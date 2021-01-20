@@ -43,9 +43,10 @@ public class UserServiceImpl  implements UserDetailsService, UserService  {
 
     private Set<SimpleGrantedAuthority> getAuthority(User user) {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        user.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
-        });
+        // user.getRoles().forEach(role -> {
+        //     authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+        // });
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName()));
         return authorities;
     }
 
@@ -67,15 +68,15 @@ public class UserServiceImpl  implements UserDetailsService, UserService  {
         nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 
         Role role = roleService.findByName("USER");
-        Set<Role> roleSet = new HashSet<>();
-        roleSet.add(role);
+        //Set<Role> roleSet = new HashSet<>(); 
+        //roleSet.add(role);
 
-        if(nUser.getEmail().split("@")[1].equals("admin.edu")){
-            role = roleService.findByName("ADMIN");
-            roleSet.add(role);
-        }
+        // if(nUser.getEmail().split("@")[1].equals("admin.edu")){
+        //     role = roleService.findByName("ADMIN");
+        //     roleSet.add(role);
+        // }
 
-        nUser.setRoles(roleSet);
+        nUser.setRole(role);
         return userDao.save(nUser);
     }
 

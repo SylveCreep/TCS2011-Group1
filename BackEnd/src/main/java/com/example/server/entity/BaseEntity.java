@@ -20,12 +20,12 @@ public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Long id;
+    private int id;
 
-    @Column
+    @Column(nullable = false)
     private Boolean is_deleted = Boolean.FALSE;
 
-    @Column
+    @Column(nullable = false)
     private Date created_at;
 
     @Column
