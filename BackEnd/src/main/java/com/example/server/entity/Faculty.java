@@ -15,10 +15,9 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "faculty")
-@Getter @Setter
 public class Faculty extends BaseEntity {
     
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false,length = 5)
     private String code;
 
     @OneToMany(mappedBy = "faculty")
@@ -30,6 +29,48 @@ public class Faculty extends BaseEntity {
 
     @OneToMany(mappedBy = "faculty")
     private List<Contribution> contribution;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public User getManager() {
+        return manager;
+    }
+
+    public void setManager(User manager) {
+        this.manager = manager;
+    }
+
+    public List<Contribution> getContribution() {
+        return contribution;
+    }
+
+    public void setContribution(List<Contribution> contribution) {
+        this.contribution = contribution;
+    }
+
+    public Faculty() {
+    }
+
+    public Faculty(String code, List<User> users, User manager, List<Contribution> contribution) {
+        this.code = code;
+        this.users = users;
+        this.manager = manager;
+        this.contribution = contribution;
+    }
 
 
     
