@@ -11,12 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "comment")
-public class Comment{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private int id;
+public class Comment extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name="user_id", referencedColumnName = "id", nullable = false)
@@ -26,6 +21,42 @@ public class Comment{
     @JoinColumn(name="contribution_id", referencedColumnName = "id", nullable = false)
     private Contribution contribution;
 
+    @Column(unique = true, nullable = false,length = 5)
+    private String code;
 
+    @Column(nullable = false)
+    private String content;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Contribution getContribution() {
+        return contribution;
+    }
+
+    public void setContribution(Contribution contribution) {
+        this.contribution = contribution;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
     
 }

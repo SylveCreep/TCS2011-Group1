@@ -7,15 +7,12 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import static com.example.server.constant.Constant.*;
 
 
 @MappedSuperclass
 @Transactional(readOnly=false)
 @Table
-@Getter @Setter @NoArgsConstructor
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,12 +20,54 @@ public class BaseEntity {
     private int id;
 
     @Column(nullable = false)
-    private Boolean is_deleted = Boolean.FALSE;
+    private int is_deleted = IntConstant.NOTDELETED;
 
     @Column(nullable = false)
-    private Date created_at;
+    private Date created_at = new Date();
 
     @Column
     private Date updateted_at;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getIs_deleted() {
+        return is_deleted;
+    }
+
+    public void setIs_deleted(int is_deleted) {
+        this.is_deleted = is_deleted;
+    }
+
+    public Date getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
+    }
+
+    public Date getUpdateted_at() {
+        return updateted_at;
+    }
+
+    public void setUpdateted_at(Date updateted_at) {
+        this.updateted_at = updateted_at;
+    }
+
+    public BaseEntity() {
+    }
+
+    public BaseEntity(int id, int is_deleted, Date created_at, Date updateted_at) {
+        this.id = id;
+        this.is_deleted = is_deleted;
+        this.created_at = created_at;
+        this.updateted_at = updateted_at;
+    }
 
 }
