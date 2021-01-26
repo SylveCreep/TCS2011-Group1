@@ -1,5 +1,7 @@
 package com.example.server.entity;
 
+import com.example.server.util.QueryChecking;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -12,12 +14,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="user")
 public class User extends BaseEntity {
+
+    private QueryChecking queryChecking = new QueryChecking();
     
     @Column(unique = true, nullable = false)
     private String email;
 
     @Column(unique = true, nullable = false,length = 5)
-    private String code= "U" + String.valueOf(ThreadLocalRandom.current().nextInt(1000, 10000));
+    private String code= "U" + String.format("%04d", queryChecking.CheckHighestIdUser("user"));
 
     @Column(nullable = false)
     @JsonIgnore
@@ -140,8 +144,4 @@ public class User extends BaseEntity {
         this.contributions = contributions;
         this.comments = comments;
     }
-
-
-
-    
 }
