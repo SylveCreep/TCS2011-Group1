@@ -4,17 +4,18 @@ import java.util.Date;
 
 import static com.example.server.constant.Constant.*;
 
-import com.example.server.dao.RoleDao;
-import com.example.server.dao.UserDao;
-import com.github.javafaker.Faker;
 import com.example.server.entity.User;
 import com.example.server.entity.Role;
+import com.example.server.entity.Faculty;
+import com.example.server.dao.RoleDao;
+import com.example.server.dao.UserDao;
+import com.example.server.dao.FacultyDao;
+import com.github.javafaker.Faker;
 import com.example.server.util.QueryChecking;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,13 +27,13 @@ public class Seeding implements CommandLineRunner {
     private UserDao userDao;
 
     @Autowired
-    private BCryptPasswordEncoder bcryptEncoder;
-
-    @Autowired
     private RoleDao roleDao;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private FacultyDao facultyDao;
+
+    @Autowired
+    private BCryptPasswordEncoder bcryptEncoder;
 
     private QueryChecking queryChecking = new QueryChecking();
 
