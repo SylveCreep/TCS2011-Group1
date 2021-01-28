@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Router from "vue-router";
-//import CommentList from "@/pages/comment/CommentList";
-import TheFooter from "@/components/TheFooter";
 import UserList from "@/pages/user/UserList";
+import UserCreate from "@/pages/user/UserCreate.vue";
 Vue.use(Router);
 const router = new Router({
     mode: 'history',
@@ -12,9 +11,9 @@ const router = new Router({
             path: '/users',
             component: UserList,
         }, {
-            name:'TheFooter',
-            path: '/footers',
-            component: TheFooter,
+            name:'Users',
+            path: '/users/create',
+            component: UserCreate,
         }
     ]
 })
