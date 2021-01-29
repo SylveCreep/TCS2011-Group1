@@ -20,11 +20,14 @@ public class Faculty extends BaseEntity {
     @Column(unique = true, nullable = false,length = 5)
     private String code;
 
+    @Column
+    private String name;
+
     @OneToMany(mappedBy = "faculty")
     private List<User> users;
 
     @OneToOne
-    @JoinColumn(name= "manager_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name= "manager_id", referencedColumnName = "id")
     private User manager;
 
     @OneToMany(mappedBy = "faculty")
@@ -36,6 +39,14 @@ public class Faculty extends BaseEntity {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public void setName(String name){
+        this.name = name;
     }
 
     public List<User> getUsers() {

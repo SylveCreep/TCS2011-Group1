@@ -26,7 +26,6 @@ public class QueryChecking{
         String sql = "SELECT COUNT(id) FROM `" + nameTable+ "`";
         int count = jdbcTemplate.queryForObject(sql, Integer.class);
         if (count > 0){
-            sql = "SELECT MAX(id) FROM `" + nameTable +"`";
             int highestId = jdbcTemplate.queryForObject(sql, Integer.class);
             return highestId + 1;
         }
@@ -35,4 +34,15 @@ public class QueryChecking{
         }
     }
     
+    public int SelectRandomId (String nameTable){
+        String sql = "SELECT id FROM `" + nameTable +"` ORDER BY RAND() LIMIT 1";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class);
+        if (count > 0){
+            int randomId = jdbcTemplate.queryForObject(sql, Integer.class);
+            return randomId;
+        }
+        else{
+            return 0;   
+        }
+    }
 }
