@@ -26,7 +26,7 @@ public class BaseEntity {
     private Date created_at = new Date();
 
     @Column
-    private Date updateted_at;
+    private Date updated_at;
 
     public int getId() {
         return id;
@@ -52,22 +52,22 @@ public class BaseEntity {
         this.created_at = created_at;
     }
 
-    public Date getUpdateted_at() {
-        return updateted_at;
+    public Date getUpdated_at() {
+        return updated_at;
     }
 
-    public void setUpdateted_at(Date updateted_at) {
-        this.updateted_at = updateted_at;
+    public void setUpdated_at(Date updated_at) {
+        this.updated_at = updated_at;
     }
 
     public BaseEntity() {
     }
 
-    public BaseEntity(int id, int is_deleted, Date created_at, Date updateted_at) {
+    public BaseEntity(int id, int is_deleted, Date created_at, Date updated_at) {
         this.id = id;
         this.is_deleted = is_deleted;
         this.created_at = created_at;
-        this.updateted_at = updateted_at;
+        this.updated_at = updated_at;
     }
 
 }
