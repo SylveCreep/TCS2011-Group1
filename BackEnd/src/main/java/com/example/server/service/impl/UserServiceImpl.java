@@ -9,11 +9,13 @@ import com.example.server.dao.UserDao;
 import com.example.server.dto.UserDto;
 import com.example.server.entity.Role;
 import com.example.server.entity.User;
+import com.example.server.model.request.CreateAccount;
 import com.example.server.service.RoleService;
 import com.example.server.service.UserService;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -61,23 +63,35 @@ public class UserServiceImpl  implements UserDetailsService, UserService  {
         return userDao.findByEmail(email);
     }
 
+    //Create account by guest
     @Override
     public User saveGuestRegister(UserDto user) {
-
         User nUser = user.getUserFromDto();
         nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 
         Role role = roleService.findByName("GUEST");
-        //Set<Role> roleSet = new HashSet<>(); 
-        //roleSet.add(role);
-
-        // if(nUser.getEmail().split("@")[1].equals("admin.edu")){
-        //     role = roleService.findByName("ADMIN");
-        //     roleSet.add(role);
-        // }
-
         nUser.setRole(role);
         return userDao.save(nUser);
     }
+
+    //Create account by admin
+    @Override
+    public User saveRegister(CreateAccount user) {
+        try {
+            User nUser = new User();
+            nUser.setEmail(user.getEmail());
+            nUser.setFullName(user.getFullName());
+            nUser.setAddress(user.getAddress());
+            nUser.setDateOfBirth(user.getDateOfBirth());
+            nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+            Role role = roleService.findById(user.getRoleId());
+            nUser.setRole(role);
+            return userDao.save(nUser);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    
 
 }

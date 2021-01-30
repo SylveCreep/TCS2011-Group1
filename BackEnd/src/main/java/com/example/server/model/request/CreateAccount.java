@@ -1,4 +1,4 @@
-package com.example.server.dto;
+package com.example.server.model.request;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -6,13 +6,7 @@ import java.util.Date;
 
 import javax.validation.constraints.Size;
 
-import com.example.server.entity.User;
-
-import org.hibernate.validator.constraints.Length;
-
-
-public class UserDto {
-
+public class CreateAccount {
     private String email;
     
     @Size(min = 6, max = 30)
@@ -26,15 +20,7 @@ public class UserDto {
 
     private Date dateOfBirth;
 
-    public User getUserFromDto(){
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setFullName(fullName);
-        user.setAddress(address);
-        user.setDateOfBirth(dateOfBirth);
-        return user;
-    }
+    private int roleId;
 
     public String getEmail() {
         return email;
@@ -81,4 +67,26 @@ public class UserDto {
             this.dateOfBirth = null;
         }
     }
+
+    public int getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
+    }
+
+    public CreateAccount() {
+    }
+
+    public CreateAccount(String email, @Size(min = 6, max = 30) String password, @Size(max = 255) String fullName,
+            @Size(max = 255) String address, Date dateOfBirth, int roleId) {
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
+        this.roleId = roleId;
+    }
+    
 }

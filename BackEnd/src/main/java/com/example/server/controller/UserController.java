@@ -1,12 +1,18 @@
 package com.example.server.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import com.example.server.dto.UserDto;
 import com.example.server.entity.User;
+import com.example.server.model.request.*;
 import com.example.server.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,23 +31,24 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(value ="/register",  consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public User saveUser( @RequestBody UserDto user){
-        return null;
+    private ResponseEntity<?> getResponseEntity(Object data, String code, String mess, HttpStatus status) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("data",data);
+        response.put("code",code);
+        response.put("messenger",mess);
+        return new ResponseEntity<>(response, status);
     }
-
-
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(value="/adminping")
-    public String adminPing(){
-        return "Only Admins Can Read This";
+    @PostMapping(value ="/create",  consumes = {"text/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> createUser(@Valid @RequestBody CreateAccount user){
+        try {
+            userService.saveRegister(user);
+            return getResponseEntity("NULL","1","Register success", HttpStatus.OK);
+        } catch (Exception e) {
+            return getResponseEntity("NULL","-1","Register failed", HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PreAuthorize("hasRole('GUEST')")
-    @GetMapping(value="/userping")
-    public String userPing(){
-        return "Any User Can Read This";
-    }
 
 }

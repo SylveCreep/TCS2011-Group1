@@ -39,12 +39,16 @@ public class Seeding implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        seedingRole();
-        seedingUserAdmin();
-        seedingUserMM();
-        seedingUserMC();
-        seedingUserGUEST();
-        seedingUserStudent();
+        try {
+            seedingRole();
+            seedingUserAdmin();
+            seedingUserMM();
+            seedingUserMC();
+            seedingUserGUEST();
+            seedingUserStudent();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
     }
 
