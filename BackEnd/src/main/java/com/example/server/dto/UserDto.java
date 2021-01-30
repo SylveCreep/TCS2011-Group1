@@ -1,14 +1,28 @@
 package com.example.server.dto;
 
+import java.util.Date;
+
+import javax.validation.constraints.Size;
+
 import com.example.server.entity.User;
+
+import org.hibernate.validator.constraints.Length;
 
 
 public class UserDto {
 
     private String email;
+    
+    @Size(min = 6, max = 30)
     private String password;
+
+    @Size(max = 255)
     private String fullName;
+
+    @Size(max = 255)
     private String address;
+
+    private Date dateOfBirth;
 
     public User getUserFromDto(){
         User user = new User();
@@ -16,6 +30,7 @@ public class UserDto {
         user.setPassword(password);
         user.setFullName(fullName);
         user.setAddress(address);
+        user.setDateOfBirth(dateOfBirth);
         return user;
     }
 

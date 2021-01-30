@@ -7,7 +7,7 @@ import com.example.server.entity.User;
 
 
 public interface UserService {
-    User save(UserDto user);
+    User saveGuestRegister(UserDto user);
 
     List<User> findAll();
     

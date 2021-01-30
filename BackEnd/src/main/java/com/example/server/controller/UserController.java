@@ -1,11 +1,14 @@
 package com.example.server.controller;
 
+import javax.validation.Valid;
+
 import com.example.server.dto.UserDto;
 import com.example.server.entity.User;
 import com.example.server.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,8 +26,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value ="/register",  consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public User saveUser(@RequestBody UserDto user){
-        return userService.save(user);
+    public User saveUser( @RequestBody UserDto user){
+        return null;
     }
 
 

@@ -7,7 +7,11 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name="user")
@@ -52,6 +56,9 @@ public class User extends BaseEntity {
 
     @Column(name="key_created_at")
     private Date keyCreatedAt;
+
+    @Column(name="date_of_birth",nullable = false)
+    private Date dateOfBirth;
 
     public String getEmail() {
         return email;
@@ -125,11 +132,36 @@ public class User extends BaseEntity {
         this.comments = comments;
     }
 
-    public User() {
+    public String getResetPasswordKey() {
+        return resetPasswordKey;
     }
 
+    public void setResetPasswordKey(String resetPasswordKey) {
+        this.resetPasswordKey = resetPasswordKey;
+    }
+
+    public Date getKeyCreatedAt() {
+        return keyCreatedAt;
+    }
+
+    public void setKeyCreatedAt(Date keyCreatedAt) {
+        this.keyCreatedAt = keyCreatedAt;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public User() {
+    }
+    
     public User(String email, String code, String password, Role role, Faculty faculty, String fullName, String address,
-            List<Contribution> contributions, List<Comment> comments) {
+            List<Contribution> contributions, List<Comment> comments, String resetPasswordKey, Date keyCreatedAt,
+            Date dateOfBirth) {
         this.email = email;
         this.code = code;
         this.password = password;
@@ -139,6 +171,27 @@ public class User extends BaseEntity {
         this.address = address;
         this.contributions = contributions;
         this.comments = comments;
+        this.resetPasswordKey = resetPasswordKey;
+        this.keyCreatedAt = keyCreatedAt;
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public User(int id, int is_deleted, Date created_at, Date updateted_at, String email, String code, String password,
+            Role role, Faculty faculty, String fullName, String address, List<Contribution> contributions,
+            List<Comment> comments, String resetPasswordKey, Date keyCreatedAt, Date dateOfBirth) {
+        super(id, is_deleted, created_at, updateted_at);
+        this.email = email;
+        this.code = code;
+        this.password = password;
+        this.role = role;
+        this.faculty = faculty;
+        this.fullName = fullName;
+        this.address = address;
+        this.contributions = contributions;
+        this.comments = comments;
+        this.resetPasswordKey = resetPasswordKey;
+        this.keyCreatedAt = keyCreatedAt;
+        this.dateOfBirth = dateOfBirth;
     }
 
 
