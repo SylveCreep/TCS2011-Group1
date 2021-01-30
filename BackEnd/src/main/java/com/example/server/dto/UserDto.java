@@ -7,6 +7,7 @@ import java.util.Date;
 import javax.validation.constraints.Size;
 
 import com.example.server.entity.User;
+import com.example.server.util.NameValidation;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -57,7 +58,11 @@ public class UserDto {
     }
 
     public void setFullName(String fullName) {
-        this.fullName = fullName;
+        if(!NameValidation.containSpecialCharacter(fullName) && !NameValidation.containNumber(fullName)){
+            this.fullName = fullName;
+        } else {
+            this.fullName = null;
+        }
     }
 
     public String getAddress() {
@@ -65,7 +70,11 @@ public class UserDto {
     }
 
     public void setAddress(String address) {
-        this.address = address;
+        if(!NameValidation.containSpecialCharacter(address)){
+            this.address = address;
+        } else {
+            this.address = null;
+        }
     }
 
     public Date getDateOfBirth() {
