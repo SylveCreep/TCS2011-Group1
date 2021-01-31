@@ -1,7 +1,10 @@
 package com.example.server.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import jdk.internal.org.jline.utils.Log;
 
 public class QueryChecking{
 
@@ -16,21 +19,25 @@ public class QueryChecking{
         return numberOfUser;
     }
     
-    public int CheckItemInTable(String table){
-        String sql = "SELECT COUNT(id) AS NumberOfRole FROM `" + table + "`";
-        int numberOfItem = jdbcTemplate.queryForObject(sql, Integer.class);
-        return numberOfItem;
+    public int CheckItemInTable(){
+        try{
+            String sql = String.valueOf("SELECT COUNT(*) AS Count FROM `role`");
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        }
+       catch(EmptyResultDataAccessException e){
+            System.out.println(e);
+            return 0;
+       }
     }
     
     public int CheckHighestIdUser(String nameTable){
-        String sql = "SELECT COUNT(id) FROM `" + nameTable+ "`";
-        int count = jdbcTemplate.queryForObject(sql, Integer.class);
-        if (count > 0){
-            int highestId = jdbcTemplate.queryForObject(sql, Integer.class);
-            return highestId + 1;
+        String sql = "SELECT COUNT(t.id) FROM `" + nameTable+ "` t";
+        if (jdbcTemplate.queryForObject(sql, Integer.class) == null){
+            return 1;
         }
         else {
-            return 1;
+            int highestId = jdbcTemplate.queryForObject(sql, Integer.class);
+            return highestId + 1;
         }
     }
     
