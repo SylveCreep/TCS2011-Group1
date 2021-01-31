@@ -116,6 +116,9 @@
                 <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button"><i
                     class="fas fa-th-large"></i></a>
             </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <router-link to="/login" class="nav-link">Login</router-link>
+            </li>
         </ul>
     </nav>
 </template>
