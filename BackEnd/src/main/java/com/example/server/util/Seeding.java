@@ -35,7 +35,8 @@ public class Seeding implements CommandLineRunner {
     @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
 
-    private QueryChecking queryChecking = new QueryChecking();
+    @Autowired
+    private QueryChecking queryChecking;
 
     @Override
     public void run(String... args) throws Exception {
@@ -60,6 +61,7 @@ public class Seeding implements CommandLineRunner {
                  nUser.setRole(role);
                  nUser.setFullName(faker.name().fullName());
                  nUser.setAddress(faker.address().buildingNumber());
+                 nUser.setDateOfBirth(faker.date().birthday(18, 50));
                  nUser.setIs_deleted(IntConstant.NOTDELETED);
                  nUser.setCreated_at(new Date());
  

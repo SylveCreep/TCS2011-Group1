@@ -3,8 +3,7 @@ package com.example.server.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import jdk.internal.org.jline.utils.Log;
+import org.springframework.stereotype.Repository;
 
 public class QueryChecking{
 

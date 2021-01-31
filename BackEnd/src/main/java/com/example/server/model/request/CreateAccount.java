@@ -6,6 +6,8 @@ import java.util.Date;
 
 import javax.validation.constraints.Size;
 
+import com.example.server.util.NameValidation;
+
 public class CreateAccount {
     private String email;
     
@@ -43,7 +45,11 @@ public class CreateAccount {
     }
 
     public void setFullName(String fullName) {
-        this.fullName = fullName;
+        if(!NameValidation.containSpecialCharacter(fullName) && !NameValidation.containNumber(fullName)){
+            this.fullName = fullName;
+        } else {
+            this.fullName = null;
+        }
     }
 
     public String getAddress() {
@@ -51,7 +57,11 @@ public class CreateAccount {
     }
 
     public void setAddress(String address) {
-        this.address = address;
+        if(!NameValidation.containSpecialCharacter(address)){
+            this.address = address;
+        } else {
+            this.address = null;
+        }
     }
 
     public Date getDateOfBirth() {

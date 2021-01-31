@@ -29,7 +29,7 @@ public class User extends BaseEntity {
     // private String code= "U" + String.format("%04d", queryChecking.CheckHighestIdUser("user"));
 
     @Column(unique = true, nullable = false,length = 5)
-    private String code= "U" + String.valueOf(ThreadLocalRandom.current().nextInt(1000, 10000));
+    private String code;
 
     @Column(nullable = false)
     @JsonIgnore
