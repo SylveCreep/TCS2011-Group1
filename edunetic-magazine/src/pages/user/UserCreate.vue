@@ -28,25 +28,29 @@
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Role: </label>
                                             <div class="col-sm-12">
-                                                <select class="form-control select2"  id="cate_id" name="category"  v-model="user.role_id">
-                                                    <option value="1">Admin</option>
-                                                    <option value="2">Student</option>
+                                                <select class="form-control select2"  id="role_id" name="category"  v-model="user.role_id">
+                                                  <option v-for="role in list_roles" :key="role.id"
+                                                          v-bind:value="role.id">
+                                                    {{role.name}}
+                                                  </option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Faculty: </label>
                                             <div class="col-sm-12">
-                                                <select class="form-control select2"  id="cate_id" name="category"  v-model="user.faculty_id">
-                                                    <option value="1">IT</option>
-                                                    <option value="2">BA</option>
+                                                <select class="form-control select2"  id="faculty_id" name="category"  v-model="user.faculty_id">
+                                                    <option v-for="faculty in list_faculties" :key="faculty.id"
+                                                            v-bind:value="faculty.id">
+                                                      {{faculty.name}}
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Email: </label>
                                             <div class="col-sm-12">
-                                                <input id="username" type="text" class="form-control" v-model="user.email"/>
+                                                <input id="email" type="text" class="form-control" v-model="user.email"/>
                                             </div>
                                         </div>                                     
                                         <div class="form-group">
@@ -95,37 +99,64 @@
 </template>
 
 <script>
-//import axios from "axios";
-//import {UrlConstants} from "../../constants/UrlConstant";
+import axios from "axios";
+import {UrlConstants} from "@/constant/UrlConstant";
+
 export default {
-    name: "UserCreate",
-    data(){
-        return{
-            user: {},
-            errors: null,
-        }
-    },
-    methods: {
-        createUser(){
-            console.log(this.user)
-            // this.user.is_admin = 1;
-            // axios.post(UrlConstants.user, this.user )
-            //     .then(response => {
-            //         alert('Create Successfully');
-            //         this.$router.push('/users')
-            //     })
-            //     .catch(error =>{
-            //         this.errors = error.response.data.errors;
-            //         this.showError(this.errors);
-            //     })
-        },
-        showError(errors){
-            Object.keys(errors).forEach(error=>{
-                let text = document.querySelector('#'+error);
-                text.style.cssText = 'border-color: red'
-            })
-        }
+  name: "UserCreate",
+  data(){
+    return{
+      user: {},
+      errors: null,
+      list_faculties: {},
+      list_roles: {},
     }
+  },
+  created() {
+    this.getFacultyList();
+    this.getRoleList();
+  },
+  methods: {
+    createUser(){
+      axios.post(UrlConstants.user, this.user )
+          .then(r =>{
+            console.log(r);
+            alert('Create Successfully');
+            this.$router.push('/users')
+          })
+          .catch(error =>{
+              this.errors = error.response;
+              console.log(this.errors)
+          })
+    },
+    showError(errors){
+      Object.keys(errors).forEach(error=>{
+        let text = document.querySelector('#'+error);
+        text.style.cssText = 'border-color: red'
+      })
+    },
+    getRoleList() {
+      axios.get(UrlConstants.Role)
+          .then(response => {
+            this.list_roles = response.data
+            console.log(this.list_roles);
+          })
+          .catch(error =>{
+            this.errors = error.response.data.errors;
+            this.showError(this.errors);
+          })
+    },
+    getFacultyList() {
+      axios.get(UrlConstants.Faculty)
+          .then(response => {
+            this.list_faculties = response.data
+          })
+          .catch(error =>{
+            this.errors = error.response.data.errors;
+            this.showError(this.errors);
+          })
+    }
+  }
 }
 </script>
 
