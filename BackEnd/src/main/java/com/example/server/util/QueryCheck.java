@@ -22,7 +22,7 @@ public class QueryCheck {
         }
     }
 
-    public int GetHighId(String tableName){
+    public int GetHighestId(String tableName){
         try{
             String sql = "SELECT t1.id FROM `"+ tableName +"` t1 INNER JOIN (SELECT id, MAX(id) AS Max FROM `"+ tableName +"`) t2 ON t1.id = t2.Max";
             int count = jdbcTemplate.queryForObject(sql, Integer.class);

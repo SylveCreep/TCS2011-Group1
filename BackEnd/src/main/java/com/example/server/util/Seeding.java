@@ -54,7 +54,7 @@ public class Seeding implements CommandLineRunner {
     private void createUser(Faker faker, String pwd, Role role){
         User nUser = new User();
                  nUser.setEmail(faker.name().username() + "@gmail.com");
-                 nUser.setCode( "U" + String.format("%04d", queryCheck.GetHighId("user")));
+                 nUser.setCode( "U" + String.format("%04d", queryCheck.GetHighestId("user")));
                  nUser.setPassword(bcryptEncoder.encode("admin123"));
                  nUser.setRole(role);
                  nUser.setFullName(faker.name().fullName());
@@ -76,7 +76,7 @@ public class Seeding implements CommandLineRunner {
     
                 role.setIs_deleted(IntConstant.NOTDELETED);
                 role.setName(listRoleName[i]);
-                role.setCode("R" + String.format("%04d", queryCheck.GetHighId("role")));
+                role.setCode("R" + String.format("%04d", queryCheck.GetHighestId("role")));
                 role.setCreated_at(new Date());
     
                 roleDao.save(role);

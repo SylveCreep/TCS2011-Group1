@@ -1,6 +1,6 @@
 package com.example.server.entity;
 
-import com.example.server.util.QueryChecking;
+import com.example.server.util.QueryCheck;
 
 import java.util.Date;
 import java.util.List;
@@ -20,13 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Table(name="user")
 public class User extends BaseEntity {
     // @Autowired
-    // private QueryChecking queryChecking;
+    // private QueryCheck queryCheck;
     
     @Column(unique = true, nullable = false)
     private String email;
 
     // @Column(unique = true, nullable = false,length = 5)
-    // private String code= "U" + String.format("%04d", queryChecking.CheckHighestIdUser("user"));
+    // private String code= "U" + String.format("%04d", queryCheck.GetHighestId("user"));
 
     @Column(unique = true, nullable = false,length = 5)
     private String code;
