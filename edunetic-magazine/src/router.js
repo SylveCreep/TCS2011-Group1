@@ -3,6 +3,7 @@ import Router from "vue-router";
 //import CommentList from "@/pages/comment/CommentList";
 import TheFooter from "@/components/TheFooter";
 import UserList from "@/pages/user/UserList";
+import RoleList from "@/pages/role/RoleList";
 Vue.use(Router);
 const router = new Router({
     mode: 'history',
@@ -15,6 +16,11 @@ const router = new Router({
             name:'TheFooter',
             path: '/footers',
             component: TheFooter,
+        },
+        {
+            name:'Roles',
+            path:'/roles',
+            component: RoleList,
         }
     ]
 })
