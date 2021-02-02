@@ -11,13 +11,12 @@ import com.example.server.dao.RoleDao;
 import com.example.server.dao.UserDao;
 import com.example.server.dao.FacultyDao;
 import com.github.javafaker.Faker;
-import com.example.server.util.QueryChecking;
+import com.example.server.util.QueryCheck;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-
+import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Component
@@ -30,13 +29,10 @@ public class Seeding implements CommandLineRunner {
     private RoleDao roleDao;
 
     @Autowired
-    private FacultyDao facultyDao;
-
-    @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
 
     @Autowired
-    private QueryChecking queryChecking;
+    private QueryCheck queryCheck;
 
     @Override
     public void run(String... args) throws Exception {
@@ -45,8 +41,10 @@ public class Seeding implements CommandLineRunner {
             seedingUserAdmin();
             seedingUserMM();
             seedingUserMC();
-            seedingUserGUEST();
             seedingUserStudent();
+            seedingUserGUEST();
+            System.out.println();
+            System.out.println("Success seeding");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,7 +54,7 @@ public class Seeding implements CommandLineRunner {
     private void createUser(Faker faker, String pwd, Role role){
         User nUser = new User();
                  nUser.setEmail(faker.name().username() + "@gmail.com");
-                 nUser.setCode( "U" + String.format("%04d", queryChecking.CheckHighestIdUser("user")));
+                 nUser.setCode( "U" + String.format("%04d", queryCheck.GetHighestId("user")));
                  nUser.setPassword(bcryptEncoder.encode("admin123"));
                  nUser.setRole(role);
                  nUser.setFullName(faker.name().fullName());
@@ -70,7 +68,7 @@ public class Seeding implements CommandLineRunner {
 
     
     private void seedingRole(){
-        if (queryChecking.CheckItemInTable("role") < 5){
+        if (queryCheck.CheckItemInTable("role") < 5){
             String listRoleName[] = {"Administrator","Marketing Manager", "Marketing Coordinator", "Student", "GUEST"};
     
             for(int i = 0; i < 5; i++){
@@ -78,7 +76,7 @@ public class Seeding implements CommandLineRunner {
     
                 role.setIs_deleted(IntConstant.NOTDELETED);
                 role.setName(listRoleName[i]);
-                role.setCode("R" + String.format("%04d", queryChecking.CheckHighestIdUser("role")));
+                role.setCode("R" + String.format("%04d", queryCheck.GetHighestId("role")));
                 role.setCreated_at(new Date());
     
                 roleDao.save(role);
@@ -90,7 +88,7 @@ public class Seeding implements CommandLineRunner {
     }
 
     private void seedingUserAdmin(){
-        if (queryChecking.CheckNumberOfUserByRole("Administrator") < 5){
+        if (queryCheck.CountUserByRole("Administrator") < 5){
              Faker faker = new Faker();
              Role role = roleDao.findRoleByName("Administrator");
              for (int i = 0; i < 5; i++){
@@ -103,7 +101,7 @@ public class Seeding implements CommandLineRunner {
     }
 
     private void seedingUserMM(){
-        if (queryChecking.CheckNumberOfUserByRole("Marketing Manager") < 1){
+        if (queryCheck.CountUserByRole("Marketing Manager") < 1){
             Faker faker = new Faker();
             Role role = roleDao.findRoleByName("Marketing Manager");
             createUser(faker, "MM1234", role);
@@ -114,7 +112,7 @@ public class Seeding implements CommandLineRunner {
     }
 
     private void seedingUserMC(){
-        if (queryChecking.CheckNumberOfUserByRole("Marketing Coordinator") < 10){
+        if (queryCheck.CountUserByRole("Marketing Coordinator") < 10){
              Faker faker = new Faker();
              Role role = roleDao.findRoleByName("Marketing Coordinator");
              for (int i = 0; i < 10; i++){
@@ -127,7 +125,7 @@ public class Seeding implements CommandLineRunner {
     }
 
     private void seedingUserStudent(){
-        if (queryChecking.CheckNumberOfUserByRole("Student") < 100){
+        if (queryCheck.CountUserByRole("Student") < 100){
             Faker faker = new Faker();
             Role role = roleDao.findRoleByName("Student");
             for (int i = 0; i < 100; i++){
@@ -140,7 +138,7 @@ public class Seeding implements CommandLineRunner {
     }
 
    private void seedingUserGUEST(){
-       if (queryChecking.CheckNumberOfUserByRole("GUEST") < 50){
+       if (queryCheck.CountUserByRole("GUEST") < 50){
             Faker faker = new Faker();
             Role role = roleDao.findRoleByName("GUEST");
             for (int i = 0; i < 100; i++){

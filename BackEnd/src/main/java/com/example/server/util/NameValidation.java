@@ -3,6 +3,9 @@ package com.example.server.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class NameValidation {
     public static Boolean containNumber(String name){
         Pattern p = Pattern.compile("[0-9]");

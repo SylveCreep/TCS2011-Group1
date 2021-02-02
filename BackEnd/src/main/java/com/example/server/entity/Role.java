@@ -1,5 +1,6 @@
 package com.example.server.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -53,6 +54,13 @@ public class Role extends BaseEntity{
     }
 
     public Role(String code, String name, List<User> users) {
+        this.code = code;
+        this.name = name;
+        this.users = users;
+    }
+
+    public Role(int id, int is_deleted, Date created_at, Date updateted_at, String code, String name, List<User> users){
+        super(id, is_deleted, created_at, updateted_at);
         this.code = code;
         this.name = name;
         this.users = users;

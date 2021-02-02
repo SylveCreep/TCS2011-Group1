@@ -13,7 +13,7 @@ import com.example.server.model.request.CreateAccount;
 import com.example.server.model.response.UserListResponse;
 import com.example.server.service.RoleService;
 import com.example.server.service.UserService;
-import com.example.server.util.QueryChecking;
+import com.example.server.util.QueryCheck;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private RoleService roleService;
 
     @Autowired
-    private QueryChecking queryChecking;
+    private QueryCheck queryCheck;
 
     @Autowired
     private UserDao userDao;
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public User saveGuestRegister(UserDto user) {
         User nUser = user.getUserFromDto();
-        nUser.setCode("U" + String.format("%04d", queryChecking.CheckHighestIdUser("user")));
+        nUser.setCode("U" + String.format("%04d", queryCheck.GetHighestId("user")));
         nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 
         Role role = roleService.findByName("GUEST");
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         try {
             User nUser = new User();
             nUser.setEmail(user.getEmail());
-            nUser.setCode("U" + String.format("%04d", queryChecking.CheckHighestIdUser("user")));
+            nUser.setCode("U" + String.format("%04d", queryCheck.GetHighestId("user")));
             nUser.setFullName(user.getFullName());
             nUser.setAddress(user.getAddress());
             nUser.setDateOfBirth(user.getDateOfBirth());
