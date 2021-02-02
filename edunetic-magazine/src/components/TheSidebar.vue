@@ -33,7 +33,7 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/roles" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
                   Role List

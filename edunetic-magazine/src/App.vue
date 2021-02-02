@@ -1,7 +1,8 @@
 <template>
   <div class="wrapper">
     <!-- Navbar -->
-    <the-navbar></the-navbar>
+    <the-navbar></the-navbar>         
+    
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
@@ -42,14 +43,8 @@ export default {
     TheNavbar,
     TheFooter,
   },
-  data() {
-    return {
-      token: null
-    }
-  },
-    created () {
-      this.$store.dispatch('AutoLogin')
-    }
+
+
 }
 </script>
 
