@@ -5,6 +5,9 @@ import java.util.List;
 import com.example.server.dto.UserDto;
 import com.example.server.entity.User;
 import com.example.server.model.request.*;
+import com.example.server.model.response.UserListResponse;
+
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 
 
 public interface UserService {
@@ -15,5 +18,7 @@ public interface UserService {
     List<User> findAll();
     
     User findOne(String email);
+
+    List<UserListResponse> getUserListResponse(Pageable pageable);
 
 }

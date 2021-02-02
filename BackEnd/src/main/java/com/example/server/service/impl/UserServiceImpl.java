@@ -10,6 +10,7 @@ import com.example.server.dto.UserDto;
 import com.example.server.entity.Role;
 import com.example.server.entity.User;
 import com.example.server.model.request.CreateAccount;
+import com.example.server.model.response.UserListResponse;
 import com.example.server.service.RoleService;
 import com.example.server.service.UserService;
 import com.example.server.util.QueryChecking;
@@ -18,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,7 +28,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service(value = "userService")
-public class UserServiceImpl  implements UserDetailsService, UserService  {
+public class UserServiceImpl implements UserDetailsService, UserService {
     @Autowired
     private RoleService roleService;
 
@@ -41,16 +43,17 @@ public class UserServiceImpl  implements UserDetailsService, UserService  {
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userDao.findByEmail(email);
-        if(user == null){
+        if (user == null) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthority(user));
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+                getAuthority(user));
     }
 
     private Set<SimpleGrantedAuthority> getAuthority(User user) {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
         // user.getRoles().forEach(role -> {
-        //     authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+        // authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
         // });
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName()));
         return authorities;
@@ -67,7 +70,7 @@ public class UserServiceImpl  implements UserDetailsService, UserService  {
         return userDao.findByEmail(email);
     }
 
-    //Create account by guest
+    // Create account by guest
     @Override
     public User saveGuestRegister(UserDto user) {
         User nUser = user.getUserFromDto();
@@ -79,7 +82,7 @@ public class UserServiceImpl  implements UserDetailsService, UserService  {
         return userDao.save(nUser);
     }
 
-    //Create account by admin
+    // Create account by admin
     @Override
     public User saveRegister(CreateAccount user) {
         try {
@@ -98,6 +101,13 @@ public class UserServiceImpl  implements UserDetailsService, UserService  {
         }
     }
 
+    @Override
+    public List<UserListResponse> getUserListResponse(Pageable pageable) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    
     
 
 }

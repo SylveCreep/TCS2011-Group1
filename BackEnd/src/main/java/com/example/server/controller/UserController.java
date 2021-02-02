@@ -40,10 +40,21 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(value ="/create",  consumes = {"text/plain", "application/*"}, produces = "application/json")
+    @PostMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> createUser(@Valid @RequestBody CreateAccount user){
         try {
             userService.saveRegister(user);
+            return getResponseEntity("NULL","1","Register success", HttpStatus.OK);
+        } catch (Exception e) {
+            return getResponseEntity("NULL","-1","Register failed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> showUser(){
+        try {
+            
             return getResponseEntity("NULL","1","Register success", HttpStatus.OK);
         } catch (Exception e) {
             return getResponseEntity("NULL","-1","Register failed", HttpStatus.BAD_REQUEST);
