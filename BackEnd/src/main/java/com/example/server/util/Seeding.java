@@ -55,7 +55,7 @@ public class Seeding implements CommandLineRunner {
         User nUser = new User();
                  nUser.setEmail(faker.name().username() + "@gmail.com");
                  nUser.setCode( "U" + String.format("%04d", queryCheck.GetHighestId("user")));
-                 nUser.setPassword(bcryptEncoder.encode("admin123"));
+                 nUser.setPassword(bcryptEncoder.encode(pwd));
                  nUser.setRole(role);
                  nUser.setFullName(faker.name().fullName());
                  nUser.setAddress(faker.address().buildingNumber());
@@ -142,7 +142,7 @@ public class Seeding implements CommandLineRunner {
             Faker faker = new Faker();
             Role role = roleDao.findRoleByName("GUEST");
             for (int i = 0; i < 100; i++){
-                createUser(faker, "123456", role);
+                createUser(faker, "GUEST123", role);
             }
        }
        else{
