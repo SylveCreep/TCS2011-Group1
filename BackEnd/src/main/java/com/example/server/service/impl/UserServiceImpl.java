@@ -10,16 +10,21 @@ import com.example.server.dto.UserDto;
 import com.example.server.entity.Role;
 import com.example.server.entity.User;
 import com.example.server.model.request.CreateAccount;
+import com.example.server.model.request.PagingRequest;
+import com.example.server.model.request.UserSearchRequest;
 import com.example.server.model.response.UserListResponse;
 import com.example.server.service.RoleService;
 import com.example.server.service.UserService;
 import com.example.server.util.QueryCheck;
+import com.example.server.util.ResponseUtils;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,6 +36,9 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserDetailsService, UserService {
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private ResponseUtils responseUtils;
 
     @Autowired
     private QueryCheck queryCheck;
@@ -101,10 +109,52 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
     }
 
+    //Get non deleted users
     @Override
-    public List<UserListResponse> getUserListResponse(Pageable pageable) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<UserListResponse> getUserListResponse(PagingRequest pagingRequest) {
+        try {
+            Sort sort = responseUtils.getSortObj(pagingRequest);
+            List<User> list = userDao.getNonDeletedUser(PageRequest.of(pagingRequest.getPage(), pagingRequest.getLimit(), sort));
+            List<UserListResponse> listResponse = new ArrayList<>();
+            for(User user: list){
+                listResponse.add(new UserListResponse(
+                    user.getId(),
+                    user.getFullName(),
+                    user.getFaculty().getId(),
+                    user.getFaculty().getName(),
+                    user.getRole().getId(),
+                    user.getEmail()
+                ));
+            }
+            return listResponse;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    //Get users by search
+    @Override
+    public List<UserListResponse> searchUserByRoleAndFacul(UserSearchRequest userSearchRequest) {
+        try {
+            Sort sort = responseUtils.getSortObj(userSearchRequest);
+            List<User> list = userDao.searchUserByRoleAndFac(userSearchRequest.getUserId(),userSearchRequest.getRoleId(),userSearchRequest.getFacultyId(),PageRequest.of(userSearchRequest.getPage(), userSearchRequest.getLimit(), sort));
+            List<UserListResponse> listResponse = new ArrayList<>();
+            for(User user: list){
+                listResponse.add(new UserListResponse(
+                    user.getId(),
+                    user.getFullName(),
+                    user.getFaculty().getId(),
+                    user.getFaculty().getName(),
+                    user.getRole().getId(),
+                    user.getEmail()
+                ));
+            }
+            return listResponse;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     

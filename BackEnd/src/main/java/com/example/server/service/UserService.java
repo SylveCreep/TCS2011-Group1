@@ -19,6 +19,8 @@ public interface UserService {
     
     User findOne(String email);
 
-    List<UserListResponse> getUserListResponse(Pageable pageable);
+    List<UserListResponse> getUserListResponse(PagingRequest pagingRequest);
+
+    List<UserListResponse> searchUserByRoleAndFacul(UserSearchRequest userSearchRequest);
 
 }

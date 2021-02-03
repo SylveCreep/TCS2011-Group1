@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
+import static com.example.server.constant.Constant.*;
 
-import com.example.server.constant.Constant.IntConstant;
 
 @Entity
 @Table(name="magazine")
@@ -26,7 +26,7 @@ public class Magazine {
     private Date publishedAt;
 
     @Column(nullable = false)
-    private int is_deleted = IntConstant.NOTDELETED;
+    private int is_deleted = NOTDELETED;
 
     @OneToMany(mappedBy = "magazine")
     private List<Contribution> contribution;

@@ -1,6 +1,7 @@
 package com.example.server.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -8,7 +9,9 @@ import javax.validation.Valid;
 import com.example.server.dto.UserDto;
 import com.example.server.entity.User;
 import com.example.server.model.request.*;
+import com.example.server.model.response.UserListResponse;
 import com.example.server.service.UserService;
+import com.example.server.util.ResponseUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +23,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.example.server.constant.Constant.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -31,33 +37,45 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    private ResponseEntity<?> getResponseEntity(Object data, String code, String mess, HttpStatus status) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("data",data);
-        response.put("code",code);
-        response.put("messenger",mess);
-        return new ResponseEntity<>(response, status);
-    }
+    @Autowired
+    private ResponseUtils responseUtils;
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> createUser(@Valid @RequestBody CreateAccount user){
         try {
             userService.saveRegister(user);
-            return getResponseEntity("NULL","1","Register success", HttpStatus.OK);
+            return responseUtils.getResponseEntity("NULL",SUCCESS,"Register success", HttpStatus.OK);
         } catch (Exception e) {
-            return getResponseEntity("NULL","-1","Register failed", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL",FAILURE,"Register failed", HttpStatus.BAD_REQUEST);
         }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> showUser(){
+    public ResponseEntity<?> showUser(@RequestParam PagingRequest pagingRequest){
         try {
-            
-            return getResponseEntity("NULL","1","Register success", HttpStatus.OK);
+            if(pagingRequest.getLimit() >= 0 || pagingRequest.getPage() > 0){
+                return responseUtils.getResponseEntity("NULL",FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
+            }
+            List<UserListResponse> users = userService.getUserListResponse(pagingRequest);
+            return responseUtils.getResponseEntity(users,SUCCESS,"Register success", HttpStatus.OK);
         } catch (Exception e) {
-            return getResponseEntity("NULL","-1","Register failed", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL",FAILURE,"Register failed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(value="/filter", consumes = {"text/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> showUserBySearch(@RequestBody UserSearchRequest userSearchRequest){
+        try {
+            if(userSearchRequest.getLimit() >= 0 || userSearchRequest.getPage() > 0){
+                return responseUtils.getResponseEntity("NULL",FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
+            }
+            List<UserListResponse> users = userService.searchUserByRoleAndFacul(userSearchRequest);
+            return responseUtils.getResponseEntity(users,SUCCESS,"Register success", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL",FAILURE,"Register failed", HttpStatus.BAD_REQUEST);
         }
     }
 

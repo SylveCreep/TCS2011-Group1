@@ -20,7 +20,7 @@ public class BaseEntity {
     private int id;
 
     @Column(nullable = false)
-    private int is_deleted = IntConstant.NOTDELETED;
+    private int is_deleted = NOTDELETED;
 
     @Column(nullable = false)
     private Date created_at = new Date();
