@@ -15,6 +15,8 @@ public interface UserService {
 
     User saveRegister(CreateAccount user);
 
+    Boolean deleteUser(Long id);
+
     List<User> findAll();
     
     User findOne(String email);
