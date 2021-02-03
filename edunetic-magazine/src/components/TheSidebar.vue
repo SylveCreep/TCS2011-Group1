@@ -33,12 +33,12 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <router-link to="/roles" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
                   Role List
               </p>
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link">
