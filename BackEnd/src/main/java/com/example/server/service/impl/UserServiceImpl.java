@@ -21,6 +21,7 @@ import com.example.server.util.ResponseUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -47,6 +48,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired(required = true)
+    private ModelMapper modelMapper; 
 
     @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
@@ -160,10 +164,29 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public Boolean deleteUser(Long id) {
-        User user = userDao.getOne(id);
-        user.setIs_deleted(DELETED);
-        return null;
+    public Boolean deleteUser(int id) {
+        try {
+            User user = userDao.getOne(id);
+            user.setIs_deleted(DELETED);
+            userDao.save(user);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public UserDto update(UserDto userDto){
+        try {
+            User user = userDao.getOne(userDto.getId());
+            user = modelMapper.map(userDto, User.class);
+            userDao.save(user);
+
+            UserDto saveUser = modelMapper.map(user, UserDto.class);
+            return saveUser;
+        } catch (Exception e) {
+           return null;
+        }
     }
 
     

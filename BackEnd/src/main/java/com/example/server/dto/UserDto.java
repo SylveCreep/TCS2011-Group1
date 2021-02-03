@@ -14,6 +14,8 @@ import org.hibernate.validator.constraints.Length;
 
 public class UserDto {
 
+    private Integer id;
+
     private String email;
     
     @Size(min = 6, max = 30)
@@ -89,5 +91,13 @@ public class UserDto {
         } else {
             this.dateOfBirth = null;
         }
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

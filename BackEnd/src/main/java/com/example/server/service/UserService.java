@@ -15,11 +15,13 @@ public interface UserService {
 
     User saveRegister(CreateAccount user);
 
-    Boolean deleteUser(Long id);
+    Boolean deleteUser(int id);
 
     List<User> findAll();
     
     User findOne(String email);
+
+    UserDto update(UserDto user);
 
     List<UserListResponse> getUserListResponse(PagingRequest pagingRequest);
 

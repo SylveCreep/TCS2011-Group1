@@ -19,8 +19,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -76,6 +79,40 @@ public class UserController {
             return responseUtils.getResponseEntity(users,SUCCESS,"Register success", HttpStatus.OK);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL",FAILURE,"Register failed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping(value="/{id}",consumes = {"text/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id){
+        try {
+            if(id == null || id.getClass().getTypeName() != "Integer"){
+                return responseUtils.getResponseEntity("NULL",FAILURE,"Must has user id", HttpStatus.BAD_REQUEST);
+            }
+            Boolean is_deleted = userService.deleteUser(id);
+            if(is_deleted == false){
+                return responseUtils.getResponseEntity("NULL",FAILURE,"Delete user fail", HttpStatus.OK);
+            }
+            return responseUtils.getResponseEntity("NULL",SUCCESS,"Delete user successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL",FAILURE,"Delete user fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> update(@RequestBody UserDto userDto){
+        try {
+            if(userDto.getId() == null || userDto.getId().getClass().getTypeName() != "Integer"){
+                return responseUtils.getResponseEntity("NULL",FAILURE,"Must has user id", HttpStatus.BAD_REQUEST);
+            }
+            UserDto user = userService.update(userDto);
+            if(user == null){
+                return responseUtils.getResponseEntity("NULL",FAILURE,"Update user fail", HttpStatus.BAD_REQUEST);
+            }
+            return responseUtils.getResponseEntity(user,SUCCESS,"Update user successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL",FAILURE,"Update user fail", HttpStatus.BAD_REQUEST);
         }
     }
 

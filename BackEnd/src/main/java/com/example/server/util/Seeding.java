@@ -69,7 +69,7 @@ public class Seeding implements CommandLineRunner {
     
     private void seedingRole(){
         if (queryCheck.CheckItemInTable("role") < 5){
-            String listRoleName[] = {"Administrator","Marketing Manager", "Marketing Coordinator", "Student", "GUEST"};
+            String listRoleName[] = {"ADMIN","Marketing Manager", "Marketing Coordinator", "Student", "GUEST"};
     
             for(int i = 0; i < 5; i++){
                 Role role = new Role();
@@ -88,9 +88,9 @@ public class Seeding implements CommandLineRunner {
     }
 
     private void seedingUserAdmin(){
-        if (queryCheck.CountUserByRole("Administrator") < 5){
+        if (queryCheck.CountUserByRole("ADMIN") < 5){
              Faker faker = new Faker();
-             Role role = roleDao.findRoleByName("Administrator");
+             Role role = roleDao.findRoleByName("ADMIN");
              for (int i = 0; i < 5; i++){
                  createUser(faker, "admin123", role);
              }
