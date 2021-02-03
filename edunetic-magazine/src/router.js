@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import Router from "vue-router";
-import UserList from "@/pages/user/UserList";
 
+import UserList from "@/pages/user/UserList";
 import UserCreate from "@/pages/user/UserCreate";
 import UserUpdate from "@/pages/user/UserUpdate";
+
 import Login from "@/pages/login/Login";
 
 import RoleList from "@/pages/role/RoleList";
-
-import RoleCreate from "@/pages/role/RoleCreate.vue";
-import RoleUpdate from "@/pages/role/RoleUpdate.vue";
+import RoleCreate from "@/pages/role/RoleCreate";
+import RoleUpdate from "@/pages/role/RoleUpdate";
 
 Vue.use(Router);
 const router = new Router({
