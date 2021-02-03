@@ -20,9 +20,7 @@
       <div class="input_box button">
         <input type="submit" value="Login">
       </div>
-      <div class="sign_up">
-        Not a member? <router-link to="/sign-up">Sign Up</router-link>
-      </div>
+      
     </form>
   </div>
 </template>
