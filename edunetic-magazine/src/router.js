@@ -3,6 +3,7 @@ import Router from "vue-router";
 import UserList from "@/pages/user/UserList";
 import UserCreate from "@/pages/user/UserCreate";
 import UserUpdate from "@/pages/user/UserUpdate";
+import Login from "@/pages/login/Login";
 Vue.use(Router);
 const router = new Router({
     mode: 'history',
@@ -19,7 +20,12 @@ const router = new Router({
             name: 'UserUpdate',
             path: '/users/:id/update',
             component: UserUpdate
-        }
+        },{
+            name:'Login',
+            path:'/login',
+            component: Login,
+            
+        },
     ]
 })
 export default router
