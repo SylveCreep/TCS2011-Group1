@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.example.server.constant.Constant;
 import com.example.server.dto.UserDto;
 import com.example.server.entity.User;
 import com.example.server.model.request.*;
@@ -13,6 +14,7 @@ import com.example.server.model.response.UserListResponse;
 import com.example.server.service.UserService;
 import com.example.server.util.ResponseUtils;
 
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,9 +50,9 @@ public class UserController {
     public ResponseEntity<?> createUser(@Valid @RequestBody CreateAccount user){
         try {
             userService.saveRegister(user);
-            return responseUtils.getResponseEntity("NULL",SUCCESS,"Register success", HttpStatus.OK);
+            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS,"Register success", HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL",FAILURE,"Register failed", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Register failed", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -58,13 +60,13 @@ public class UserController {
     @GetMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> showUser(@RequestBody PagingRequest pagingRequest){
         try {
-            if(pagingRequest.getLimit() < 0 || pagingRequest.getPage() < 0){
-                return responseUtils.getResponseEntity("NULL",FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
+            if(pagingRequest.getLimit() >= 0 || pagingRequest.getPage() > 0){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
             }
             List<UserListResponse> users = userService.getUserListResponse(pagingRequest);
-            return responseUtils.getResponseEntity(users,SUCCESS,"Show user success", HttpStatus.OK);
+            return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Register success", HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL",FAILURE,"Show user failed", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Register failed", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -73,12 +75,12 @@ public class UserController {
     public ResponseEntity<?> showUserBySearch(@RequestBody UserSearchRequest userSearchRequest){
         try {
             if(userSearchRequest.getLimit() >= 0 || userSearchRequest.getPage() > 0){
-                return responseUtils.getResponseEntity("NULL",FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
             }
             List<UserListResponse> users = userService.searchUserByRoleAndFacul(userSearchRequest);
-            return responseUtils.getResponseEntity(users,SUCCESS,"Filter success", HttpStatus.OK);
+            return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Register success", HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL",FAILURE,"Filter failed", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Register failed", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -87,15 +89,15 @@ public class UserController {
     public ResponseEntity<?> delete(@PathVariable("id") Integer id){
         try {
             if(id == null || id.getClass().getTypeName() != "Integer"){
-                return responseUtils.getResponseEntity("NULL",FAILURE,"Must has user id", HttpStatus.BAD_REQUEST);
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Must has user id", HttpStatus.BAD_REQUEST);
             }
             Boolean is_deleted = userService.deleteUser(id);
             if(is_deleted == false){
-                return responseUtils.getResponseEntity("NULL",FAILURE,"Delete user fail", HttpStatus.OK);
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Delete user fail", HttpStatus.OK);
             }
-            return responseUtils.getResponseEntity("NULL",SUCCESS,"Delete user successfully", HttpStatus.OK);
+            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS,"Delete user successfully", HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL",FAILURE,"Delete user fail", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Delete user fail", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -104,15 +106,15 @@ public class UserController {
     public ResponseEntity<?> update(@RequestBody UserDto userDto){
         try {
             if(userDto.getId() == null || userDto.getId().getClass().getTypeName() != "Integer"){
-                return responseUtils.getResponseEntity("NULL",FAILURE,"Must has user id", HttpStatus.BAD_REQUEST);
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE ,"Must has user id", HttpStatus.BAD_REQUEST);
             }
             UserDto user = userService.update(userDto);
             if(user == null){
-                return responseUtils.getResponseEntity("NULL",FAILURE,"Update user fail", HttpStatus.BAD_REQUEST);
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Update user fail", HttpStatus.BAD_REQUEST);
             }
-            return responseUtils.getResponseEntity(user,SUCCESS,"Update user successfully", HttpStatus.OK);
+            return responseUtils.getResponseEntity(user, Constant.SUCCESS,"Update user successfully", HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL",FAILURE,"Update user fail", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Update user fail", HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -7,7 +7,7 @@ import com.example.server.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface RoleDao extends JpaRepository<Role, Long> {
+public interface RoleDao extends JpaRepository<Role, Integer> {
     Role findRoleByName(String name);
     
     Role findRoleById(int id);
