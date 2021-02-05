@@ -47,9 +47,7 @@ export default {
       token: null
     }
   },
-    created () {
-      this.$store.dispatch('AutoLogin')
-    }
+
 }
 </script>
 
