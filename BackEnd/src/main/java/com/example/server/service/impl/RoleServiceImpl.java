@@ -3,6 +3,7 @@ package com.example.server.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.server.constant.Constant;
 import com.example.server.dao.RoleDao;
 import com.example.server.dto.RoleDto;
 import com.example.server.entity.Role;
@@ -10,6 +11,7 @@ import com.example.server.model.request.CreateRole;
 import com.example.server.service.RoleService;
 import com.example.server.util.QueryCheck;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,13 @@ public class RoleServiceImpl implements RoleService {
     private RoleDao roleDao;
 
     @Autowired
+    private RoleDto roleDto;
+
+    @Autowired
     private QueryCheck queryCheck;
+
+    @Autowired(required = true)
+    private ModelMapper modelMapper;
 
     @Override
     public Role findByName(String name) {
@@ -56,6 +64,33 @@ public class RoleServiceImpl implements RoleService {
         }
         catch(Exception e){
             return null;
+        }
+    }
+
+    @Override
+    public RoleDto updateRole(RoleDto roleDto) {
+        try{
+            Role role = roleDao.getOne(roleDto.getId());
+            role = modelMapper.map(roleDto, Role.class);
+            roleDao.save(role);
+            RoleDto saveRole = modelMapper.map(role, RoleDto.class);
+            return saveRole;
+        }
+        catch(Exception e){
+            return null;
+        }
+    }
+
+    @Override
+    public Boolean deleteRole(int id) {
+        try{
+            Role role = roleDao.findRoleById(id);
+            role.setIs_deleted(Constant.DELETED);
+            roleDao.save(role);
+            return true;
+        }
+        catch (Exception e){
+            return false;
         }
     }
 }

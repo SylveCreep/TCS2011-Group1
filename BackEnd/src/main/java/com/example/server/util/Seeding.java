@@ -9,6 +9,7 @@ import com.example.server.entity.Role;
 import com.example.server.entity.Faculty;
 import com.example.server.dao.RoleDao;
 import com.example.server.dao.UserDao;
+import com.example.server.constant.Constant;
 import com.example.server.dao.FacultyDao;
 import com.github.javafaker.Faker;
 import com.example.server.util.QueryCheck;
@@ -60,7 +61,7 @@ public class Seeding implements CommandLineRunner {
                  nUser.setFullName(faker.name().fullName());
                  nUser.setAddress(faker.address().buildingNumber());
                  nUser.setDateOfBirth(faker.date().birthday(18, 50));
-                 nUser.setIs_deleted(NOTDELETED);
+                 nUser.setIs_deleted(Constant.NOTDELETED);
                  nUser.setCreated_at(new Date());
  
                  userDao.save(nUser);
@@ -74,7 +75,7 @@ public class Seeding implements CommandLineRunner {
             for(int i = 0; i < 5; i++){
                 Role role = new Role();
     
-                role.setIs_deleted(NOTDELETED);
+                role.setIs_deleted(Constant.NOTDELETED);
                 role.setName(listRoleName[i]);
                 role.setCode("R" + String.format("%04d", queryCheck.GetHighestId("role")));
                 role.setCreated_at(new Date());

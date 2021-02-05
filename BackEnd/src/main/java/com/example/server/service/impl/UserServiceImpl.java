@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.example.server.constant.Constant;
 import com.example.server.dao.UserDao;
 import com.example.server.dto.UserDto;
 import com.example.server.entity.Role;
@@ -32,8 +33,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import static com.example.server.constant.Constant.*;
 
 @Service(value = "userService")
 public class UserServiceImpl implements UserDetailsService, UserService {
@@ -167,7 +166,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public Boolean deleteUser(int id) {
         try {
             User user = userDao.getOne(id);
-            user.setIs_deleted(DELETED);
+            user.setIs_deleted(Constant.DELETED);
             userDao.save(user);
             return true;
         } catch (Exception e) {
