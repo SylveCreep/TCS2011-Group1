@@ -56,15 +56,15 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> showUser(@RequestParam PagingRequest pagingRequest){
+    public ResponseEntity<?> showUser(@RequestBody PagingRequest pagingRequest){
         try {
-            if(pagingRequest.getLimit() >= 0 || pagingRequest.getPage() > 0){
+            if(pagingRequest.getLimit() < 0 || pagingRequest.getPage() < 0){
                 return responseUtils.getResponseEntity("NULL",FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
             }
             List<UserListResponse> users = userService.getUserListResponse(pagingRequest);
-            return responseUtils.getResponseEntity(users,SUCCESS,"Register success", HttpStatus.OK);
+            return responseUtils.getResponseEntity(users,SUCCESS,"Show user success", HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL",FAILURE,"Register failed", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL",FAILURE,"Show user failed", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -76,9 +76,9 @@ public class UserController {
                 return responseUtils.getResponseEntity("NULL",FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
             }
             List<UserListResponse> users = userService.searchUserByRoleAndFacul(userSearchRequest);
-            return responseUtils.getResponseEntity(users,SUCCESS,"Register success", HttpStatus.OK);
+            return responseUtils.getResponseEntity(users,SUCCESS,"Filter success", HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL",FAILURE,"Register failed", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL",FAILURE,"Filter failed", HttpStatus.BAD_REQUEST);
         }
     }
 
