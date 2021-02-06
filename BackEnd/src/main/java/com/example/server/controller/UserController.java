@@ -49,10 +49,13 @@ public class UserController {
     @PostMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> createUser(@Valid @RequestBody CreateAccount user){
         try {
-            userService.saveRegister(user);
-            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS,"Register success", HttpStatus.OK);
+            User createdUser = userService.saveRegister(user);
+            if(createdUser == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Create user failed", HttpStatus.BAD_REQUEST);
+            }
+            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS,"Create user success", HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Register failed", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Create user failed", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -60,13 +63,17 @@ public class UserController {
     @GetMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> showUser(@RequestBody PagingRequest pagingRequest){
         try {
-            if(pagingRequest.getLimit() >= 0 || pagingRequest.getPage() > 0){
+            if(pagingRequest.getLimit() < 0 || pagingRequest.getPage() < 0){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
             }
             List<UserListResponse> users = userService.getUserListResponse(pagingRequest);
-            return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Register success", HttpStatus.OK);
+            if(users == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Show failed", HttpStatus.BAD_REQUEST);
+            }
+
+            return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Show success",users.size(), HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Register failed", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Show failed", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -74,21 +81,24 @@ public class UserController {
     @PostMapping(value="/filter", consumes = {"text/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> showUserBySearch(@RequestBody UserSearchRequest userSearchRequest){
         try {
-            if(userSearchRequest.getLimit() >= 0 || userSearchRequest.getPage() > 0){
+            if(userSearchRequest.getLimit() < 0 || userSearchRequest.getPage() < 0){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
             }
             List<UserListResponse> users = userService.searchUserByRoleAndFacul(userSearchRequest);
-            return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Register success", HttpStatus.OK);
+            if(users == null){
+                return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Don't have user", HttpStatus.OK);
+            }
+            return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Show user success", HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Register failed", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Show user failed", HttpStatus.BAD_REQUEST);
         }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value="/{id}",consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id){
+    public ResponseEntity<?> delete(@PathVariable(name="id") Integer id){
         try {
-            if(id == null || id.getClass().getTypeName() != "Integer"){
+            if(id == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Must has user id", HttpStatus.BAD_REQUEST);
             }
             Boolean is_deleted = userService.deleteUser(id);
@@ -105,7 +115,7 @@ public class UserController {
     @PutMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> update(@RequestBody UserDto userDto){
         try {
-            if(userDto.getId() == null || userDto.getId().getClass().getTypeName() != "Integer"){
+            if(userDto.getId() == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE ,"Must has user id", HttpStatus.BAD_REQUEST);
             }
             UserDto user = userService.update(userDto);

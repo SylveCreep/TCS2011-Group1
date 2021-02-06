@@ -87,6 +87,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public User saveGuestRegister(UserDto user) {
         User nUser = user.getUserFromDto();
+        if(userDao.findByEmail(user.getEmail()) == null){
+            nUser.setEmail(user.getEmail());
+        } else {
+            return null;
+        }
         nUser.setCode("U" + String.format("%04d", queryCheck.GetHighestId("user")));
         nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 
@@ -100,7 +105,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public User saveRegister(CreateAccount user) {
         try {
             User nUser = new User();
-            nUser.setEmail(user.getEmail());
+            if(userDao.findByEmail(user.getEmail()) == null){
+                nUser.setEmail(user.getEmail());
+            } else {
+                return null;
+            }
             nUser.setCode("U" + String.format("%04d", queryCheck.GetHighestId("user")));
             nUser.setFullName(user.getFullName());
             nUser.setAddress(user.getAddress());
@@ -122,11 +131,17 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             List<User> list = userDao.getNonDeletedUser(PageRequest.of(pagingRequest.getPage(), pagingRequest.getLimit(), sort));
             List<UserListResponse> listResponse = new ArrayList<>();
             for(User user: list){
+                int falcu = 0;
+                String name = "";
+                if(user.getFaculty() != null){
+                    falcu = user.getFaculty().getId();
+                    name = user.getFaculty().getName();
+                }
                 listResponse.add(new UserListResponse(
                     user.getId(),
                     user.getFullName(),
-                    user.getFaculty().getId(),
-                    user.getFaculty().getName(),
+                    falcu,
+                    name,
                     user.getRole().getId(),
                     user.getEmail()
                 ));
@@ -142,15 +157,22 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public List<UserListResponse> searchUserByRoleAndFacul(UserSearchRequest userSearchRequest) {
         try {
+            int offset = userSearchRequest.getPage() -1;
             Sort sort = responseUtils.getSortObj(userSearchRequest);
-            List<User> list = userDao.searchUserByRoleAndFac(userSearchRequest.getUserId(),userSearchRequest.getRoleId(),userSearchRequest.getFacultyId(),PageRequest.of(userSearchRequest.getPage(), userSearchRequest.getLimit(), sort));
+            List<User> list = userDao.searchUserByRoleAndFac(userSearchRequest.getUserId(),userSearchRequest.getRoleId(),userSearchRequest.getFacultyId(),PageRequest.of(offset, userSearchRequest.getLimit(), sort));
             List<UserListResponse> listResponse = new ArrayList<>();
             for(User user: list){
+                int falcu = 0;
+                String name = "";
+                if(user.getFaculty() != null){
+                    falcu = user.getFaculty().getId();
+                    name = user.getFaculty().getName();
+                }
                 listResponse.add(new UserListResponse(
                     user.getId(),
                     user.getFullName(),
-                    user.getFaculty().getId(),
-                    user.getFaculty().getName(),
+                    falcu,
+                    name,
                     user.getRole().getId(),
                     user.getEmail()
                 ));
@@ -178,7 +200,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public UserDto update(UserDto userDto){
         try {
             User user = userDao.getOne(userDto.getId());
-            user = modelMapper.map(userDto, User.class);
+            if(userDao.findByEmail(userDto.getEmail()) != null){
+                return null;
+            }
+            user.setEmail(userDto.getEmail());
+            user.setFullName(userDto.getFullName());
+            user.setAddress(userDto.getAddress());
+            user.setDateOfBirth(userDto.getDateOfBirth());
             userDao.save(user);
 
             UserDto saveUser = modelMapper.map(user, UserDto.class);

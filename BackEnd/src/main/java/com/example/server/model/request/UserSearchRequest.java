@@ -42,5 +42,9 @@ public class UserSearchRequest extends PagingRequest {
         this.facultyId = facultyId;
     }
 
+    public UserSearchRequest(){
+        
+    }
+
     
 }

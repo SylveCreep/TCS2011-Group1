@@ -54,6 +54,10 @@ public class NonAuthController {
     @PostMapping(value = "/login")
     public ResponseEntity<?> generateToken(@RequestBody LoginUser loginUser) throws AuthenticationException {
         try {
+            User user = userService.findOne(loginUser.getEmail());
+            if(user.getIs_deleted() == 1){
+                return getResponseEntity("NULL","-1","Account is deleted, login failed", HttpStatus.BAD_REQUEST);
+            }
             final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginUser.getEmail(),
@@ -71,7 +75,10 @@ public class NonAuthController {
     @PostMapping(value ="/register",  consumes = {"text/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> saveUser(@Valid @RequestBody UserDto user){
         try {
-            userService.saveGuestRegister(user);
+            User regisUser = userService.saveGuestRegister(user);
+            if(regisUser == null){
+                return getResponseEntity("NULL","1","Register failed", HttpStatus.BAD_REQUEST);
+            }
             return getResponseEntity("NULL","1","Register success", HttpStatus.OK);
         } catch (Exception e) {
             return getResponseEntity("NULL","-1","Register failed", HttpStatus.BAD_REQUEST);

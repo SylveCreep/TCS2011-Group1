@@ -30,5 +30,5 @@ public interface UserDao extends JpaRepository<User, Integer> {
     "and (:roleId = 0 or r.id = :roleId) " + 
     "and (:facultyId = 0 or f.id = :facultyId) " +
     "group by u.id")
-    List<User> searchUserByRoleAndFac(@Param("userId") int userId,@Param("roleId") int roleId, @Param("facultyId") int facultyId ,Pageable pageable);
+    List<User> searchUserByRoleAndFac(@Param("userId") int userId,@Param("roleId") int roleId, @Param("facultyId") int facultyId, Pageable pageable);
 }

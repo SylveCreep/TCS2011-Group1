@@ -85,18 +85,5 @@ public class CreateAccount {
     public void setRoleId(int roleId) {
         this.roleId = roleId;
     }
-
-    public CreateAccount() {
-    }
-
-    public CreateAccount(String email, @Size(min = 6, max = 30) String password, @Size(max = 255) String fullName,
-            @Size(max = 255) String address, Date dateOfBirth, int roleId) {
-        this.email = email;
-        this.password = password;
-        this.fullName = fullName;
-        this.address = address;
-        this.dateOfBirth = dateOfBirth;
-        this.roleId = roleId;
-    }
     
 }

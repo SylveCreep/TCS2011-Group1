@@ -35,4 +35,13 @@ public class ResponseUtils {
         response.put("messenger",mess);
         return new ResponseEntity<>(response, status);
     }
+
+    public ResponseEntity<?> getResponseEntity(Object data, int code, String mess, int total,  HttpStatus status) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("data",data);
+        response.put("code",code);
+        response.put("total",total);
+        response.put("messenger",mess);
+        return new ResponseEntity<>(response, status);
+    }
 }

@@ -3,7 +3,7 @@ package com.example.server.model.response;
 public class UserListResponse {
     private int id;
     private String fullname;
-    private int faculty_id;
+    private Integer faculty_id;
     private String faculty_name;
     private int role_id;
     private String email;
@@ -59,7 +59,8 @@ public class UserListResponse {
     public UserListResponse() {
     }
 
-    public UserListResponse(int id, String fullname, int faculty_id, String faculty_name, int role_id, String email) {
+    public UserListResponse(int id, String fullname, Integer faculty_id, String faculty_name, int role_id,
+            String email) {
         this.id = id;
         this.fullname = fullname;
         this.faculty_id = faculty_id;
@@ -67,5 +68,11 @@ public class UserListResponse {
         this.role_id = role_id;
         this.email = email;
     }
+
+    public void setFaculty_id(Integer faculty_id) {
+        this.faculty_id = faculty_id;
+    }
+
+    
     
 }
