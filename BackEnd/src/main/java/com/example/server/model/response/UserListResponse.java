@@ -2,6 +2,7 @@ package com.example.server.model.response;
 
 public class UserListResponse {
     private int id;
+    private String code;
     private String fullname;
     private Integer faculty_id;
     private String faculty_name;
@@ -59,9 +60,22 @@ public class UserListResponse {
     public UserListResponse() {
     }
 
-    public UserListResponse(int id, String fullname, Integer faculty_id, String faculty_name, int role_id,
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setFaculty_id(Integer faculty_id) {
+        this.faculty_id = faculty_id;
+    }
+
+    public UserListResponse(int id, String code, String fullname, Integer faculty_id, String faculty_name, int role_id,
             String email) {
         this.id = id;
+        this.code = code;
         this.fullname = fullname;
         this.faculty_id = faculty_id;
         this.faculty_name = faculty_name;
@@ -69,9 +83,6 @@ public class UserListResponse {
         this.email = email;
     }
 
-    public void setFaculty_id(Integer faculty_id) {
-        this.faculty_id = faculty_id;
-    }
 
     
     

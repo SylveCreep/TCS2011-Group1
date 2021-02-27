@@ -139,6 +139,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 }
                 listResponse.add(new UserListResponse(
                     user.getId(),
+                    user.getCode(),
                     user.getFullName(),
                     falcu,
                     name,
@@ -170,6 +171,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 }
                 listResponse.add(new UserListResponse(
                     user.getId(),
+                    user.getCode(),
                     user.getFullName(),
                     falcu,
                     name,

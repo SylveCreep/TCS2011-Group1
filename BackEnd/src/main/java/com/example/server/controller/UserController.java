@@ -45,8 +45,8 @@ public class UserController {
     @Autowired
     private ResponseUtils responseUtils;
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
+    //@PreAuthorize("hasRole('ADMIN')")
+    @PostMapping
     public ResponseEntity<?> createUser(@Valid @RequestBody CreateAccount user){
         try {
             User createdUser = userService.saveRegister(user);
@@ -59,26 +59,26 @@ public class UserController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> showUser(@RequestBody PagingRequest pagingRequest){
-        try {
-            if(pagingRequest.getLimit() < 0 || pagingRequest.getPage() < 0){
-                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
-            }
-            List<UserListResponse> users = userService.getUserListResponse(pagingRequest);
-            if(users == null){
-                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Show failed", HttpStatus.BAD_REQUEST);
-            }
+    //@PreAuthorize("hasRole('ADMIN')")
+    // @GetMapping
+    // public ResponseEntity<?> showUser(@RequestBody PagingRequest pagingRequest){
+    //     try {
+    //         if(pagingRequest.getLimit() < 0 || pagingRequest.getPage() < 0){
+    //             return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
+    //         }
+    //         List<UserListResponse> users = userService.getUserListResponse(pagingRequest);
+    //         if(users == null){
+    //             return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Show failed", HttpStatus.BAD_REQUEST);
+    //         }
 
-            return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Show success",users.size(), HttpStatus.OK);
-        } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Show failed", HttpStatus.BAD_REQUEST);
-        }
-    }
+    //         return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Show success",users.size(), HttpStatus.OK);
+    //     } catch (Exception e) {
+    //         return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Show failed", HttpStatus.BAD_REQUEST);
+    //     }
+    // }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(value="/filter", consumes = {"text/plain", "application/*"}, produces = "application/json")
+    @PostMapping(value="/filter")
     public ResponseEntity<?> showUserBySearch(@RequestBody UserSearchRequest userSearchRequest){
         try {
             if(userSearchRequest.getLimit() < 0 || userSearchRequest.getPage() < 0){
