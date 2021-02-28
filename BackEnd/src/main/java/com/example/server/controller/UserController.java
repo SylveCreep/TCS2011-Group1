@@ -128,5 +128,22 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(value="/{id}",consumes = {"text/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> getUser(@PathVariable(name="id") Integer id){
+        try {
+            if(id == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Must has user id", HttpStatus.BAD_REQUEST);
+            }
+            UserDto user = userService.findById(id);
+            if(user == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Get user fail", HttpStatus.OK);
+            }
+            return responseUtils.getResponseEntity(user, Constant.SUCCESS,"Get user successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Get user fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 }

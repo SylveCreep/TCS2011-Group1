@@ -21,6 +21,8 @@ public interface UserService {
     
     User findOne(String email);
 
+    UserDto findById(int id);
+
     UserDto update(UserDto user);
 
     List<UserListResponse> getUserListResponse(PagingRequest pagingRequest);

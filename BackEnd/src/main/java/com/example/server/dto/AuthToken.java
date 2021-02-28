@@ -4,7 +4,7 @@ package com.example.server.dto;
 public class AuthToken {
     private String token;
 
-    private String email;
+    private int id;
 
     public String getToken() {
         return token;
@@ -14,19 +14,20 @@ public class AuthToken {
         this.token = token;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public AuthToken() {
     }
 
-    public AuthToken(String token, String email) {
-        this.token = token;
-        this.email = email;
+    public int getId() {
+        return id;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public AuthToken(String token, int id) {
+        this.token = token;
+        this.id = id;
+    }
+
 }

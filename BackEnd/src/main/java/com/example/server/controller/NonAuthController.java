@@ -64,9 +64,13 @@ public class NonAuthController {
                         loginUser.getPassword()
                 )
             );
+            User userLogin = userService.findOne(loginUser.getEmail());
+            if(userLogin == null){
+                return getResponseEntity("NULL","-1","Login failed", HttpStatus.BAD_REQUEST);
+            }
             SecurityContextHolder.getContext().setAuthentication(authentication);
             final String token = jwtTokenUtil.generateToken(authentication);
-            return getResponseEntity(new AuthToken(token, loginUser.getEmail()),"1","Register success", HttpStatus.OK);
+            return getResponseEntity(new AuthToken(token, userLogin.getId()),"1","Login success", HttpStatus.OK);
         } catch (Exception e) {
             return getResponseEntity("NULL","-1","Login failed", HttpStatus.BAD_REQUEST);
         }

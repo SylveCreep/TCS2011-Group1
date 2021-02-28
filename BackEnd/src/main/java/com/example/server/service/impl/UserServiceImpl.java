@@ -34,6 +34,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static com.example.server.constant.Constant.*;
+
 @Service(value = "userService")
 public class UserServiceImpl implements UserDetailsService, UserService {
     @Autowired
@@ -215,6 +217,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             return saveUser;
         } catch (Exception e) {
            return null;
+        }
+    }
+
+    @Override
+    public UserDto findById(int id) {
+        try {
+            User user = userDao.getOne(id);
+            UserDto userDto = modelMapper.map(user, UserDto.class);
+            if(user.getIs_deleted() == DELETED){
+                return null;
+            }
+            return userDto;
+        } catch (Exception e) {
+            return null;
         }
     }
 
