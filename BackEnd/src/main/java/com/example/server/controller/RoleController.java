@@ -51,7 +51,7 @@ public class RoleController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "/{id}", consumes = {"test/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> deleteRole(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteRole(@PathVariable("id") Long id){
         try{
             if(id == null || id.getClass().getTypeName() != "Integer"){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Must has role id", HttpStatus.BAD_REQUEST);

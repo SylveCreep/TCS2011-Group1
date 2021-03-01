@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.Length;
 
 public class UserDto {
 
-    private Integer id;
+    private Long id;
 
     private String email;
     
@@ -93,11 +93,11 @@ public class UserDto {
         }
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

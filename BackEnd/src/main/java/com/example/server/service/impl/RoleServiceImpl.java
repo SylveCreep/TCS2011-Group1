@@ -36,7 +36,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role findById(int id) {
+    public Role findById(Long id) {
         Role role = roleDao.findRoleById(id);
         return role;
     }
@@ -82,7 +82,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Boolean deleteRole(int id) {
+    public Boolean deleteRole(Long id) {
         try{
             Role role = roleDao.findRoleById(id);
             role.setIs_deleted(Constant.DELETED);

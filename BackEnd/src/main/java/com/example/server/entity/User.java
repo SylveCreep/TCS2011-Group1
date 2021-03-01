@@ -68,6 +68,15 @@ public class User extends BaseEntity {
     @Column(name="date_of_birth",nullable = false)
     private Date dateOfBirth;
 
+    @Column(name="phone_number")
+    private Integer phoneNumber;
+
+    @Column(name="background_avatar")
+    private String avatar;
+
+    @Column(name="gender")
+    private Integer gender;
+
     public String getEmail() {
         return email;
     }
@@ -164,30 +173,37 @@ public class User extends BaseEntity {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public User() {
-    }
-    
-    public User(String email, String code, String password, Role role, Faculty faculty, String fullName, String address,
-            List<Contribution> contributions, List<Comment> comments, String resetPasswordKey, Date keyCreatedAt,
-            Date dateOfBirth) {
-        this.email = email;
-        this.code = code;
-        this.password = password;
-        this.role = role;
-        this.faculty = faculty;
-        this.fullName = fullName;
-        this.address = address;
-        this.contributions = contributions;
-        this.comments = comments;
-        this.resetPasswordKey = resetPasswordKey;
-        this.keyCreatedAt = keyCreatedAt;
-        this.dateOfBirth = dateOfBirth;
+    public Integer getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public User(int id, int is_deleted, Date created_at, Date updateted_at, String email, String code, String password,
-            Role role, Faculty faculty, String fullName, String address, List<Contribution> contributions,
-            List<Comment> comments, String resetPasswordKey, Date keyCreatedAt, Date dateOfBirth) {
-        super(id, is_deleted, created_at, updateted_at);
+    public void setPhoneNumber(Integer phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public User(){
+
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public User(String email, String code, String password, Role role, Faculty faculty, String fullName, String address,
+            List<Contribution> contributions, List<Comment> comments, String resetPasswordKey, Date keyCreatedAt,
+            Date dateOfBirth, Integer phoneNumber, String avatar, Integer gender) {
         this.email = email;
         this.code = code;
         this.password = password;
@@ -200,5 +216,34 @@ public class User extends BaseEntity {
         this.resetPasswordKey = resetPasswordKey;
         this.keyCreatedAt = keyCreatedAt;
         this.dateOfBirth = dateOfBirth;
+        this.phoneNumber = phoneNumber;
+        this.avatar = avatar;
+        this.gender = gender;
     }
+
+    public User(Long id, int is_deleted, Date created_at, Date updated_at, String email, String code, String password,
+            Role role, Faculty faculty, String fullName, String address, List<Contribution> contributions,
+            List<Comment> comments, String resetPasswordKey, Date keyCreatedAt, Date dateOfBirth, Integer phoneNumber,
+            String avatar, Integer gender) {
+        super(id, is_deleted, created_at, updated_at);
+        this.email = email;
+        this.code = code;
+        this.password = password;
+        this.role = role;
+        this.faculty = faculty;
+        this.fullName = fullName;
+        this.address = address;
+        this.contributions = contributions;
+        this.comments = comments;
+        this.resetPasswordKey = resetPasswordKey;
+        this.keyCreatedAt = keyCreatedAt;
+        this.dateOfBirth = dateOfBirth;
+        this.phoneNumber = phoneNumber;
+        this.avatar = avatar;
+        this.gender = gender;
+    }
+
+    
+
+    
 }

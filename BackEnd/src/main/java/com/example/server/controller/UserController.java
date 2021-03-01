@@ -1,5 +1,7 @@
 package com.example.server.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +12,9 @@ import com.example.server.constant.Constant;
 import com.example.server.dto.UserDto;
 import com.example.server.entity.User;
 import com.example.server.model.request.*;
+import com.example.server.model.response.UserLastPageResponse;
 import com.example.server.model.response.UserListResponse;
+import com.example.server.model.response.UserResponse;
 import com.example.server.service.UserService;
 import com.example.server.util.ResponseUtils;
 
@@ -84,11 +88,11 @@ public class UserController {
             if(userSearchRequest.getLimit() < 0 || userSearchRequest.getPage() < 0){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
             }
-            List<UserListResponse> users = userService.searchUserByRoleAndFacul(userSearchRequest);
+            UserLastPageResponse users = userService.searchUserByRoleAndFacul(userSearchRequest);
             if(users == null){
                 return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Don't have user", HttpStatus.OK);
             }
-            return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Show user success", HttpStatus.OK);
+            return responseUtils.getResponseEntity(users.getList(), Constant.SUCCESS,"Show user success",users.getLastPage(), HttpStatus.OK);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Show user failed", HttpStatus.BAD_REQUEST);
         }
@@ -96,7 +100,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value="/{id}",consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> delete(@PathVariable(name="id") Integer id){
+    public ResponseEntity<?> delete(@PathVariable(name="id") Long id){
         try {
             if(id == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Must has user id", HttpStatus.BAD_REQUEST);
@@ -130,12 +134,12 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value="/{id}",consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> getUser(@PathVariable(name="id") Integer id){
+    public ResponseEntity<?> getUser(@PathVariable(name="id") Long id){
         try {
             if(id == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Must has user id", HttpStatus.BAD_REQUEST);
             }
-            UserDto user = userService.findById(id);
+            UserResponse user = userService.findById(id);
             if(user == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Get user fail", HttpStatus.OK);
             }

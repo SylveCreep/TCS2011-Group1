@@ -5,7 +5,9 @@ import java.util.List;
 import com.example.server.dto.UserDto;
 import com.example.server.entity.User;
 import com.example.server.model.request.*;
+import com.example.server.model.response.UserLastPageResponse;
 import com.example.server.model.response.UserListResponse;
+import com.example.server.model.response.UserResponse;
 
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 
@@ -15,18 +17,18 @@ public interface UserService {
 
     User saveRegister(CreateAccount user);
 
-    Boolean deleteUser(int id);
+    Boolean deleteUser(Long id);
 
     List<User> findAll();
     
     User findOne(String email);
 
-    UserDto findById(int id);
+    UserResponse findById(Long id);
 
     UserDto update(UserDto user);
 
-    List<UserListResponse> getUserListResponse(PagingRequest pagingRequest);
+    List<Object> getUserListResponse(PagingRequest pagingRequest);
 
-    List<UserListResponse> searchUserByRoleAndFacul(UserSearchRequest userSearchRequest);
+    UserLastPageResponse searchUserByRoleAndFacul(UserSearchRequest userSearchRequest);
 
 }

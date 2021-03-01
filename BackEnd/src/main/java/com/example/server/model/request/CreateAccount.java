@@ -22,7 +22,13 @@ public class CreateAccount {
 
     private Date dateOfBirth;
 
-    private int roleId;
+    private Long roleId;
+
+    private Integer phoneNumber;
+
+    private Integer gender;
+
+    private String avatar;
 
     public String getEmail() {
         return email;
@@ -78,12 +84,36 @@ public class CreateAccount {
         }
     }
 
-    public int getRoleId() {
+    public Long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(int roleId) {
+    public void setRoleId(Long roleId) {
         this.roleId = roleId;
+    }
+
+    public Integer getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(Integer phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
     
 }

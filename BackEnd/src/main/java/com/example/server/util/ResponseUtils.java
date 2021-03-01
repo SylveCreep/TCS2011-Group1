@@ -1,5 +1,7 @@
 package com.example.server.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,12 +38,21 @@ public class ResponseUtils {
         return new ResponseEntity<>(response, status);
     }
 
-    public ResponseEntity<?> getResponseEntity(Object data, int code, String mess, int total,  HttpStatus status) {
+    public ResponseEntity<?> getResponseEntity(Object data, int code, String mess, Object total,  HttpStatus status) {
         Map<String, Object> response = new HashMap<>();
         response.put("data",data);
         response.put("code",code);
-        response.put("total",total);
+        response.put("lastPage",total);
         response.put("messenger",mess);
         return new ResponseEntity<>(response, status);
+    }
+
+    public static String dateFormat(Date date){
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            return simpleDateFormat.format(date);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

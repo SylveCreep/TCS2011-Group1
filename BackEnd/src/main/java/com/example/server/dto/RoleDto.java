@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RoleDto {
 
-    private Integer id;
+    private Long id;
 
     //@Size(min = 5, max = 5)
     //private String code;
@@ -40,11 +40,11 @@ public class RoleDto {
         this.name = name;
     }
 
-    public Integer getId(){
+    public Long getId(){
         return id;
     }
 
-    public void setId(Integer id){
+    public void setId(Long id){
         this.id = id;
     }
 }

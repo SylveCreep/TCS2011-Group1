@@ -7,7 +7,7 @@ import com.example.server.dto.RoleDto;
 public interface RoleService {
     Role findByName(String name);
 
-    Role findById(int name);
+    Role findById(Long id);
 
     Role saveRole(RoleDto role);
 
@@ -15,5 +15,5 @@ public interface RoleService {
 
     RoleDto updateRole(RoleDto user);
 
-    Boolean deleteRole(int id);
+    Boolean deleteRole(Long id);
 }

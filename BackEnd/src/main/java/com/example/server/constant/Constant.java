@@ -11,4 +11,7 @@ public class Constant {
         public static final int APPROVED = 1;
         public static final int PENDING = 0;
         public static final int DENIED = 2;
+
+        public static final int MALE = 0;
+        public static final int FEMALE = 1;
 }

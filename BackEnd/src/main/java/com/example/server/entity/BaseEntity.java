@@ -17,7 +17,7 @@ public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private int id;
+    private Long id;
 
     @Column(nullable = false)
     private int is_deleted = NOTDELETED;
@@ -28,11 +28,11 @@ public class BaseEntity {
     @Column
     private Date updated_at;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -63,7 +63,7 @@ public class BaseEntity {
     public BaseEntity() {
     }
 
-    public BaseEntity(int id, int is_deleted, Date created_at, Date updated_at) {
+    public BaseEntity(Long id, int is_deleted, Date created_at, Date updated_at) {
         this.id = id;
         this.is_deleted = is_deleted;
         this.created_at = created_at;

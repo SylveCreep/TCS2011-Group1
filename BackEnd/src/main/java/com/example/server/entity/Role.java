@@ -57,7 +57,7 @@ public class Role extends BaseEntity{
         this.users = users;
     }
 
-    public Role(int id, int is_deleted, Date created_at, Date updateted_at, String code, String name, List<User> users){
+    public Role(Long id, int is_deleted, Date created_at, Date updateted_at, String code, String name, List<User> users){
         super(id, is_deleted, created_at, updateted_at);
         this.code = code;
         this.name = name;

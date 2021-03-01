@@ -132,7 +132,7 @@ public class Contribution extends BaseEntity {
         this.isApproved = isApproved;
     }
 
-    public Contribution(int id, int is_deleted, Date created_at, Date updated_at, User user, User checkedBy,
+    public Contribution(Long id, int is_deleted, Date created_at, Date updated_at, User user, User checkedBy,
             Faculty faculty, Magazine magazine, List<Comment> comments, String code, String linkSource,
             Date publishedAt, int isApproved) {
         super(id, is_deleted, created_at, updated_at);

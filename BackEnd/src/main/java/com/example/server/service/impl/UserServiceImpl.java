@@ -13,7 +13,9 @@ import com.example.server.entity.User;
 import com.example.server.model.request.CreateAccount;
 import com.example.server.model.request.PagingRequest;
 import com.example.server.model.request.UserSearchRequest;
+import com.example.server.model.response.UserLastPageResponse;
 import com.example.server.model.response.UserListResponse;
+import com.example.server.model.response.UserResponse;
 import com.example.server.service.RoleService;
 import com.example.server.service.UserService;
 import com.example.server.util.QueryCheck;
@@ -25,6 +27,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,6 +38,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.example.server.constant.Constant.*;
+import static com.example.server.util.ResponseUtils.*;
 
 @Service(value = "userService")
 public class UserServiceImpl implements UserDetailsService, UserService {
@@ -116,6 +120,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             nUser.setFullName(user.getFullName());
             nUser.setAddress(user.getAddress());
             nUser.setDateOfBirth(user.getDateOfBirth());
+            nUser.setPhoneNumber(user.getPhoneNumber());
+            nUser.setGender(user.getGender());
+            nUser.setAvatar(user.getAvatar());
             nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
             Role role = roleService.findById(user.getRoleId());
             nUser.setRole(role);
@@ -127,29 +134,31 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     //Get non deleted users
     @Override
-    public List<UserListResponse> getUserListResponse(PagingRequest pagingRequest) {
+    public List<Object> getUserListResponse(PagingRequest pagingRequest) {
         try {
             Sort sort = responseUtils.getSortObj(pagingRequest);
-            List<User> list = userDao.getNonDeletedUser(PageRequest.of(pagingRequest.getPage(), pagingRequest.getLimit(), sort));
-            List<UserListResponse> listResponse = new ArrayList<>();
+            Page<User> list = userDao.getNonDeletedUser(PageRequest.of(pagingRequest.getPage(), pagingRequest.getLimit(), sort));
+            int lastPage = Math.round(list.getTotalElements()/pagingRequest.getLimit());
+            List<Object> object = new ArrayList<>();
+            List<UserResponse> listResponse = new ArrayList<>();
             for(User user: list){
-                int falcu = 0;
-                String name = "";
-                if(user.getFaculty() != null){
-                    falcu = user.getFaculty().getId();
-                    name = user.getFaculty().getName();
-                }
-                listResponse.add(new UserListResponse(
-                    user.getId(),
-                    user.getCode(),
-                    user.getFullName(),
-                    falcu,
-                    name,
-                    user.getRole().getId(),
-                    user.getEmail()
-                ));
+                UserResponse userRes = new UserResponse();
+                userRes.setId(user.getId());
+                userRes.setRoleId(user.getRole() == null?null:user.getRole().getId());
+                userRes.setFacultyId(user.getFaculty() == null?null:user.getFaculty().getId());
+                userRes.setCode(user.getCode() == null?"":user.getCode());
+                userRes.setFullName(user.getFullName() == null?"":user.getFullName());
+                userRes.setRoleName(user.getRole() == null?"":user.getRole().getName());
+                userRes.setFacultyName(user.getFaculty() == null?"":user.getFaculty().getName());
+                userRes.setEmail(user.getEmail()==null?"":user.getEmail());
+                userRes.setAddress(user.getAddress()==null?"":user.getAddress());
+                userRes.setPhoneNumber(user.getPhoneNumber()==null?null:user.getPhoneNumber());
+                userRes.setDateOfBirth(dateFormat(user.getDateOfBirth()));
+                listResponse.add(userRes);
             }
-            return listResponse;
+            object.add(listResponse);
+            object.add(lastPage);
+            return object;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -158,30 +167,40 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     //Get users by search
     @Override
-    public List<UserListResponse> searchUserByRoleAndFacul(UserSearchRequest userSearchRequest) {
+    public UserLastPageResponse searchUserByRoleAndFacul(UserSearchRequest userSearchRequest) {
         try {
             int offset = userSearchRequest.getPage() -1;
             Sort sort = responseUtils.getSortObj(userSearchRequest);
-            List<User> list = userDao.searchUserByRoleAndFac(userSearchRequest.getUserId(),userSearchRequest.getRoleId(),userSearchRequest.getFacultyId(),PageRequest.of(offset, userSearchRequest.getLimit(), sort));
-            List<UserListResponse> listResponse = new ArrayList<>();
-            for(User user: list){
-                int falcu = 0;
-                String name = "";
-                if(user.getFaculty() != null){
-                    falcu = user.getFaculty().getId();
-                    name = user.getFaculty().getName();
-                }
-                listResponse.add(new UserListResponse(
-                    user.getId(),
-                    user.getCode(),
-                    user.getFullName(),
-                    falcu,
-                    name,
-                    user.getRole().getId(),
-                    user.getEmail()
-                ));
+            int hasDate = 0;
+            if(userSearchRequest.getStartDate() != null && userSearchRequest.getEndDate() != null){
+                hasDate = 1;
             }
-            return listResponse;
+            Page<User> list = userDao.searchUserByRoleAndFac(userSearchRequest.getUserId(),userSearchRequest.getRoleId(),userSearchRequest.getFacultyId(),
+            userSearchRequest.getFullName(),userSearchRequest.getRoleName(),userSearchRequest.getFacultyName(),
+            userSearchRequest.getEmail(),userSearchRequest.getStartDate(),userSearchRequest.getEndDate(),hasDate,userSearchRequest.getGender(),
+            PageRequest.of(offset, userSearchRequest.getLimit(), sort));
+
+            int lastPage = Math.round(list.getTotalElements()/userSearchRequest.getLimit());
+            UserLastPageResponse object = new UserLastPageResponse();
+            List<UserResponse> listResponse = new ArrayList<>();
+            for(User user: list){
+                UserResponse userRes = new UserResponse();
+                userRes.setId(user.getId());
+                userRes.setRoleId(user.getRole() == null?null:user.getRole().getId());
+                userRes.setFacultyId(user.getFaculty() == null?null:user.getFaculty().getId());
+                userRes.setCode(user.getCode() == null?"":user.getCode());
+                userRes.setFullName(user.getFullName() == null?"":user.getFullName());
+                userRes.setRoleName(user.getRole() == null?"":user.getRole().getName());
+                userRes.setFacultyName(user.getFaculty() == null?"":user.getFaculty().getName());
+                userRes.setEmail(user.getEmail()==null?"":user.getEmail());
+                userRes.setAddress(user.getAddress()==null?"":user.getAddress());
+                userRes.setPhoneNumber(user.getPhoneNumber()==null?null:user.getPhoneNumber());
+                userRes.setDateOfBirth(dateFormat(user.getDateOfBirth()));
+                listResponse.add(userRes);
+            }
+            object.setLastPage(lastPage);
+            object.setList(listResponse);
+            return object;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -189,7 +208,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public Boolean deleteUser(int id) {
+    public Boolean deleteUser(Long id) {
         try {
             User user = userDao.getOne(id);
             user.setIs_deleted(Constant.DELETED);
@@ -221,14 +240,25 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public UserDto findById(int id) {
+    public UserResponse findById(Long id) {
         try {
             User user = userDao.getOne(id);
-            UserDto userDto = modelMapper.map(user, UserDto.class);
             if(user.getIs_deleted() == DELETED){
                 return null;
             }
-            return userDto;
+            UserResponse userRes = new UserResponse();
+            userRes.setId(user.getId());
+            userRes.setRoleId(user.getRole() == null?null:user.getRole().getId());
+            userRes.setFacultyId(user.getFaculty() == null?null:user.getFaculty().getId());
+            userRes.setCode(user.getCode() == null?"":user.getCode());
+            userRes.setFullName(user.getFullName() == null?"":user.getFullName());
+            userRes.setRoleName(user.getRole() == null?"":user.getRole().getName());
+            userRes.setFacultyName(user.getFaculty() == null?"":user.getFaculty().getName());
+            userRes.setEmail(user.getEmail()==null?"":user.getEmail());
+            userRes.setAddress(user.getAddress()==null?"":user.getAddress());
+            userRes.setPhoneNumber(user.getPhoneNumber()==null?null:user.getPhoneNumber());
+            userRes.setDateOfBirth(dateFormat(user.getDateOfBirth()));
+            return userRes;
         } catch (Exception e) {
             return null;
         }
