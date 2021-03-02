@@ -50,8 +50,11 @@ public class User extends BaseEntity {
     @JoinColumn(name="faculty_id")
     private Faculty faculty;
 
-    @Column(nullable = false)
-    private String fullName, address;
+    @Column(nullable = false, name="fullName")
+    private String fullName;
+
+    @Column(nullable = false, name="address")
+    private String address;
 
     @OneToMany(mappedBy = "user")
     private List<Contribution> contributions;

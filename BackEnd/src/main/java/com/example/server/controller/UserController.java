@@ -158,14 +158,14 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/logout")
+    @DeleteMapping(value = "/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String token){
         try {
             String result = banService.add(token.replace(TOKEN_PREFIX,""));
             if(result == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Log out failed", HttpStatus.BAD_REQUEST);
             }
-            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, result, HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, result, HttpStatus.OK);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Log out failed", HttpStatus.BAD_REQUEST);
         }
