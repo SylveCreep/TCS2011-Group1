@@ -15,11 +15,13 @@ import com.example.server.model.request.*;
 import com.example.server.model.response.UserLastPageResponse;
 import com.example.server.model.response.UserListResponse;
 import com.example.server.model.response.UserResponse;
+import com.example.server.service.BanService;
 import com.example.server.service.UserService;
 import com.example.server.util.ResponseUtils;
 
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,6 +51,12 @@ public class UserController {
 
     @Autowired
     private ResponseUtils responseUtils;
+
+    @Autowired
+    private BanService banService;
+
+    @Value("${jwt.token.prefix}")
+    public String TOKEN_PREFIX;
 
     //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping
@@ -146,6 +155,19 @@ public class UserController {
             return responseUtils.getResponseEntity(user, Constant.SUCCESS,"Get user successfully", HttpStatus.OK);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Get user fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token){
+        try {
+            String result = banService.add(token.replace(TOKEN_PREFIX,""));
+            if(result == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Log out failed", HttpStatus.BAD_REQUEST);
+            }
+            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, result, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Log out failed", HttpStatus.BAD_REQUEST);
         }
     }
 
