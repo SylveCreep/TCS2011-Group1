@@ -1,5 +1,6 @@
 export const DefaultConstants = Object.freeze({
     Limit: 15,
-    Column: 'name',
+    Column: 'id',
     Sort: 'asc',
+    Page: 1
 });

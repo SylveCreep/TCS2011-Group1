@@ -5,7 +5,7 @@ import UserList from "@/pages/user/UserList";
 import UserCreate from "@/pages/user/UserCreate";
 import UserUpdate from "@/pages/user/UserUpdate";
 
-import Login from "@/pages/login/Login";
+import Login from "@/pages/Login";
 
 import RoleList from "@/pages/role/RoleList";
 import RoleCreate from "@/pages/role/RoleCreate";
@@ -15,6 +15,11 @@ Vue.use(Router);
 const router = new Router({
     mode: 'history',
     routes: [
+        {
+            name:'Users',
+            path: '/',
+            component: UserList,
+        },
         {
             name:'Users',
             path: '/users',

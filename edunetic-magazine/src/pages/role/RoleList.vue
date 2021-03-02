@@ -113,10 +113,17 @@ export default {
       );
     },
     getRoleList() {
+      let filter = {
+        sort: "asc",
+        column: "id",
+        limit: "100",
+        page: "1",
+      };
       axios
-        .get("https://601956c3fa0b1f0017acce88.mockapi.io/roles")
+        .post(UrlConstants.User +"/filter", filter)
         .then((response) => {
           this.list_roles = response.data;
+          console.log(this.list_roles)
         })
         .catch((error) => {
           this.errors = error.response.data;

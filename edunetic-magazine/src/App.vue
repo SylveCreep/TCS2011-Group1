@@ -1,16 +1,16 @@
 <template>
   <div class="wrapper">
     <!-- Navbar -->
-    <the-navbar></the-navbar>
+    <the-navbar v-if="this.token !== null"></the-navbar>
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-    <the-sidebar></the-sidebar>
+    <the-sidebar v-if="this.token !== null" v-on:user-logout="userLogout"></the-sidebar>
     <!-- /.Main Sidebar Container -->
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-      <router-view></router-view>
+      <router-view v-on:user-logged="userLogin"></router-view>
     </div>
     <!-- /.content-wrapper -->
 
@@ -25,12 +25,13 @@
     <!-- /.control-sidebar -->
 
     <!-- Main Footer -->
-    <the-footer></the-footer>
+    <the-footer v-if="this.token !== null"></the-footer>
     <!-- /.Main Footer -->
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import TheSidebar from "./components/TheSidebar";
 import TheNavbar from "./components/TheNavbar";
 import TheFooter from "./components/TheFooter";
@@ -44,12 +45,29 @@ export default {
   },
   data() {
     return {
-      token: null
+      token: this.$cookies.get('jwt')
     }
   },
-    created () {
-      this.$store.dispatch('AutoLogin')
+  created () {
+   this.setHeader();
+  },
+  methods: {
+    setHeader() {
+      if (this.$cookies.isKey('jwt')) {
+        axios.defaults.headers.common['Authorization'] = "Bearer " + this.token;
+      } else {
+        axios.defaults.headers.common['Authorization'] = null;
+      }
+    },
+    userLogin(e) {
+      this.token = this.$cookies.get('jwt');
+      axios.defaults.headers.common['Authorization'] = "Bearer " + this.$cookies.get('jwt');
+    },
+    userLogout(e) {
+      this.token = e;
+      axios.defaults.headers.common["Authorization"] = null;
     }
+  }
 }
 </script>
 

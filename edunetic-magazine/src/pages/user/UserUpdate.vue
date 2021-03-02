@@ -5,7 +5,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h2>User Create</h2>
+                            <h2>User Update</h2>
                         </div>
                         <div class="card-body">
                             <div class="tab-content">
@@ -22,11 +22,11 @@
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Full Name: </label>
                                             <div class="col-sm-12">
-                                                <input id="username" type="text" class="form-control" v-model="user.name"/>
+                                                <input id="username" type="text" class="form-control" v-model="user.fullName"/>
                                             </div>
                                         </div>
                                       <div class="form-group">
-                                        <label class="col-sm-2 control-label">Full Name: </label>
+                                        <label class="col-sm-2 control-label">Code: </label>
                                         <div class="col-sm-12">
                                           <input id="code" type="text" class="form-control" v-model="user.code" readonly/>
                                         </div>
@@ -72,9 +72,9 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-2 control-label">Phone Number: </label>
+                                            <label class="col-sm-2 control-label">Date of birth: </label>
                                             <div class="col-sm-12">
-                                                <input id="DoB" type="date" class="form-control" v-model="user.date_of_birth"/>
+                                                <input id="DoB" type="date" class="form-control" v-model="user.dateOfBirth"/>
                                             </div>
                                         </div>
                                         <div class="form-group text-center">
@@ -127,12 +127,10 @@ export default {
     getUser(){
       axios.get(UrlConstants.User + '/' + this.$route.params.id)
           .then(r =>{
-            this.user = r.data
-            console.log(this.user)
+            this.user = r.data.data
           })
           .catch(error =>{
               this.errors = error.response;
-              console.log(this.errors)
           })
     },
     showError(errors){
