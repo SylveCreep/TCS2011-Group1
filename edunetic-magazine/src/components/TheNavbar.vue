@@ -113,19 +113,47 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button"><i
-                    class="fas fa-th-large"></i></a>
+                <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+                    <i class="fas fa-th-large"></i>
+                </a>
             </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <router-link to="/login" class="nav-link">Login</router-link>
-            </li>
+            <div v-if="!currentUser" class="navbar-nav ml-auto">        
+                <li class="nav-item">
+                    <router-link to="/login" class="nav-link">
+                        Login
+                    </router-link>
+                </li>
+            </div>
+            <div v-if="currentUser" class="navbar-nav ml-auto">
+                 <li class="nav-item">
+                     <router-link to="/profile" class="nav-link">              
+                        {{ currentUser.email }}
+                    </router-link>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href @click.prevent="logOut">
+                            LogOut
+                    </a>
+                </li>
+            </div>
         </ul>
     </nav>
 </template>
 
 <script>
 export default {
-    name: "TheNavbar"
+    name: "TheNavbar",
+    computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+},    
+    methods: {
+    logOut() {
+      this.$store.dispatch('auth/logout');
+      this.$router.push('/login');
+    }
+  }
 }
 </script>
 

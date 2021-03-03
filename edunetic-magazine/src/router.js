@@ -12,7 +12,7 @@ import RoleCreate from "@/pages/role/RoleCreate";
 import RoleUpdate from "@/pages/role/RoleUpdate";
 
 Vue.use(Router);
-const router = new Router({
+export const router = new Router({
     mode: 'history',
     routes: [
         {

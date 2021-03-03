@@ -68,6 +68,7 @@ export default {
       axios.defaults.headers.common["Authorization"] = null;
     }
   }
+
 }
 </script>
 
