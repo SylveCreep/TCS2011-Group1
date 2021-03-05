@@ -26,12 +26,12 @@ public class CreateRole {
         this.name = name;
     }
 
-    public CreateRole(){
+    /*public CreateRole(){
 
     }
 
     public CreateRole(@Size(min = 5, max = 5) String code,@Size(max = 255) String name){
         //this.code = code;
         this.name = name;
-    }
+    }*/
 }

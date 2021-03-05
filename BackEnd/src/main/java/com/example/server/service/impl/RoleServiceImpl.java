@@ -71,8 +71,9 @@ public class RoleServiceImpl implements RoleService {
     public RoleDto updateRole(RoleDto roleDto) {
         try{
             Role role = roleDao.getOne(roleDto.getId());
-            role = modelMapper.map(roleDto, Role.class);
+            role.setName(roleDto.getName());
             roleDao.save(role);
+
             RoleDto saveRole = modelMapper.map(role, RoleDto.class);
             return saveRole;
         }
@@ -84,7 +85,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Boolean deleteRole(Long id) {
         try{
-            Role role = roleDao.findRoleById(id);
+            Role role = roleDao.getOne(id);
             role.setIs_deleted(Constant.DELETED);
             roleDao.save(role);
             return true;
