@@ -17,7 +17,7 @@ public class Faculty extends BaseEntity {
     @Column(unique = true, nullable = false,length = 5)
     private String code;
 
-    @Column
+    @Column(name ="faculty_name")
     private String name;
 
     @OneToMany(mappedBy = "faculty")
