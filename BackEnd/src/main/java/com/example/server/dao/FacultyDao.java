@@ -1,16 +1,34 @@
 package com.example.server.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.example.server.entity.Faculty;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface FacultyDao extends JpaRepository<Faculty, Long> {
     
     @Query("select f from Faculty f "+ 
     "where f.is_deleted = 0 "+ 
     "group by f.id ")
     List<Faculty> getNonDelFaculty();
+
+    @Query(value ="SELECT f.* FROM faculty f "+
+    "LEFT JOIN user u ON u.id =  f.manager_id "+ 
+    "WHERE f.is_deleted = 0 "+
+    "AND u.is_deleted = 0 "+
+    "AND ((:facultyName IS NULL) OR (f.name LIKE CONCAT('%',:facultyName,'%'))) "+ 
+    "AND ((:code IS NULL) OR (f.code LIKE CONCAT('%',:code,'%'))) "+ 
+    "AND ((:managerName IS NULL) OR (u.fullName LIKE CONCAT('%',:managerName,'%')))"+ 
+    "AND ((:hasDate = 0) OR (f.created_at BETWEEN :startDate AND :endDate))", nativeQuery = true)
+    Page<Faculty> searchFaculty(@Param("code")String code, @Param("facultyName")String facultyName,
+    @Param("managerName")String managerName, @Param("startDate")Date startDate,
+    @Param("endDate")Date endDate, @Param("hasDate") int hasDate, Pageable page);
 }

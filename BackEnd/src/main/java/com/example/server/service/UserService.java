@@ -31,4 +31,6 @@ public interface UserService {
 
     UserLastPageResponse searchUserByRoleAndFacul(UserSearchRequest userSearchRequest);
 
+    List<UserResponse> getUserNotIsManager();
+
 }

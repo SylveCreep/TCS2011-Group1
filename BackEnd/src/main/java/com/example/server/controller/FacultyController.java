@@ -1,0 +1,85 @@
+package com.example.server.controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import static com.example.server.constant.Constant.*;
+
+import com.example.server.model.request.*;
+import com.example.server.model.response.*;
+import com.example.server.service.FacultyService;
+import com.example.server.util.ResponseUtils;
+
+@RestController
+@RequestMapping("/faculties")
+public class FacultyController {
+
+    @Autowired
+    private FacultyService facultyService;
+
+    @Autowired
+    private ResponseUtils responseUtils;
+
+    @PostMapping(value="/filter")
+    public ResponseEntity<?> showUserBySearch(@RequestBody FacultyRequest facultyRequest){
+        try {
+            if(facultyRequest.getLimit() < 0 || facultyRequest.getPage() < 0){
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
+            }
+            FacultyPagingResponse facult = facultyService.searchFaculty(facultyRequest);
+            if(facult == null){
+                return responseUtils.getResponseEntity(facult, SUCCESS,"Don't have faculty", HttpStatus.OK);
+            }
+            return responseUtils.getResponseEntity(facult.getFacultyResponses(), SUCCESS,"Show faculty success",facult.getLastPage(), HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", FAILURE,"Show faculty failed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping(value="/{id}",consumes = {"text/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> delete(@PathVariable(name="id") Long id){
+        try {
+            if(id == null){
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Must has faculty id", HttpStatus.BAD_REQUEST);
+            }
+            Boolean is_deleted = facultyService.deleted(id);
+            if(is_deleted == false){
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Delete faculty fail", HttpStatus.OK);
+            }
+            return responseUtils.getResponseEntity("NULL", SUCCESS,"Delete faculty successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", FAILURE,"Delete faculty fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> update(@RequestBody FacultyRequest faculty){
+        try {
+            if(faculty.getFaculty_id() == null){
+                return responseUtils.getResponseEntity("NULL", FAILURE ,"Must has faculty id", HttpStatus.BAD_REQUEST);
+            }
+            Boolean facult = facultyService.update(faculty);
+            if(facult == null){
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Update faculty fail", HttpStatus.BAD_REQUEST);
+            }
+            return responseUtils.getResponseEntity("NULL", SUCCESS,"Update faculty successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", FAILURE,"Update faculty fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+}

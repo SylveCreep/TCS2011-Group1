@@ -171,5 +171,18 @@ public class UserController {
         }
     }
 
+    @GetMapping(value="/nrm",consumes = {"text/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> getUserNormal(){
+        try {
+            List<UserResponse> users = userService.getUserNotIsManager();
+            if(users == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Get user fail", HttpStatus.OK);
+            }
+            return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Get user successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Get user fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 }

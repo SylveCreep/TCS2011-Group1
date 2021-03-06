@@ -264,6 +264,32 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
     }
 
+    @Override
+    public List<UserResponse> getUserNotIsManager() {
+        try {
+            List<User> users = userDao.searchUserNotIsManager();
+            List<UserResponse> list = new ArrayList<>();
+            for(User user: users){
+                UserResponse userRes = new UserResponse();
+                userRes.setId(user.getId());
+                userRes.setRoleId(user.getRole() == null?null:user.getRole().getId());
+                userRes.setFacultyId(user.getFaculty() == null?null:user.getFaculty().getId());
+                userRes.setCode(user.getCode() == null?"":user.getCode());
+                userRes.setFullName(user.getFullName() == null?"":user.getFullName());
+                userRes.setRoleName(user.getRole() == null?"":user.getRole().getName());
+                userRes.setFacultyName(user.getFaculty() == null?"":user.getFaculty().getName());
+                userRes.setEmail(user.getEmail()==null?"":user.getEmail());
+                userRes.setAddress(user.getAddress()==null?"":user.getAddress());
+                userRes.setPhoneNumber(user.getPhoneNumber()==null?null:user.getPhoneNumber());
+                userRes.setDateOfBirth(dateFormat(user.getDateOfBirth()));
+                list.add(userRes);
+            }
+            return list;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     
     
 

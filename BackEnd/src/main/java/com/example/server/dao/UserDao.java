@@ -29,6 +29,8 @@ public interface UserDao extends JpaRepository<User, Long> {
     "LEFT JOIN faculty f ON f.id = u.faculty_id "+ 
     "LEFT JOIN role r ON r.id = u.role_id "+ 
     "where u.is_deleted = 0 "+ 
+    "AND f.is_deleted = 0 "+ 
+    "AND r.is_deleted = 0 "+ 
     "AND ((:fullName IS NULL) OR LOWER(u.full_name) LIKE CONCAT('%',IFNULL(LOWER(:fullName),LOWER(u.full_name)),'%')) "+
     "AND ((:email IS NULL) OR LOWER(u.email) LIKE CONCAT('%',IFNULL(LOWER(:email),LOWER(u.email)),'%')) "+
     "AND ((:hasDate = 0) OR (u.date_of_birth BETWEEN :startDate AND :endDate)) "+
@@ -43,4 +45,11 @@ public interface UserDao extends JpaRepository<User, Long> {
     @Param("facultyId") Long facultyId, @Param("fullName") String fullName,
     @Param("roleName") String roleName, @Param("facultyName") String facultyName,
     @Param("email") String email, @Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("hasDate") int hasDate, @Param("gender") Integer gender, Pageable pageable);
+
+    @Query(value="Select * FROM user u "+ 
+    "LEFT JOIN faculty f ON f.id = u.faculty_id "+ 
+    "WHERE u.is_deleted = 0 "+
+    "AND f.is_deleted = 0 "+ 
+    "AND ((f.manager_id IS NULL) OR (u.id <> f.manager_id)) ", nativeQuery = true)
+    List<User> searchUserNotIsManager();
 }

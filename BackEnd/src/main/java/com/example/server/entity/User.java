@@ -19,14 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Entity
 @Table(name="user")
 public class User extends BaseEntity {
-    // @Autowired
-    // private QueryCheck queryCheck;
     
     @Column(unique = true, nullable = false)
     private String email;
-
-    // @Column(unique = true, nullable = false,length = 5)
-    // private String code= "U" + String.format("%04d", queryCheck.GetHighestId("user"));
 
     @Column(unique = true, nullable = false,length = 5)
     private String code;
@@ -35,13 +30,6 @@ public class User extends BaseEntity {
     @JsonIgnore
     private String password;
 
-    //@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    // @JoinTable(name = "USER_ROLES",
-    //         joinColumns = {
-    //         @JoinColumn(name = "USER_ID")
-    //         },
-    //         inverseJoinColumns = {
-    //         @JoinColumn(name = "ROLE_ID") })
     @ManyToOne
     @JoinColumn(name="role_id",nullable = false)
     private Role role;
