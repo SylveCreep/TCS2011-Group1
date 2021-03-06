@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,10 +51,10 @@ public class RoleController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(value = "/{id}", consumes = {"test/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> deleteRole(@PathVariable("id") Long id){
+    @DeleteMapping(value = "/{id}", consumes = {"test/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> deleteRole(@PathVariable(name="id") Long id){
         try{
-            if(id == null || id.getClass().getTypeName() != "Integer"){
+            if(id == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Must has role id", HttpStatus.BAD_REQUEST);
             }
             Boolean is_deleted = roleService.deleteRole(id);
@@ -71,7 +72,7 @@ public class RoleController {
     @PutMapping(value = "/{id}", consumes = {"test/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> updateRole(@RequestBody RoleDto roleDto) {
         try{
-            if (roleDto.getId() == null || roleDto.getId().getClass().getTypeName() != "Integer"){
+            if (roleDto.getId() == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Must has role id", HttpStatus.BAD_REQUEST);
             }
             RoleDto role = roleService.updateRole(roleDto);
