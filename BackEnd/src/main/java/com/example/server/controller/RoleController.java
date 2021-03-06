@@ -4,11 +4,14 @@ import javax.validation.Valid;
 
 import com.example.server.entity.Role;
 import com.example.server.model.request.CreateRole;
+import com.example.server.model.request.RoleSearchRequest;
+import com.example.server.model.response.RoleLastPageResponse;
 import com.example.server.service.RoleService;
 import com.example.server.util.ResponseUtils;
 import com.example.server.constant.Constant;
 import com.example.server.dto.RoleDto;
 
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,6 +86,23 @@ public class RoleController {
         }
         catch(Exception e){
             return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update role fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(value = "/filter")
+    public ResponseEntity<?> showRoleBySearch(@RequestBody RoleSearchRequest roleSearchRequest){
+        try{
+            if (roleSearchRequest.getLimit() < 0 || roleSearchRequest.getPage() < 0){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
+            }
+            RoleLastPageResponse roles = roleService.searchRoleByName(roleSearchRequest);
+            if (roles == null){
+                return responseUtils.getResponseEntity(roles, Constant.SUCCESS, "Don't have role", HttpStatus.OK);
+            }
+            return responseUtils.getResponseEntity(roles.getList(), Constant.SUCCESS, "Show role success", roles.getLastPage(), HttpStatus.OK);
+        } catch(Exception e){
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Show role failed", HttpStatus.BAD_REQUEST);
         }
     }
 }
