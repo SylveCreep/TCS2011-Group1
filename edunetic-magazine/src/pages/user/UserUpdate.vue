@@ -82,7 +82,7 @@
                                                 <router-link to="/users" tag="button" class="btn btn-primary">
                                                     Back
                                                 </router-link>
-                                                <button type="submit" class="btn btn-success">Create</button>
+                                                <button type="submit" class="btn btn-success">Update</button>
                                             </div>
                                         </div>
                                     </form>

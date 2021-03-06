@@ -5,7 +5,7 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <h2>Role Create</h2>
+              <h2>Faculty Update</h2>
             </div>
             <div class="card-body">
               <div class="tab-content">
@@ -19,16 +19,34 @@
                   </div>
                   <form
                     class="form-horizontal"
-                    v-on:submit.prevent="createRole()"
+                    v-on:submit.prevent="updateFaculty()"
                   >
                     <div class="form-group">
                       <label class="col-sm-2 control-label">Name: </label>
                       <div class="col-sm-12">
                         <input
-                          id="rolename"
+                          id="facultyname"
                           type="text"
                           class="form-control"
-                          v-model="role.name"
+                          v-model="faculty.name"
+                        />
+                      </div>
+                      <label class="col-sm-2 control-label">Faculty code: </label>
+                      <div class="col-sm-12">
+                        <input
+                          id="facultycode"
+                          type="text"
+                          class="form-control"
+                          v-model="faculty.code" readonly
+                        />
+                      </div>
+                      <label class="col-sm-2 control-label">Co-codinator's Name: </label>
+                      <div class="col-sm-12">
+                        <input
+                          id="codinatorname"
+                          type="text"
+                          class="form-control"
+                          v-model="faculty.codinatorname"
                         />
                       </div>
                     </div>
@@ -41,8 +59,8 @@
                         >
                           Back
                         </router-link>
-                        <button type="submit" class="btn btn-success">
-                          Create
+                        <button type="submit" class="btn btn-success" v-on:click="UpdateFaculty()">
+                          Update
                         </button>
                       </div>
                     </div>
@@ -73,18 +91,23 @@ export default {
   name: "RoleCreate",
   data() {
     return {
-      role: {},
+      faculty: {},
       errors: null,
+      list_faculties: {},
+      list_roles: {},
     };
   },
+  created() {
+    this.getFacultyList();
+  },
   methods: {
-    createRole() {
+    updateFaculty() {
       axios
-        .post(UrlConstants.role, this.role)
+        .post(UrlConstants.Faculty, this.faculty)
         .then((r) => {
           console.log(r);
-          alert("Create Successfully");
-          this.$router.push("/roles");
+          alert("Update Successfully");
+          this.$router.push("/faculties");
         })
         .catch((error) => {
           this.errors = error.response;
@@ -96,6 +119,17 @@ export default {
         let text = document.querySelector("#" + error);
         text.style.cssText = "border-color: red";
       });
+    },
+    getFacultyList() {
+      axios
+        .get(UrlConstants.Faculty, this.faculty)
+        .then((response) => {
+          this.list_faculties = response.data;
+          console.log(this.list_faculties);
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
     },
   },
 };

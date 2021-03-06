@@ -55,10 +55,10 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <router-link to="/faculties" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>Faculty List</p>
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link" v-on:click.prevent="logOut">

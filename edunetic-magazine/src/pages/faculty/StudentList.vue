@@ -7,18 +7,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h2 class="card-title">User List</h2>
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px">
-                    <router-link
-                      to="/users/create"
-                      tag="button"
-                      class="btn btn-success"
-                    >
-                      Create New <i class="fas fa-plus fa-fw"></i>
-                    </router-link>
-                  </div>
-                </div>
+                <h2 class="card-title">Student List</h2>
               </div>
               <!--FILTER SECTION-->
               <div class="card-header">

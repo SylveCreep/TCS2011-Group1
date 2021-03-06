@@ -11,6 +11,11 @@ import RoleList from "@/pages/role/RoleList";
 import RoleCreate from "@/pages/role/RoleCreate";
 import RoleUpdate from "@/pages/role/RoleUpdate";
 
+import FacultyList from "@/pages/faculty/FacultyList";
+import FacultyCreate from "@/pages/faculty/FacultyCreate";
+import FacultyUpdate from "@/pages/faculty/FacultyUpdate";
+import StudentList from "@/pages/faculty/StudentList";
+
 Vue.use(Router);
 export const router = new Router({
     mode: 'history',
@@ -21,7 +26,7 @@ export const router = new Router({
             component: UserList,
         },
         {
-            name:'Users',
+            name:'UsersList',
             path: '/users',
             component: UserList,
         }, {
@@ -36,19 +41,34 @@ export const router = new Router({
             name:'Login',
             path:'/login',
             component: Login,
-            
         },{
             name:'Roles',
             path:'/roles',
             component: RoleList,
         },{
-            name:'Roles',
+            name:'RolesCreate',
             path: '/roles/create',
             component: RoleCreate,
         },{
-            name:'Roles',
+            name:'RolesUpdate',
             path: '/roles/update',
             component: RoleUpdate,
+        },{
+            name:'FacultyList',
+            path:'/faculties',
+            component: FacultyList,
+        },{
+            name:'FacultyCreate',
+            path: '/faculties/create',
+            component: FacultyCreate,
+        },{
+            name:'FacultyUpdate',
+            path: '/faculties/update',
+            component: FacultyUpdate,
+        },{
+            name:'StudentList',
+            path: '/faculties/studentlist',
+            component: StudentList,
         }
 
     ]

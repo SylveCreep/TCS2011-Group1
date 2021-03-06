@@ -9,7 +9,7 @@
               <div class="card-header">
                 <h2 class="card-title">Role List</h2>
                 <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
+                  <div class="input-group input-group-sm" style="width: 150px">
                     <router-link
                       to="/roles/create"
                       tag="button"
@@ -17,6 +17,47 @@
                     >
                       Create New <i class="fas fa-plus fa-fw"></i>
                     </router-link>
+                  </div>
+                </div>
+              </div>
+              <!--FILTER SECTION-->
+              <div class="card-header">
+                <div class="row">
+                  <h3 class="card-title">Filter</h3>
+                </div>
+                <div class="row">
+                  <div class="form-group">
+                    <label>Code</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Search"
+                      aria-label="Search"
+                      v-model="filter.code"
+                      v-on:keyup="getFilter"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Name</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Search"
+                      aria-label="Search"
+                      v-model="filter.name"
+                      v-on:keyup="getFilter"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Date created </label>
+                    <input
+                      class="form-control"
+                      type="date"
+                      placeholder="Search"
+                      aria-label="Search"
+                      v-model="filter.date_of_birth"
+                      v-on:keyup="getFilter"
+                    />
                   </div>
                 </div>
               </div>
@@ -35,17 +76,21 @@
                       <td>{{ role.code }}</td>
                       <td>{{ role.name }}</td>
                       <td>
-                        <router-link to="/roles/update"
-                          ><p class="click" style="display: inline">
-                            <b>Update</b>
-                          </p>
-                          |</router-link
+                        <p
+                          class="click"
+                          style="display: inline"
+                          v-on:click="showRole(role.id)"
                         >
-                        <router-link to="/roles"
-                          ><p class="click" style="display: inline">
-                            <b v-on:click="deleteRole(role.id)">Delete</b>
-                          </p></router-link
+                          <b>Update</b>
+                        </p>
+                        |
+                        <p
+                          class="click"
+                          style="display: inline"
+                          v-on:click="deleteRole(role.id)"
                         >
+                          <b>Delete</b>
+                        </p>
                       </td>
                     </tr>
                   </tbody>
@@ -58,8 +103,8 @@
                     <div>
                       <strong> Per Page: </strong>
                       <select>
-                        <option value="10" selected>10</option>
-                        <option value="15">15</option>
+                        <option value="10">10</option>
+                        <option value="15" selected>15</option>
                         <option value="1">1</option>
                       </select>
                     </div>
@@ -86,6 +131,8 @@
 import axios from "axios";
 import { DefaultConstants } from "@/constant/DefaultConstant";
 import { UrlConstants } from "@/constant/UrlConstant";
+import { ResultConstants } from "@/constant/ResultConstant";
+import router from "@/router";
 //import ThePagination from "@/components/ThePagination";
 export default {
   name: "RoleList",
@@ -94,58 +141,85 @@ export default {
   },
   data() {
     return {
-      column: DefaultConstants.column, //default column = 'name'
-      sort: DefaultConstants.sort, //default sort = 'asc'
-      limit: DefaultConstants.limit, //default limit = 15
       list_roles: [],
       errors: [],
+      filter: {
+        column: DefaultConstants.Column, //default column = 'id'
+        sort: DefaultConstants.Sort, //default sort = 'asc'
+        limit: DefaultConstants.Limit, //default limit = 15
+        page: DefaultConstants.Page, //default page = 1
+      },
     };
   },
   created() {
     this.getRoleList();
   },
   methods: {
-    getUrl() {
-      return (
-        UrlConstants.Role + '?column=' + this.column
-                          + '&limit=' + this.limit
-                          + '&sort=' + this.sort
-      );
-    },
     getRoleList() {
-      let filter = {
-        sort: "asc",
-        column: "id",
-        limit: "100",
-        page: "1",
-      };
       axios
-        .post(UrlConstants.User +"/filter", filter)
+        .post(UrlConstants.User + "/filter", this.filter)
         .then((response) => {
           this.list_roles = response.data;
-          console.log(this.list_roles)
+          console.log(this.list_roles);
         })
         .catch((error) => {
           this.errors = error.response.data;
         });
     },
-    deleteRole(id) {
-      axios
-        // .delete(UrlConstants.role + this.role)
-        .delete('https://601956c3fa0b1f0017acce88.mockapi.io/roles/'+ id)
-        .then((id) => {
-          console.log(id);
-          if (confirm("Are you sure to Delete this Role?")) {
-            alert("Delete Successfully");
-            this.getRoleList();
+    deleteRole(role_id) {
+      axios.get(UrlConstants.Role + "/" + role_id).then((response) => {
+        if (response.data.code === ResultConstants.Failure) {
+          alert("error");
+          this.getRoleList();
+        } else {
+          if (confirm("Are you sure to delete this role ?")) {
+            axios
+              .delete(UrlConstants.Role + "/" + role_id)
+              .then((res) => {
+                if (res.data.code === ResultConstants.Sucess) {
+                  alert("sucess");
+                  this.getRoleList();
+                }
+                if (res.data.code === ResultConstants.Failure) {
+                  alert("error");
+                  this.getRoleList();
+                }
+              })
+              .catch((error) => {
+                this.errors = error.data;
+              });
           }
-        })
-        .catch((error) => {
-          this.errors = error.response.data;
-        });
+        }
+      });
+    },
+    showRole(role_id) {
+      axios.get(UrlConstants.Role + "/" + role_id).then((response) => {
+        if (response.data.code === ResultConstants.Failure) {
+          alert("error");
+          this.getRoleList();
+        } else {
+          router.push("/roles/" + role_id + "/update");
+        }
+      });
+    },
+    getFilter() {
+      this.getRoleList();
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.card {
+  margin: 20px;
+}
+.sort {
+  cursor: pointer;
+}
+.click {
+  cursor: pointer;
+}
+.click :hover {
+  color: #d10024;
+}
+</style>
