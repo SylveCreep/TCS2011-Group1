@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import static com.example.server.constant.Constant.*;
 import static com.example.server.util.ResponseUtils.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -39,10 +41,14 @@ public class FacultyServiceImpl implements FacultyService {
             Sort sort = responseUtils.getSortObj(facultyRequest);
             int offset = facultyRequest.getPage() - 1;
             int hasDate = 0;
+            Date startDate = null;
+            Date endDate = null;
             if(facultyRequest.getStartDate() != null && facultyRequest.getEndDate() != null){
                 hasDate = 1;
+                startDate = facultyRequest.getStartDate();
+                endDate = facultyRequest.getEndDate();
             }
-            Page<Faculty> data = facultyDao.searchFaculty(facultyRequest.getCode(), facultyRequest.getFacultyName(), facultyRequest.getManagerName(), facultyRequest.getStartDate(), facultyRequest.getEndDate(), hasDate, PageRequest.of(offset, facultyRequest.getLimit(), sort));
+            Page<Faculty> data = facultyDao.searchFaculty(facultyRequest.getCode(), facultyRequest.getFacultyName(), facultyRequest.getManagerName(), startDate, endDate, hasDate, PageRequest.of(offset, facultyRequest.getLimit(), sort));
             int lastPage = Math.round(data.getTotalElements()/facultyRequest.getLimit());
             FacultyPagingResponse response = new FacultyPagingResponse();
             List<FacultyResponse> listResponse = new ArrayList<>();
