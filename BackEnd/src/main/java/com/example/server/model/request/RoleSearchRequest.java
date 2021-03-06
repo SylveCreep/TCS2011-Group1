@@ -20,6 +20,10 @@ public class RoleSearchRequest extends PagingRequest {
         this.name = name;
     }
 
+    public RoleSearchRequest(){
+
+    }
+    
     public RoleSearchRequest(Long roleId, String name){
         this.roleId = roleId;
         this.name = name;
