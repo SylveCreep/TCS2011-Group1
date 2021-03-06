@@ -49,7 +49,6 @@ public interface UserDao extends JpaRepository<User, Long> {
     @Query(value="Select * FROM user u "+ 
     "LEFT JOIN faculty f ON f.id = u.faculty_id "+ 
     "WHERE u.is_deleted = 0 "+
-    "AND f.is_deleted = 0 "+ 
-    "AND ((f.manager_id IS NULL) OR (u.id <> f.manager_id)) ", nativeQuery = true)
+    "AND ((f.manager_id IS NULL) OR (u.id <> f.manager_id AND f.is_deleted = 0)) ", nativeQuery = true)
     List<User> searchUserNotIsManager();
 }
