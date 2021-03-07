@@ -29,13 +29,13 @@ public interface UserDao extends JpaRepository<User, Long> {
     "LEFT JOIN faculty f ON f.id = u.faculty_id "+ 
     "LEFT JOIN role r ON r.id = u.role_id "+ 
     "where u.is_deleted = 0 "+ 
-    "AND f.is_deleted = 0 "+ 
+    //"AND f.is_deleted = 0 "+ 
     "AND r.is_deleted = 0 "+ 
     "AND ((:fullName IS NULL) OR LOWER(u.full_name) LIKE CONCAT('%',IFNULL(LOWER(:fullName),LOWER(u.full_name)),'%')) "+
     "AND ((:email IS NULL) OR LOWER(u.email) LIKE CONCAT('%',IFNULL(LOWER(:email),LOWER(u.email)),'%')) "+
     "AND ((:hasDate = 0) OR (u.date_of_birth BETWEEN :startDate AND :endDate)) "+
     "AND ((:roleName IS NULL) OR LOWER(r.name) LIKE CONCAT('%',IFNULL(LOWER(:roleName),LOWER(r.name)),'%')) "+
-    "AND ((:facultyName IS NULL) OR LOWER(f.name) LIKE CONCAT('%',IFNULL(LOWER(:facultyName),LOWER(f.name)),'%')) "+
+    "AND ((:facultyName IS NULL) OR LOWER(f.faculty_name) LIKE CONCAT('%',IFNULL(LOWER(:facultyName),LOWER(f.faculty_name)),'%')) "+
     "AND ((:gender is null) or (u.gender = :gender)) " + 
     "AND ((:userId is null) or (u.id = :userId)) " + 
     "AND ((:roleId is null) or (r.id = :roleId)) " + 
