@@ -44,14 +44,37 @@ public class RoleServiceImpl implements RoleService {
     private ModelMapper modelMapper;
 
     @Override
+    public RoleResponse findByIdToGetRole(Long id) {
+        try{
+            Role role = roleDao.getOne(id);
+            if(role.getIs_deleted() == Constant.DELETED){
+                return null;
+            }
+            RoleResponse roleResponse = new RoleResponse();
+            roleResponse.setId(role.getId());
+            roleResponse.setName(role.getName() == null?"":role.getName());
+            roleResponse.setCode(role.getCode() == null?"":role.getCode());
+            return roleResponse;
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    @Override
+    public Role findById(Long id) {
+        Role role = roleDao.findRoleById(id);
+        return role;
+    }
+
+    @Override
     public Role findByName(String name) {
         Role role = roleDao.findRoleByName(name);
         return role;
     }
 
     @Override
-    public Role findById(Long id) {
-        Role role = roleDao.findRoleById(id);
+    public Role findByCode(String code){
+        Role role = roleDao.findRoleByCode(code);
         return role;
     }
 
@@ -85,6 +108,7 @@ public class RoleServiceImpl implements RoleService {
         try {
             Role role = roleDao.getOne(roleDto.getId());
             role.setName(roleDto.getName());
+            role.setCode(roleDto.getCode());
             roleDao.save(role);
 
             RoleDto saveRole = modelMapper.map(role, RoleDto.class);
@@ -111,7 +135,7 @@ public class RoleServiceImpl implements RoleService {
         try{
             int offset = roleSearchRequest.getPage() - 1;
             Sort sort = responseUtils.getSortObj(roleSearchRequest);
-            Page<Role> list = roleDao.searchRoleByName(/*roleSearchRequest.getRoleId(),*/ roleSearchRequest.getName(), PageRequest.of(offset, roleSearchRequest.getLimit(), sort));
+            Page<Role> list = roleDao.searchRoleByName(roleSearchRequest.getRoleId(), roleSearchRequest.getName(), roleSearchRequest.getCode(), PageRequest.of(offset, roleSearchRequest.getLimit(), sort));
 
             int lastPage = Math.round(list.getTotalElements()/roleSearchRequest.getLimit());
             RoleLastPageResponse object = new RoleLastPageResponse();
@@ -120,6 +144,7 @@ public class RoleServiceImpl implements RoleService {
                 RoleResponse roleResponse = new RoleResponse();
                 roleResponse.setId(role.getId());
                 roleResponse.setName(role.getName() == null ?"":role.getName());
+                roleResponse.setCode(role.getCode() == null ?"": role.getCode());
                 listResponse.add(roleResponse);
             }
             object.setLastPage(lastPage);
@@ -143,6 +168,7 @@ public class RoleServiceImpl implements RoleService {
                 RoleResponse roleResponse = new RoleResponse();
                 roleResponse.setId(role.getId());
                 roleResponse.setName(role.getName() == null ?"":role.getCode());
+                roleResponse.setCode(role.getCode() );
                 listResponse.add(roleResponse);
             }
             object.add(listResponse);

@@ -6,6 +6,7 @@ import com.example.server.entity.Role;
 import com.example.server.model.request.CreateRole;
 import com.example.server.model.request.RoleSearchRequest;
 import com.example.server.model.response.RoleLastPageResponse;
+import com.example.server.model.response.RoleResponse;
 import com.example.server.service.RoleService;
 import com.example.server.util.ResponseUtils;
 import com.example.server.constant.Constant;
@@ -105,6 +106,23 @@ public class RoleController {
             return responseUtils.getResponseEntity(roles.getList(), Constant.SUCCESS, "Show role success", roles.getLastPage(), HttpStatus.OK);
         } catch(Exception e){
             return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Show role failed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(value = "/{id}", consumes = {"text/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> getRole(@PathVariable(name = "id") Long id){
+        try{
+            if(id == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Must has role id", HttpStatus.BAD_REQUEST);
+            }
+            RoleResponse roleResponse = roleService.findByIdToGetRole(id);
+            if (roleResponse == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get role fail", HttpStatus.OK);
+            }
+            return responseUtils.getResponseEntity(roleResponse, Constant.SUCCESS, "Get role successfully", HttpStatus.OK);
+        } catch (Exception e){
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get role fail", HttpStatus.BAD_REQUEST);
         }
     }
 }
