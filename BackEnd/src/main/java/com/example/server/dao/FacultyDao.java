@@ -23,7 +23,7 @@ public interface FacultyDao extends JpaRepository<Faculty, Long> {
     @Query(value ="SELECT f.* FROM faculty f "+
     "LEFT JOIN user u ON u.id =  f.manager_id "+ 
     "WHERE f.is_deleted = 0 "+
-    "AND u.is_deleted = 0 "+
+    //"AND u.is_deleted = 0 "+
     "AND ((:facultyName IS NULL) OR (f.faculty_name LIKE CONCAT('%',:facultyName,'%'))) "+ 
     "AND ((:code IS NULL) OR (f.code LIKE CONCAT('%',:code,'%'))) "+ 
     "AND ((:managerName IS NULL) OR (u.full_name LIKE CONCAT('%',:managerName,'%')))"+ 
