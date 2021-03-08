@@ -12,6 +12,7 @@ import com.example.server.entity.User;
 import com.example.server.model.request.CreateAccount;
 import com.example.server.model.request.LoginUser;
 import com.example.server.service.UserService;
+import com.example.server.util.ResponseUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.example.server.constant.Constant.*;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping
@@ -43,6 +46,9 @@ public class NonAuthController {
     
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ResponseUtils responseUtils;
 
     private ResponseEntity<?> getResponseEntity(Object data, String code, String mess, HttpStatus status) {
         Map<String, Object> response = new HashMap<>();
@@ -80,6 +86,11 @@ public class NonAuthController {
     @PostMapping(value ="/register",  consumes = {"text/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> saveUser(@Valid @RequestBody CreateAccount user){
         try {
+            HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(user);
+            Object validateRes = validateResult.get("result");
+            if(Integer.parseInt(validateRes.toString()) == -1){
+                return responseUtils.getActionResponseEntity("NULL", FAILURE,"Create user failed",validateResult, HttpStatus.BAD_REQUEST);
+            }
             User regisUser = userService.saveGuestRegister(user);
             if(regisUser == null){
                 return getResponseEntity("NULL","1","Register failed", HttpStatus.BAD_REQUEST);

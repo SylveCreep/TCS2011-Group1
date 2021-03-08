@@ -63,6 +63,11 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> createUser(@Valid @RequestBody CreateAccount user){
         try {
+            HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(user);
+            Object validateRes = validateResult.get("result");
+            if(Integer.parseInt(validateRes.toString()) == -1){
+                return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE,"Create user failed",validateResult, HttpStatus.BAD_REQUEST);
+            }
             User createdUser = userService.saveRegister(user);
             if(createdUser == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Create user failed", HttpStatus.BAD_REQUEST);

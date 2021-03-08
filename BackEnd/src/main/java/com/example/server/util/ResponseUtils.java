@@ -1,21 +1,40 @@
 package com.example.server.util;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.example.server.dao.FacultyDao;
+import com.example.server.dao.RoleDao;
+import com.example.server.dao.UserDao;
+import com.example.server.entity.Faculty;
+import com.example.server.entity.Role;
+import com.example.server.entity.User;
+import com.example.server.model.request.CreateAccount;
 import com.example.server.model.request.PagingRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import static com.example.server.constant.Constant.*;
+
 @Service
 public class ResponseUtils {
 
+    @Autowired
+    private UserDao userDao;
 
+    @Autowired
+    private RoleDao roleDao;
+
+    @Autowired
+    private FacultyDao facultyDao;
+    
     //Get sort object for sort
     public Sort getSortObj(PagingRequest pagingRequest){
         Sort sort;
@@ -34,7 +53,7 @@ public class ResponseUtils {
         Map<String, Object> response = new HashMap<>();
         response.put("data",data);
         response.put("code",code);
-        response.put("messenger",mess);
+        response.put("message",mess);
         return new ResponseEntity<>(response, status);
     }
 
@@ -43,7 +62,26 @@ public class ResponseUtils {
         response.put("data",data);
         response.put("code",code);
         response.put("lastPage",total);
-        response.put("messenger",mess);
+        response.put("message",mess);
+        return new ResponseEntity<>(response, status);
+    }
+
+    public ResponseEntity<?> getResponseEntity(Object data, int code, String mess, Object total, Object validate,  HttpStatus status) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("data",data);
+        response.put("code",code);
+        response.put("lastPage",total);
+        response.put("message",mess);
+        response.put("validate",validate);
+        return new ResponseEntity<>(response, status);
+    }
+
+    public ResponseEntity<?> getActionResponseEntity(Object data, int code, String mess, Object validate,  HttpStatus status) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("data",data);
+        response.put("code",code);
+        response.put("message",mess);
+        response.put("validate",validate);
         return new ResponseEntity<>(response, status);
     }
 
@@ -55,4 +93,150 @@ public class ResponseUtils {
             return null;
         }
     }
+
+    public HashMap<String, Object> validateCreateAccountRequest(CreateAccount createAccount){
+        HashMap<String, Object> form = new HashMap<>();
+        HashMap<String, Object> inputForm = new HashMap<>();
+        form.put("input", inputForm);
+        
+        inputForm.put("email", validateEmailInput(createAccount.getEmail()));
+        inputForm.put("password", validatePasswordInput(createAccount.getPassword()));
+        inputForm.put("fullName", validateNameInput(createAccount.getFullName()));
+        inputForm.put("address", validateAddressInput(createAccount.getAddress()));
+        inputForm.put("dateOfBirth", validateBirthDayInput(createAccount.getDateOfBirth()));
+        inputForm.put("roleId", validateRoleInput(createAccount.getRoleId()));
+        inputForm.put("facultyId", validateFacultyInput(createAccount.getFacultyId()));
+        inputForm.put("phoneNumber", validatePhoneInput(createAccount.getPhoneNumber()));
+        inputForm.put("gender", validateGenderInput(createAccount.getGender()));
+        inputForm.put("avatar", "Valid");
+
+        if(validateEmailInput(createAccount.getEmail()).equals("Valid") 
+        && validatePasswordInput(createAccount.getPassword()).equals("Valid")
+        && validateNameInput(createAccount.getFullName()).equals("Valid")
+        && validateAddressInput(createAccount.getAddress()).equals("Valid")
+        && validateBirthDayInput(createAccount.getDateOfBirth()).equals("Valid")
+        && validateRoleInput(createAccount.getRoleId()).equals("Valid")
+        && validateFacultyInput(createAccount.getFacultyId()).equals("Valid")
+        && validatePhoneInput(createAccount.getPhoneNumber()).equals("Valid")
+        && validateGenderInput(createAccount.getGender()).equals("Valid")){
+            form.put("result", 0);
+        } else {
+            form.put("result", -1);
+        }
+
+        return form;
+    }
+
+    public String validateEmailInput(String email){
+        if(email == null){
+            return "Invalid";
+        }
+        User user = userDao.findByEmail(email);
+        if(user != null){
+            return  "Email existed";
+        } else {
+            return "Valid";
+        }
+    }
+
+    public String validateNameInput(String fullName){
+        if(fullName == null){
+            return "Invalid";
+        }
+        if(!NameValidation.containSpecialCharacter(fullName) && !NameValidation.containNumber(fullName)){
+            return "Valid";
+        } else {
+            return "Contain invalid character";
+        }
+    }
+
+    public String validatePasswordInput(String password){
+        if(password == null){
+            return "Invalid";
+        }
+        if(password.length() >= 6){
+            return "Valid";
+        } else {
+            return "Invalid length";
+        }
+    }
+
+    public String validateAddressInput(String address){
+        if(address == null){
+            return "Invalid";
+        }
+        if(!NameValidation.containSpecialCharacter(address)){
+            return "Valid";
+        } else {
+            return "Contain invalid character";
+        }
+    }
+
+    public String validateBirthDayInput(Date dateOfBirth){
+        if(dateOfBirth == null){
+            return "Invalid";
+        }
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date currentDate = new Date();
+        if((Integer.parseInt(dateFormat.format(currentDate).substring(0, 4)) - Integer.parseInt(dateFormat.format(dateOfBirth).substring(0, 4))) > 18){
+            return "Valid";
+        } else {
+            return "Must over 18 years old";
+        }
+    }
+
+    public String validateRoleInput(Long roleId){
+        if(roleId == null){
+            return "Valid";
+        }
+        Role role = roleDao.getOne(roleId);
+        if(role != null){
+            if(role.getIs_deleted() != DELETED){
+                return "Valid";
+            } else {
+                return "Role is deleted";
+            }
+        } else {
+            return "Role not existed";
+        }
+    }
+
+    public String validateFacultyInput(Long facultyId){
+        if(facultyId == null){
+            return "Valid";
+        }
+        Faculty faculty = facultyDao.getOne(facultyId);
+        if(faculty != null){
+            if(faculty.getIs_deleted() != DELETED){
+                return "Valid";
+            } else {
+                return "Faculty is deleted";
+            }
+        } else {
+            return "Faculty not existed";
+        }
+    }
+
+    public String validatePhoneInput(Integer phoneNumber){
+        if(phoneNumber == null){
+            return "Invalid";
+        }
+        if(phoneNumber.toString().length() < 15 && phoneNumber.toString().length() >= 9){
+            return "Valid";
+        } else {
+            return "Invalid length";
+        }
+    }
+
+    public String validateGenderInput(Integer gender){
+        if(gender == null){
+            return "Invalid";
+        }
+        if(gender != MALE && gender != FEMALE){
+            return "Invalid";
+        } else {
+            return "Valid";
+        }
+    }
+
 }
