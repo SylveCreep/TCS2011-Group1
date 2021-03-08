@@ -36,6 +36,7 @@ public interface UserDao extends JpaRepository<User, Long> {
     "AND ((:hasDate = 0) OR (u.date_of_birth BETWEEN :startDate AND :endDate)) "+
     "AND ((:roleName IS NULL) OR LOWER(r.name) LIKE CONCAT('%',IFNULL(LOWER(:roleName),LOWER(r.name)),'%')) "+
     "AND ((:facultyName IS NULL) OR LOWER(f.faculty_name) LIKE CONCAT('%',IFNULL(LOWER(:facultyName),LOWER(f.faculty_name)),'%')) "+
+    "AND ((:code IS NULL) OR LOWER(u.code) LIKE CONCAT('%',IFNULL(LOWER(:code),LOWER(u.code)),'%')) "+
     "AND ((:gender is null) or (u.gender = :gender)) " + 
     "AND ((:userId is null) or (u.id = :userId)) " + 
     "AND ((:roleId is null) or (r.id = :roleId)) " + 
@@ -44,7 +45,7 @@ public interface UserDao extends JpaRepository<User, Long> {
     Page<User> searchUserByRoleAndFac(@Param("userId") Long userId,@Param("roleId") Long roleId,
     @Param("facultyId") Long facultyId, @Param("fullName") String fullName,
     @Param("roleName") String roleName, @Param("facultyName") String facultyName,
-    @Param("email") String email, @Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("hasDate") int hasDate, @Param("gender") Integer gender, Pageable pageable);
+    @Param("email") String email, @Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("hasDate") int hasDate, @Param("gender") Integer gender, @Param("code") String code, Pageable pageable);
 
     @Query(value="Select * FROM user u "+ 
     "LEFT JOIN faculty f ON f.id = u.faculty_id "+ 

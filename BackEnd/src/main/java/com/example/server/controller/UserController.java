@@ -58,7 +58,7 @@ public class UserController {
     @Value("${jwt.token.prefix}")
     public String TOKEN_PREFIX;
 
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<?> createUser(@Valid @RequestBody CreateAccount user){
         try {

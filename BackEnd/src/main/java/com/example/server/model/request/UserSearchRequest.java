@@ -13,6 +13,7 @@ public class UserSearchRequest extends PagingRequest {
     private Date endDate;
     private String email;
     private Integer gender;
+    private String code;
 
     public Long getUserId() {
         return userId;
@@ -100,8 +101,16 @@ public class UserSearchRequest extends PagingRequest {
         this.gender = gender;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public UserSearchRequest(Long userId, Long roleId, Long facultyId, String fullName, String roleName,
-            String facultyName, Date startDate, Date endDate, String email, Integer gender) {
+            String facultyName, Date startDate, Date endDate, String email, Integer gender, String code) {
         this.userId = userId;
         this.roleId = roleId;
         this.facultyId = facultyId;
@@ -112,11 +121,12 @@ public class UserSearchRequest extends PagingRequest {
         this.endDate = endDate;
         this.email = email;
         this.gender = gender;
+        this.code = code;
     }
 
     public UserSearchRequest(int limit, int page, String sort, String column, Long userId, Long roleId, Long facultyId,
             String fullName, String roleName, String facultyName, Date startDate, Date endDate, String email,
-            Integer gender) {
+            Integer gender, String code) {
         super(limit, page, sort, column);
         this.userId = userId;
         this.roleId = roleId;
@@ -128,7 +138,10 @@ public class UserSearchRequest extends PagingRequest {
         this.endDate = endDate;
         this.email = email;
         this.gender = gender;
+        this.code = code;
     }
+
+    
 
     
 

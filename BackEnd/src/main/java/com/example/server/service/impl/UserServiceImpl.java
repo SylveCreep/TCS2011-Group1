@@ -125,6 +125,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             nUser.setAvatar(user.getAvatar());
             nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
             Role role = roleService.findById(user.getRoleId());
+            if(role == null){
+                return null;
+            }
             nUser.setRole(role);
             return userDao.save(nUser);
         } catch (Exception e) {
@@ -177,7 +180,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             }
             Page<User> list = userDao.searchUserByRoleAndFac(userSearchRequest.getUserId(),userSearchRequest.getRoleId(),userSearchRequest.getFacultyId(),
             userSearchRequest.getFullName(),userSearchRequest.getRoleName(),userSearchRequest.getFacultyName(),
-            userSearchRequest.getEmail(),userSearchRequest.getStartDate(),userSearchRequest.getEndDate(),hasDate,userSearchRequest.getGender(),
+            userSearchRequest.getEmail(),userSearchRequest.getStartDate(),userSearchRequest.getEndDate(),hasDate,userSearchRequest.getGender(), userSearchRequest.getCode(),
             PageRequest.of(offset, userSearchRequest.getLimit(), sort));
 
             int lastPage = Math.round(list.getTotalElements()/userSearchRequest.getLimit());
