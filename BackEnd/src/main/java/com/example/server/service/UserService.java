@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.P
 
 
 public interface UserService {
-    User saveGuestRegister(UserDto user);
+    User saveGuestRegister(CreateAccount user);
 
     User saveRegister(CreateAccount user);
 
@@ -25,7 +25,7 @@ public interface UserService {
 
     UserResponse findById(Long id);
 
-    UserDto update(UserDto user);
+    Boolean update(CreateAccount user);
 
     List<Object> getUserListResponse(PagingRequest pagingRequest);
 

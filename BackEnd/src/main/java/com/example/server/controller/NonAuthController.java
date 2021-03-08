@@ -9,6 +9,7 @@ import com.example.server.config.TokenProvider;
 import com.example.server.dto.AuthToken;
 import com.example.server.dto.UserDto;
 import com.example.server.entity.User;
+import com.example.server.model.request.CreateAccount;
 import com.example.server.model.request.LoginUser;
 import com.example.server.service.UserService;
 
@@ -77,7 +78,7 @@ public class NonAuthController {
     }
 
     @PostMapping(value ="/register",  consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> saveUser(@Valid @RequestBody UserDto user){
+    public ResponseEntity<?> saveUser(@Valid @RequestBody CreateAccount user){
         try {
             User regisUser = userService.saveGuestRegister(user);
             if(regisUser == null){

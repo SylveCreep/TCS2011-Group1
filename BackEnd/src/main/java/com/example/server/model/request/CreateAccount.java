@@ -9,6 +9,8 @@ import javax.validation.constraints.Size;
 import com.example.server.util.NameValidation;
 
 public class CreateAccount {
+
+    private Long id; 
     private String email;
     
     @Size(min = 6, max = 30)
@@ -23,6 +25,8 @@ public class CreateAccount {
     private Date dateOfBirth;
 
     private Long roleId;
+
+    private Long facultyId;
 
     private Integer phoneNumber;
 
@@ -114,6 +118,22 @@ public class CreateAccount {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Long getFacultyId() {
+        return facultyId;
+    }
+
+    public void setFacultyId(Long facultyId) {
+        this.facultyId = facultyId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
     
 }

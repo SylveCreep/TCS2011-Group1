@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Set;
 
 import com.example.server.constant.Constant;
+import com.example.server.dao.FacultyDao;
+import com.example.server.dao.RoleDao;
 import com.example.server.dao.UserDao;
 import com.example.server.dto.UserDto;
+import com.example.server.entity.Faculty;
 import com.example.server.entity.Role;
 import com.example.server.entity.User;
 import com.example.server.model.request.CreateAccount;
@@ -54,6 +57,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private RoleDao roleDao;
+
+    @Autowired
+    private FacultyDao facultyDao;
+
     @Autowired(required = true)
     private ModelMapper modelMapper; 
 
@@ -91,19 +100,28 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     // Create account by guest
     @Override
-    public User saveGuestRegister(UserDto user) {
-        User nUser = user.getUserFromDto();
-        if(userDao.findByEmail(user.getEmail()) == null){
-            nUser.setEmail(user.getEmail());
-        } else {
+    public User saveGuestRegister(CreateAccount user) {
+        try {
+            User nUser = new User();
+            if(userDao.findByEmail(user.getEmail()) == null){
+                nUser.setEmail(user.getEmail());
+            } else {
+                return null;
+            }
+            nUser.setCode("U" + String.format("%04d", queryCheck.GetHighestId("user")));
+            nUser.setFullName(user.getFullName());
+            nUser.setAddress(user.getAddress());
+            nUser.setDateOfBirth(user.getDateOfBirth());
+            nUser.setPhoneNumber(user.getPhoneNumber());
+            nUser.setGender(user.getGender());
+            nUser.setAvatar(user.getAvatar());
+            nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+            Role role = roleService.findByName("GUEST");
+            nUser.setRole(role);
+            return userDao.save(nUser);
+        } catch (Exception e) {
             return null;
         }
-        nUser.setCode("U" + String.format("%04d", queryCheck.GetHighestId("user")));
-        nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-
-        Role role = roleService.findByName("GUEST");
-        nUser.setRole(role);
-        return userDao.save(nUser);
     }
 
     // Create account by admin
@@ -125,10 +143,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             nUser.setAvatar(user.getAvatar());
             nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
             Role role = roleService.findById(user.getRoleId());
-            if(role == null){
+            Faculty faculty = facultyDao.getOne(user.getFacultyId());
+            if(role == null || role.getIs_deleted() == DELETED){
+                return null;
+            }
+            if(faculty == null || faculty.getIs_deleted() == DELETED){
                 return null;
             }
             nUser.setRole(role);
+            nUser.setFaculty(faculty);
             return userDao.save(nUser);
         } catch (Exception e) {
             return null;
@@ -223,22 +246,31 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public UserDto update(UserDto userDto){
+    public Boolean update(CreateAccount userDto){
         try {
             User user = userDao.getOne(userDto.getId());
+            Role role = roleDao.getOne(userDto.getRoleId());
+            Faculty facult = facultyDao.getOne(userDto.getFacultyId());
+            if(role == null){
+                return false;
+            }
+            if(facult == null){
+                return false;
+            }
             if(userDao.findByEmail(userDto.getEmail()) != null){
-                return null;
+                return false;
             }
             user.setEmail(userDto.getEmail());
             user.setFullName(userDto.getFullName());
             user.setAddress(userDto.getAddress());
             user.setDateOfBirth(userDto.getDateOfBirth());
+            user.setPhoneNumber(userDto.getPhoneNumber());
+            user.setRole(role);
+            user.setFaculty(facult);
             userDao.save(user);
-
-            UserDto saveUser = modelMapper.map(user, UserDto.class);
-            return saveUser;
+            return true;
         } catch (Exception e) {
-           return null;
+           return false;
         }
     }
 

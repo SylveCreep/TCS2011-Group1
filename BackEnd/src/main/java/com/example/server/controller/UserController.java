@@ -29,6 +29,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -125,14 +126,14 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> update(@RequestBody UserDto userDto){
+    @PatchMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> update(@RequestBody CreateAccount userDto){
         try {
             if(userDto.getId() == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE ,"Must has user id", HttpStatus.BAD_REQUEST);
             }
-            UserDto user = userService.update(userDto);
-            if(user == null){
+            Boolean user = userService.update(userDto);
+            if(user == false){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Update user fail", HttpStatus.BAD_REQUEST);
             }
             return responseUtils.getResponseEntity(user, Constant.SUCCESS,"Update user successfully", HttpStatus.OK);
