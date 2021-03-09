@@ -3,29 +3,31 @@
         <ul class="pagination pg-blue">
             <li class="page-item">
                 <a href="#" class="page-link" tabindex="-1"
-                   v-on:click.prevent="changePage(1)" v-if="pagination.last_page > 5">
-                    <span aria-hidden="true"><<</span>
+                   v-on:click.prevent="changePage(1)" v-if="pagination.lastPage > 5">
+                    <span aria-hidden="true"> 
+                    First
+                    </span>
                 </a>
             </li>
-            <li class="page-item" v-if="pagination.current_page > 1">
+            <li class="page-item" v-if="pagination.currentPage > 1">
                 <a href="#" class="page-link" tabindex="-1"
-                   v-on:click.prevent="changePage(pagination.current_page - 1)">
-                    <span aria-hidden="true"><</span>
+                   v-on:click.prevent="changePage(pagination.currentPage - 1)">
+                    <span aria-hidden="true">Previous</span>
                 </a>
             </li>
-            <li class="page-item" v-for="page in pagesNumber"
-                :class="{'active': page == pagination.current_page}">
+            <li class="page-item" v-for="page in pagesNumber" :key="page"
+                :class="{'active': page == pagination.currentPage}">
                 <a href="#" class="page-link" v-on:click.prevent="changePage(page)">{{page}}</a>
             </li>
-            <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                <a href="#" class="page-link" v-on:click.prevent="changePage(pagination.current_page + 1)">
-                    <span aria-hidden="true">></span>
+            <li class="page-item" v-if="pagination.currentPage < pagination.lastPage">
+                <a href="#" class="page-link" v-on:click.prevent="changePage(pagination.currentPage + 1)">
+                    <span aria-hidden="true">Next</span>
                 </a>
             </li>
             <li class="page-item">
                 <a href="#" class="page-link" tabindex="-1"
-                   v-on:click.prevent="changePage(pagination.last_page)" v-if="pagination.last_page > 3">
-                    <span aria-hidden="true">>></span>
+                   v-on:click.prevent="changePage(pagination.lastPage)" v-if="pagination.lastPage > 3">
+                    Last
                 </a>
             </li>
         </ul>
@@ -40,24 +42,24 @@ export default {
         pagesNumber() {
             var from;
             var pageArray = [];
-            if (this.pagination.last_page < 5){
-                for (from = 1; from <= this.pagination.last_page; from++){
+            if (this.pagination.lastPage < 5){
+                for (from = 1; from <= this.pagination.lastPage; from++){
                     pageArray.push(from);
                 }
             }
-            else if (this.pagination.current_page <= 3) {
+            else if (this.pagination.currentPage <= 3) {
                 for (from = 1; from <= 5; from++) {
                     pageArray.push(from);
                 }
             }
-            else if (this.pagination.current_page >= this.pagination.last_page - 2) {
-                for (from =this.pagination.last_page - 4 ; from <= this.pagination.last_page; from++) {
+            else if (this.pagination.currentPage >= this.pagination.lastPage - 2) {
+                for (from =this.pagination.lastPage - 4 ; from <= this.pagination.lastPage; from++) {
                     pageArray.push(from);
                 }
             }
             else
             {
-                for (from =this.pagination.current_page - 2 ; from <= this.pagination.current_page + 2; from++) {
+                for (from =this.pagination.currentPage - 2 ; from <= this.pagination.currentPage + 2; from++) {
                     pageArray.push(from);
                 }
             }
@@ -66,7 +68,7 @@ export default {
     },
     methods: {
         changePage(page){
-            this.pagination.current_page = page;
+            this.$emit("currentPage", page);
         },
     }
 }

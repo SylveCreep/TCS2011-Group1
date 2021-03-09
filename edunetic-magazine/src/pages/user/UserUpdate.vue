@@ -34,9 +34,11 @@
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Role: </label>
                                             <div class="col-sm-12">
-                                                <select class="form-control select2"  id="role_id" name="category"  v-model="user.role_id">
-                                                  <option v-for="role in list_roles" :key="role.id"
-                                                          v-bind:value="role.id">
+                                                <select class="form-control select2"  id="role_id" name="category"  v-model="user.roleId">
+                                                  <option selected v-bind:value="user.roleId">{{user.roleName}}</option>
+                                                  <option v-for="role in roleList" :key="role.id"
+                                                          v-bind:value="role.id"
+                                                  >
                                                     {{role.name}}
                                                   </option>
                                                 </select>
@@ -45,10 +47,11 @@
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Faculty: </label>
                                             <div class="col-sm-12">
-                                                <select class="form-control select2"  id="faculty_id" name="category"  v-model="user.faculty_id">
-                                                    <option v-for="faculty in list_faculties" :key="faculty.id"
+                                                <select class="form-control select2"  id="faculty_id" name="category"  v-model="user.facultyId">
+                                                    <option selected v-bind:value="user.facultyId">{{user.facultyName}}</option>
+                                                    <option v-for="faculty in facultyList" :key="faculty.id"
                                                             v-bind:value="faculty.id">
-                                                      {{faculty.name}}
+                                                      {{faculty.faculty_name}}
                                                     </option>
                                                 </select>
                                             </div>
@@ -107,15 +110,34 @@
 <script>
 import axios from "axios";
 import {UrlConstants} from "@/constant/UrlConstant";
+import { DefaultConstants } from "@/constant/DefaultConstant";
+import { commonHelper } from "@/helper/commonHelper";
+
 
 export default {
   name: "UserUpdate",
+  mixins: [commonHelper],
   data(){
     return{
       user: {},
       errors: null,
-      list_faculties: {},
-      list_roles: {},
+      list_faculties: [],
+      list_roles: [],
+      validate: true,
+      filter: {
+        column: DefaultConstants.Column, //default column = 'id'
+        sort: DefaultConstants.Sort, //default sort = 'asc'
+        limit: DefaultConstants.Limit, //default limit = 15
+        page: DefaultConstants.Page, //default page = 15
+      },
+    }
+  },
+  computed: {
+    roleList() {
+      return this.list_roles.filter(role => role.id !== this.user.roleId);
+    },
+    facultyList() {
+      return this.list_faculties.filter(fac => fac.id !== this.user.facultyId);
     }
   },
   created() {
@@ -133,44 +155,47 @@ export default {
               this.errors = error.response;
           })
     },
-    showError(errors){
-      Object.keys(errors).forEach(error=>{
-        let text = document.querySelector('#'+error);
-        text.style.cssText = 'border-color: red'
-      })
-    },
     getRoleList() {
-      axios.get(UrlConstants.Role)
-          .then(response => {
-            this.list_roles = response.data
-            console.log(this.list_roles);
-          })
-          .catch(error =>{
-            this.errors = error.response.data.errors;
-            this.showError(this.errors);
-          })
+      axios
+        .post(UrlConstants.Role + "/filter", this.filter)
+        .then((response) => {
+          this.list_roles = response.data.data;
+         
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+          this.showError(this.errors);
+        });
     },
-    getFacultyList() {
-      axios.get(UrlConstants.Faculty)
-          .then(response => {
-            this.list_faculties = response.data
-          })
-          .catch(error =>{
-            this.errors = error.response.data.errors;
-            this.showError(this.errors);
-          })
+   getFacultyList() {
+      axios
+        .post(UrlConstants.Faculty + "/filter", this.filter)
+        .then((response) => {
+          this.list_faculties = response.data.data;
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+          this.showError(this.errors);
+        });
     },
     updateUser() {
-      axios.patch(UrlConstants.User + '/' + this.$route.params.id, this.user )
+      this.list_errors = this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
+      if (Object.keys(this.list_errors).length > 0) {
+        this.validate = false;
+      }
+      this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
+      if (this.validate) {
+        axios.patch(UrlConstants.User + '/' + this.$route.params.id, this.user )
           .then(response => {
             console.log(response)
             alert('success')
-            this.$router.push('/products')
+            this.$router.push('/users')
           })
           .catch(error =>{
             this.errors = error.response.data.errors;
             this.showError(this.errors);
           })
+      }
     }
   }
 }

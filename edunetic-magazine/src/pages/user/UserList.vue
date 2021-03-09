@@ -34,7 +34,7 @@
                       placeholder="Search"
                       aria-label="Search"
                       v-model="filter.code"
-                      v-on:keyup="getFilter"
+                      v-on:keyup="getUserList"
                     />
                   </div>
                   <div class="form-group">
@@ -54,8 +54,8 @@
                       class="form-control select2"
                       id="cate_id"
                       name="category"
-                      v-model="filter.is_male"
-                      v-on:change="getFilter"
+                      v-model="filter.gender"
+                      v-on:change="getUserList"
                     >
                       <option value="" selected>All</option>
                       <option value="1" selected>Male</option>
@@ -68,16 +68,16 @@
                       class="form-control select2"
                       id="faculty_id"
                       name="faculty"
-                      v-model="filter.faculty_id"
-                      v-on:change="getFilter()"
+                      v-model="filter.facultyId"
+                      v-on:change="getUserList"
                     >
                       <option value="" selected>All</option>
                       <option
-                        v-for="faculty in list_faculties"
+                        v-for="faculty in list_faculties.data"
                         :key="faculty.id"
                         v-bind:value="faculty.id"
                       >
-                        {{ faculty.name }}
+                        {{ faculty.faculty_name }}
                       </option>
                     </select>
                   </div>
@@ -87,12 +87,12 @@
                       class="form-control select2"
                       id="role_id"
                       name="role"
-                      v-model="filter.role"
-                      v-on:change="getFilter()"
+                      v-model="filter.roleId"
+                      v-on:change="getUserList"
                     >
-                      <option value="" selected>All</option>
+                      <option value="" selected=selected>All</option>
                       <option
-                        v-for="role in list_roles"
+                        v-for="role in list_roles.data"
                         :key="role.id"
                         v-bind:value="role.id"
                       >
@@ -108,7 +108,7 @@
                       placeholder="Search"
                       aria-label="Search"
                       v-model="filter.email"
-                      v-on:keyup="getFilter"
+                      v-on:keyup="getUserList"
                     />
                   </div>
                   <div class="form-group">
@@ -119,7 +119,7 @@
                       placeholder="Search"
                       aria-label="Search"
                       v-model="filter.date_of_birth"
-                      v-on:keyup="getFilter"
+                      v-on:keyup="getUserList"
                     />
                   </div>
                 </div>
@@ -131,11 +131,15 @@
                   <thead>
                     <tr>
                       <th class="sort">Code <i class="fas fa-sort"></i></th>
-                      <th class="sort" v-on:click="getSort('fullName')">
+                      <th class="sort" v-on:click="getSort('full_name')">
                         Full name <i class="fas fa-sort"></i>
                       </th>
-                      <th class="sort">Faculty <i class="fas fa-sort"></i></th>
-                      <th class="sort">Role <i class="fas fa-sort"></i></th>
+                      <th class="sort" v-on:click="getSort('faculty_id')">
+                        Faculty <i class="fas fa-sort"></i>
+                      </th>
+                      <th class="sort" v-on:click="getSort('role_id')">
+                        Role <i class="fas fa-sort"></i>
+                      </th>
                       <th class="sort" v-on:click="getSort('email')">
                         Email <i class="fas fa-sort"></i>
                       </th>
@@ -143,7 +147,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="user of list_users" :key="user.id">
+                    <tr v-for="user of list_users.data" :key="user.id">
                       <td>{{ user.code }}</td>
                       <td>{{ user.fullName }}</td>
                       <td>{{ user.facultyName }}</td>
@@ -184,7 +188,7 @@
                     </div>
                   </div>
                   <div class="col-sm-6">
-                    <!--                    <the-pagination v-bind:pagination="list_users" v-on:click.native="getUserList"></the-pagination>-->
+                    <the-pagination v-bind:pagination="list_users" v-on:currentPage="changePage"></the-pagination>
                   </div>
                 </div>
               </div>
@@ -207,16 +211,15 @@ import { DefaultConstants } from "@/constant/DefaultConstant";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { ResultConstants } from "@/constant/ResultConstant";
 import router from "@/router";
-//import ThePagination from "@/components/ThePagination";
+import ThePagination from "@/components/ThePagination";
 
 export default {
   name: "UserList",
   components: {
-    //ThePagination
+    ThePagination
   },
   data() {
-    return {
-      
+    return {    
       list_users: [],
       list_roles: [],
       list_faculties: [],
@@ -231,7 +234,7 @@ export default {
   },
   created() {
     this.getUserList();
-    //this.getRoleList();
+    this.getRoleList();
     this.getFacultyList();
   },
   methods: {
@@ -239,7 +242,8 @@ export default {
       axios
         .post(UrlConstants.User + "/filter", this.filter)
         .then((response) => {
-          this.list_users = response.data.data;
+          this.list_users = response.data;
+          this.list_users.currentPage = this.filter.page;
         })
         .catch((error) => {
           this.errors = error.response.data;
@@ -247,10 +251,10 @@ export default {
     },
     getRoleList() {
       axios
-        .get(UrlConstants.Role)
+        .post(UrlConstants.Role + "/filter", this.filter)
         .then((response) => {
           this.list_roles = response.data;
-          console.log(this.list_roles);
+         
         })
         .catch((error) => {
           this.errors = error.response.data.errors;
@@ -259,9 +263,10 @@ export default {
     },
     getFacultyList() {
       axios
-        .get(UrlConstants.Faculty)
+        .post(UrlConstants.Faculty + "/filter", this.filter)
         .then((response) => {
           this.list_faculties = response.data;
+          console.log(this.list_faculties)
         })
         .catch((error) => {
           this.errors = error.response.data.errors;
@@ -321,6 +326,10 @@ export default {
       this.filter.page = 1;
       this.getUserList();
     },
+    changePage(e){
+      this.filter.page = e;
+      this.getUserList();
+    }
   },
 };
 </script>
