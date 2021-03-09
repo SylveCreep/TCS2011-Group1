@@ -61,9 +61,9 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<?> createUser(@Valid @RequestBody CreateAccount user){
+    public ResponseEntity<?> createUser(@RequestBody CreateAccount user){
         try {
-            HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(user);
+            HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(user, 0);
             Object validateRes = validateResult.get("result");
             if(Integer.parseInt(validateRes.toString()) == -1){
                 return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE,"Create user failed",validateResult, HttpStatus.BAD_REQUEST);
@@ -134,6 +134,11 @@ public class UserController {
     @PatchMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> update(@RequestBody CreateAccount userDto){
         try {
+            HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(userDto, 1);
+            Object validateRes = validateResult.get("result");
+            if(Integer.parseInt(validateRes.toString()) == -1){
+                return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE,"Update user failed",validateResult, HttpStatus.BAD_REQUEST);
+            }
             if(userDto.getId() == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE ,"Must has user id", HttpStatus.BAD_REQUEST);
             }

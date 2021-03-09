@@ -5,6 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
+import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 
 import com.example.server.dao.FacultyDao;
 import com.example.server.dao.RoleDao;
@@ -94,34 +97,69 @@ public class ResponseUtils {
         }
     }
 
-    public HashMap<String, Object> validateCreateAccountRequest(CreateAccount createAccount){
+    public HashMap<String, Object> validateCreateAccountRequest(CreateAccount createAccount, int type){
         HashMap<String, Object> form = new HashMap<>();
         HashMap<String, Object> inputForm = new HashMap<>();
         form.put("input", inputForm);
-        
-        inputForm.put("email", validateEmailInput(createAccount.getEmail()));
-        inputForm.put("password", validatePasswordInput(createAccount.getPassword()));
-        inputForm.put("fullName", validateNameInput(createAccount.getFullName()));
-        inputForm.put("address", validateAddressInput(createAccount.getAddress()));
-        inputForm.put("dateOfBirth", validateBirthDayInput(createAccount.getDateOfBirth()));
-        inputForm.put("roleId", validateRoleInput(createAccount.getRoleId()));
-        inputForm.put("facultyId", validateFacultyInput(createAccount.getFacultyId()));
-        inputForm.put("phoneNumber", validatePhoneInput(createAccount.getPhoneNumber()));
-        inputForm.put("gender", validateGenderInput(createAccount.getGender()));
-        inputForm.put("avatar", "Valid");
 
-        if(validateEmailInput(createAccount.getEmail()).equals("Valid") 
-        && validatePasswordInput(createAccount.getPassword()).equals("Valid")
-        && validateNameInput(createAccount.getFullName()).equals("Valid")
-        && validateAddressInput(createAccount.getAddress()).equals("Valid")
-        && validateBirthDayInput(createAccount.getDateOfBirth()).equals("Valid")
-        && validateRoleInput(createAccount.getRoleId()).equals("Valid")
-        && validateFacultyInput(createAccount.getFacultyId()).equals("Valid")
-        && validatePhoneInput(createAccount.getPhoneNumber()).equals("Valid")
-        && validateGenderInput(createAccount.getGender()).equals("Valid")){
-            form.put("result", 0);
-        } else {
-            form.put("result", -1);
+        // Type 0 for create account request
+        // Type 1 for update account request
+        switch (type) {
+            case 0:
+                inputForm.put("email", validateEmailInput(createAccount.getEmail()));
+                inputForm.put("password", validatePasswordInput(createAccount.getPassword()));
+                inputForm.put("fullName", validateNameInput(createAccount.getFullName()));
+                inputForm.put("address", validateAddressInput(createAccount.getAddress()));
+                inputForm.put("dateOfBirth", validateBirthDayInput(createAccount.getDateOfBirth()));
+                inputForm.put("roleId", validateRoleInput(createAccount.getRoleId()));
+                inputForm.put("facultyId", validateFacultyInput(createAccount.getFacultyId()));
+                inputForm.put("phoneNumber", validatePhoneInput(createAccount.getPhoneNumber()));
+                inputForm.put("gender", validateGenderInput(createAccount.getGender()));
+                inputForm.put("avatar", "Valid");
+        
+                if(validateEmailInput(createAccount.getEmail()).equals("Valid") 
+                && validatePasswordInput(createAccount.getPassword()).equals("Valid")
+                && validateNameInput(createAccount.getFullName()).equals("Valid")
+                && validateAddressInput(createAccount.getAddress()).equals("Valid")
+                && validateBirthDayInput(createAccount.getDateOfBirth()).equals("Valid")
+                && validateRoleInput(createAccount.getRoleId()).equals("Valid")
+                && validateFacultyInput(createAccount.getFacultyId()).equals("Valid")
+                && validatePhoneInput(createAccount.getPhoneNumber()).equals("Valid")
+                && validateGenderInput(createAccount.getGender()).equals("Valid")){
+                    form.put("result", 0);
+                } else {
+                    form.put("result", -1);
+                }
+                break;
+            case 1:
+                inputForm.put("userId", validateUserInput(createAccount.getId()));
+                inputForm.put("email", validateEmailInput(createAccount.getEmail()));
+                inputForm.put("password", validatePasswordInput(createAccount.getPassword()));
+                inputForm.put("fullName", validateNameInput(createAccount.getFullName()));
+                inputForm.put("address", validateAddressInput(createAccount.getAddress()));
+                inputForm.put("dateOfBirth", validateBirthDayInput(createAccount.getDateOfBirth()));
+                inputForm.put("roleId", validateRoleInput(createAccount.getRoleId()));
+                inputForm.put("facultyId", validateFacultyInput(createAccount.getFacultyId()));
+                inputForm.put("phoneNumber", validatePhoneInput(createAccount.getPhoneNumber()));
+                inputForm.put("gender", validateGenderInput(createAccount.getGender()));
+                inputForm.put("avatar", "Valid");
+        
+                if(validateEmailInput(createAccount.getEmail()).equals("Valid") 
+                && validatePasswordInput(createAccount.getPassword()).equals("Valid")
+                && validateNameInput(createAccount.getFullName()).equals("Valid")
+                && validateAddressInput(createAccount.getAddress()).equals("Valid")
+                && validateBirthDayInput(createAccount.getDateOfBirth()).equals("Valid")
+                && validateRoleInput(createAccount.getRoleId()).equals("Valid")
+                && validateFacultyInput(createAccount.getFacultyId()).equals("Valid")
+                && validatePhoneInput(createAccount.getPhoneNumber()).equals("Valid")
+                && validateGenderInput(createAccount.getGender()).equals("Valid")
+                && validateUserInput(createAccount.getId()).equals("Valid")){
+                    form.put("result", 0);
+                } else {
+                    form.put("result", -1);
+                }
+            default:
+                break;
         }
 
         return form;
@@ -189,7 +227,7 @@ public class ResponseUtils {
         if(roleId == null){
             return "Valid";
         }
-        Role role = roleDao.getOne(roleId);
+        Role role = roleDao.findRoleById(roleId);
         if(role != null){
             if(role.getIs_deleted() != DELETED){
                 return "Valid";
@@ -198,6 +236,22 @@ public class ResponseUtils {
             }
         } else {
             return "Role not existed";
+        }
+    }
+
+    public String validateUserInput(Long userId){
+        if(userId == null){
+            return "Must have user Id";
+        }
+        Optional<User> user = userDao.findById(userId);
+        if(!user.isEmpty()){
+            if(user.get().getIs_deleted() != DELETED){
+                return "Valid";
+            } else {
+                return "User is deleted";
+            }
+        } else {
+            return "User not existed";
         }
     }
 

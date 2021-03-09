@@ -13,13 +13,10 @@ public class CreateAccount {
     private Long id; 
     private String email;
     
-    @Size(min = 6, max = 30)
     private String password;
 
-    @Size(max = 255)
     private String fullName;
 
-    @Size(max = 255)
     private String address;
 
     private Date dateOfBirth;
@@ -55,11 +52,7 @@ public class CreateAccount {
     }
 
     public void setFullName(String fullName) {
-        if(!NameValidation.containSpecialCharacter(fullName) && !NameValidation.containNumber(fullName)){
-            this.fullName = fullName;
-        } else {
-            this.fullName = null;
-        }
+        this.fullName = fullName;
     }
 
     public String getAddress() {
@@ -67,11 +60,7 @@ public class CreateAccount {
     }
 
     public void setAddress(String address) {
-        if(!NameValidation.containSpecialCharacter(address)){
-            this.address = address;
-        } else {
-            this.address = null;
-        }
+        this.address = address;
     }
 
     public Date getDateOfBirth() {
@@ -79,13 +68,7 @@ public class CreateAccount {
     }
 
     public void setDateOfBirth(Date dateOfBirth) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-        Date currentDate = new Date();
-        if((Integer.parseInt(dateFormat.format(currentDate).substring(0, 4)) - Integer.parseInt(dateFormat.format(dateOfBirth).substring(0, 4))) > 18){
-            this.dateOfBirth = dateOfBirth;
-        } else {
-            this.dateOfBirth = null;
-        }
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Long getRoleId() {

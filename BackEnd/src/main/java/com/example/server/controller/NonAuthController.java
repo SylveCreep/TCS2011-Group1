@@ -86,7 +86,7 @@ public class NonAuthController {
     @PostMapping(value ="/register",  consumes = {"text/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> saveUser(@Valid @RequestBody CreateAccount user){
         try {
-            HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(user);
+            HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(user, 0);
             Object validateRes = validateResult.get("result");
             if(Integer.parseInt(validateRes.toString()) == -1){
                 return responseUtils.getActionResponseEntity("NULL", FAILURE,"Create user failed",validateResult, HttpStatus.BAD_REQUEST);
