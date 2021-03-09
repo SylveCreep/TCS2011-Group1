@@ -102,61 +102,151 @@ public class ResponseUtils {
         HashMap<String, Object> inputForm = new HashMap<>();
         form.put("input", inputForm);
 
+        String valEmail = validateEmailInput(createAccount.getEmail());
+        String valPass = validatePasswordInput(createAccount.getPassword());
+        String valName = validateNameInput(createAccount.getFullName());
+        String valAddr = validateAddressInput(createAccount.getAddress());
+        String valDob = validateBirthDayInput(createAccount.getDateOfBirth());
+        String valRole = validateRoleInput(createAccount.getRoleId());
+        String valFacl = validateFacultyInput(createAccount.getFacultyId());
+        String valPhone = validatePhoneInput(createAccount.getPhoneNumber());
+        String valGen = validateGenderInput(createAccount.getGender());
+        String valId = validateGenderInput(createAccount.getGender());
+
         // Type 0 for create account request
         // Type 1 for update account request
         switch (type) {
             case 0:
-                inputForm.put("email", validateEmailInput(createAccount.getEmail()));
-                inputForm.put("password", validatePasswordInput(createAccount.getPassword()));
-                inputForm.put("fullName", validateNameInput(createAccount.getFullName()));
-                inputForm.put("address", validateAddressInput(createAccount.getAddress()));
-                inputForm.put("dateOfBirth", validateBirthDayInput(createAccount.getDateOfBirth()));
-                inputForm.put("roleId", validateRoleInput(createAccount.getRoleId()));
-                inputForm.put("facultyId", validateFacultyInput(createAccount.getFacultyId()));
-                inputForm.put("phoneNumber", validatePhoneInput(createAccount.getPhoneNumber()));
-                inputForm.put("gender", validateGenderInput(createAccount.getGender()));
-                inputForm.put("avatar", "Valid");
-        
-                if(validateEmailInput(createAccount.getEmail()).equals("Valid") 
-                && validatePasswordInput(createAccount.getPassword()).equals("Valid")
-                && validateNameInput(createAccount.getFullName()).equals("Valid")
-                && validateAddressInput(createAccount.getAddress()).equals("Valid")
-                && validateBirthDayInput(createAccount.getDateOfBirth()).equals("Valid")
-                && validateRoleInput(createAccount.getRoleId()).equals("Valid")
-                && validateFacultyInput(createAccount.getFacultyId()).equals("Valid")
-                && validatePhoneInput(createAccount.getPhoneNumber()).equals("Valid")
-                && validateGenderInput(createAccount.getGender()).equals("Valid")){
+                if(!valEmail.equals("Valid")){
+                    inputForm.put("email", valEmail);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if(!valPass.equals("Valid")){
+                    inputForm.put("password", valPass);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if(!valName.equals("Valid")){
+                    inputForm.put("fullName", valName);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if(!valAddr.equals("Valid")){
+                    inputForm.put("address", valAddr);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if(!valDob.equals("Valid")){
+                    inputForm.put("dateOfBirth", valDob);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if(!valRole.equals("Valid")){
+                    inputForm.put("roleId", valRole);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+
+                if(!valFacl.equals("Valid")){
+                    inputForm.put("facultyId", valFacl);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+
+                if(!valPhone.equals("Valid")){
+                    inputForm.put("phoneNumber", valPhone);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+
+                if(!valGen.equals("Valid")){
+                    inputForm.put("gender", valGen);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+
+                if(!form.containsKey("result")){
                     form.put("result", 0);
-                } else {
-                    form.put("result", -1);
                 }
                 break;
             case 1:
-                inputForm.put("userId", validateUserInput(createAccount.getId()));
-                inputForm.put("email", validateEmailInput(createAccount.getEmail()));
-                inputForm.put("password", validatePasswordInput(createAccount.getPassword()));
-                inputForm.put("fullName", validateNameInput(createAccount.getFullName()));
-                inputForm.put("address", validateAddressInput(createAccount.getAddress()));
-                inputForm.put("dateOfBirth", validateBirthDayInput(createAccount.getDateOfBirth()));
-                inputForm.put("roleId", validateRoleInput(createAccount.getRoleId()));
-                inputForm.put("facultyId", validateFacultyInput(createAccount.getFacultyId()));
-                inputForm.put("phoneNumber", validatePhoneInput(createAccount.getPhoneNumber()));
-                inputForm.put("gender", validateGenderInput(createAccount.getGender()));
-                inputForm.put("avatar", "Valid");
-        
-                if(validateEmailInput(createAccount.getEmail()).equals("Valid") 
-                && validatePasswordInput(createAccount.getPassword()).equals("Valid")
-                && validateNameInput(createAccount.getFullName()).equals("Valid")
-                && validateAddressInput(createAccount.getAddress()).equals("Valid")
-                && validateBirthDayInput(createAccount.getDateOfBirth()).equals("Valid")
-                && validateRoleInput(createAccount.getRoleId()).equals("Valid")
-                && validateFacultyInput(createAccount.getFacultyId()).equals("Valid")
-                && validatePhoneInput(createAccount.getPhoneNumber()).equals("Valid")
-                && validateGenderInput(createAccount.getGender()).equals("Valid")
-                && validateUserInput(createAccount.getId()).equals("Valid")){
+                if(!valId.equals("Valid")){
+                    inputForm.put("userId", valEmail);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+
+                if(!valEmail.equals("Valid")){
+                    inputForm.put("email", valEmail);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                // if(!valPass.equals("Valid")){
+                //     inputForm.put("password", valPass);
+                //     if(!form.containsKey("result")){
+                //         form.put("result", -1);
+                //     }
+                // }
+                if(!valName.equals("Valid")){
+                    inputForm.put("fullName", valName);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if(!valAddr.equals("Valid")){
+                    inputForm.put("address", valAddr);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if(!valDob.equals("Valid")){
+                    inputForm.put("dateOfBirth", valDob);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if(!valRole.equals("Valid")){
+                    inputForm.put("roleId", valRole);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+
+                if(!valFacl.equals("Valid")){
+                    inputForm.put("facultyId", valFacl);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+
+                if(!valPhone.equals("Valid")){
+                    inputForm.put("phoneNumber", valPhone);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+
+                if(!valGen.equals("Valid")){
+                    inputForm.put("gender", valGen);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+
+                if(!form.containsKey("result")){
                     form.put("result", 0);
-                } else {
-                    form.put("result", -1);
                 }
             default:
                 break;
