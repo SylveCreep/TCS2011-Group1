@@ -44,7 +44,7 @@
                       type="text"
                       placeholder="Search"
                       aria-label="Search"
-                      v-model="filter.name"
+                      v-model="filter.faculty_name"
                       v-on:keyup="getFilter"
                     />
                   </div>
@@ -55,7 +55,7 @@
                       type="text"
                       placeholder="Search"
                       aria-label="Search"
-                      v-model="filter.cordinatorname"
+                      v-model="filter.manager_name"
                       v-on:keyup="getFilter"
                     />
                   </div>
@@ -86,15 +86,15 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="faculty of list_faculties" :key="faculty.id">
+                    <tr v-for="faculty of list_faculties" :key="faculty.faculty_id">
                       <td>{{ faculty.code }}</td>
-                      <td>{{ faculty.name }}</td>
-                      <td>{{ faculty.cordinator }}</td>
+                      <td>{{ faculty.faculty_name }}</td>
+                      <td>{{ faculty.manager_name }}</td>
                       <td>
                         <p
                           class="click"
                           style="display: inline"
-                          v-on:click="showFaculty(faculty.id)"
+                          v-on:click="showFaculty(faculty.faculty_id)"
                         >
                           <b>Update</b>
                         </p>
@@ -102,7 +102,7 @@
                         <p
                           class="click"
                           style="display: inline"
-                          v-on:click="deleteFaculty(Faculty.id)"
+                          v-on:click="deleteFaculty(faculty.faculty_id)"
                         >
                           <b>Delete</b>
                         </p>
@@ -110,7 +110,7 @@
                         <p
                           class="click"
                           style="display: inline"
-                          v-on:click="showStundent(faculty.id)"
+                          v-on:click="showStundent(faculty.faculty_id, faculty.faculty_name)"
                         >
                           <b>Stundent's list</b>
                         </p>
@@ -155,7 +155,7 @@ import axios from "axios";
 import { DefaultConstants } from "@/constant/DefaultConstant";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { ResultConstants } from "@/constant/ResultConstant";
-import { RoleConstants } from "@/constant/RoleConstants";
+// import { RoleConstants } from "@/constant/RoleConstants";
 import router from "@/router";
 //import ThePagination from "@/components/ThePagination";
 export default {
@@ -173,7 +173,7 @@ export default {
         sort: DefaultConstants.Sort, //default sort = 'asc'
         limit: DefaultConstants.Limit, //default limit = 15
         page: DefaultConstants.Page, //default page = 1
-        roleId: RoleConstants.Stundent, //default role_id of MarketingCoordinator = 4
+        // roleId: RoleConstants.Stundent, //default role_id of MarketingCoordinator = 4
       },
     };
   },
@@ -186,7 +186,7 @@ export default {
       axios
         .post(UrlConstants.Faculty + "/filter", this.filter)
         .then((response) => {
-          this.list_faculties = response.data;
+          this.list_faculties = response.data.data;
           console.log(this.list_faculties);
         })
         .catch((error) => {
@@ -195,7 +195,7 @@ export default {
     },
     getUserList() {
       axios
-        .post(UrlConstants.User)
+        .post(UrlConstants.User + "/filter", this.filter)
         .then((response) => {
           this.list_users = response.data.data;
           console.log(this.list_users);
@@ -208,7 +208,7 @@ export default {
       axios.get(UrlConstants.Faculty + "/" + faculty_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
           alert("error");
-          this.getRoleList();
+          this.getFacultyList();
         } else {
           if (confirm("Are you sure to delete this faculty ?")) {
             axios
@@ -241,17 +241,20 @@ export default {
       });
       router.push("/faculties/update");
     },
-    showStundent(faculty_id) {
+    showStundent(faculty_id, faculty_name) {
       axios.get(UrlConstants.Faculty + "/" + faculty_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
           alert("This faculty is null");
           this.getFacultyList();
         } else {
-          
-          router.push("/faculties/" + faculty_id + "/studentlist");
+          let student = {
+            facultyId : faculty_id,
+            facultyName : faculty_name,
+          }
+          console.log(student);
         }
       });
-      router.push("/faculties/studentlist");
+      
     },
     checkStudent() {
 

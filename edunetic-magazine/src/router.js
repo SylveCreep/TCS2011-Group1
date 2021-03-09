@@ -26,6 +26,17 @@ export const router = new Router({
             component: UserList,
         },
         {
+            name:'Roles',
+            path: '/',
+            component: RoleList,
+        },
+        {
+            name:'Faculties',
+            path: '/',
+            component: FacultyList,
+        },
+
+        {
             name:'UsersList',
             path: '/users',
             component: UserList,
@@ -42,7 +53,7 @@ export const router = new Router({
             path:'/login',
             component: Login,
         },{
-            name:'Roles',
+            name:'RolesList',
             path:'/roles',
             component: RoleList,
         },{
@@ -51,7 +62,7 @@ export const router = new Router({
             component: RoleCreate,
         },{
             name:'RolesUpdate',
-            path: '/roles/update',
+            path: '/roles/:id/update',
             component: RoleUpdate,
         },{
             name:'FacultyList',
@@ -63,7 +74,7 @@ export const router = new Router({
             component: FacultyCreate,
         },{
             name:'FacultyUpdate',
-            path: '/faculties/update',
+            path: '/faculties/:id/update',
             component: FacultyUpdate,
         },{
             name:'StudentList',

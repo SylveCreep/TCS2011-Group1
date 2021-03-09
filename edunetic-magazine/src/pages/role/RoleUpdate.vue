@@ -70,19 +70,30 @@ import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
 
 export default {
-  name: "RoleCreate",
+  name: "RoleUpdate",
   data() {
     return {
       role: {},
       errors: null,
-      list_faculties: {},
-      list_roles: {},
     };
   },
+  create() {
+    this.getRole();
+  },
   methods: {
+    getRole() {
+      axios.get(UrlConstants.Role + '/' + this.$route.params.id)
+          .then(r =>{
+            this.role = r.data.data;
+            console.log(this.role);
+          })
+          .catch(error =>{
+              this.errors = error.response;
+          })
+    },
     updateRole() {
       axios
-        .post(UrlConstants.role, this.role)
+        .post(UrlConstants.Role, this.Role)
         .then((r) => {
           console.log(r);
           alert("Update Successfully");

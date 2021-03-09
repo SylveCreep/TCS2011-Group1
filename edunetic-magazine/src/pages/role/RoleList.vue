@@ -157,9 +157,9 @@ export default {
   methods: {
     getRoleList() {
       axios
-        .post(UrlConstants.User + "/filter", this.filter)
+        .post(UrlConstants.Role + "/filter", this.filter)
         .then((response) => {
-          this.list_roles = response.data;
+          this.list_roles = response.data.data;
           console.log(this.list_roles);
         })
         .catch((error) => {

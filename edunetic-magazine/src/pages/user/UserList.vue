@@ -258,9 +258,9 @@ export default {
     },
     getFacultyList() {
       axios
-        .get(UrlConstants.Faculty)
+        .get(UrlConstants.Faculty + "/filter", this.filter)
         .then((response) => {
-          this.list_faculties = response.data;
+          this.list_faculties = response.data.data;
         })
         .catch((error) => {
           this.errors = error.response.data.errors;
