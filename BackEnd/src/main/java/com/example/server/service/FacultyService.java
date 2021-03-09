@@ -9,4 +9,8 @@ public interface FacultyService {
     Boolean update(FacultyRequest facultyRequest);
 
     Boolean deleted(Long id);
+
+    Boolean create(FacultyRequest facultyRequest);
+
+    FacultyResponse getById(Long id);
 }

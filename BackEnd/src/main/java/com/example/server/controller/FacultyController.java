@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static com.example.server.constant.Constant.*;
 
+import com.example.server.dao.FacultyDao;
 import com.example.server.model.request.*;
 import com.example.server.model.response.*;
 import com.example.server.service.FacultyService;
@@ -35,10 +36,13 @@ public class FacultyController {
     private FacultyService facultyService;
 
     @Autowired
+    private FacultyDao facultyDao;
+
+    @Autowired
     private ResponseUtils responseUtils;
 
     @PostMapping(value="/filter")
-    public ResponseEntity<?> showUserBySearch(@RequestBody FacultyRequest facultyRequest){
+    public ResponseEntity<?> showFacultyBySearch(@RequestBody FacultyRequest facultyRequest){
         try {
             if(facultyRequest.getLimit() < 0 || facultyRequest.getPage() < 0){
                 return responseUtils.getResponseEntity("NULL", FAILURE,"Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
@@ -82,6 +86,38 @@ public class FacultyController {
             return responseUtils.getResponseEntity("NULL", SUCCESS,"Update faculty successfully", HttpStatus.OK);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", FAILURE,"Update faculty fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createFaculty(@RequestBody FacultyRequest facultyRequest){
+        try {
+            if(facultyRequest.getFacultyName().isBlank()){
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Create faculty failed", HttpStatus.BAD_REQUEST);
+            }
+            Boolean isSuccess = facultyService.create(facultyRequest);
+            if(isSuccess == false){
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Create faculty failed", HttpStatus.BAD_REQUEST);
+            }
+            return responseUtils.getResponseEntity("NULL", SUCCESS,"Create faculty success", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", FAILURE,"Create faculty failed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value="/{id}",consumes = {"text/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> getFacultyById(@PathVariable(name="id") Long id){
+        try {
+            if(id == null){
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Must has user id", HttpStatus.BAD_REQUEST);
+            }
+            FacultyResponse facultyResponse = facultyService.getById(id);
+            if(facultyResponse == null){
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Get user fail", HttpStatus.BAD_REQUEST);
+            }
+            return responseUtils.getResponseEntity(facultyResponse, SUCCESS,"Get user successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", FAILURE,"Get user fail", HttpStatus.BAD_REQUEST);
         }
     }
     
