@@ -6,7 +6,6 @@ import VueCookies from 'vue-cookies'
 import moment from 'moment';
 
 
-
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@/assets/css/main.css'
 
@@ -17,7 +16,6 @@ Vue.filter('formatDate', function(value) {
       return moment(String(value)).format('MM/DD/YYYY')
   }
 });
-
 new Vue({
   axios,router,
   render: h => h(App),
