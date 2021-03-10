@@ -102,7 +102,7 @@
                   <div class="col-sm-6">
                     <div>
                       <strong> Per Page: </strong>
-                      <select>
+                      <select v-on:change="getLimit($event)">
                         <option value="10">10</option>
                         <option value="15" selected>15</option>
                         <option value="1">1</option>
@@ -110,7 +110,7 @@
                     </div>
                   </div>
                   <div class="col-sm-6">
-                    <!--                    <the-pagination v-bind:pagination="list_users" v-on:click.native="getRoleList"></the-pagination>-->
+                    <the-pagination v-bind:pagination="list_roles" v-on:currentPage="changePage"></the-pagination>
                   </div>
                 </div>
               </div>
@@ -133,11 +133,11 @@ import { DefaultConstants } from "@/constant/DefaultConstant";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { ResultConstants } from "@/constant/ResultConstant";
 import router from "@/router";
-//import ThePagination from "@/components/ThePagination";
+import ThePagination from "@/components/ThePagination";
 export default {
   name: "RoleList",
   components: {
-    //ThePagination
+    ThePagination
   },
   data() {
     return {
@@ -160,7 +160,8 @@ export default {
         .post(UrlConstants.Role + "/filter", this.filter)
         .then((response) => {
           this.list_roles = response.data.data;
-          console.log(this.list_roles);
+          this.list_roles.currentPage = this.filter.page;
+          this.list_roles.lastPage = response.data.lastPage;
         })
         .catch((error) => {
           this.errors = error.response.data;
@@ -176,7 +177,7 @@ export default {
             axios
               .delete(UrlConstants.Role + "/" + role_id)
               .then((res) => {
-                if (res.data.code === ResultConstants.Sucess) {
+                if (res.data.code === ResultConstants.Success) {
                   alert("sucess");
                   this.getRoleList();
                 }
@@ -205,6 +206,15 @@ export default {
     getFilter() {
       this.getRoleList();
     },
+    getLimit(event) {
+      this.filter.limit = event.target.value;
+      this.filter.page = 1;
+      this.getRoleList();
+    },
+    changePage(e){
+      this.filter.page = e;
+      this.getRoleList();
+    }
   },
 };
 </script>

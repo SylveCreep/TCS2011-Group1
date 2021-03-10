@@ -1,3 +1,4 @@
+
 export const validateHelper = {
     data() {
         return {
@@ -43,7 +44,7 @@ export const validateHelper = {
             }
         },
         userValidate(atributes, objectType) {
-           
+
             //validate required attribute
             this.requiredValidate(atributes, objectType);
 
@@ -86,5 +87,30 @@ export const validateHelper = {
                 }
             }, 1000);
         },
-    }
+    },
+
+    //USER HELPER FUNCTION
+    getRoleList() {
+        axios
+            .post(UrlConstants.Role + "/filter", this.filter)
+            .then((response) => {
+                this.list_roles = response.data.data;
+            })
+            .catch((error) => {
+                this.errors = error.response.data.errors;
+                this.showError(this.errors);
+            });
+    },
+    getFacultyList() {
+        axios
+            .post(UrlConstants.Faculty + "/filter", this.filter)
+            .then((response) => {
+                this.list_faculties = response.data.data;
+            })
+            .catch((error) => {
+                this.errors = error.response.data.errors;
+                this.showError(this.errors);
+            });
+    },
+
 }
