@@ -7,6 +7,7 @@ import com.example.server.entity.User;
 import com.example.server.model.request.*;
 import com.example.server.model.response.*;
 import com.example.server.service.FacultyService;
+import com.example.server.util.QueryCheck;
 import com.example.server.util.ResponseUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
@@ -31,6 +33,9 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private QueryCheck queryCheck;
 
     @Autowired
     private ResponseUtils responseUtils;
@@ -72,12 +77,14 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public Boolean update(FacultyRequest facultyRequest) {
         try {
-            Faculty facl = facultyDao.getOne(facultyRequest.getFaculty_id());
+            Optional<Faculty> faclOptional = facultyDao.findById(facultyRequest.getFaculty_id());
+            Faculty facl = faclOptional.get();
             if(facl.getIs_deleted() == 1){
                 return false;
             }
             if(facultyRequest.getManager_id() != null){
-                User manager = userDao.getOne(facultyRequest.getManager_id());
+                Optional<User> managerOptional = userDao.findById(facultyRequest.getManager_id());
+                User manager = managerOptional.get();
                 if(manager.getIs_deleted() == 0){
                     facl.setManager(manager);
                 } else {
@@ -102,6 +109,41 @@ public class FacultyServiceImpl implements FacultyService {
             return true;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    @Override
+    public Boolean create(FacultyRequest facultyRequest) {
+        try {
+            Faculty facl = new Faculty();
+            facl.setCode("U" + String.format("%04d", queryCheck.GetHighestId("user")));
+            facl.setName(facultyRequest.getFacultyName());
+            facultyDao.save(facl);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public FacultyResponse getById(Long id) {
+        try {
+            Optional<Faculty> faclOptional = facultyDao.findById(id);
+            Faculty falc = faclOptional.get();
+            if(falc != null){
+                if(falc.getIs_deleted() == NOTDELETED){
+                    FacultyResponse faculResponse = new FacultyResponse();
+                    faculResponse.setCode(falc.getCode() == null? "":falc.getCode());
+                    faculResponse.setFaculty_id(falc.getId());
+                    faculResponse.setFaculty_name(falc.getName() == null? "": falc.getName());
+                    faculResponse.setManager_id(falc.getManager() == null? null: falc.getManager().getId());
+                    faculResponse.setManager_name(falc.getManager() == null? "": falc.getManager().getFullName());
+                    return faculResponse;
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
         }
     }
     

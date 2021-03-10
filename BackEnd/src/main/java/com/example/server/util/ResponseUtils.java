@@ -102,6 +102,7 @@ public class ResponseUtils {
         HashMap<String, Object> inputForm = new HashMap<>();
         form.put("input", inputForm);
 
+        String valUpdateEmail = validateEmailUpdateInput(createAccount.getEmail(), createAccount.getId());
         String valEmail = validateEmailInput(createAccount.getEmail());
         String valPass = validatePasswordInput(createAccount.getPassword());
         String valName = validateNameInput(createAccount.getFullName());
@@ -111,7 +112,7 @@ public class ResponseUtils {
         String valFacl = validateFacultyInput(createAccount.getFacultyId());
         String valPhone = validatePhoneInput(createAccount.getPhoneNumber());
         String valGen = validateGenderInput(createAccount.getGender());
-        String valId = validateGenderInput(createAccount.getGender());
+        String valId = validateUserInput(createAccount.getId());
 
         // Type 0 for create account request
         // Type 1 for update account request
@@ -187,8 +188,8 @@ public class ResponseUtils {
                     }
                 }
 
-                if(!valEmail.equals("Valid")){
-                    inputForm.put("email", valEmail);
+                if(!valUpdateEmail.equals("Valid")){
+                    inputForm.put("email", valUpdateEmail);
                     if(!form.containsKey("result")){
                         form.put("result", -1);
                     }
@@ -267,6 +268,23 @@ public class ResponseUtils {
         }
     }
 
+    public String validateEmailUpdateInput(String email, Long id){
+        if(email == null || id == null){
+            return "Invalid";
+        }
+        Optional<User> user = userDao.findById(id);
+        User userE = userDao.findByEmail(email);
+        if(user.get() != null && userE != null){
+            if(user.get().getEmail().equals(email)){
+                return  "Email existed";
+            } else {
+                return "Valid";
+            }
+        } else {
+            return "Valid";
+        }
+    }
+
     public String validateNameInput(String fullName){
         if(fullName == null){
             return "Invalid";
@@ -304,7 +322,7 @@ public class ResponseUtils {
         if(dateOfBirth == null){
             return "Invalid";
         }
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date currentDate = new Date();
         if((Integer.parseInt(dateFormat.format(currentDate).substring(0, 4)) - Integer.parseInt(dateFormat.format(dateOfBirth).substring(0, 4))) > 18){
             return "Valid";
