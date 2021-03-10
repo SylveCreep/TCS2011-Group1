@@ -3,6 +3,7 @@ package com.example.server.service.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.example.server.constant.Constant;
@@ -143,15 +144,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             nUser.setAvatar(user.getAvatar());
             nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
             Role role = roleService.findById(user.getRoleId());
-            Faculty faculty = facultyDao.getOne(user.getFacultyId());
+            Optional<Faculty> faculty = facultyDao.findById(user.getFacultyId());
             if(role == null || role.getIs_deleted() == DELETED){
                 return null;
             }
-            if(faculty == null || faculty.getIs_deleted() == DELETED){
+            if(faculty.get() == null || faculty.get().getIs_deleted() == DELETED){
                 return null;
             }
             nUser.setRole(role);
-            nUser.setFaculty(faculty);
+            nUser.setFaculty(faculty.get());
             return userDao.save(nUser);
         } catch (Exception e) {
             return null;
