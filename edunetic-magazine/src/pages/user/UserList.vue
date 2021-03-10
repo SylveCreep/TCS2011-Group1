@@ -219,11 +219,7 @@ export default {
     ThePagination
   },
   data() {
-<<<<<<< HEAD
-    return {
-=======
     return {    
->>>>>>> FE-Internal
       list_users: [],
       list_roles: [],
       list_faculties: [],
@@ -246,13 +242,8 @@ export default {
       axios
         .post(UrlConstants.User + "/filter", this.filter)
         .then((response) => {
-<<<<<<< HEAD
-          this.list_users = response.data.data;
-          console.log(this.list_users);
-=======
           this.list_users = response.data;
           this.list_users.currentPage = this.filter.page;
->>>>>>> FE-Internal
         })
         .catch((error) => {
           this.errors = error.response.data;
@@ -263,10 +254,7 @@ export default {
         .post(UrlConstants.Role + "/filter", this.filter)
         .then((response) => {
           this.list_roles = response.data;
-<<<<<<< HEAD
-=======
          
->>>>>>> FE-Internal
         })
         .catch((error) => {
           this.errors = error.response.data.errors;
@@ -275,16 +263,10 @@ export default {
     },
     getFacultyList() {
       axios
-<<<<<<< HEAD
-        .get(UrlConstants.Faculty + "/filter", this.filter)
-        .then((response) => {
-          this.list_faculties = response.data.data;
-=======
         .post(UrlConstants.Faculty + "/filter", this.filter)
         .then((response) => {
           this.list_faculties = response.data;
           console.log(this.list_faculties)
->>>>>>> FE-Internal
         })
         .catch((error) => {
           this.errors = error.response.data.errors;

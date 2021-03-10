@@ -1,5 +1,5 @@
 import moment from "moment";
-export const commonHelper = {
+export const validateHelper = {
     methods: {
         calculateAge(dob) {
             let currentDate = new Date();

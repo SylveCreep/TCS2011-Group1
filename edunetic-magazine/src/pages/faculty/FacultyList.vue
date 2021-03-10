@@ -125,7 +125,7 @@
                   <div class="col-sm-6">
                     <div>
                       <strong> Per Page: </strong>
-                      <select>
+                      <select v-on:change="getLimit($event)">
                         <option value="10">10</option>
                         <option value="15" selected>15</option>
                         <option value="1">1</option>
@@ -133,7 +133,7 @@
                     </div>
                   </div>
                   <div class="col-sm-6">
-                    <!--                    <the-pagination v-bind:pagination="list_users" v-on:click.native="getRoleList"></the-pagination>-->
+                    <the-pagination v-bind:pagination="list_faculties" v-on:currentPage="changePage"></the-pagination>
                   </div>
                 </div>
               </div>
@@ -157,11 +157,11 @@ import { UrlConstants } from "@/constant/UrlConstant";
 import { ResultConstants } from "@/constant/ResultConstant";
 // import { RoleConstants } from "@/constant/RoleConstants";
 import router from "@/router";
-//import ThePagination from "@/components/ThePagination";
+import ThePagination from "@/components/ThePagination";
 export default {
   name: "FacultyList",
   components: {
-    //ThePagination
+    ThePagination
   },
   data() {
     return {
@@ -187,7 +187,8 @@ export default {
         .post(UrlConstants.Faculty + "/filter", this.filter)
         .then((response) => {
           this.list_faculties = response.data.data;
-          console.log(this.list_faculties);
+          this.list_faculties.currentPage = this.filter.page;
+          this.list_faculties.lastPage = response.data.lastPage;
         })
         .catch((error) => {
           this.errors = error.response.data;
@@ -197,7 +198,7 @@ export default {
       axios
         .post(UrlConstants.User + "/filter", this.filter)
         .then((response) => {
-          this.list_users = response.data.data;
+          this.list_users = response.data.data  ;
           console.log(this.list_users);
         })
         .catch((error) => {
@@ -262,6 +263,15 @@ export default {
     getFilter() {
       this.getFacultyList();
     },
+    getLimit(event) {
+      this.filter.limit = event.target.value;
+      this.filter.page = 1;
+      this.getFacultyList();
+    },
+    changePage(e){
+      this.filter.page = e;
+      this.getFacultyList();
+    }
   },
 };
 </script>

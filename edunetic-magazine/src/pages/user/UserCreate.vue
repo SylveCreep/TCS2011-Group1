@@ -224,13 +224,13 @@
 
 <script>
 import axios from "axios";
-import { commonHelper } from "@/helper/commonHelper";
+import { validateHelper } from "@/helper/validateHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { DefaultConstants } from "@/constant/DefaultConstant";
 
 export default {
   name: "UserCreate",
-  mixins: [commonHelper],
+  mixins: [validateHelper],
   data() {
     return {
       user: {

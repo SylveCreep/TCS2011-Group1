@@ -111,12 +111,12 @@
 import axios from "axios";
 import {UrlConstants} from "@/constant/UrlConstant";
 import { DefaultConstants } from "@/constant/DefaultConstant";
-import { commonHelper } from "@/helper/commonHelper";
+import { validateHelper } from "@/helper/validateHelper";
 
 
 export default {
   name: "UserUpdate",
-  mixins: [commonHelper],
+  mixins: [validateHelper],
   data(){
     return{
       user: {},

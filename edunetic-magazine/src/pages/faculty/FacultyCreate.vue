@@ -25,7 +25,7 @@
                       <label class="col-sm-2 control-label">Name: </label>
                       <div class="col-sm-12">
                         <input
-                          id="facultyname"
+                          id="name"
                           type="text"
                           class="form-control"
                           v-model="faculty.name"
