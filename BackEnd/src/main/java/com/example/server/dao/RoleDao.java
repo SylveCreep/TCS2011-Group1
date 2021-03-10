@@ -26,7 +26,7 @@ public interface RoleDao extends JpaRepository<Role, Long> {
 
     @Query(value = "Select * from role r where r.is_deleted = 0 " +
     "AND ((:name IS NULL) OR LOWER(r.name) LIKE CONCAT('%',IFNULL(LOWER(:name), LOWER(r.name)), '%')) " +
-    "AND ((:code IS NULL) OR (r.code = :code))" +
+    "AND ((:code IS NULL) OR LOWER (r.code) LIKE CONCAT('%',IFNULL(LOWER(:code),LOWER(r.code)),'%')) " +
     "AND ((:roleId IS NULL) OR (r.id = :roleId))" +
     "group by r.id", nativeQuery = true)
     Page<Role> searchRoleByName(@Param("roleId") Long roleId, @Param("name") String name, @Param("code") String code, Pageable pageable);
