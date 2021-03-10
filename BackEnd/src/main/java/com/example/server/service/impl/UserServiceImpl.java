@@ -144,15 +144,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             nUser.setAvatar(user.getAvatar());
             nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
             Role role = roleService.findById(user.getRoleId());
-            Optional<Faculty> faculty = facultyDao.findById(user.getFacultyId());
+            if(user.getFacultyId() != null){
+                Optional<Faculty> faculty = facultyDao.findById(user.getFacultyId());
+                if(faculty.get() == null){
+                    return null;
+                }
+                if(faculty.get().getIs_deleted() == DELETED){
+                    return null;
+                }
+                nUser.setFaculty(faculty.get());
+            }
             if(role == null || role.getIs_deleted() == DELETED){
                 return null;
             }
-            if(faculty.get() == null || faculty.get().getIs_deleted() == DELETED){
-                return null;
-            }
             nUser.setRole(role);
-            nUser.setFaculty(faculty.get());
             return userDao.save(nUser);
         } catch (Exception e) {
             return null;
