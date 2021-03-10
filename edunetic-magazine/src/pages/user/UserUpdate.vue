@@ -47,13 +47,10 @@
                           class="form-control select2"
                           id="roleId"
                           name="role"
-                          v-on:change="changeRoleId"
+                          v-model="user.roleId"
                         >
-                          <option selected v-bind:value="rolePicked.roleId">
-                            {{ rolePicked.roleName }}
-                          </option>
                           <option
-                            v-for="role in roleList"
+                            v-for="role in list_roles"
                             :key="role.id"
                             v-bind:value="role.id"
                           >
@@ -71,11 +68,8 @@
                           name="faculty"
                           v-model="user.facultyId"
                         >
-                          <option selected v-bind:value="user.facultyId">
-                            {{ user.facultyName }}
-                          </option>
                           <option
-                            v-for="faculty in facultyList"
+                            v-for="faculty in list_faculties"
                             :key="faculty.id"
                             v-bind:value="faculty.id"
                           >
@@ -122,7 +116,7 @@
                           id="phoneNumber"
                           type="tel"
                           class="form-control"
-                          v-model="user.phone"
+                          v-model="user.phoneNumber"
                         />
                         <p style="color: red" v-if="list_errors !== null">
                           {{ list_errors.phoneNumber }}
@@ -140,6 +134,9 @@
                           class="form-control"
                           v-model="user.dateOfBirth"
                         />
+                        <p style="color: red" v-if="list_errors !== null">
+                          {{ list_errors.dateOfBirth }}
+                        </p>
                       </div>
                     </div>
                     <div class="form-group text-center">
@@ -195,31 +192,10 @@ export default {
       },
     };
   },
-  computed: {
-    rolePicked() {
-      let role = {
-        roleId: this.user.roleId,
-        roleName: this.user.roleName,
-      }
-      return role;
-    },
-    roleList() {
-      return this.list_roles.filter((role) => role.id !== this.user.roleId);
-    },
-    facultyList() {
-      return this.list_faculties.filter(
-        (fac) => fac.id !== this.user.facultyId
-      );
-    },
-  },
   created() {
     this.getUser();
   },
   methods: {
-    changeRoleId(e) {
-      this.user.roleId = e.target.value;
-      console.log(this.user.roleId)
-    },
     getUser() {
       axios
         .get(UrlConstants.User + "/" + this.$route.params.id)
@@ -231,7 +207,7 @@ export default {
         });
     },
     updateUser() {
-      this.requiredValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
+      this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       console.log(this.validate)
       if (this.validate) {

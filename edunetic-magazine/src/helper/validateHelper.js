@@ -1,10 +1,10 @@
 export const validateHelper = {
     data() {
         return {
-            list_errors: {},
+            list_errors: null,
             validate: true,
             timeCheck: null,
-      password_match: null,
+            password_match: null,
         }
     },
     methods: {
@@ -34,6 +34,7 @@ export const validateHelper = {
             }
         },
         requiredValidate(atributes, objectType) {
+            this.list_errors = {};
             for (let [key, value] of Object.entries(atributes)) {
                 if (!Object.prototype.hasOwnProperty.call(objectType, key) || objectType[key] === "" || objectType[key] === null) {
                     this.list_errors[key] = value + " field is required";
