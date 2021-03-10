@@ -44,7 +44,7 @@
                       type="text"
                       placeholder="Search"
                       aria-label="Search"
-                      v-model="filter.faculty_name"
+                      v-model="filter.facultyName"
                       v-on:keyup="getFilter"
                     />
                   </div>
@@ -55,7 +55,7 @@
                       type="text"
                       placeholder="Search"
                       aria-label="Search"
-                      v-model="filter.manager_name"
+                      v-model="filter.managername"
                       v-on:keyup="getFilter"
                     />
                   </div>
@@ -180,6 +180,7 @@ export default {
   created() {
     this.getFacultyList();
     this.getUserList();
+    console.log(this.pagination)
   },
   methods: {
     getFacultyList() {

@@ -34,7 +34,7 @@
                       placeholder="Search"
                       aria-label="Search"
                       v-model="filter.code"
-                      v-on:keyup="getFilter"
+                      v-on:keyup="getRoleList"
                     />
                   </div>
                   <div class="form-group">
@@ -45,7 +45,7 @@
                       placeholder="Search"
                       aria-label="Search"
                       v-model="filter.name"
-                      v-on:keyup="getFilter"
+                      v-on:keyup="getRoleList"
                     />
                   </div>
                   <div class="form-group">
@@ -56,7 +56,7 @@
                       placeholder="Search"
                       aria-label="Search"
                       v-model="filter.date_of_birth"
-                      v-on:keyup="getFilter"
+                      v-on:keyup="getRoleList"
                     />
                   </div>
                 </div>
@@ -202,9 +202,6 @@ export default {
           router.push("/roles/" + role_id + "/update");
         }
       });
-    },
-    getFilter() {
-      this.getRoleList();
     },
     getLimit(event) {
       this.filter.limit = event.target.value;

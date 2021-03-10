@@ -72,6 +72,9 @@ export default {
   data() {
     return {
       role: {},
+      role1: {
+        name: "abc"
+      },
       list_errors: {},
       validate: true,
       requireAttribute: {
@@ -90,7 +93,7 @@ export default {
       if (this.validate) {
         console.log(this.role)
         axios
-          .post(UrlConstants.Role, this.role)
+          .post(UrlConstants.Role, this.role) 
           .then((r) => {
             alert("Create Successfully");
             this.$router.push("/roles");
