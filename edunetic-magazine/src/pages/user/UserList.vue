@@ -73,7 +73,7 @@
                     >
                       <option value="" selected>All</option>
                       <option
-                        v-for="faculty in list_faculties.data"
+                        v-for="faculty in list_faculties"
                         :key="faculty.id"
                         v-bind:value="faculty.id"
                       >
@@ -92,7 +92,7 @@
                     >
                       <option value="" selected=selected>All</option>
                       <option
-                        v-for="role in list_roles.data"
+                        v-for="role in list_roles"
                         :key="role.id"
                         v-bind:value="role.id"
                       >
@@ -147,7 +147,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="user of list_users.data" :key="user.id">
+                    <tr v-for="user of list_users" :key="user.id">
                       <td>{{ user.code }}</td>
                       <td>{{ user.fullName }}</td>
                       <td>{{ user.facultyName }}</td>
@@ -207,7 +207,7 @@
 
 <script>
 import axios from "axios";
-import { DefaultConstants } from "@/constant/DefaultConstant";
+import { commonHelper } from "@/helper/commonHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { ResultConstants } from "@/constant/ResultConstant";
 import router from "@/router";
@@ -218,59 +218,26 @@ export default {
   components: {
     ThePagination
   },
+  mixins: [commonHelper],
   data() {
-    return {    
+    return {
       list_users: [],
-      list_roles: [],
-      list_faculties: [],
-      errors: [],
-      filter: {
-        column: DefaultConstants.Column, //default column = 'id'
-        sort: DefaultConstants.Sort, //default sort = 'asc'
-        limit: DefaultConstants.Limit, //default limit = 15
-        page: DefaultConstants.Page, //default page = 15
-      },
     };
   },
   created() {
     this.getUserList();
-    this.getRoleList();
-    this.getFacultyList();
   },
   methods: {
     getUserList() {
       axios
         .post(UrlConstants.User + "/filter", this.filter)
         .then((response) => {
-          this.list_users = response.data;
+          this.list_users = response.data.data;
           this.list_users.currentPage = this.filter.page;
+          this.list_users.lastPage = response.data.lastPage;
         })
         .catch((error) => {
           this.errors = error.response.data;
-        });
-    },
-    getRoleList() {
-      axios
-        .post(UrlConstants.Role + "/filter", this.filter)
-        .then((response) => {
-          this.list_roles = response.data;
-         
-        })
-        .catch((error) => {
-          this.errors = error.response.data.errors;
-          this.showError(this.errors);
-        });
-    },
-    getFacultyList() {
-      axios
-        .post(UrlConstants.Faculty + "/filter", this.filter)
-        .then((response) => {
-          this.list_faculties = response.data;
-          console.log(this.list_faculties)
-        })
-        .catch((error) => {
-          this.errors = error.response.data.errors;
-          this.showError(this.errors);
         });
     },
     showUser(user_id) {
@@ -310,25 +277,16 @@ export default {
         }
       });
     },
-    getFilter() {
-      this.getUserList();
-    },
     getSort($column) {
-      if (this.filter.sort === "asc") {
-        this.filter.sort = "desc";
-      } else if (this.filter.sort === "desc") {
-        this.filter.sort = "asc";
-      }
-      this.filter.column = $column;
+      this.getcommonSort($column);
       this.getUserList();
     },
     getLimit(event) {
-      this.filter.limit = event.target.value;
-      this.filter.page = 1;
+      this.getcommonLimit(event.target.value);
       this.getUserList();
     },
     changePage(e){
-      this.filter.page = e;
+      this.changecommonPage(e);
       this.getUserList();
     }
   },

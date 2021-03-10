@@ -1,5 +1,14 @@
-import moment from "moment";
+import axios from "axios";
+import { UrlConstants } from "@/constant/UrlConstant";
 export const validateHelper = {
+    data() {
+        return {
+            list_errors: null,
+            validate: true,
+            timeCheck: null,
+            password_match: null,
+        }
+    },
     methods: {
         calculateAge(dob) {
             let currentDate = new Date();
@@ -16,12 +25,6 @@ export const validateHelper = {
                 return false;
             }
         },
-        preFormatDate(date) {
-            return moment(String(date)).format(
-                "yyyy-MM-DD HH:mm:ss"
-            );
-
-        },
         showError(attributes, error) {
             for (let key of Object.keys(attributes)) {
                 let text = document.querySelector("#" + key);
@@ -33,33 +36,82 @@ export const validateHelper = {
             }
         },
         requiredValidate(atributes, objectType) {
-            let list_errors = {};
+            this.list_errors = {};
             for (let [key, value] of Object.entries(atributes)) {
-                if (!Object.prototype.hasOwnProperty.call(objectType, key) || objectType[key] === "") {
-                    list_errors[key] = value + " field is required";
+                if (!Object.prototype.hasOwnProperty.call(objectType, key) || objectType[key] === "" || objectType[key] === null) {
+                    this.list_errors[key] = value + " field is required";
+                    this.validate = false;
                 }
             }
-            return list_errors;
         },
         userValidate(atributes, objectType) {
-            let list_errors = {};
+
             //validate required attribute
-            list_errors = this.requiredValidate(atributes, objectType);
+            this.requiredValidate(atributes, objectType);
 
             //validate age older than 18
             if (objectType.dateOfBirth) {
-                let age = this.calculateAge(objectType.dateOfBirth) 
+                let age = this.calculateAge(objectType.dateOfBirth)
                 if (age < 18) {
-                    list_errors.dateOfBirth = "User must be older than 18";
+                    this.list_errors.dateOfBirth = "User must be older than 18";
+                    this.validate = false;
                 }
             }
             //validate phone input
             if (objectType.phoneNumber) {
-                if (!this.checkPhone(objectType.phoneNumber)) { 
+                if (!this.checkPhone(objectType.phoneNumber)) {
                     this.list_errors.phoneNumber = "Phone number field only can contain 0-9 digits";
+                    this.validate = false;
                 }
             }
-            return list_errors;
-        }
-    }
+
+        },
+        checkPassword() {
+            let pass = document.querySelector("#password");
+            let cpass = document.querySelector("#confirm_password");
+            let self = this;
+            // clear timeout variable
+            clearTimeout(this.timeCheck);
+            this.timeCheck = setTimeout(function () {
+                if (self.user.password !== self.user.confirm_password) {
+                    self.password_match = false;
+                    pass.style.cssText = "border-color: red";
+                    cpass.style.cssText = "border-color: red";
+                    self.validate = false;
+                    self.password_match = false; //render don't match message
+                } else {
+                    self.password_match = true;
+                    pass.style.cssText = "border-color: #CED4DA";
+                    cpass.style.cssText = "border-color: #CED4DA";
+                    self.validate = true;
+                    self.password_match = true; //render match message
+                }
+            }, 1000);
+        },
+    },
+
+    //USER HELPER FUNCTION
+    getRoleList() {
+        axios
+            .post(UrlConstants.Role + "/filter", this.filter)
+            .then((response) => {
+                this.list_roles = response.data.data;
+            })
+            .catch((error) => {
+                this.errors = error.response.data.errors;
+                this.showError(this.errors);
+            });
+    },
+    getFacultyList() {
+        axios
+            .post(UrlConstants.Faculty + "/filter", this.filter)
+            .then((response) => {
+                this.list_faculties = response.data.data;
+            })
+            .catch((error) => {
+                this.errors = error.response.data.errors;
+                this.showError(this.errors);
+            });
+    },
+
 }

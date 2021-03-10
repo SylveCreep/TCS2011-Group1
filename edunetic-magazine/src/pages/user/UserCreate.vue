@@ -60,7 +60,7 @@
                           v-model="user.facultyId"
                         >
                           <option
-                            v-for="faculty in list_faculties"
+                            v-for="faculty in list_faculties.data"
                             :key="faculty.id"
                             v-bind:value="faculty.id"
                           >
@@ -224,13 +224,13 @@
 
 <script>
 import axios from "axios";
+import { commonHelper } from "@/helper/commonHelper";
 import { validateHelper } from "@/helper/validateHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
-import { DefaultConstants } from "@/constant/DefaultConstant";
 
 export default {
   name: "UserCreate",
-  mixins: [validateHelper],
+  mixins: [validateHelper, commonHelper],
   data() {
     return {
       user: {
@@ -246,19 +246,6 @@ export default {
         password: "password",
         confirm_password: "Confirm password",
       },
-      list_errors: {},
-      list_faculties: [],
-      list_roles: [],
-      filter: {
-        column: DefaultConstants.Column, //default column = 'id'
-        sort: DefaultConstants.Sort, //default sort = 'asc'
-        limit: DefaultConstants.Limit, //default limit = 15
-        page: DefaultConstants.Page, //default page = 15
-      },
-      timeCheck: null,
-  
-      password_match: null,
-      validate: true,
     };
   },
   computed: {
@@ -266,17 +253,9 @@ export default {
       return this.list_roles.filter((role) => role.id !== 5);
     },
   },
-  created() {
-    this.getFacultyList();
-    this.getRoleList();
-  },
   methods: {
     createUser() {
-      this.list_errors = this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
-      if (Object.keys(this.list_errors).length > 0) {
-        this.validate = false;
-      }
-      console.log(this.validate)
+      this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
         this.preFormatDate(this.user.dateOfBirth);
@@ -290,51 +269,6 @@ export default {
             this.list_errors = error.response;
           });
       }
-    },
-
-    getRoleList() {
-      axios
-        .post(UrlConstants.Role + "/filter", this.filter)
-        .then((response) => {
-          this.list_roles = response.data.data;
-        })
-        .catch((error) => {
-          this.list_errors = error.response.data;
-          this.showError(this.list_errors);
-        });
-    },
-    getFacultyList() {
-      axios
-        .post(UrlConstants.Faculty + "/filter", this.filter)
-        .then((response) => {
-          this.list_faculties = response.data.data;
-        })
-        .catch((error) => {
-          this.list_errors = error.response.data;
-          this.showError(this.list_errors);
-        });
-    },
-    checkPassword() {
-      let pass = document.querySelector("#password");
-      let cpass = document.querySelector("#confirm_password");
-      let self = this;
-      // clear timeout variable
-      clearTimeout(this.timeCheck);
-      this.timeCheck = setTimeout(function () {
-        if (self.user.password !== self.user.confirm_password) {
-          self.password_match = false;
-          pass.style.cssText = "border-color: red";
-          cpass.style.cssText = "border-color: red";
-          self.validate = false;
-          self.password_match = false; //render don't match message
-        } else {
-          self.password_match = true;
-          pass.style.cssText = "border-color: #CED4DA";
-          cpass.style.cssText = "border-color: #CED4DA";
-          self.validate = true;
-          self.password_match = true; //render match message
-        }
-      }, 1000);
     },
   },
 };
