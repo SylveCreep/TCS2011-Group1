@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.server.constant.Constant;
 import com.example.server.dao.CommentDao;
 import com.example.server.dao.ContributionDao;
 import com.example.server.dao.UserDao;
@@ -49,6 +50,38 @@ public class CommentService {
         return list;
     }
 
+    public Boolean deleteComment(Long id){
+        try {
+            Comment comment = commentDao.getOne(id);
+            comment.setIs_deleted(Constant.DELETED);
+            commentDao.save(comment);
+            return true;
+        } catch(Exception e){
+            return false;
+        }
+    }
+
+    public Boolean updateComment(CreateComment commentDto){
+        try{
+            Comment comment = commentDao.getOne(commentDto.getId());
+            User user = userDao.findById(commentDto.getUserId()).get();
+            Contribution contribution = contributionDao.getOne(commentDto.getContributionId());
+            if (user == null){
+                return false;
+            }
+            if (contribution == null){
+                return false;
+            }
+            comment.setContent(commentDto.getContent());
+            comment.setContribution(contribution);
+            comment.setUser(user);
+            commentDao.save(comment);
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
     public Comment saveComment(CommentDto comment){
         Comment nComment = comment.getCommentFromDto();
         nComment.setContent(comment.getContent());
@@ -64,8 +97,14 @@ public class CommentService {
             nComment.setCode("C" + String.format("%04d", queryCheck.GetHighestId("comment")));
             nComment.setContent(comment.getContent());
             Optional<User> user = userDao.findById(comment.getUserId());
-            nComment.setUser(user.get());
             Contribution contribution = contributionDao.getOne(comment.getContributionId());
+            if (user.get() == null || user.get().getIs_deleted() == Constant.DELETED){
+                return null;
+            }
+            if(contribution == null || contribution.getIs_deleted() == Constant.DELETED){
+                return null;
+            }
+            nComment.setUser(user.get());
             nComment.setContribution(contribution);
             return commentDao.save(nComment);
         }catch(Exception e){
