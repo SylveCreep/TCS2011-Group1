@@ -208,7 +208,6 @@ export default {
         });
     },
     updateUser() {
-      console.log(this.user)
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       console.log(this.validate)
