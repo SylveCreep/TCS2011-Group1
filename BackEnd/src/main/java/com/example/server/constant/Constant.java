@@ -1,7 +1,7 @@
 package com.example.server.constant;
 
 public class Constant {
-        public static final int SUCCESS = -1;
+        public static final int SUCCESS = 1;
         public static final int FAILURE = 0;
 
         public static final int NOTDELETED = 0;
