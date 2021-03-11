@@ -1,6 +1,6 @@
 <template>
   <div class="app-main__inner">
-    <div class="app-page-title">
+    <div class="app-page-title" style="margin: 0; background-color: #f0f3f5; padding: 5px;">
       <div class="page-title-wrapper">
         <div class="page-title-heading">
           <div class="page-title-icon">
@@ -32,11 +32,11 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-12">
+      <div class="col-lg-12" style="padding: 0;">
         <div class="main-card mb-3 card">
           <div class="card-body">
             <!--FILTER SECTION-->
-            <div class="card-title" style="padding:20px;">
+            <div class="card-title" style="padding:20px 20px 0;">
               <div class="row">
                 <h4><b>Filter</b></h4>
               </div>
@@ -174,13 +174,12 @@ import router from "@/router";
 import ThePagination from "@/components/ThePagination";
 import { commonHelper } from "@/helper/commonHelper";
 export default {
-  data () {
-    return {
-    }
+  data() {
+    return {};
   },
   name: "FacultyList",
   components: {
-    ThePagination
+    ThePagination,
   },
   mixins: [commonHelper],
 
@@ -228,17 +227,14 @@ export default {
           this.getFacultyList();
         } else {
           let student = {
-            facultyId : faculty_id,
-            facultyName : faculty_name,
-          }
+            facultyId: faculty_id,
+            facultyName: faculty_name,
+          };
           console.log(student);
         }
       });
-      
     },
-    checkStudent() {
-
-    },
+    checkStudent() {},
     getSort($column) {
       this.getcommonSort($column);
       this.getFacultyList();
@@ -247,10 +243,10 @@ export default {
       this.getcommonLimit(event.target.value);
       this.getFacultyList();
     },
-    changePage(e){
+    changePage(e) {
       this.changecommonPage(e);
       this.getFacultyList();
-    }
+    },
   },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
-  <div class="app-main__inner">
-    <div class="app-page-title">
+  <div class="app-main__inner" style="background-color: #fff">
+    <div class="app-page-title"> 
       <div class="page-title-wrapper">
         <div class="page-title-heading">
           <div class="page-title-icon">
@@ -269,4 +269,7 @@ export default {
   padding-left: 5px;
   padding-right: 20px;
 }
+.app-page-title {
+  margin:-30px 0 0 -30px;
+};
 </style>
