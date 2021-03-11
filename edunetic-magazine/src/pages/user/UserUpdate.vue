@@ -1,176 +1,148 @@
 <template>
-  <section class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header">
-              <h2>User Update</h2>
-            </div>
-            <div class="card-body">
-              <div class="tab-content">
-                <div class="tab-pane active show" id="settings">
-                  <form
-                    class="form-horizontal"
-                    v-on:submit.prevent="updateUser()"
-                  >
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">Full Name: </label>
-                      <div class="col-sm-12">
-                        <input
-                          id="fullName"
-                          type="text"
-                          class="form-control"
-                          v-model="user.fullName"
-                        />
-                        <p style="color: red" v-if="list_errors !== null">
-                          {{ list_errors.fullName }}
-                        </p>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">Code: </label>
-                      <div class="col-sm-12">
-                        <input
-                          id="code"
-                          type="text"
-                          class="form-control"
-                          v-model="user.code"
-                          readonly
-                        />
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">Role: </label>
-                      <div class="col-sm-12">
-                        <select
-                          class="form-control select2"
-                          id="roleId"
-                          name="role"
-                          v-model="user.roleId"
-                        >
-                          <option
-                            v-for="role in list_roles"
-                            :key="role.id"
-                            v-bind:value="role.id"
-                          >
-                            {{ role.name }}
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">Faculty: </label>
-                      <div class="col-sm-12">
-                        <select
-                          class="form-control select2"
-                          id="facultyId"
-                          name="faculty"
-                          v-model="user.facultyId"
-                        >
-                        
-                          <option
-                            v-for="faculty in list_faculties"
-                            :key="faculty.id"
-                            v-bind:value="faculty.id"
-                          >
-                            {{ faculty.faculty_name }}
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">Email: </label>
-                      <div class="col-sm-12">
-                        <input
-                          id="email"
-                          type="text"
-                          class="form-control"
-                          v-model="user.email"
-                          readonly
-                        />
-                        <p style="color: red" v-if="list_errors !== null">
-                          {{ list_errors.email }}
-                        </p>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">Address: </label>
-                      <div class="col-sm-12">
-                        <input
-                          id="address"
-                          type="text"
-                          class="form-control"
-                          v-model="user.address"
-                        />
-                        <p style="color: red" v-if="list_errors !== null">
-                          {{ list_errors.address }}
-                        </p>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label"
-                        >Phone Number:
-                      </label>
-                      <div class="col-sm-12">
-                        <input
-                          id="phoneNumber"
-                          type="tel"
-                          class="form-control"
-                          v-model="user.phoneNumber"
-                        />
-                        <p style="color: red" v-if="list_errors !== null">
-                          {{ list_errors.phoneNumber }}
-                        </p>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label"
-                        >Date of birth:
-                      </label>
-                      <div class="col-sm-12">
-                        <input
-                          id="dateOfBirth"
-                          type="date"
-                          class="form-control"
-                          v-model="user.dateOfBirth"
-                        />
-                         <p style="color: red" v-if="list_errors !== null">
-                          {{ list_errors.dateOfBirth }}
-                        </p>
-                      </div>
-                    </div>
-                    <div class="form-group text-center">
-                      <div class="col-sm-offset-2 col-sm-12">
-                        <router-link
-                          to="/users"
-                          tag="button"
-                          class="btn btn-primary"
-                        >
-                          Back
-                        </router-link>
-                        <button type="submit" class="btn btn-success">
-                          Update
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-                <!-- /.tab-pane -->
-              </div>
-              <!-- /.tab-content -->
-            </div>
-            <!-- /.card-body -->
+  <div class="app-main__inner">
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-display1 icon-gradient bg-premium-dark"> </i>
           </div>
-          <!-- /.nav-tabs-custom -->
+          <div>
+            <h2>User Update</h2>
+          </div>
         </div>
-        <!-- /.col -->
       </div>
-      <!-- /.row -->
     </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
+    <div class="main-card mb-3 card">
+      <div class="card-body">
+        <h5 class="card-title">Update Form</h5>
+        <form v-on:submit.prevent="updateUser()">
+          <div class="position-relative form-group">
+            <label class="col-sm-2 control-label">Full Name: </label>
+            <div class="col-sm-12">
+              <input
+                id="fullName"
+                type="text"
+                class="form-control"
+                v-model="user.fullName"
+              />
+              <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.fullName }}
+              </p>
+            </div>
+          </div>
+          <div class="position-relative form-group">
+            <label class="col-sm-2 control-label">Code: </label>
+            <div class="col-sm-12">
+              <input
+                id="code"
+                type="text"
+                class="form-control"
+                v-model="user.code"
+                readonly
+              />
+            </div>
+          </div>
+          <div class="position-relative form-group">
+            <label class="col-sm-2 control-label">Role: </label>
+            <div class="col-sm-12">
+              <input
+                id="roleId"
+                type="text"
+                class="form-control"
+                v-model="user.roleId"
+                readonly
+              />
+            </div>
+          </div>
+          <div
+            class="position-relative form-group"
+            v-if="user.roleId === 3 || user.roleId === 4"
+          >
+            <label class="col-sm-2 control-label">Faculty: </label>
+            <div class="col-sm-12">
+              <select
+                class="form-control select2"
+                id="facultyId"
+                name="faculty"
+                v-model="user.facultyId"
+              >
+                <option
+                  v-for="faculty in list_faculties"
+                  :key="faculty.id"
+                  v-bind:value="faculty.id"
+                >
+                  {{ faculty.faculty_name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="position-relative form-group">
+            <label class="col-sm-2 control-label">Email: </label>
+            <div class="col-sm-12">
+              <input
+                id="email"
+                type="text"
+                class="form-control"
+                v-model="user.email"
+                readonly
+              />
+              <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.email }}
+              </p>
+            </div>
+          </div>
+          <div class="position-relative form-group">
+            <label class="col-sm-2 control-label">Address: </label>
+            <div class="col-sm-12">
+              <input
+                id="address"
+                type="text"
+                class="form-control"
+                v-model="user.address"
+              />
+              <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.address }}
+              </p>
+            </div>
+          </div>
+          <div class="position-relative form-group">
+            <label class="col-sm-2 control-label">Phone Number: </label>
+            <div class="col-sm-12">
+              <input
+                id="phoneNumber"
+                type="tel"
+                class="form-control"
+                v-model="user.phoneNumber"
+              />
+              <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.phoneNumber }}
+              </p>
+            </div>
+          </div>
+          <div class="position-relative form-group">
+            <label class="col-sm-2 control-label">Date of birth: </label>
+            <div class="col-sm-12">
+              <input
+                id="dateOfBirth"
+                type="date"
+                class="form-control"
+                v-model="user.dateOfBirth"
+              />
+              <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.dateOfBirth }}
+              </p>
+            </div>
+          </div>
+          <div class="col-sm-offset-2 col-sm-12 text-center">
+            <router-link to="/users" tag="button" class="btn btn-primary">
+              Back
+            </router-link>
+            <button type="submit" class="btn btn-success">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -208,10 +180,8 @@ export default {
         });
     },
     updateUser() {
-      console.log(this.user)
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
-      console.log(this.validate)
       if (this.validate) {
         axios
           .patch(UrlConstants.User + "/" + this.$route.params.id, this.user)

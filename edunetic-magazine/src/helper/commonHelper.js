@@ -13,7 +13,7 @@ export const commonHelper = {
         sort: DefaultConstants.Sort, //default sort = 'asc'
         limit: DefaultConstants.Limit, //default limit = 15
         page: DefaultConstants.Page, //default page = 15
-      }
+      },
     }
   },
   created() {
@@ -39,8 +39,7 @@ export const commonHelper = {
       this.filter.page = e;
       this.filter
     },
-
-    //USER HELPER FUNCTION
+   
     getRoleList() {
       axios
         .post(UrlConstants.Role + "/filter", this.filter)
