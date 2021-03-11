@@ -77,7 +77,7 @@ export default {
       errors: null,
     };
   },
-  create() {
+  created() {
     this.getRole();
   },
   methods: {

@@ -66,8 +66,8 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th class="sort">Code <i class="fas fa-sort"></i></th>
-                      <th class="sort">Name <i class="fas fa-sort"></i></th>
+                      <th class="sort" v-on:click="getSort('code')">Code <i class="fas fa-sort"></i></th>
+                      <th class="sort" v-on:click="getSort('name')">Name <i class="fas fa-sort"></i></th>
                       <th>Action <i class="fas fa-sort"></i></th>
                     </tr>
                   </thead>
@@ -129,44 +129,19 @@
 
 <script>
 import axios from "axios";
-import { DefaultConstants } from "@/constant/DefaultConstant";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { ResultConstants } from "@/constant/ResultConstant";
 import router from "@/router";
 import ThePagination from "@/components/ThePagination";
+import { commonHelper } from "@/helper/commonHelper";
 export default {
   name: "RoleList",
   components: {
     ThePagination
   },
-  data() {
-    return {
-      list_roles: [],
-      errors: [],
-      filter: {
-        column: DefaultConstants.Column, //default column = 'id'
-        sort: DefaultConstants.Sort, //default sort = 'asc'
-        limit: DefaultConstants.Limit, //default limit = 15
-        page: DefaultConstants.Page, //default page = 1
-      },
-    };
-  },
-  created() {
-    this.getRoleList();
-  },
+  mixins: [commonHelper],
+  
   methods: {
-    getRoleList() {
-      axios
-        .post(UrlConstants.Role + "/filter", this.filter)
-        .then((response) => {
-          this.list_roles = response.data.data;
-          this.list_roles.currentPage = this.filter.page;
-          this.list_roles.lastPage = response.data.lastPage;
-        })
-        .catch((error) => {
-          this.errors = error.response.data;
-        });
-    },
     deleteRole(role_id) {
       axios.get(UrlConstants.Role + "/" + role_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
@@ -203,13 +178,16 @@ export default {
         }
       });
     },
+    getSort($column) {
+      this.getcommonSort($column);
+      this.getRoleList();
+    },
     getLimit(event) {
-      this.filter.limit = event.target.value;
-      this.filter.page = 1;
+      this.getcommonLimit(event.target.value);
       this.getRoleList();
     },
     changePage(e){
-      this.filter.page = e;
+      this.changecommonPage(e);
       this.getRoleList();
     }
   },

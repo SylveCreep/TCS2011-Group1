@@ -130,7 +130,8 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th class="sort">Code <i class="fas fa-sort"></i></th>
+                      <th class="sort" v-on:click="getSort('code')">
+                        Code <i class="fas fa-sort"></i></th>
                       <th class="sort" v-on:click="getSort('full_name')">
                         Full name <i class="fas fa-sort"></i>
                       </th>

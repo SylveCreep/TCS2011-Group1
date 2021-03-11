@@ -61,8 +61,8 @@
                         >
                           <option
                             v-for="faculty in list_faculties.data"
-                            :key="faculty.id"
-                            v-bind:value="faculty.id"
+                            :key="faculty.faculty_id"
+                            v-bind:value="faculty.faculty_id"
                           >
                             {{ faculty.faculty_name }}
                           </option>
@@ -258,9 +258,8 @@ export default {
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
-        this.preFormatDate(this.user.dateOfBirth);
         axios
-          .post(UrlConstants.User, this.list_errors)
+          .post(UrlConstants.User, this.user)
           .then((r) => {
             alert("Create Successfully");
             this.$router.push("/users");

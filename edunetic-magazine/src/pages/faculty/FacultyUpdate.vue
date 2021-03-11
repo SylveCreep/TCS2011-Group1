@@ -128,7 +128,7 @@ export default {
   methods: {
     getFaculty() {
       axios
-        .get(UrlConstants.Faculty + "/" + this.$route.params.faculty_id)
+        .get(UrlConstants.Faculty + "/" + this.$route.params.id)
         .then((r) => {
           this.faculty = r.data.data;
         })

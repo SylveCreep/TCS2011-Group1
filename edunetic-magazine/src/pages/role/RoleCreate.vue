@@ -65,18 +65,14 @@
 import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { validateHelper } from "@/helper/validateHelper";
+import { commonHelper } from "@/helper/commonHelper";
 
 export default {
   name: "RoleCreate",
-  mixins: [validateHelper],
+  mixins: [validateHelper, commonHelper],
   data() {
     return {
       role: {},
-      role1: {
-        name: "abc"
-      },
-      list_errors: {},
-      validate: true,
       requireAttribute: {
         name: "Role Name",
       },
@@ -84,14 +80,9 @@ export default {
   },
   methods: {
     createRole() {
-      this.list_errors = this.userValidate(this.requireAttribute, this.role); //this function is called from helperMixin.js file
-      if (Object.keys(this.list_errors).length > 0) {
-        this.validate = false;
-      }
-      console.log(this.validate);
+      this.userValidate(this.requireAttribute, this.role); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
-        console.log(this.role)
         axios
           .post(UrlConstants.Role, this.role) 
           .then((r) => {
@@ -103,12 +94,6 @@ export default {
           });
       }
     },
-    showError(errors) {
-      Object.keys(errors).forEach((error) => {
-        let text = document.querySelector("#" + error);
-        text.style.cssText = "border-color: red";
-      });
-    },
   },
 };
 </script>
@@ -116,5 +101,9 @@ export default {
 <style scoped>
 .card {
   margin: 20px;
+}
+.label-gender {
+  padding-left: 5px;
+  padding-right: 20px;
 }
 </style>

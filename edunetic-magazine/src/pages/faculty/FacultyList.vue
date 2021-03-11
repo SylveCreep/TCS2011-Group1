@@ -34,7 +34,7 @@
                       placeholder="Search"
                       aria-label="Search"
                       v-model="filter.code"
-                      v-on:keyup="getFilter"
+                      v-on:keyup="getFacultyList"
                     />
                   </div>
                   <div class="form-group">
@@ -45,7 +45,7 @@
                       placeholder="Search"
                       aria-label="Search"
                       v-model="filter.facultyName"
-                      v-on:keyup="getFilter"
+                      v-on:keyup="getFacultyList"
                     />
                   </div>
                   <div class="form-group">
@@ -56,7 +56,7 @@
                       placeholder="Search"
                       aria-label="Search"
                       v-model="filter.managername"
-                      v-on:keyup="getFilter"
+                      v-on:keyup="getFacultyList"
                     />
                   </div>
                   <div class="form-group">
@@ -67,7 +67,7 @@
                       placeholder="Search"
                       aria-label="Search"
                       v-model="filter.date_of_birth"
-                      v-on:keyup="getFilter"
+                      v-on:keyup="getFacultyList"
                     />
                   </div>
                 </div>
@@ -77,9 +77,11 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th class="sort">Code <i class="fas fa-sort"></i></th>
-                      <th class="sort">Name <i class="fas fa-sort"></i></th>
-                      <th class="sort">
+                      <th class="sort" v-on:click="getSort('code')">
+                        Code <i class="fas fa-sort"></i></th>
+                      <th class="sort" v-on:click="getSort('faculty_name')">
+                        Name <i class="fas fa-sort"></i></th>
+                      <th class="sort" v-on:click="getSort('manager_name')">
                         Co-cordinator's name <i class="fas fa-sort"></i>
                       </th>
                       <th>Action <i class="fas fa-sort"></i></th>
@@ -152,60 +154,20 @@
 
 <script>
 import axios from "axios";
-import { DefaultConstants } from "@/constant/DefaultConstant";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { ResultConstants } from "@/constant/ResultConstant";
 // import { RoleConstants } from "@/constant/RoleConstants";
 import router from "@/router";
 import ThePagination from "@/components/ThePagination";
+import { commonHelper } from "@/helper/commonHelper";
 export default {
   name: "FacultyList",
   components: {
     ThePagination
   },
-  data() {
-    return {
-      list_faculties: [],
-      list_users: [],
-      errors: [],
-      filter: {
-        column: DefaultConstants.Column, //default column = 'id'
-        sort: DefaultConstants.Sort, //default sort = 'asc'
-        limit: DefaultConstants.Limit, //default limit = 15
-        page: DefaultConstants.Page, //default page = 1
-        // roleId: RoleConstants.Stundent, //default role_id of MarketingCoordinator = 4
-      },
-    };
-  },
-  created() {
-    this.getFacultyList();
-    this.getUserList();
-    console.log(this.pagination)
-  },
+  mixins: [commonHelper],
+
   methods: {
-    getFacultyList() {
-      axios
-        .post(UrlConstants.Faculty + "/filter", this.filter)
-        .then((response) => {
-          this.list_faculties = response.data.data;
-          this.list_faculties.currentPage = this.filter.page;
-          this.list_faculties.lastPage = response.data.lastPage;
-        })
-        .catch((error) => {
-          this.errors = error.response.data;
-        });
-    },
-    getUserList() {
-      axios
-        .post(UrlConstants.User + "/filter", this.filter)
-        .then((response) => {
-          this.list_users = response.data.data  ;
-          console.log(this.list_users);
-        })
-        .catch((error) => {
-          this.errors = error.response.data;
-        });
-    },
     deleteFaculty(faculty_id) {
       axios.get(UrlConstants.Faculty + "/" + faculty_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
@@ -216,7 +178,7 @@ export default {
             axios
               .delete(UrlConstants.Faculty + "/" + faculty_id)
               .then((res) => {
-                if (res.data.code === ResultConstants.Sucess) {
+                if (res.data.code === ResultConstants.Success) {
                   alert("sucess");
                   this.getFacultyList();
                 }
@@ -241,7 +203,6 @@ export default {
           router.push("/faculties/" + faculty_id + "/update");
         }
       });
-      router.push("/faculties/update");
     },
     showStundent(faculty_id, faculty_name) {
       axios.get(UrlConstants.Faculty + "/" + faculty_id).then((response) => {
@@ -261,16 +222,16 @@ export default {
     checkStudent() {
 
     },
-    getFilter() {
+    getSort($column) {
+      this.getcommonSort($column);
       this.getFacultyList();
     },
     getLimit(event) {
-      this.filter.limit = event.target.value;
-      this.filter.page = 1;
+      this.getcommonLimit(event.target.value);
       this.getFacultyList();
     },
     changePage(e){
-      this.filter.page = e;
+      this.changecommonPage(e);
       this.getFacultyList();
     }
   },
