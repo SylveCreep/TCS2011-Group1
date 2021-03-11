@@ -61,8 +61,8 @@
                         >
                           <option
                             v-for="faculty in list_faculties.data"
-                            :key="faculty.faculty_id"
-                            v-bind:value="faculty.faculty_id"
+                            :key="faculty.id"
+                            v-bind:value="faculty.id"
                           >
                             {{ faculty.faculty_name }}
                           </option>
