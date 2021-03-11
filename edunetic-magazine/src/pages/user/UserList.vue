@@ -7,7 +7,7 @@
             <i class="pe-7s-drawer icon-gradient bg-happy-itmeo"> </i>
           </div>
           <div>
-            <h3>Home/user</h3>
+            <h3>User List</h3>
           </div>
         </div>
         <div class="page-title-actions">
@@ -34,8 +34,113 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="main-card mb-3 card">
+          
           <div class="card-body">
-            <h5 class="card-title">User List</h5>
+             <!--FILTER SECTION-->
+              <div class="card-title" style="padding:20px;">
+                <div class="row">
+                  <h4><b>Filter</b></h4>
+                </div>
+                <div class="row">
+                  <div class="form-group">
+                    <label>Code</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Search"
+                      aria-label="Search"
+                      v-model="filter.code"
+                      v-on:keyup="getUserList"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Full Name</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Search"
+                      aria-label="Search"
+                      v-model="filter.fullName"
+                      v-on:keyup="getUserList"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Gender</label>
+                    <select
+                      class="form-control select2"
+                      id="cate_id"
+                      name="category"
+                      v-model="filter.gender"
+                      v-on:change="getUserList"
+                    >
+                      <option value="" selected>All</option>
+                      <option value="1" selected>Male</option>
+                      <option value="0" selected>Female</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Faculty</label>
+                    <select
+                      class="form-control select2"
+                      id="faculty_id"
+                      name="faculty"
+                      v-model="filter.facultyId"
+                      v-on:change="getUserList"
+                    >
+                      <option value="" selected>All</option>
+                      <option
+                        v-for="faculty in list_faculties"
+                        :key="faculty.id"
+                        v-bind:value="faculty.id"
+                      >
+                        {{ faculty.faculty_name }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Role</label>
+                    <select
+                      class="form-control select2"
+                      id="role_id"
+                      name="role"
+                      v-model="filter.roleId"
+                      v-on:change="getUserList"
+                    >
+                      <option value="" selected=selected>All</option>
+                      <option
+                        v-for="role in list_roles"
+                        :key="role.id"
+                        v-bind:value="role.id"
+                      >
+                        {{ role.name }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Email</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Search"
+                      aria-label="Search"
+                      v-model="filter.email"
+                      v-on:keyup="getUserList"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Date of birth </label>
+                    <input
+                      class="form-control"
+                      type="date"
+                      placeholder="Search"
+                      aria-label="Search"
+                      v-model="filter.date_of_birth"
+                      v-on:keyup="getUserList"
+                    />
+                  </div>
+                </div>
+              </div>
+              <!--/.FILTER SECTION-->
             <div class="table-responsive">
               <table class="mb-0 table">
                 <thead>
