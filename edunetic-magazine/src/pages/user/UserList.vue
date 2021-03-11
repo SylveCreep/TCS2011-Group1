@@ -34,7 +34,6 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="main-card mb-3 card">
-          
           <div class="card-body">
              <!--FILTER SECTION-->
               <div class="card-title" style="padding:20px;">
@@ -141,75 +140,6 @@
                 </div>
               </div>
               <!--/.FILTER SECTION-->
-<<<<<<< HEAD
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th class="sort" v-on:click="getSort('code')">
-                        Code <i class="fas fa-sort"></i></th>
-                      <th class="sort" v-on:click="getSort('full_name')">
-                        Full name <i class="fas fa-sort"></i>
-                      </th>
-                      <th class="sort" v-on:click="getSort('faculty_id')">
-                        Faculty <i class="fas fa-sort"></i>
-                      </th>
-                      <th class="sort" v-on:click="getSort('role_id')">
-                        Role <i class="fas fa-sort"></i>
-                      </th>
-                      <th class="sort" v-on:click="getSort('email')">
-                        Email <i class="fas fa-sort"></i>
-                      </th>
-                      <th>Action <i class="fas fa-sort"></i></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="user of list_users" :key="user.id">
-                      <td>{{ user.code }}</td>
-                      <td>{{ user.fullName }}</td>
-                      <td>{{ user.facultyName }}</td>
-                      <td>{{ user.roleName }}</td>
-                      <td>{{ user.email }}</td>
-                      <td>
-                        <p
-                          class="click"
-                          style="display: inline"
-                          v-on:click="showUser(user.id)"
-                        >
-                          <b>Update</b>
-                        </p>
-                        |
-                        <p
-                          class="click"
-                          style="display: inline"
-                          v-on:click="deleteUser(user.id)"
-                        >
-                          <b>Delete</b>
-                        </p>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div>
-                      <strong> Per Page: </strong>
-                      <select v-on:change="getLimit($event)">
-                        <option value="10">10</option>
-                        <option value="15" selected>15</option>
-                        <option value="1">1</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <the-pagination v-bind:pagination="list_users" v-on:currentPage="changePage"></the-pagination>
-                  </div>
-                </div>
-=======
             <div class="table-responsive">
               <table class="mb-0 table">
                 <thead>
@@ -269,7 +199,6 @@
                   <option value="15" selected>15</option>
                   <option value="1">1</option>
                 </select>
->>>>>>> FE-Internal
               </div>
               <div class="col-lg-6">
                 <the-pagination

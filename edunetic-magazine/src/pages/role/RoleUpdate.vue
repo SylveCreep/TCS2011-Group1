@@ -1,80 +1,70 @@
 <template>
-  <section class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header">
-              <h2>Role Update</h2>
-            </div>
-            <div class="card-body">
-              <div class="tab-content">
-                <div class="tab-pane active show" id="settings">
-                  <div class="alert alert-danger" v-if="errors !== null">
-                    <ul>
-                      <li v-for="(v, k) in errors" :key="k">
-                        {{ v.toString() }}
-                      </li>
-                    </ul>
-                  </div>
-                  <form
-                    class="form-horizontal"
-                    v-on:submit.prevent="updateRole()"
-                  >
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">Name: </label>
-                      <div class="col-sm-12">
-                        <input
-                          id="rolename"
-                          type="text"
-                          class="form-control"
-                          v-model="role.name"
-                        />
-                      </div>
-                    </div>
-                    <div class="form-group text-center">
-                      <div class="col-sm-offset-2 col-sm-12">
-                        <router-link
-                          to="/roles"
-                          tag="button"
-                          class="btn btn-primary"
-                        >
-                          Back
-                        </router-link>
-                        <button type="submit" class="btn btn-success" v-on:click="UpdateRoles()">
-                          Update
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-                <!-- /.tab-pane -->
-              </div>
-              <!-- /.tab-content -->
-            </div>
-            <!-- /.card-body -->
+  <div class="app-main__inner">
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-display1 icon-gradient bg-premium-dark"> </i>
           </div>
-          <!-- /.nav-tabs-custom -->
+          <div>
+            <h2>Role Update</h2>
+          </div>
         </div>
-        <!-- /.col -->
       </div>
-      <!-- /.row -->
     </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
+    <div class="main-card mb-3 card">
+      <div class="card-body">
+        <h5 class="card-title">Update Form</h5>
+        <form v-on:submit.prevent="updateRole()">
+          <div class="position-relative form-group">
+            <label class="col-sm-2 control-label">Name: </label>
+            <div class="col-sm-12">
+              <input
+                id="name"
+                type="text"
+                class="form-control"
+                v-model="role.name"
+              />
+              <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.name }}
+              </p>
+            </div>
+          </div>
+          <div class="col-sm-offset-2 col-sm-12 text-center">
+            <div class="col-sm-offset-2 col-sm-12">
+              <router-link to="/roles" tag="button" class="btn btn-primary">
+                Back
+              </router-link>
+              <button
+                type="submit"
+                class="btn btn-success"
+                v-on:click="UpdateRoles()"
+              >
+                Update
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
+import { validateHelper } from "@/helper/validateHelper";
+import { commonHelper } from "@/helper/commonHelper";
 
 export default {
   name: "RoleUpdate",
+  mixins: [commonHelper, validateHelper],
   data() {
     return {
       role: {},
-      errors: null,
+      requireAttribute: {
+        name: "Role Name",
+      },
     };
   },
   created() {
@@ -82,33 +72,31 @@ export default {
   },
   methods: {
     getRole() {
-      axios.get(UrlConstants.Role + '/' + this.$route.params.id)
-          .then(r =>{
-            this.role = r.data.data;
-            console.log(this.role);
-          })
-          .catch(error =>{
-              this.errors = error.response;
-          })
-    },
-    updateRole() {
       axios
-        .post(UrlConstants.Role, this.Role)
+        .get(UrlConstants.Role + "/" + this.$route.params.id)
         .then((r) => {
-          console.log(r);
-          alert("Update Successfully");
-          this.$router.push("/roles");
+          this.role = r.data.data;
         })
         .catch((error) => {
           this.errors = error.response;
-          console.log(this.errors);
         });
     },
-    showError(errors) {
-      Object.keys(errors).forEach((error) => {
-        let text = document.querySelector("#" + error);
-        text.style.cssText = "border-color: red";
-      });
+    updateRole() {
+      this.userValidate(this.requireAttribute, this.role); //this function is called from helperMixin.js file
+      this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
+      if (this.validate) {
+        axios
+          .patch(UrlConstants.Role + "/" + this.$route.params.id, this.role)
+          .then((r) => {
+            console.log(r);
+            alert("Update Successfully");
+            this.$router.push("/roles");
+          })
+          .catch((error) => {
+            this.errors = error.response.data.errors;
+            console.log(this.errors);
+          });
+      }
     },
   },
 };

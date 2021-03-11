@@ -1,64 +1,49 @@
 <template>
-  <section class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header">
-              <h2>Faculty Create</h2>
-            </div>
-            <div class="card-body">
-              <div class="tab-content">
-                <div class="tab-pane active show" id="settings">
-                  <form
-                    class="form-horizontal"
-                    v-on:submit.prevent="createFaculty()"
-                  >
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">Name: </label>
-                      <div class="col-sm-12">
-                        <input
-                          id="facultyName"
-                          type="text"
-                          class="form-control"
-                          v-model="faculty.faculty_name"
-                        />
-                        <p style="color: red" v-if="list_errors !== null">
-                          {{ list_errors.faculty_name }}
-                        </p>
-                      </div>
-                    </div>
-                    <div class="form-group text-center">
-                      <div class="col-sm-offset-2 col-sm-12">
-                        <router-link
-                          to="/faculties"
-                          tag="button"
-                          class="btn btn-primary"
-                        >
-                          Back
-                        </router-link>
-                        <button type="submit" class="btn btn-success">
-                          Create
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-                <!-- /.tab-pane -->
-              </div>
-              <!-- /.tab-content -->
-            </div>
-            <!-- /.card-body -->
+  <div class="app-main__inner">
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-display1 icon-gradient bg-premium-dark"> </i>
           </div>
-          <!-- /.nav-tabs-custom -->
+          <div>
+            <h2>Faculty Create</h2>
+          </div>
         </div>
-        <!-- /.col -->
       </div>
-      <!-- /.row -->
     </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
+    <div class="main-card mb-3 card">
+      <div class="card-body">
+        <h5 class="card-title">Create Form</h5>
+        <form v-on:submit.prevent="createFaculty()">
+          <div class="position-relative form-group">
+            <label class="col-sm-2 control-label">Name: </label>
+            <div class="col-sm-12">
+              <input
+                id="faculty_name"
+                type="text"
+                class="form-control"
+                v-model="faculty.faculty_name"
+              />
+              <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.faculty_name }}
+              </p>
+            </div>
+          </div>
+          <div class="position-relative form-group text-center">
+            <div class="col-sm-offset-2 col-sm-12">
+              <router-link to="/faculties" tag="button" class="btn btn-primary">
+                Back
+              </router-link>
+              <button type="submit" class="btn btn-success">
+                Create
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

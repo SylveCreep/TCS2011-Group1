@@ -1,78 +1,97 @@
 <template>
-  <div>
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h2 class="card-title">Role List</h2>
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px">
-                    <router-link
-                      to="/roles/create"
-                      tag="button"
-                      class="btn btn-success"
-                    >
-                      Create New <i class="fas fa-plus fa-fw"></i>
-                    </router-link>
-                  </div>
+  <div class="app-main__inner">
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-drawer icon-gradient bg-happy-itmeo"> </i>
+          </div>
+          <div>
+            <h3>Role List</h3>
+          </div>
+        </div>
+        <div class="page-title-actions">
+          <button
+            type="button"
+            data-toggle="tooltip"
+            title="Example Tooltip"
+            data-placement="bottom"
+            class="btn-shadow mr-3 btn btn-dark"
+          >
+            <i class="fa fa-star"></i>
+          </button>
+          <div class="d-inline-block dropdown">
+            <router-link to="/roles/create" class="btn-shadow btn btn-info">
+              <span class="btn-icon-wrapper pr-2 opacity-7">
+                <i class="fa fa-business-time fa-w-20"></i>
+              </span>
+              Create Role
+            </router-link>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="main-card mb-3 card">
+          <div class="card-body">
+            <!--FILTER SECTION-->
+            <div class="card-title" style="padding:20px;">
+              <div class="row">
+                <h4><b>Filter</b></h4>
+              </div>
+              <div class="row">
+                <div class="form-group">
+                  <label>Code</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Search"
+                    aria-label="Search"
+                    v-model="filter.code"
+                    v-on:keyup="getRoleList"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Name</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Search"
+                    aria-label="Search"
+                    v-model="filter.name"
+                    v-on:keyup="getRoleList"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Date created </label>
+                  <input
+                    class="form-control"
+                    type="date"
+                    placeholder="Search"
+                    aria-label="Search"
+                    v-model="filter.date_of_birth"
+                    v-on:keyup="getRoleList"
+                  />
                 </div>
               </div>
-              <!--FILTER SECTION-->
-              <div class="card-header">
-                <div class="row">
-                  <h3 class="card-title">Filter</h3>
-                </div>
-                <div class="row">
-                  <div class="form-group">
-                    <label>Code</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      placeholder="Search"
-                      aria-label="Search"
-                      v-model="filter.code"
-                      v-on:keyup="getRoleList"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>Name</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      placeholder="Search"
-                      aria-label="Search"
-                      v-model="filter.name"
-                      v-on:keyup="getRoleList"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>Date created </label>
-                    <input
-                      class="form-control"
-                      type="date"
-                      placeholder="Search"
-                      aria-label="Search"
-                      v-model="filter.date_of_birth"
-                      v-on:keyup="getRoleList"
-                    />
-                  </div>
-                </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th class="sort" v-on:click="getSort('code')">Code <i class="fas fa-sort"></i></th>
-                      <th class="sort" v-on:click="getSort('name')">Name <i class="fas fa-sort"></i></th>
-                      <th>Action <i class="fas fa-sort"></i></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="role of list_roles" :key="role.id">
+            </div>
+            <!--/.FILTER SECTION-->
+            <div class="table-responsive">
+              <table class="mb-0 table">
+                <thead>
+                  <tr>
+                    <th class="sort" v-on:click="getSort('code')">
+                      Code <i class="fas fa-sort"></i>
+                    </th>
+                    <th class="sort" v-on:click="getSort('name')">
+                      Name <i class="fas fa-sort"></i>
+                    </th>
+                    <th>Action <i class="fas fa-sort"></i></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="role of list_roles" :key="role.id">
                       <td>{{ role.code }}</td>
                       <td>{{ role.name }}</td>
                       <td>
@@ -93,37 +112,29 @@
                         </p>
                       </td>
                     </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div>
-                      <strong> Per Page: </strong>
-                      <select v-on:change="getLimit($event)">
-                        <option value="10">10</option>
-                        <option value="15" selected>15</option>
-                        <option value="1">1</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <the-pagination v-bind:pagination="list_roles" v-on:currentPage="changePage"></the-pagination>
-                  </div>
-                </div>
-              </div>
+                </tbody>
+              </table>
             </div>
-            <!-- /.card -->
           </div>
-          <!-- /.col -->
+          <div class="card-footer">
+            <div class="col-lg-6">
+              <strong> Per page: </strong>
+              <select v-on:change="getLimit($event)">
+                <option value="10">10</option>
+                <option value="15" selected>15</option>
+                <option value="1">1</option>
+              </select>
+            </div>
+            <div class="col-lg-6">
+              <the-pagination
+                v-bind:pagination="list_roles"
+                v-on:currentPage="changePage"
+              ></the-pagination>
+            </div>
+          </div>
         </div>
-        <!-- /.row -->
       </div>
-      <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+    </div>
   </div>
 </template>
 

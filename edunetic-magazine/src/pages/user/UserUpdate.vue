@@ -49,7 +49,7 @@
                 id="roleId"
                 type="text"
                 class="form-control"
-                v-model="user.roleId"
+                v-model="user.roleName"
                 readonly
               />
             </div>
