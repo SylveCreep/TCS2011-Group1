@@ -1,207 +1,111 @@
 <template>
-  <div>
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h2 class="card-title">User List</h2>
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px">
-                    <router-link
-                      to="/users/create"
-                      tag="button"
-                      class="btn btn-success"
-                    >
-                      Create New <i class="fas fa-plus fa-fw"></i>
-                    </router-link>
-                  </div>
-                </div>
-              </div>
-              <!--FILTER SECTION-->
-              <div class="card-header">
-                <div class="row">
-                  <h3 class="card-title">Filter</h3>
-                </div>
-                <div class="row">
-                  <div class="form-group">
-                    <label>Code</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      placeholder="Search"
-                      aria-label="Search"
-                      v-model="filter.code"
-                      v-on:keyup="getUserList"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>Full Name</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      placeholder="Search"
-                      aria-label="Search"
-                      v-model="filter.fullName"
-                      v-on:keyup="getUserList"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>Gender</label>
-                    <select
-                      class="form-control select2"
-                      id="cate_id"
-                      name="category"
-                      v-model="filter.gender"
-                      v-on:change="getUserList"
-                    >
-                      <option value="" selected>All</option>
-                      <option value="1" selected>Male</option>
-                      <option value="0" selected>Female</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label>Faculty</label>
-                    <select
-                      class="form-control select2"
-                      id="faculty_id"
-                      name="faculty"
-                      v-model="filter.facultyId"
-                      v-on:change="getUserList"
-                    >
-                      <option value="" selected>All</option>
-                      <option
-                        v-for="faculty in list_faculties"
-                        :key="faculty.id"
-                        v-bind:value="faculty.id"
-                      >
-                        {{ faculty.faculty_name }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label>Role</label>
-                    <select
-                      class="form-control select2"
-                      id="role_id"
-                      name="role"
-                      v-model="filter.roleId"
-                      v-on:change="getUserList"
-                    >
-                      <option value="" selected=selected>All</option>
-                      <option
-                        v-for="role in list_roles"
-                        :key="role.id"
-                        v-bind:value="role.id"
-                      >
-                        {{ role.name }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label>Email</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      placeholder="Search"
-                      aria-label="Search"
-                      v-model="filter.email"
-                      v-on:keyup="getUserList"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>Date of birth </label>
-                    <input
-                      class="form-control"
-                      type="date"
-                      placeholder="Search"
-                      aria-label="Search"
-                      v-model="filter.date_of_birth"
-                      v-on:keyup="getUserList"
-                    />
-                  </div>
-                </div>
-              </div>
-              <!--/.FILTER SECTION-->
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th class="sort">Code <i class="fas fa-sort"></i></th>
-                      <th class="sort" v-on:click="getSort('full_name')">
-                        Full name <i class="fas fa-sort"></i>
-                      </th>
-                      <th class="sort" v-on:click="getSort('faculty_id')">
-                        Faculty <i class="fas fa-sort"></i>
-                      </th>
-                      <th class="sort" v-on:click="getSort('role_id')">
-                        Role <i class="fas fa-sort"></i>
-                      </th>
-                      <th class="sort" v-on:click="getSort('email')">
-                        Email <i class="fas fa-sort"></i>
-                      </th>
-                      <th>Action <i class="fas fa-sort"></i></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="user of list_users" :key="user.id">
-                      <td>{{ user.code }}</td>
-                      <td>{{ user.fullName }}</td>
-                      <td>{{ user.facultyName }}</td>
-                      <td>{{ user.roleName }}</td>
-                      <td>{{ user.email }}</td>
-                      <td>
-                        <p
-                          class="click"
-                          style="display: inline"
-                          v-on:click="showUser(user.id)"
-                        >
-                          <b>Update</b>
-                        </p>
-                        |
-                        <p
-                          class="click"
-                          style="display: inline"
-                          v-on:click="deleteUser(user.id)"
-                        >
-                          <b>Delete</b>
-                        </p>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div>
-                      <strong> Per Page: </strong>
-                      <select v-on:change="getLimit($event)">
-                        <option value="10">10</option>
-                        <option value="15" selected>15</option>
-                        <option value="1">1</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <the-pagination v-bind:pagination="list_users" v-on:currentPage="changePage"></the-pagination>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- /.card -->
+  <div class="app-main__inner">
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-drawer icon-gradient bg-happy-itmeo"> </i>
           </div>
-          <!-- /.col -->
+          <div>
+            <h3>Home/user</h3>
+          </div>
         </div>
-        <!-- /.row -->
+        <div class="page-title-actions">
+          <button
+            type="button"
+            data-toggle="tooltip"
+            title="Example Tooltip"
+            data-placement="bottom"
+            class="btn-shadow mr-3 btn btn-dark"
+          >
+            <i class="fa fa-star"></i>
+          </button>
+          <div class="d-inline-block dropdown">
+            <router-link to="/users/create" class="btn-shadow btn btn-info">
+              <span class="btn-icon-wrapper pr-2 opacity-7">
+                <i class="fa fa-business-time fa-w-20"></i>
+              </span>
+              Create User
+            </router-link>
+          </div>
+        </div>
       </div>
-      <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="main-card mb-3 card">
+          <div class="card-body">
+            <h5 class="card-title">User List</h5>
+            <div class="table-responsive">
+              <table class="mb-0 table">
+                <thead>
+                  <tr>
+                    <th class="sort" v-on:click="getSort('code')">
+                      Code <i class="fas fa-sort"></i>
+                    </th>
+                    <th class="sort" v-on:click="getSort('full_name')">
+                      Full name <i class="fas fa-sort"></i>
+                    </th>
+                    <th class="sort" v-on:click="getSort('faculty_id')">
+                      Faculty <i class="fas fa-sort"></i>
+                    </th>
+                    <th class="sort" v-on:click="getSort('role_id')">
+                      Role <i class="fas fa-sort"></i>
+                    </th>
+                    <th class="sort" v-on:click="getSort('email')">
+                      Email <i class="fas fa-sort"></i>
+                    </th>
+                    <th>Action <i class="fas fa-sort"></i></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="user of list_users" :key="user.id">
+                    <td>{{ user.code }}</td>
+                    <td>{{ user.fullName }}</td>
+                    <td>{{ user.facultyName }}</td>
+                    <td>{{ user.roleName }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                      <p
+                        class="click"
+                        style="display: inline"
+                        v-on:click="showUser(user.id)"
+                      >
+                        <b>Update</b>
+                      </p>
+                      |
+                      <p
+                        class="click"
+                        style="display: inline"
+                        v-on:click="deleteUser(user.id)"
+                      >
+                        <b>Delete</b>
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card-footer">
+              <div class="col-lg-6">
+                <strong> Items per page: </strong>
+                <select v-on:change="getLimit($event)">
+                  <option value="10">10</option>
+                  <option value="15" selected>15</option>
+                  <option value="1">1</option>
+                </select>
+              </div>
+              <div class="col-lg-6">
+                <the-pagination
+                  v-bind:pagination="list_users"
+                  v-on:currentPage="changePage"
+                ></the-pagination>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -216,7 +120,7 @@ import ThePagination from "@/components/ThePagination";
 export default {
   name: "UserList",
   components: {
-    ThePagination
+    ThePagination,
   },
   mixins: [commonHelper],
   data() {
@@ -262,7 +166,7 @@ export default {
               .then((res) => {
                 if (res.data.code === ResultConstants.Success) {
                   alert("success");
-                  console.log(res.data)
+                  console.log(res.data);
                   this.getUserList();
                 }
                 if (res.data.code === ResultConstants.Failure) {
@@ -285,10 +189,10 @@ export default {
       this.getcommonLimit(event.target.value);
       this.getUserList();
     },
-    changePage(e){
+    changePage(e) {
       this.changecommonPage(e);
       this.getUserList();
-    }
+    },
   },
 };
 </script>

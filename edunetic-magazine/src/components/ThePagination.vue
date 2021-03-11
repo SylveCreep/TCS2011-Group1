@@ -73,3 +73,14 @@ export default {
     }
 }
 </script>
+<style scoped>
+.page-item.active .page-link, .pagination .active.page-number .page-link {
+    background-color: #3f6ad8;
+    border-color: #007bff;
+}
+.pagination li a {
+    color: #3f6ad8
+}
+</style>
+    
+

@@ -54,10 +54,18 @@ export default {
           let jwt = this.$cookies.set("jwt", r.data.data.token, "30min");
           this.$cookies.set("id", r.data.data.id, "30min");
           this.$emit("user-logged", jwt);
+          this.getCurrentUser();
           this.$router.push("/users");
         })
         .catch((e) => {
           this.error = "Wrong user or password"
+        });
+    },
+    getCurrentUser() {
+      axios
+        .get(UrlConstants.User + "/" + this.$cookies.get("id"))
+        .then((res) => {
+          this.$cookies.set("currentUser", res.data.data, "30min");
         });
     },
   },

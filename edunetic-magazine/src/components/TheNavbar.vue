@@ -1,192 +1,132 @@
 <template>
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-    <!-- Left navbar links -->
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"
-          ><i class="fas fa-bars"></i
-        ></a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <router-link to="/" class="nav-link">Home</router-link>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
-      </li>
-    </ul>
-
-    <!-- SEARCH FORM -->
-    <form class="form-inline ml-3">
-      <div class="input-group input-group-sm">
-        <input
-          class="form-control form-control-navbar"
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
-        />
-        <div class="input-group-append">
-          <button class="btn btn-navbar" type="submit">
-            <i class="fas fa-search"></i>
+ <div class="app-header header-shadow">
+      <div class="app-header__logo">
+        <h6>Edunetic Magazine</h6>
+        <div class="header__pane ml-auto">
+          <div>
+            <button
+              type="button"
+              class="hamburger close-sidebar-btn hamburger--elastic"
+              data-class="closed-sidebar"
+            >
+              <span class="hamburger-box">
+                <span class="hamburger-inner"></span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="app-header__mobile-menu">
+        <div>
+          <button
+            type="button"
+            class="hamburger hamburger--elastic mobile-toggle-nav"
+          >
+            <span class="hamburger-box">
+              <span class="hamburger-inner"></span>
+            </span>
           </button>
         </div>
       </div>
-    </form>
-
-    <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
-      <!-- Messages Dropdown Menu -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-comments"></i>
-          <span class="badge badge-danger navbar-badge">3</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img
-                src="dist/img/user1-128x128.jpg"
-                alt="User Avatar"
-                class="img-size-50 mr-3 img-circle"
-              />
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Brad Diesel
-                  <span class="float-right text-sm text-danger"
-                    ><i class="fas fa-star"></i
-                  ></span>
-                </h3>
-                <p class="text-sm">Call me whenever you can...</p>
-                <p class="text-sm text-muted">
-                  <i class="far fa-clock mr-1"></i> 4 Hours Ago
-                </p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img
-                src="dist/img/user8-128x128.jpg"
-                alt="User Avatar"
-                class="img-size-50 img-circle mr-3"
-              />
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  John Pierce
-                  <span class="float-right text-sm text-muted"
-                    ><i class="fas fa-star"></i
-                  ></span>
-                </h3>
-                <p class="text-sm">I got your message bro</p>
-                <p class="text-sm text-muted">
-                  <i class="far fa-clock mr-1"></i> 4 Hours Ago
-                </p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img
-                src="dist/img/user3-128x128.jpg"
-                alt="User Avatar"
-                class="img-size-50 img-circle mr-3"
-              />
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Nora Silvester
-                  <span class="float-right text-sm text-warning"
-                    ><i class="fas fa-star"></i
-                  ></span>
-                </h3>
-                <p class="text-sm">The subject goes here</p>
-                <p class="text-sm text-muted">
-                  <i class="far fa-clock mr-1"></i> 4 Hours Ago
-                </p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-        </div>
-      </li>
-      <!-- Notifications Dropdown Menu -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-bell"></i>
-          <span class="badge badge-warning navbar-badge">15</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-header">15 Notifications</span>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-envelope mr-2"></i> 4 new messages
-            <span class="float-right text-muted text-sm">3 mins</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-users mr-2"></i> 8 friend requests
-            <span class="float-right text-muted text-sm">12 hours</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-file mr-2"></i> 3 new reports
-            <span class="float-right text-muted text-sm">2 days</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer"
-            >See All Notifications</a
+      <div class="app-header__menu">
+        <span>
+          <button
+            type="button"
+            class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav"
           >
-        </div>
-      </li>
-      <li class="nav-item">
-        <a
-          class="nav-link"
-          data-widget="control-sidebar"
-          data-slide="true"
-          href="#"
-          role="button"
-        >
-          <i class="fas fa-th-large"></i>
-        </a>
-      </li>
-      <!-- <div v-if="!currentUser" class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <router-link to="/login" class="nav-link"> Login </router-link>
-        </li>
+            <span class="btn-icon-wrapper">
+              <i class="fa fa-ellipsis-v fa-w-6"></i>
+            </span>
+          </button>
+        </span>
       </div>
-      <div v-if="currentUser" class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <router-link to="/profile" class="nav-link">
-            {{ currentUser.email }}
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href @click.prevent="logOut"> LogOut </a>
-        </li>
-      </div> -->
-    </ul>
-  </nav>
+      <div class="app-header__content">
+        <div class="app-header-right">
+          <div class="header-btn-lg pr-0">
+            <div class="widget-content p-0">
+              <div class="widget-content-wrapper">
+                <div class="widget-content-left">
+                  <div class="btn-group">
+                    <a
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      class="p-0 btn"
+                    >
+                      <img
+                        width="42"
+                        class="rounded-circle"
+                        src="assets/images/avatars/1.jpg"
+                        alt=""
+                      />
+                      <i class="fa fa-angle-down ml-2 opacity-8"></i>
+                    </a>
+                    <div
+                      tabindex="-1"
+                      role="menu"
+                      aria-hidden="true"
+                      class="dropdown-menu dropdown-menu-right"
+                    >
+                      <button type="button" tabindex="0" class="dropdown-item">
+                        User Account
+                      </button>
+                      
+                      <div tabindex="-1" class="dropdown-divider"></div>
+                      <button type="button" tabindex="0" class="dropdown-item" v-on:click="logOut">
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="widget-content-left ml-3 header-user-info">
+                  <div class="widget-heading">{{user.fullName}}</div>
+                  <div class="widget-subheading">{{user.roleName}}</div>
+                </div>
+                <div class="widget-content-right header-user-info ml-3">
+                  <button
+                    type="button"
+                    class="btn-shadow p-1 btn btn-primary btn-sm show-toastr-example"
+                  >
+                    <i class="fa text-white fa-calendar pr-1 pl-1"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 </template>
 
 <script>
+import { UrlConstants } from "@/constant/UrlConstant";
+import axios from "axios";
 export default {
   name: "TheNavbar",
   data() {
-      return {
-          currentUser: this.$cookies.get('jwt')
-      }
+    return  {
+      user: {}
+    };
+  },
+  created() {
+    this.getCurrentUser();
   },
   methods: {
+    getCurrentUser() {
+      axios
+        .get(UrlConstants.User + "/" + this.$cookies.get("id"))
+        .then((res) => {
+          this.user = res.data.data;
+        });
+    },
     logOut() {
-      this.$store.dispatch("auth/logout");
-      this.$router.push("/login");
+     let result = confirm("Do you want to log out?");
+      if (result) {
+        this.$cookies.remove("jwt");
+        this.$cookies.remove("currentUser");
+        this.$emit("user-logout", null);
+        this.$router.push("/login");
+      }
     },
   },
 };

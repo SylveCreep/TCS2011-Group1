@@ -43,23 +43,16 @@
                     <div class="form-group">
                       <label class="col-sm-2 control-label">Role: </label>
                       <div class="col-sm-12">
-                        <select
-                          class="form-control select2"
+                       <input
                           id="roleId"
-                          name="role"
+                          type="text"
+                          class="form-control"
                           v-model="user.roleId"
-                        >
-                          <option
-                            v-for="role in list_roles"
-                            :key="role.id"
-                            v-bind:value="role.id"
-                          >
-                            {{ role.name }}
-                          </option>
-                        </select>
+                          readonly
+                        />
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" v-if="user.roleId === 3 || user.roleId === 4">
                       <label class="col-sm-2 control-label">Faculty: </label>
                       <div class="col-sm-12">
                         <select
@@ -68,7 +61,6 @@
                           name="faculty"
                           v-model="user.facultyId"
                         >
-                        
                           <option
                             v-for="faculty in list_faculties"
                             :key="faculty.id"
@@ -208,10 +200,8 @@ export default {
         });
     },
     updateUser() {
-      console.log(this.user)
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
-      console.log(this.validate)
       if (this.validate) {
         axios
           .patch(UrlConstants.User + "/" + this.$route.params.id, this.user)
