@@ -93,9 +93,9 @@
                     <option
                       v-for="faculty in list_faculties"
                       :key="faculty.id"
-                      v-bind:value="faculty.faculty_id"
+                      v-bind:value="faculty.facultyId"
                     >
-                      {{ faculty.faculty_name }}
+                      {{ faculty.facultyName }}
                     </option>
                   </select>
                 </div>
