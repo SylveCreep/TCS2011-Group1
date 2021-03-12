@@ -2,7 +2,7 @@
   <div class="app-main__inner">
     <div
       class="app-page-title"
-      style="margin: 0; background-color: #f0f3f5; padding: 5px;"
+      style="margin: 0; background-color: #f0f3f5; padding: 5px"
     >
       <div class="page-title-wrapper">
         <div class="page-title-heading">
@@ -35,11 +35,11 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-12" style="padding: 0;">
+      <div class="col-lg-12" style="padding: 0">
         <div class="main-card mb-3 card">
           <div class="card-body">
             <!--FILTER SECTION-->
-            <div class="card-title" style="padding:20px 20px 0;">
+            <div class="card-title" style="padding: 20px 20px 0">
               <div class="row">
                 <h4><b>Filter</b></h4>
               </div>
@@ -177,15 +177,14 @@ import router from "@/router";
 import ThePagination from "@/components/ThePagination";
 import { commonHelper } from "@/helper/commonHelper";
 export default {
-  data() {
-    return {};
-  },
   name: "FacultyList",
   components: {
     ThePagination,
   },
   mixins: [commonHelper],
-
+  created() {
+    this.getFacultyList();
+  },
   methods: {
     deleteFaculty(faculty_id) {
       axios.get(UrlConstants.Faculty + "/" + faculty_id).then((response) => {
@@ -193,8 +192,11 @@ export default {
           alert("error");
           this.getFacultyList();
         } else {
-          if (confirm("Are you sure to delete this faculty ?")) {
-            axios
+          if (!this.checkStudent(faculty_id)) {
+             alert("Cannot delete this faculty");
+          } else {
+            if (confirm("Are you sure to delete this faculty ?")) {
+              axios
               .delete(UrlConstants.Faculty + "/" + faculty_id)
               .then((res) => {
                 if (res.data.code === ResultConstants.Success) {
@@ -209,6 +211,7 @@ export default {
               .catch((error) => {
                 this.errors = error.data;
               });
+            }
           }
         }
       });
@@ -233,13 +236,24 @@ export default {
             facultyId: faculty_id,
             facultyName: faculty_name,
           };
-          console.log(student);
           this.$cookies.set("facultyStudent", student);
           this.$router.push("/users");
         }
       });
     },
-    checkStudent() {},
+    checkStudent(facultyId) {
+        this.filter.facultyId =facultyId;
+        axios
+        .post(UrlConstants.User + "/filter", this.filter)
+        .then((response) => {
+          this.list_users = response.data.data;
+          if (Object.keys(this.list_users).length === 0) {
+            return false;
+          } else {
+            return true;
+          }
+        })
+    },
     getSort($column) {
       this.getcommonSort($column);
       this.getFacultyList();

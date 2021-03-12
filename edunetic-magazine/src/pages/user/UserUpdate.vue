@@ -66,6 +66,7 @@
                 name="faculty"
                 v-model="user.facultyId"
               >
+                <option selected v-bind:value="user.facultyId"> {{user.facultyName}}</option>
                 <option
                   v-for="faculty in list_faculties"
                   :key="faculty.id"
@@ -167,6 +168,7 @@ export default {
   },
   created() {
     this.getUser();
+    this.getFacultyList();
   },
   methods: {
     getUser() {
@@ -183,7 +185,6 @@ export default {
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
-         axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
         axios
           .patch(UrlConstants.User + "/" + this.$route.params.id, this.user)
           .then((response) => {

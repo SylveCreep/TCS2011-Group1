@@ -238,21 +238,13 @@ export default {
   },
   created() {
     this.setStudentList();
+    //These function are called from commonHelper.js file 
     this.getUserList();
+    this.getRoleList();
+    this.getFacultyList();
   },
   methods: {
-    getUserList() {
-      axios
-        .post(UrlConstants.User + "/filter", this.filter)
-        .then((response) => {
-          this.list_users = response.data.data;
-          this.list_users.currentPage = this.filter.page;
-          this.list_users.lastPage = response.data.lastPage;
-        })
-        .catch((error) => {
-          this.errors = error.response.data;
-        });
-    },
+   
     showUser(user_id) {
       axios.get(UrlConstants.User + "/" + user_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
