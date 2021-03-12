@@ -52,7 +52,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.code"
-                    v-on:keyup="getFacultyList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -63,7 +63,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.facultyName"
-                    v-on:keyup="getFacultyList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -73,8 +73,8 @@
                     type="text"
                     placeholder="Search"
                     aria-label="Search"
-                    v-model="filter.managerName"
-                    v-on:keyup="getFacultyList"
+                    v-model="filter.managername"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -85,7 +85,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.date_of_birth"
-                    v-on:keyup="getFacultyList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
               </div>
@@ -194,9 +194,9 @@ export default {
             axios
               .delete(UrlConstants.Faculty + "/" + facultyId)
               .then((res) => {
-                alert("sucess");
-                this.filter.facultyId = "";
-                this.getFacultyList();
+                  alert("sucess");
+                  this.filter.facultyId = "";
+                  this.getFacultyList();
               })
               .catch((error) => {
                 this.errors = error.data;
@@ -238,6 +238,10 @@ export default {
             alert("Çannot Delete This user");
           }
         });
+    },
+    getFilter() {
+      this.filter.page = 1;
+      this.getFacultyList();
     },
     getSort($column) {
       this.getcommonSort($column);

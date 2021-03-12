@@ -52,7 +52,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.code"
-                    v-on:keyup="getRoleList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -63,7 +63,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.name"
-                    v-on:keyup="getRoleList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -74,7 +74,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.date_of_birth"
-                    v-on:keyup="getRoleList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
               </div>
@@ -168,8 +168,13 @@ export default {
             axios
               .delete(UrlConstants.Role + "/" + role_id)
               .then((res) => {
+<<<<<<< HEAD
                 alert("sucess");
                 this.filter.roleId = ""; 
+=======
+                alert("success");
+                this.filter.roleId = "";
+>>>>>>> FE-Internal
                 this.getRoleList();
               })
               .catch((error) => {
@@ -201,6 +206,10 @@ export default {
             alert("Çannot Delete This role");
           }
         });
+    },
+    getFilter() {
+      this.filter.page = 1;
+      this.getRoleList();
     },
     getSort($column) {
       this.getcommonSort($column);

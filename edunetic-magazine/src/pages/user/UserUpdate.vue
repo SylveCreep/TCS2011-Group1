@@ -107,6 +107,26 @@
             </div>
           </div>
           <div class="position-relative form-group">
+            <label class="col-sm-2 control-label">Gender </label>
+            <div class="col-sm-12">
+              <input
+                type="radio"
+                id="rmale"
+                v-model="user.gender"
+                value="1"
+                checked
+              />
+              <label for="male" class="label-gender">Male</label>
+              <input
+                type="radio"
+                id="rfemale"
+                v-model="user.gender"
+                value="0"
+              />
+              <label for="female" class="label-gender">Female</label>
+            </div>
+          </div>
+          <div class="position-relative form-group">
             <label class="col-sm-2 control-label">Phone Number: </label>
             <div class="col-sm-12">
               <input
@@ -184,9 +204,13 @@ export default {
     updateUser() {
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
+      let updateUser = this.user;
+      delete updateUser["roleName"];
+      delete updateUser["facultyName"];
+      delete updateUser["code"];
       if (this.validate) {
         axios
-          .patch(UrlConstants.User + "/" + this.$route.params.id, this.user)
+          .patch(UrlConstants.User, updateUser)
           .then((response) => {
             console.log(response);
             alert("success");
@@ -203,10 +227,12 @@ export default {
 </script>
 
 <style scoped>
-.card {
-  margin: 0 0 30px;
-}
+
 .app-page-title {
   margin:-30px 0 0 -30px;
 };
+.label-gender {
+  padding-left: 5px !important;
+  padding-right: 20px !important;
+}
 </style>
