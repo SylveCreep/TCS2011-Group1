@@ -67,8 +67,8 @@
                     <label>Gender</label>
                     <select
                       class="form-control select2"
-                      id="cate_id"
-                      name="category"
+                      id="gender"
+                      name="gender"
                       v-model="filter.gender"
                       v-on:change="getUserList"
                     >
@@ -90,7 +90,7 @@
                       <option
                         v-for="faculty in list_faculties"
                         :key="faculty.id"
-                        v-bind:value="faculty.id"
+                        v-bind:value="faculty.faculty_id"
                       >
                         {{ faculty.faculty_name }}
                       </option>
@@ -159,7 +159,7 @@
                     <th class="sort" v-on:click="getSort('email')">
                       Email <i class="fas fa-sort"></i>
                     </th>
-                    <th>Action <i class="fas fa-sort"></i></th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>

@@ -66,6 +66,7 @@ export default {
       this.userValidate(this.requireAttribute, this.role); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
+         axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
         axios
           .post(UrlConstants.Role, this.role)
           .then((r) => {
