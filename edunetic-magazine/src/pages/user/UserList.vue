@@ -80,7 +80,7 @@
                     <option value="0" selected>Female</option>
                   </select>
                 </div>
-                <div class="form-group" v-if="this.isFacultyFilter = true">
+                <div class="form-group">
                   <label>Faculty</label>
                   <select
                     class="form-control select2"
