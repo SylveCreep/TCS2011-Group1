@@ -52,7 +52,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.code"
-                    v-on:keyup="getFacultyList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -63,7 +63,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.facultyName"
-                    v-on:keyup="getFacultyList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -74,7 +74,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.managername"
-                    v-on:keyup="getFacultyList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -85,7 +85,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.date_of_birth"
-                    v-on:keyup="getFacultyList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
               </div>
@@ -246,6 +246,10 @@ export default {
 
           }
         })
+    },
+    getFilter() {
+      this.filter.page = 1;
+      this.getFacultyList();
     },
     getSort($column) {
       this.getcommonSort($column);
