@@ -60,10 +60,10 @@ public class FacultyServiceImpl implements FacultyService {
             for(Faculty facl : data){
                 FacultyResponse faclRes = new FacultyResponse();
                 faclRes.setCode(facl.getCode() == null? "":facl.getCode());
-                faclRes.setFaculty_id(facl.getId() == null? null:facl.getId());
-                faclRes.setFaculty_name(facl.getName() == null? "": facl.getName());
-                faclRes.setManager_name(facl.getManager() == null? "": facl.getManager().getFullName());
-                faclRes.setManager_id(facl.getManager()== null? null: facl.getManager().getId());
+                faclRes.setFacultyId(facl.getId() == null? null:facl.getId());
+                faclRes.setFacultyName(facl.getName() == null? "": facl.getName());
+                faclRes.setManagerName(facl.getManager() == null? "": facl.getManager().getFullName());
+                faclRes.setManagerId(facl.getManager()== null? null: facl.getManager().getId());
                 listResponse.add(faclRes);
             }
             response.setFacultyResponses(listResponse);
@@ -134,10 +134,10 @@ public class FacultyServiceImpl implements FacultyService {
                 if(falc.getIs_deleted() == NOTDELETED){
                     FacultyResponse faculResponse = new FacultyResponse();
                     faculResponse.setCode(falc.getCode() == null? "":falc.getCode());
-                    faculResponse.setFaculty_id(falc.getId());
-                    faculResponse.setFaculty_name(falc.getName() == null? "": falc.getName());
-                    faculResponse.setManager_id(falc.getManager() == null? null: falc.getManager().getId());
-                    faculResponse.setManager_name(falc.getManager() == null? "": falc.getManager().getFullName());
+                    faculResponse.setFacultyId(falc.getId());
+                    faculResponse.setFacultyName(falc.getName() == null? "": falc.getName());
+                    faculResponse.setManagerId(falc.getManager() == null? null: falc.getManager().getId());
+                    faculResponse.setManagerName(falc.getManager() == null? "": falc.getManager().getFullName());
                     return faculResponse;
                 }
             }
