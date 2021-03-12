@@ -20,13 +20,13 @@
             <label class="col-sm-2 control-label">Name: </label>
             <div class="col-sm-12">
               <input
-                id="faculty_name"
+                id="facultyName"
                 type="text"
                 class="form-control"
-                v-model="faculty.faculty_name"
+                v-model="faculty.facultyName"
               />
               <p style="color: red" v-if="list_errors !== null">
-                {{ list_errors.faculty_name }}
+                {{ list_errors.facultyName }}
               </p>
             </div>
           </div>
@@ -71,7 +71,7 @@ export default {
     return {
       faculty: {},
       requireAttribute: {
-        faculty_name: "Faculty Name",
+        facultyName: "Faculty Name",
       },
     };
   },
@@ -95,7 +95,7 @@ export default {
       if (this.validate) {
         axios
           .patch(
-            UrlConstants.Faculty + "/" + this.$route.params.faculty_id,
+            UrlConstants.Faculty + "/" + this.$route.params.id,
             this.faculty
           )
           .then((response) => {

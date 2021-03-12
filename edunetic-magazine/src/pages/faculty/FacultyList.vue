@@ -52,7 +52,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.code"
-                    v-on:keyup="getFacultyList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -63,7 +63,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.facultyName"
-                    v-on:keyup="getFacultyList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -74,7 +74,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.managername"
-                    v-on:keyup="getFacultyList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -85,7 +85,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.date_of_birth"
-                    v-on:keyup="getFacultyList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
               </div>
@@ -104,7 +104,7 @@
                     <th class="sort" v-on:click="getSort('manager_name')">
                       Co-cordinator's name <i class="fas fa-sort"></i>
                     </th>
-                    <th>Action <i class="fas fa-sort"></i></th>
+                    <th>Action </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -113,13 +113,13 @@
                     :key="faculty.faculty_id"
                   >
                     <td>{{ faculty.code }}</td>
-                    <td>{{ faculty.faculty_name }}</td>
-                    <td>{{ faculty.manager_name }}</td>
+                    <td>{{ faculty.facultyName }}</td>
+                    <td>{{ faculty.managerName }}</td>
                     <td>
                       <p
                         class="click"
                         style="display: inline"
-                        v-on:click="showFaculty(faculty.faculty_id)"
+                        v-on:click="showFaculty(faculty.facultyId)"
                       >
                         <b>Update</b>
                       </p>
@@ -127,7 +127,7 @@
                       <p
                         class="click"
                         style="display: inline"
-                        v-on:click="checkStudent (faculty.faculty_id)"
+                        v-on:click="checkStudent(faculty.facultyId)"
                       >
                         <b>Delete</b>
                       </p>
@@ -135,9 +135,7 @@
                       <p
                         class="click"
                         style="display: inline"
-                        v-on:click="
-                          showStundent(faculty.faculty_id)
-                        "
+                        v-on:click="showStundent(faculty.facultyId)"
                       >
                         <b>Stundent's list</b>
                       </p>
@@ -181,76 +179,69 @@ export default {
   components: {
     ThePagination,
   },
-  data() {
-    return {
-     canDelete: true
-    }
-  },
   mixins: [commonHelper],
   created() {
     this.getFacultyList();
   },
   methods: {
-    deleteFaculty(faculty_id) { 
-      axios.get(UrlConstants.Faculty + "/" + faculty_id).then((response) => {
+    deleteFaculty(facultyId) {
+      axios.get(UrlConstants.Faculty + "/" + facultyId).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
           alert("error");
           this.getFacultyList();
         } else {
-            if (confirm("Are you sure to delete this faculty ?")) {
-              axios
-              .delete(UrlConstants.Faculty + "/" + faculty_id)
+          if (confirm("Are you sure to delete this faculty ?")) {
+            axios
+              .delete(UrlConstants.Faculty + "/" + facultyId)
               .then((res) => {
-                if (res.data.code === ResultConstants.Success) {
                   alert("sucess");
+                  this.filter.facultyId = "";
                   this.getFacultyList();
-                }
-                if (res.data.code === ResultConstants.Failure) {
-                  alert("error");
-                  this.getFacultyList();
-                }
               })
               .catch((error) => {
                 this.errors = error.data;
               });
-            }
           }
+        }
       });
     },
-    showFaculty(faculty_id) {
-      axios.get(UrlConstants.Faculty + "/" + faculty_id).then((response) => {
+    showFaculty(facultyId) {
+      axios.get(UrlConstants.Faculty + "/" + facultyId).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
           alert("error");
           this.getFacultyList();
         } else {
-          router.push("/faculties/" + faculty_id + "/update");
+          router.push("/faculties/" + facultyId + "/update");
         }
       });
     },
-    showStundent(faculty_id) {
-      axios.get(UrlConstants.Faculty + "/" + faculty_id).then((response) => {
+    showStundent(facultyId) {
+      axios.get(UrlConstants.Faculty + "/" + facultyId).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
           alert("This faculty is null");
           this.getFacultyList();
         } else {
-          this.$cookies.set("facultyStudent", faculty_id);
+          this.$cookies.set("facultyStudent", facultyId);
           this.$router.push("/users");
         }
       });
     },
     checkStudent(facultyId) {
-        this.filter.facultyId = facultyId;
-        axios
+      this.filter.facultyId = facultyId;
+      axios
         .post(UrlConstants.User + "/filter", this.filter)
         .then((response) => {
-          this.list_users = response.data.data
+          this.list_users = response.data.data;
           if (Object.keys(this.list_users).length === 0) {
-            this.deleteFaculty(facultyId)
+            this.deleteFaculty(facultyId);
           } else {
-           alert ('Çannot Delete This user')
-
+            alert("Çannot Delete This user");
           }
-        })
+        });
+    },
+    getFilter() {
+      this.filter.page = 1;
+      this.getFacultyList();
     },
     getSort($column) {
       this.getcommonSort($column);

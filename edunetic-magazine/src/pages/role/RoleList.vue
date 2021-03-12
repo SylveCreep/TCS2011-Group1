@@ -1,6 +1,9 @@
 <template>
   <div class="app-main__inner">
-    <div class="app-page-title" style="margin: 0; background-color: #f0f3f5; padding: 5px;">
+    <div
+      class="app-page-title"
+      style="margin: 0; background-color: #f0f3f5; padding: 5px;"
+    >
       <div class="page-title-wrapper">
         <div class="page-title-heading">
           <div class="page-title-icon">
@@ -49,7 +52,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.code"
-                    v-on:keyup="getRoleList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -60,7 +63,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.name"
-                    v-on:keyup="getRoleList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -71,7 +74,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.date_of_birth"
-                    v-on:keyup="getRoleList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
               </div>
@@ -87,7 +90,7 @@
                     <th class="sort" v-on:click="getSort('name')">
                       Name <i class="fas fa-sort"></i>
                     </th>
-                    <th>Action <i class="fas fa-sort"></i></th>
+                    <th>Action </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -165,14 +168,9 @@ export default {
             axios
               .delete(UrlConstants.Role + "/" + role_id)
               .then((res) => {
-                if (res.data.code === ResultConstants.Success) {
-                  alert("sucess");
-                  this.getRoleList();
-                }
-                if (res.data.code === ResultConstants.Failure) {
-                  alert("error");
-                  this.getRoleList();
-                }
+                alert("sucess");
+                this.filter.roleId = ""; 
+                this.getRoleList();
               })
               .catch((error) => {
                 this.errors = error.data;
@@ -192,17 +190,21 @@ export default {
       });
     },
     checkRole(role_id) {
-        this.filter.roleId = role_id;
-        axios
+      this.filter.roleId = role_id;
+      axios
         .post(UrlConstants.User + "/filter", this.filter)
         .then((response) => {
-          this.list_users = response.data.data
+          this.list_users = response.data.data;
           if (Object.keys(this.list_users).length === 0) {
-            this.deleteRole(role_id)
+            this.deleteRole(role_id);
           } else {
-            alert ('Çannot Delete This role')
+            alert("Çannot Delete This role");
           }
-        })
+        });
+    },
+    getFilter() {
+      this.filter.page = 1;
+      this.getRoleList();
     },
     getSort($column) {
       this.getcommonSort($column);

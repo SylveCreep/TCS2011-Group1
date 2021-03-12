@@ -52,7 +52,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.code"
-                    v-on:keyup="getUserList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -63,7 +63,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.fullName"
-                    v-on:keyup="getUserList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -73,7 +73,7 @@
                     id="cate_id"
                     name="category"
                     v-model="filter.gender"
-                    v-on:change="getUserList"
+                    v-on:change="getFilter"
                   >
                     <option value="" selected>All</option>
                     <option value="1" selected>Male</option>
@@ -87,15 +87,15 @@
                     id="faculty_id"
                     name="faculty"
                     v-model="filter.facultyId"
-                    v-on:change="getUserList"
+                    v-on:change="getFilter"
                   >
                     <option value="" selected>All</option>
                     <option
                       v-for="faculty in list_faculties"
                       :key="faculty.id"
-                      v-bind:value="faculty.faculty_id"
+                      v-bind:value="faculty.facultyId"
                     >
-                      {{ faculty.faculty_name }}
+                      {{ faculty.facultyName }}
                     </option>
                   </select>
                 </div>
@@ -106,7 +106,7 @@
                     id="role_id"
                     name="role"
                     v-model="filter.roleId"
-                    v-on:change="getUserList"
+                    v-on:change="getFilter"
                   >
                     <option value="" selected="selected">All</option>
                     <option
@@ -126,7 +126,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.email"
-                    v-on:keyup="getUserList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
@@ -137,7 +137,7 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.date_of_birth"
-                    v-on:keyup="getUserList"
+                    v-on:keyup="getFilter"
                   />
                 </div>
               </div>
@@ -243,7 +243,6 @@ export default {
     this.getFacultyList();
   },
   methods: {
-   
     showUser(user_id) {
       axios.get(UrlConstants.User + "/" + user_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
@@ -285,6 +284,10 @@ export default {
       if (this.$cookies.isKey("facultyStudent")) {
         this.filter.facultyId = this.$cookies.get("facultyStudent");
       }
+    },
+    getFilter(){
+      this.filter.page =1;
+      this.getUserList();
     },
     getSort($column) {
       this.getcommonSort($column);
