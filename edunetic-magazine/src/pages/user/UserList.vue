@@ -1,6 +1,9 @@
 <template>
   <div class="app-main__inner">
-    <div class="app-page-title" style="margin: 0; background-color: #f0f3f5; padding: 5px;">
+    <div
+      class="app-page-title"
+      style="margin: 0; background-color: #f0f3f5; padding: 5px;"
+    >
       <div class="page-title-wrapper">
         <div class="page-title-heading">
           <div class="page-title-icon">
@@ -35,111 +38,111 @@
       <div class="col-lg-12" style="padding: 0;">
         <div class="main-card mb-3 card">
           <div class="card-body">
-             <!--FILTER SECTION-->
-              <div class="card-title" style="padding:20px 20px 0;">
-                <div class="row">
-                  <h4><b>Filter</b></h4>
+            <!--FILTER SECTION-->
+            <div class="card-title" style="padding:20px 20px 0;">
+              <div class="row">
+                <h4><b>Filter</b></h4>
+              </div>
+              <div class="row">
+                <div class="form-group">
+                  <label>Code</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Search"
+                    aria-label="Search"
+                    v-model="filter.code"
+                    v-on:keyup="getUserList"
+                  />
                 </div>
-                <div class="row">
-                  <div class="form-group">
-                    <label>Code</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      placeholder="Search"
-                      aria-label="Search"
-                      v-model="filter.code"
-                      v-on:keyup="getUserList"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>Full Name</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      placeholder="Search"
-                      aria-label="Search"
-                      v-model="filter.fullName"
-                      v-on:keyup="getUserList"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>Gender</label>
-                    <select
-                      class="form-control select2"
-                      id="cate_id"
-                      name="category"
-                      v-model="filter.gender"
-                      v-on:change="getUserList"
+                <div class="form-group">
+                  <label>Full Name</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Search"
+                    aria-label="Search"
+                    v-model="filter.fullName"
+                    v-on:keyup="getUserList"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Gender</label>
+                  <select
+                    class="form-control select2"
+                    id="cate_id"
+                    name="category"
+                    v-model="filter.gender"
+                    v-on:change="getUserList"
+                  >
+                    <option value="" selected>All</option>
+                    <option value="1" selected>Male</option>
+                    <option value="0" selected>Female</option>
+                  </select>
+                </div>
+                <div class="form-group" v-if="this.isFacultyFilter = true">
+                  <label>Faculty</label>
+                  <select
+                    class="form-control select2"
+                    id="faculty_id"
+                    name="faculty"
+                    v-model="filter.facultyId"
+                    v-on:change="getUserList"
+                  >
+                    <option value="" selected>All</option>
+                    <option
+                      v-for="faculty in list_faculties"
+                      :key="faculty.id"
+                      v-bind:value="faculty.id"
                     >
-                      <option value="" selected>All</option>
-                      <option value="1" selected>Male</option>
-                      <option value="0" selected>Female</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label>Faculty</label>
-                    <select
-                      class="form-control select2"
-                      id="faculty_id"
-                      name="faculty"
-                      v-model="filter.facultyId"
-                      v-on:change="getUserList"
+                      {{ faculty.faculty_name }}
+                    </option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Role</label>
+                  <select
+                    class="form-control select2"
+                    id="role_id"
+                    name="role"
+                    v-model="filter.roleId"
+                    v-on:change="getUserList"
+                  >
+                    <option value="" selected="selected">All</option>
+                    <option
+                      v-for="role in list_roles"
+                      :key="role.id"
+                      v-bind:value="role.id"
                     >
-                      <option value="" selected>All</option>
-                      <option
-                        v-for="faculty in list_faculties"
-                        :key="faculty.id"
-                        v-bind:value="faculty.id"
-                      >
-                        {{ faculty.faculty_name }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label>Role</label>
-                    <select
-                      class="form-control select2"
-                      id="role_id"
-                      name="role"
-                      v-model="filter.roleId"
-                      v-on:change="getUserList"
-                    >
-                      <option value="" selected=selected>All</option>
-                      <option
-                        v-for="role in list_roles"
-                        :key="role.id"
-                        v-bind:value="role.id"
-                      >
-                        {{ role.name }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label>Email</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      placeholder="Search"
-                      aria-label="Search"
-                      v-model="filter.email"
-                      v-on:keyup="getUserList"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>Date of birth </label>
-                    <input
-                      class="form-control"
-                      type="date"
-                      placeholder="Search"
-                      aria-label="Search"
-                      v-model="filter.date_of_birth"
-                      v-on:keyup="getUserList"
-                    />
-                  </div>
+                      {{ role.name }}
+                    </option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Email</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Search"
+                    aria-label="Search"
+                    v-model="filter.email"
+                    v-on:keyup="getUserList"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Date of birth </label>
+                  <input
+                    class="form-control"
+                    type="date"
+                    placeholder="Search"
+                    aria-label="Search"
+                    v-model="filter.date_of_birth"
+                    v-on:keyup="getUserList"
+                  />
                 </div>
               </div>
-              <!--/.FILTER SECTION-->
+            </div>
+            <!--/.FILTER SECTION-->
             <div class="table-responsive">
               <table class="mb-0 table">
                 <thead>
@@ -192,19 +195,19 @@
             </div>
           </div>
           <div class="card-footer">
-              <div class="col-lg-6">
-                <strong> Items per page: </strong>
-                <select v-on:change="getLimit($event)">
-                  <option value="10">10</option>
-                  <option value="15" selected>15</option>
-                  <option value="1">1</option>
-                </select>
-              </div>
-              <div class="col-lg-6">
-                <the-pagination
-                  v-bind:pagination="list_users"
-                  v-on:currentPage="changePage"
-                ></the-pagination>
+            <div class="col-lg-6">
+              <strong> Items per page: </strong>
+              <select v-on:change="getLimit($event)">
+                <option value="10">10</option>
+                <option value="15" selected>15</option>
+                <option value="1">1</option>
+              </select>
+            </div>
+            <div class="col-lg-6">
+              <the-pagination
+                v-bind:pagination="list_users"
+                v-on:currentPage="changePage"
+              ></the-pagination>
             </div>
           </div>
         </div>
@@ -230,9 +233,11 @@ export default {
   data() {
     return {
       list_users: [],
+      isFacultyFilter: false,
     };
   },
   created() {
+    this.setStudentList();
     this.getUserList();
   },
   methods: {
@@ -284,6 +289,12 @@ export default {
           }
         }
       });
+    },
+    setStudentList() {
+      if (this.$cookies.isKey("facultyStudent")) {
+        this.filter.facultyId = this.$cookies.get("facultyStudent").facultyId;
+        this.isFacultyFilter = true;
+      }
     },
     getSort($column) {
       this.getcommonSort($column);

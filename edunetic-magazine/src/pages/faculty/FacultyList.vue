@@ -1,6 +1,9 @@
 <template>
   <div class="app-main__inner">
-    <div class="app-page-title" style="margin: 0; background-color: #f0f3f5; padding: 5px;">
+    <div
+      class="app-page-title"
+      style="margin: 0; background-color: #f0f3f5; padding: 5px;"
+    >
       <div class="page-title-wrapper">
         <div class="page-title-heading">
           <div class="page-title-icon">
@@ -231,6 +234,8 @@ export default {
             facultyName: faculty_name,
           };
           console.log(student);
+          this.$cookies.set("facultyStudent", student);
+          this.$router.push("/users");
         }
       });
     },
