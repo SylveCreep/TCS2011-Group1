@@ -168,13 +168,8 @@ export default {
             axios
               .delete(UrlConstants.Role + "/" + role_id)
               .then((res) => {
-<<<<<<< HEAD
                 alert("sucess");
                 this.filter.roleId = ""; 
-=======
-                alert("success");
-                this.filter.roleId = "";
->>>>>>> FE-Internal
                 this.getRoleList();
               })
               .catch((error) => {
