@@ -1,5 +1,5 @@
 <template>
-  <div class="app-main__inner">
+  <div class="app-main__inner" style="background-color: #fff">
     <div class="app-page-title">
       <div class="page-title-wrapper">
         <div class="page-title-heading">
@@ -49,7 +49,7 @@
                 id="roleId"
                 type="text"
                 class="form-control"
-                v-model="user.roleId"
+                v-model="user.roleName"
                 readonly
               />
             </div>
@@ -202,6 +202,9 @@ export default {
 
 <style scoped>
 .card {
-  margin: 20px;
+  margin: 0 0 30px;
 }
+.app-page-title {
+  margin:-30px 0 0 -30px;
+};
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div class="app-main__inner">
-    <div class="app-page-title">
+  <div class="app-main__inner" style="background-color: #fff">
+    <div class="app-page-title"> 
       <div class="page-title-wrapper">
         <div class="page-title-heading">
           <div class="page-title-icon">
@@ -234,7 +234,6 @@ export default {
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
-        this.user;
         axios
           .post(UrlConstants.User, this.user)
           .then((r) => {
@@ -271,4 +270,7 @@ export default {
   padding-left: 5px;
   padding-right: 20px;
 }
+.app-page-title {
+  margin:-30px 0 0 -30px;
+};
 </style>

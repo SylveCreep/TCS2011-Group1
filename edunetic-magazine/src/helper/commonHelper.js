@@ -45,6 +45,8 @@ export const commonHelper = {
         .post(UrlConstants.Role + "/filter", this.filter)
         .then((response) => {
           this.list_roles = response.data.data;
+          this.list_roles.currentPage = this.filter.page;
+          this.list_roles.lastPage = response.data.lastPage;
         })
         .catch((error) => {
           this.errors = error.response.data.errors;
@@ -56,6 +58,8 @@ export const commonHelper = {
         .post(UrlConstants.Faculty + "/filter", this.filter)
         .then((response) => {
           this.list_faculties = response.data.data;
+          this.list_faculties.currentPage = this.filter.page;
+          this.list_faculties.lastPage = response.data.lastPage;
         })
         .catch((error) => {
           this.errors = error.response.data.errors;

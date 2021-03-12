@@ -1,6 +1,6 @@
 <template>
   <div class="app-main__inner">
-    <div class="app-page-title">
+    <div class="app-page-title" style="margin: 0; background-color: #f0f3f5; padding: 5px;">
       <div class="page-title-wrapper">
         <div class="page-title-heading">
           <div class="page-title-icon">
@@ -32,12 +32,11 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-12">
+      <div class="col-lg-12" style="padding: 0;">
         <div class="main-card mb-3 card">
-          
           <div class="card-body">
              <!--FILTER SECTION-->
-              <div class="card-title" style="padding:20px;">
+              <div class="card-title" style="padding:20px 20px 0;">
                 <div class="row">
                   <h4><b>Filter</b></h4>
                 </div>
