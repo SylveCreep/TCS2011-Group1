@@ -233,7 +233,6 @@ export default {
   data() {
     return {
       list_users: [],
-      isFacultyFilter: false,
     };
   },
   created() {
@@ -285,8 +284,6 @@ export default {
     setStudentList() {
       if (this.$cookies.isKey("facultyStudent")) {
         this.filter.facultyId = this.$cookies.get("facultyStudent");
-        
-        this.isFacultyFilter = true;
       }
     },
     getSort($column) {

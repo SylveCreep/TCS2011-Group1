@@ -136,7 +136,7 @@
                         class="click"
                         style="display: inline"
                         v-on:click="
-                          showStundent(faculty.faculty_id, faculty.faculty_name)
+                          showStundent(faculty.faculty_id)
                         "
                       >
                         <b>Stundent's list</b>
@@ -227,7 +227,7 @@ export default {
         }
       });
     },
-    showStundent(faculty_id, faculty_name) {
+    showStundent(faculty_id) {
       axios.get(UrlConstants.Faculty + "/" + faculty_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
           alert("This faculty is null");
@@ -247,8 +247,8 @@ export default {
           if (Object.keys(this.list_users).length === 0) {
             this.deleteFaculty(facultyId)
           } else {
-            alert ('Çannot Delete This user')
-            this.getFacultyList();
+           alert ('Çannot Delete This user')
+
           }
         })
     },

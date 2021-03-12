@@ -106,7 +106,7 @@
                       <p
                         class="click"
                         style="display: inline"
-                        v-on:click="deleteRole(role.id)"
+                        v-on:click="checkRole(role.id)"
                       >
                         <b>Delete</b>
                       </p>
@@ -190,6 +190,19 @@ export default {
           router.push("/roles/" + role_id + "/update");
         }
       });
+    },
+    checkRole(role_id) {
+        this.filter.roleId = role_id;
+        axios
+        .post(UrlConstants.User + "/filter", this.filter)
+        .then((response) => {
+          this.list_users = response.data.data
+          if (Object.keys(this.list_users).length === 0) {
+            this.deleteRole(role_id)
+          } else {
+            alert ('Çannot Delete This role')
+          }
+        })
     },
     getSort($column) {
       this.getcommonSort($column);
