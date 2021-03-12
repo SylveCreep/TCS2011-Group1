@@ -116,7 +116,7 @@ public class FacultyServiceImpl implements FacultyService {
     public Boolean create(FacultyRequest facultyRequest) {
         try {
             Faculty facl = new Faculty();
-            facl.setCode("U" + String.format("%04d", queryCheck.GetHighestId("user")));
+            facl.setCode("F" + String.format("%04d", queryCheck.GetHighestId("faculty")));
             facl.setName(facultyRequest.getFacultyName());
             facultyDao.save(facl);
             return true;
