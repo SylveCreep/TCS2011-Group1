@@ -243,7 +243,6 @@ export default {
     this.getFacultyList();
   },
   methods: {
-   
     showUser(user_id) {
       axios.get(UrlConstants.User + "/" + user_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
