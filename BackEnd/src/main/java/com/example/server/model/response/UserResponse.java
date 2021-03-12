@@ -13,6 +13,7 @@ public class UserResponse {
     private String email;
     private String address;
     private Integer phoneNumber;
+    private Integer gender;
     private String dateOfBirth;
 
     public UserResponse(){
@@ -105,6 +106,14 @@ public class UserResponse {
 
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
     }
 
 }

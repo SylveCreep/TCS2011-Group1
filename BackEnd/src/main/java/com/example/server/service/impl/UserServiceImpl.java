@@ -228,6 +228,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 userRes.setAddress(user.getAddress()==null?"":user.getAddress());
                 userRes.setPhoneNumber(user.getPhoneNumber()==null?null:user.getPhoneNumber());
                 userRes.setDateOfBirth(dateFormat(user.getDateOfBirth()));
+                userRes.setGender(user.getGender());
                 listResponse.add(userRes);
             }
             object.setLastPage(lastPage);
@@ -277,6 +278,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             user.setAddress(userDto.getAddress());
             user.setDateOfBirth(userDto.getDateOfBirth());
             user.setPhoneNumber(userDto.getPhoneNumber());
+            user.setGender(userDto.getGender());
             userDao.save(user);
             return true;
         } catch (Exception e) {
@@ -303,6 +305,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             userRes.setAddress(user.getAddress()==null?"":user.getAddress());
             userRes.setPhoneNumber(user.getPhoneNumber()==null?null:user.getPhoneNumber());
             userRes.setDateOfBirth(dateFormat(user.getDateOfBirth()));
+            userRes.setGender(user.getGender());
             return userRes;
         } catch (Exception e) {
             return null;

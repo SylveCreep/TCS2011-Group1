@@ -239,12 +239,12 @@ public class ResponseUtils {
                     }
                 }
 
-                // if(!valGen.equals("Valid")){
-                //     inputForm.put("gender", valGen);
-                //     if(!form.containsKey("result")){
-                //         form.put("result", -1);
-                //     }
-                // }
+                if(!valGen.equals("Valid")){
+                    inputForm.put("gender", valGen);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
 
                 if(!form.containsKey("result")){
                     form.put("result", 0);
