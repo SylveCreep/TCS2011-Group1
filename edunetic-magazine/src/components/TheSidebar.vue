@@ -53,7 +53,7 @@
           <li>
             <router-link to="/users">
               <i class="metismenu-icon fas fa-th"></i>
-              <p>User List</p>
+              <p v-on:click="deleteUserKey()">User List</p>
             </router-link>
           </li>
           <li>
@@ -122,6 +122,11 @@ export default {
         this.$cookies.remove("currentUser");
         this.$emit("user-logout", null);
         this.$router.push("/login");
+      }
+    },
+    deleteUserKey() {
+      if (this.$cookies.isKey("facultyStudent")) {
+        this.$cookies.remove("facultyStudent");
       }
     },
   },

@@ -9,5 +9,5 @@ export const DefaultConstants = Object.freeze({
     Student : 4,
     Guest: 5,
     female: 0,
-    male: 1
+    male: 1,
 });

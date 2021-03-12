@@ -29,7 +29,6 @@ import axios from "axios";
 import TheSidebar from "./components/TheSidebar";
 import TheNavbar from "./components/TheNavbar";
 import TheFooter from "./components/TheFooter";
-import { UrlConstants } from "@/constant/UrlConstant";
 
 export default {
   name: "Layout",
@@ -58,6 +57,7 @@ export default {
       this.token = this.$cookies.get("jwt");
       axios.defaults.headers.common["Authorization"] =
         "Bearer " + this.$cookies.get("jwt");
+      axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
     },
     userLogout(e) {
       this.token = e;
