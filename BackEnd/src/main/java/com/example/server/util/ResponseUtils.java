@@ -188,12 +188,12 @@ public class ResponseUtils {
                     }
                 }
 
-                if(!valUpdateEmail.equals("Valid")){
-                    inputForm.put("email", valUpdateEmail);
-                    if(!form.containsKey("result")){
-                        form.put("result", -1);
-                    }
-                }
+                // if(!valUpdateEmail.equals("Valid")){
+                //     inputForm.put("email", valUpdateEmail);
+                //     if(!form.containsKey("result")){
+                //         form.put("result", -1);
+                //     }
+                // }
                 // if(!valPass.equals("Valid")){
                 //     inputForm.put("password", valPass);
                 //     if(!form.containsKey("result")){
@@ -239,12 +239,12 @@ public class ResponseUtils {
                     }
                 }
 
-                if(!valGen.equals("Valid")){
-                    inputForm.put("gender", valGen);
-                    if(!form.containsKey("result")){
-                        form.put("result", -1);
-                    }
-                }
+                // if(!valGen.equals("Valid")){
+                //     inputForm.put("gender", valGen);
+                //     if(!form.containsKey("result")){
+                //         form.put("result", -1);
+                //     }
+                // }
 
                 if(!form.containsKey("result")){
                     form.put("result", 0);

@@ -255,24 +255,28 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public Boolean update(CreateAccount userDto){
         try {
             User user = userDao.getOne(userDto.getId());
-            Role role = roleDao.getOne(userDto.getRoleId());
-            Faculty facult = facultyDao.getOne(userDto.getFacultyId());
-            if(role == null){
-                return false;
+            if(userDto.getRoleId() != null){
+                Optional<Role> role = roleDao.findById(userDto.getRoleId());
+                if(role.get() == null){
+                    return false;
+                }
+                user.setRole(role.get());
             }
-            if(facult == null){
-                return false;
+            if(userDto.getFacultyId() != null){
+                Optional<Faculty> facult = facultyDao.findById(userDto.getFacultyId());
+                if(facult.get() == null){
+                    return false;
+                }
+                user.setFaculty(facult.get());
             }
-            if(userDao.findByEmail(userDto.getEmail()) != null){
-                return false;
-            }
+            // if(userDao.findByEmail(userDto.getEmail()) != null){
+            //     return false;
+            // }
             user.setEmail(userDto.getEmail());
             user.setFullName(userDto.getFullName());
             user.setAddress(userDto.getAddress());
             user.setDateOfBirth(userDto.getDateOfBirth());
             user.setPhoneNumber(userDto.getPhoneNumber());
-            user.setRole(role);
-            user.setFaculty(facult);
             userDao.save(user);
             return true;
         } catch (Exception e) {
