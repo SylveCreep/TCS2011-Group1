@@ -47,7 +47,7 @@
 <script>
 import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
-import { validateHelper } from "@/helper/validateHelper";
+import { validateHelper } from "@/helper/validateHelper"; 
 import { commonHelper } from "@/helper/commonHelper";
 
 export default {
