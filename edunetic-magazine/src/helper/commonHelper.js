@@ -5,6 +5,7 @@ import axios from "axios";
 export const commonHelper = {
   data() {
     return {
+      list_users: [],
       list_faculties: [],
       list_roles: [],
       list_errors: [],
@@ -15,10 +16,6 @@ export const commonHelper = {
         page: DefaultConstants.Page, //default page = 15
       },
     }
-  },
-  created() {
-    this.getRoleList();
-    this.getFacultyList();
   },
   methods: {
     getcommonSort($column) {
@@ -39,7 +36,6 @@ export const commonHelper = {
       this.filter.page = e;
       this.filter
     },
-   
     getRoleList() {
       axios
         .post(UrlConstants.Role + "/filter", this.filter)
@@ -66,6 +62,17 @@ export const commonHelper = {
           this.showError(this.errors);
         });
     },
-
+    getUserList() {
+      axios
+        .post(UrlConstants.User + "/filter", this.filter)
+        .then((response) => {
+          this.list_users = response.data.data;
+          this.list_users.currentPage = this.filter.page;
+          this.list_users.lastPage = response.data.lastPage;
+        })
+        .catch((error) => {
+          this.errors = error.response.data;
+        });
+    },
   },
 }

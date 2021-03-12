@@ -66,6 +66,7 @@
                 name="faculty"
                 v-model="user.facultyId"
               >
+                <option selected v-bind:value="user.facultyId"> {{user.facultyName}}</option>
                 <option
                   v-for="faculty in list_faculties"
                   :key="faculty.id"
@@ -167,6 +168,7 @@ export default {
   },
   created() {
     this.getUser();
+    this.getFacultyList();
   },
   methods: {
     getUser() {

@@ -151,7 +151,9 @@ export default {
     ThePagination,
   },
   mixins: [commonHelper],
-
+  created() {
+    this.getRoleList();
+  },
   methods: {
     deleteRole(role_id) {
       axios.get(UrlConstants.Role + "/" + role_id).then((response) => {

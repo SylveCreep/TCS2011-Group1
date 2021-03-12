@@ -93,7 +93,7 @@
                     <option
                       v-for="faculty in list_faculties"
                       :key="faculty.id"
-                      v-bind:value="faculty.id"
+                      v-bind:value="faculty.faculty_id"
                     >
                       {{ faculty.faculty_name }}
                     </option>
@@ -162,7 +162,7 @@
                     <th class="sort" v-on:click="getSort('email')">
                       Email <i class="fas fa-sort"></i>
                     </th>
-                    <th>Action <i class="fas fa-sort"></i></th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -238,21 +238,13 @@ export default {
   },
   created() {
     this.setStudentList();
+    //These function are called from commonHelper.js file 
     this.getUserList();
+    this.getRoleList();
+    this.getFacultyList();
   },
   methods: {
-    getUserList() {
-      axios
-        .post(UrlConstants.User + "/filter", this.filter)
-        .then((response) => {
-          this.list_users = response.data.data;
-          this.list_users.currentPage = this.filter.page;
-          this.list_users.lastPage = response.data.lastPage;
-        })
-        .catch((error) => {
-          this.errors = error.response.data;
-        });
-    },
+   
     showUser(user_id) {
       axios.get(UrlConstants.User + "/" + user_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
@@ -292,7 +284,8 @@ export default {
     },
     setStudentList() {
       if (this.$cookies.isKey("facultyStudent")) {
-        this.filter.facultyId = this.$cookies.get("facultyStudent").facultyId;
+        this.filter.facultyId = this.$cookies.get("facultyStudent");
+        
         this.isFacultyFilter = true;
       }
     },

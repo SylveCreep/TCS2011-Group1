@@ -229,6 +229,10 @@ export default {
       return this.list_roles.filter((role) => role.id !== 5);
     },
   },
+  created() {
+    this.getRoleList();
+    this.getFacultyList();
+  },
   methods: {
     createUser() {
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
@@ -241,7 +245,8 @@ export default {
             this.$router.push("/users");
           })
           .catch((error) => {
-            this.list_errors = error.response;
+            this.list_errors = error.response.data.validate.input
+            this.showError(this.requireAttribute, this.list_errors)
           });
       }
     },
