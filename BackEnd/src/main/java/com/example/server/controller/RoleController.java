@@ -45,7 +45,7 @@ public class RoleController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(value = "/create"/*, consumes = {"text/plain", "application/*"}, produces = "application/json"*/)
+    @PostMapping
     public ResponseEntity<?> createRole(@Valid @RequestBody CreateRole role){
         try{
             roleService.saveRole(role);
