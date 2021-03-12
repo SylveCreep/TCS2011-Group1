@@ -17,12 +17,23 @@ export const validateHelper = {
             let age = Math.floor(difference / 31557600000);
             return age
         },
-        checkPhone(string) {
+        checkPhone(phone) {
             let numbers = /^[0-9]+$/;
-            if (string.match(numbers)) {
-                return true;
-            } else {
-                return false;
+            if (!phone.match(numbers)) {
+                this.list_errors.phoneNumber = "Phone number field only can contain 0-9 digits";
+                this.validate = false;
+            }
+            if(phone.length < 9 || phone.length > 15 ) {
+                this.list_errors.phoneNumber = "Phone number field must be from 9 to 15 digits";
+                this.validate = false;
+            }
+        },
+        checkEMail(email) {
+            let format = /^([A-Za-z0-9_\-.+])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,})$/;
+
+            if(!format.test(email)) {
+                this.list_errors.email = "Invalid email format";
+                this.validate = false;
             }
         },
         showError(attributes, error) {
@@ -49,6 +60,11 @@ export const validateHelper = {
             //validate required attribute
             this.requiredValidate(atributes, objectType);
 
+            //validate email store special characters
+            if(objectType.email) {
+                this.checkEMail(objectType.email)
+            }
+
             //validate age older than 18
             if (objectType.dateOfBirth) {
                 let age = this.calculateAge(objectType.dateOfBirth)
@@ -57,11 +73,16 @@ export const validateHelper = {
                     this.validate = false;
                 }
             }
+
             //validate phone input
             if (objectType.phoneNumber) {
-                if (!this.checkPhone(objectType.phoneNumber)) {
-                    this.list_errors.phoneNumber = "Phone number field only can contain 0-9 digits";
-                    this.validate = false;
+                this.checkPhone(objectType.phoneNumber)
+            }
+
+            //validate password length
+            if (objectType.password) {
+                if (objectType.password.length < 6) {
+                    this.list_errors.password = "Password must have more than 5 characters"
                 }
             }
 
