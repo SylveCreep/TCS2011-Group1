@@ -127,7 +127,7 @@
                       <p
                         class="click"
                         style="display: inline"
-                        v-on:click="deleteFaculty(faculty.faculty_id)"
+                        v-on:click="checkStudent (faculty.faculty_id)"
                       >
                         <b>Delete</b>
                       </p>
@@ -181,20 +181,22 @@ export default {
   components: {
     ThePagination,
   },
+  data() {
+    return {
+     canDelete: true
+    }
+  },
   mixins: [commonHelper],
   created() {
     this.getFacultyList();
   },
   methods: {
-    deleteFaculty(faculty_id) {
+    deleteFaculty(faculty_id) { 
       axios.get(UrlConstants.Faculty + "/" + faculty_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
           alert("error");
           this.getFacultyList();
         } else {
-          if (!this.checkStudent(faculty_id)) {
-             alert("Cannot delete this faculty");
-          } else {
             if (confirm("Are you sure to delete this faculty ?")) {
               axios
               .delete(UrlConstants.Faculty + "/" + faculty_id)
@@ -213,7 +215,6 @@ export default {
               });
             }
           }
-        }
       });
     },
     showFaculty(faculty_id) {
@@ -232,25 +233,22 @@ export default {
           alert("This faculty is null");
           this.getFacultyList();
         } else {
-          let student = {
-            facultyId: faculty_id,
-            facultyName: faculty_name,
-          };
-          this.$cookies.set("facultyStudent", student);
+          this.$cookies.set("facultyStudent", faculty_id);
           this.$router.push("/users");
         }
       });
     },
     checkStudent(facultyId) {
-        this.filter.facultyId =facultyId;
+        this.filter.facultyId = facultyId;
         axios
         .post(UrlConstants.User + "/filter", this.filter)
         .then((response) => {
-          this.list_users = response.data.data;
+          this.list_users = response.data.data
           if (Object.keys(this.list_users).length === 0) {
-            return false;
+            this.deleteFaculty(facultyId)
           } else {
-            return true;
+            alert ('Çannot Delete This user')
+            this.getFacultyList();
           }
         })
     },
