@@ -1,79 +1,61 @@
 <template>
-  <section class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header">
-              <h2>Role Create</h2>
-            </div>
-            <div class="card-body">
-              <div class="tab-content">
-                <div class="tab-pane active show" id="settings">
-                  <form
-                    class="form-horizontal"
-                    v-on:submit.prevent="createRole()"
-                  >
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">Name: </label>
-                      <div class="col-sm-12">
-                        <input
-                          id="name"
-                          type="text"
-                          class="form-control"
-                          v-model="role.name"
-                        />
-                        <p style="color: red" v-if="list_errors !== null">
-                          {{ list_errors.name }}
-                        </p>
-                      </div>
-                    </div>
-                    <div class="form-group text-center">
-                      <div class="col-sm-offset-2 col-sm-12">
-                        <router-link
-                          to="/roles"
-                          tag="button"
-                          class="btn btn-primary"
-                        >
-                          Back
-                        </router-link>
-                        <button type="submit" class="btn btn-success">
-                          Create
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-                <!-- /.tab-pane -->
-              </div>
-              <!-- /.tab-content -->
-            </div>
-            <!-- /.card-body -->
+  <div class="app-main__inner" style="background-color: #fff">
+    <div class="app-page-title">
+      <div class="page-title-wrapper">
+        <div class="page-title-heading">
+          <div class="page-title-icon">
+            <i class="pe-7s-display1 icon-gradient bg-premium-dark"> </i>
           </div>
-          <!-- /.nav-tabs-custom -->
+          <div>
+            <h2>Role Create</h2>
+          </div>
         </div>
-        <!-- /.col -->
       </div>
-      <!-- /.row -->
     </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
+    <div class="main-card mb-3 card">
+      <div class="card-body">
+        <h5 class="card-title">Create Form</h5>
+        <form v-on:submit.prevent="createRole()">
+          <div class="position-relative form-group">
+            <label class="col-sm-2 control-label">Name: </label>
+            <div class="col-sm-12">
+              <input
+                id="name"
+                type="text"
+                class="form-control"
+                v-model="role.name"
+              />
+              <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.name }}
+              </p>
+            </div>
+          </div>
+          <div class="position-relative form-group text-center">
+            <div class="col-sm-offset-2 col-sm-12">
+              <router-link to="/roles" tag="button" class="btn btn-primary">
+                Back
+              </router-link>
+              <button type="submit" class="btn btn-success">Create</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { validateHelper } from "@/helper/validateHelper";
+import { commonHelper } from "@/helper/commonHelper";
 
 export default {
   name: "RoleCreate",
-  mixins: [validateHelper],
+  mixins: [validateHelper, commonHelper],
   data() {
     return {
       role: {},
-      list_errors: {},
-      validate: true,
       requireAttribute: {
         name: "Role Name",
       },
@@ -81,14 +63,9 @@ export default {
   },
   methods: {
     createRole() {
-      this.list_errors = this.userValidate(this.requireAttribute, this.role); //this function is called from helperMixin.js file
-      if (Object.keys(this.list_errors).length > 0) {
-        this.validate = false;
-      }
-      console.log(this.validate);
+      this.userValidate(this.requireAttribute, this.role); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
-        console.log(this.role)
         axios
           .post(UrlConstants.Role, this.role)
           .then((r) => {
@@ -100,18 +77,19 @@ export default {
           });
       }
     },
-    showError(errors) {
-      Object.keys(errors).forEach((error) => {
-        let text = document.querySelector("#" + error);
-        text.style.cssText = "border-color: red";
-      });
-    },
   },
 };
 </script>
 
 <style scoped>
 .card {
-  margin: 20px;
+  margin: 0 0 30px;
+}
+.label-gender {
+  padding-left: 5px;
+  padding-right: 20px;
+}
+.app-page-title {
+  margin:-30px 0 0 -30px;
 }
 </style>

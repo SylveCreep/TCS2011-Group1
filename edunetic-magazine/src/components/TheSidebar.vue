@@ -1,77 +1,95 @@
 <template>
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="index2.html" class="brand-link">
-      <img
-        src="dist/img/AdminLTELogo.png"
-        alt="AdminLTE Logo"
-        class="brand-image img-circle elevation-3"
-        style="opacity: 0.8"
-      />
-      <span class="brand-text font-weight-light">Edunetic Magazine</span>
-    </a>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="info">
-          <router-link to="/profile" class="d-block">Hello {{this.user.fullName}}</router-link>
+  <div class="app-sidebar sidebar-shadow">
+    <div class="app-header__logo">
+      <div class="logo-src"></div>
+      <div class="header__pane ml-auto">
+        <div>
+          <button
+            type="button"
+            class="hamburger close-sidebar-btn hamburger--elastic"
+            data-class="closed-sidebar"
+          >
+            <span class="hamburger-box">
+              <span class="hamburger-inner"></span>
+            </span>
+          </button>
         </div>
       </div>
-
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul
-          class="nav nav-pills nav-sidebar flex-column"
-          data-widget="treeview"
-          role="menu"
-          data-accordion="false"
+    </div>
+    <div class="app-header__mobile-menu">
+      <div>
+        <button
+          type="button"
+          class="hamburger hamburger--elastic mobile-toggle-nav"
         >
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-          <li class="nav-item">
-            <router-link to="/users" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
+          <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+          </span>
+        </button>
+      </div>
+    </div>
+    <div class="app-header__menu">
+      <span>
+        <button
+          type="button"
+          class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav"
+        >
+          <span class="btn-icon-wrapper">
+            <i class="fa fa-ellipsis-v fa-w-6"></i>
+          </span>
+        </button>
+      </span>
+    </div>
+    <div class="scrollbar-sidebar">
+      <div class="app-sidebar__inner">
+        <ul class="vertical-nav-menu">
+          <li class="app-sidebar__heading">Hello {{user.fullName}}</li>
+          <li>
+            <router-link to="/">
+              <i class="metismenu-icon fas fa-th"></i>
+              <p>Dashboard</p>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/users">
+              <i class="metismenu-icon fas fa-th"></i>
               <p>User List</p>
             </router-link>
           </li>
-          <li class="nav-item">
-            <router-link to="/roles" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
+          <li>
+            <router-link to="/roles" >
+              <i class="metismenu-icon fas fa-th"></i>
               <p>Role List</p>
             </router-link>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>Contribution List</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>Magazine List</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <router-link to="/faculties" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
+          <li>
+            <router-link to="/faculties">
+              <i class="metismenu-icon fas fa-th"></i>
               <p>Faculty List</p>
             </router-link>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link" v-on:click.prevent="logOut">
-              <i class="nav-icon fas fa-power-off"></i>
+          <li>
+            <router-link to="/contributions">
+              <i class="metismenu-icon fas fa-th"></i>
+              <p>Contribution List</p>
+            </router-link>
+          </li>
+          <li>
+           <router-link to="/Magazine">
+              <i class="metismenu-icon fas fa-th"></i>
+              <p>Magazine List</p>
+            </router-link>
+          </li>
+          <li>
+            <a href="#" v-on:click.prevent="logOut">
+              <i class="metismenu-icon fas fa-power-off"></i>
               <p>Logout</p>
             </a>
           </li>
         </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
+      </div>
     </div>
-    <!-- /.sidebar -->
-  </aside>
+  </div>
 </template>
 
 <script>
@@ -79,28 +97,31 @@ import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
 
 export default {
-  watch: {},
   name: "TheSidebar",
   data() {
-      return {
-          user: {}
-      }
+    return {
+      user: null,
+      //currentUser: this.$cookies.get("currentUser")
+    }
   },
   created() {
-      this.getCurrentUser();
+    this.getCurrentUser();
   },
   methods: {
-    getCurrentUser() {
-      axios.get(UrlConstants.User + "/" + this.$cookies.get("id")).then((res) => {
-        this.user = res.data.data
-      });
+     getCurrentUser() {
+      axios
+        .get(UrlConstants.User + "/" + this.$cookies.get("id"))
+        .then((res) => {
+          this.user = res.data.data;
+        });
     },
     logOut() {
       let result = confirm("Do you want to log out?");
       if (result) {
-         this.$cookies.remove("jwt");
-          this.$emit("user-logout", null);
-          this.$router.push("/login");
+        this.$cookies.remove("jwt");
+        this.$cookies.remove("currentUser");
+        this.$emit("user-logout", null);
+        this.$router.push("/login");
       }
     },
   },
@@ -109,6 +130,8 @@ export default {
 
 <style scoped>
 a.router-link-exact-active {
-  background-color: green;
+  background-color: #e0f3ff;
+  font-weight: bold;
+  color: #000000;
 }
 </style>

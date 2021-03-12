@@ -14,7 +14,6 @@ import RoleUpdate from "@/pages/role/RoleUpdate";
 import FacultyList from "@/pages/faculty/FacultyList";
 import FacultyCreate from "@/pages/faculty/FacultyCreate";
 import FacultyUpdate from "@/pages/faculty/FacultyUpdate";
-import StudentList from "@/pages/faculty/StudentList";
 
 Vue.use(Router);
 export const router = new Router({
@@ -76,12 +75,7 @@ export const router = new Router({
             name:'FacultyUpdate',
             path: '/faculties/:id/update',
             component: FacultyUpdate,
-        },{
-            name:'StudentList',
-            path: '/faculties/studentlist',
-            component: StudentList,
-        }
-
+        },
     ]
 })
 export default router

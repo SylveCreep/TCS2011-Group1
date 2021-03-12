@@ -1,32 +1,26 @@
 <template>
-  <div class="wrapper">
-    <!-- Navbar -->
+  <div
+    class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
+  >
     <the-navbar v-if="this.token !== null"></the-navbar>
-    <!-- /.navbar -->
+    <div class="app-main">
+      <!--Sidebar section -->
+      <the-sidebar v-if="this.token !== null" v-on:user-logout="userLogout"></the-sidebar>
+      <!--End sidebar section -->
 
-    <!-- Main Sidebar Container -->
-    <the-sidebar v-if="this.token !== null" v-on:user-logout="userLogout"></the-sidebar>
-    <!-- /.Main Sidebar Container -->
+      
+      <div class="app-main__outer">
+        <!--Main section -->
+        <router-view v-on:user-logged="userLogin"></router-view>
+        <!--End main section -->
 
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-      <router-view v-on:user-logged="userLogin"></router-view>
-    </div>
-    <!-- /.content-wrapper -->
-
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-      <!-- Control sidebar content goes here -->
-      <div class="p-3">
-        <h5>Title</h5>
-        <p>Sidebar content</p>
+        <!--Footer section -->
+        <div class="app-wrapper-footer">
+          <the-footer v-if="this.token !== null"></the-footer>
+        </div>
+        <!--End footer section -->
       </div>
-    </aside>
-    <!-- /.control-sidebar -->
-
-    <!-- Main Footer -->
-    <the-footer v-if="this.token !== null"></the-footer>
-    <!-- /.Main Footer -->
+    </div>
   </div>
 </template>
 
@@ -35,6 +29,7 @@ import axios from "axios";
 import TheSidebar from "./components/TheSidebar";
 import TheNavbar from "./components/TheNavbar";
 import TheFooter from "./components/TheFooter";
+import { UrlConstants } from "@/constant/UrlConstant";
 
 export default {
   name: "Layout",
@@ -45,31 +40,32 @@ export default {
   },
   data() {
     return {
-      token: this.$cookies.get('jwt')
-    }
+      token: this.$cookies.get("jwt"),
+    };
   },
-  created () {
-   this.setHeader();
+  created() {
+    this.setHeader();
   },
   methods: {
     setHeader() {
-      if (this.$cookies.isKey('jwt')) {
-        axios.defaults.headers.common['Authorization'] = "Bearer " + this.token;
+      if (this.$cookies.isKey("jwt")) {
+        axios.defaults.headers.common["Authorization"] = "Bearer " + this.token;
       } else {
-        axios.defaults.headers.common['Authorization'] = null;
+        axios.defaults.headers.common["Authorization"] = null;
       }
     },
     userLogin(e) {
-      this.token = this.$cookies.get('jwt');
-      axios.defaults.headers.common['Authorization'] = "Bearer " + this.$cookies.get('jwt');
+      this.token = this.$cookies.get("jwt");
+      axios.defaults.headers.common["Authorization"] =
+        "Bearer " + this.$cookies.get("jwt");
     },
     userLogout(e) {
       this.token = e;
       axios.defaults.headers.common["Authorization"] = null;
-    }
-  }
-
-}
+    },
+    
+  },
+};
 </script>
 
 <style scoped>

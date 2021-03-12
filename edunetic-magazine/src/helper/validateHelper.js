@@ -1,4 +1,5 @@
-
+import axios from "axios";
+import { UrlConstants } from "@/constant/UrlConstant";
 export const validateHelper = {
     data() {
         return {
