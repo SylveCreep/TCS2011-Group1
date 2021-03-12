@@ -242,7 +242,8 @@ export default {
             this.$router.push("/users");
           })
           .catch((error) => {
-            this.list_errors = error.response;
+            this.list_errors = error.response.data.validate.input
+            this.showError(this.requireAttribute, this.list_errors)
           });
       }
     },
