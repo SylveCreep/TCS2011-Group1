@@ -201,14 +201,9 @@ export default {
               axios
               .delete(UrlConstants.Faculty + "/" + faculty_id)
               .then((res) => {
-                if (res.data.code === ResultConstants.Success) {
                   alert("sucess");
+                  this.filter.facultyId = "";
                   this.getFacultyList();
-                }
-                if (res.data.code === ResultConstants.Failure) {
-                  alert("error");
-                  this.getFacultyList();
-                }
               })
               .catch((error) => {
                 this.errors = error.data;

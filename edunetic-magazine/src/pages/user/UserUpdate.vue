@@ -184,9 +184,19 @@ export default {
     updateUser() {
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
+      let updateUser = {
+        id: this.user.id,
+        fullName: this.user.fullName,
+        facultyId: this.user.facultyId,
+        roleId: this.user.roleId,
+        address: this.user.address,
+        phoneNumber: this.user.phoneNumber,
+        gender: this.user.gender,
+        dateOfBirth: this.user.dateOfBirth,
+      }
       if (this.validate) {
         axios
-          .patch(UrlConstants.User + "/" + this.$route.params.id, this.user)
+          .patch(UrlConstants.User, updateUser)
           .then((response) => {
             console.log(response);
             alert("success");

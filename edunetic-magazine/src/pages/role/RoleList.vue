@@ -165,14 +165,9 @@ export default {
             axios
               .delete(UrlConstants.Role + "/" + role_id)
               .then((res) => {
-                if (res.data.code === ResultConstants.Success) {
-                  alert("sucess");
-                  this.getRoleList();
-                }
-                if (res.data.code === ResultConstants.Failure) {
-                  alert("error");
-                  this.getRoleList();
-                }
+                alert("success");
+                this.filter.roleId = "";
+                this.getRoleList();
               })
               .catch((error) => {
                 this.errors = error.data;
