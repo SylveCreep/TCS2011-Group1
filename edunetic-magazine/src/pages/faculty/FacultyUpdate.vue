@@ -47,7 +47,6 @@
             <button
               type="submit"
               class="btn btn-success"
-              v-on:click="UpdateFaculty()"
             >
               Update
             </button>
