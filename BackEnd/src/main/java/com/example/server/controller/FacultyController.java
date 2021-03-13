@@ -76,7 +76,7 @@ public class FacultyController {
     @PatchMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> update(@RequestBody FacultyRequest faculty){
         try {
-            if(faculty.getFaculty_id() == null){
+            if(faculty.getFacultyId() == null){
                 return responseUtils.getResponseEntity("NULL", FAILURE ,"Must has faculty id", HttpStatus.BAD_REQUEST);
             }
             Boolean facult = facultyService.update(faculty);
