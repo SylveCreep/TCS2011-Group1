@@ -77,13 +77,13 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public Boolean update(FacultyRequest facultyRequest) {
         try {
-            Optional<Faculty> faclOptional = facultyDao.findById(facultyRequest.getFaculty_id());
+            Optional<Faculty> faclOptional = facultyDao.findById(facultyRequest.getFacultyId());
             Faculty facl = faclOptional.get();
             if(facl.getIs_deleted() == 1){
                 return false;
             }
-            if(facultyRequest.getManager_id() != null){
-                Optional<User> managerOptional = userDao.findById(facultyRequest.getManager_id());
+            if(facultyRequest.getManagerId() != null){
+                Optional<User> managerOptional = userDao.findById(facultyRequest.getManagerId());
                 User manager = managerOptional.get();
                 if(manager.getIs_deleted() == 0){
                     facl.setManager(manager);

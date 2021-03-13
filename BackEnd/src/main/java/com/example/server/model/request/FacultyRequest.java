@@ -3,8 +3,8 @@ package com.example.server.model.request;
 import java.util.Date;
 
 public class FacultyRequest extends PagingRequest {
-    private Long faculty_id;
-    private Long manager_id;
+    private Long facultyId;
+    private Long managerId;
     private String code;
     private String facultyName;
     private String managerName;
@@ -54,20 +54,22 @@ public class FacultyRequest extends PagingRequest {
     public FacultyRequest() {
     }
 
-    public Long getFaculty_id() {
-        return faculty_id;
+    public Long getFacultyId() {
+        return facultyId;
     }
 
-    public void setFaculty_id(Long faculty_id) {
-        this.faculty_id = faculty_id;
+    public void setFacultyId(Long facultyId) {
+        this.facultyId = facultyId;
     }
 
-    public Long getManager_id() {
-        return manager_id;
+    public Long getManagerId() {
+        return managerId;
     }
 
-    public void setManager_id(Long manager_id) {
-        this.manager_id = manager_id;
+    public void setManagerId(Long managerId) {
+        this.managerId = managerId;
     }
+
+    
     
 }
