@@ -73,7 +73,7 @@
                     type="text"
                     placeholder="Search"
                     aria-label="Search"
-                    v-model="filter.managername"
+                    v-model="filter.managerName"
                     v-on:keyup="getFilter"
                   />
                 </div>

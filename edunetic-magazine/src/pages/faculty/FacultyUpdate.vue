@@ -90,13 +90,12 @@ export default {
         });
     },
     updateFaculty() {
-      this.userValidate(this.requireAttribute, this.faculty); //this function is called from helperMixin.js file
+      this.requiredValidate(this.requireAttribute, this.faculty); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
         axios
           .patch(
-            UrlConstants.Faculty + "/" + this.$route.params.id,
-            this.faculty
+            UrlConstants.Faculty, this.faculty
           )
           .then((response) => {
             console.log(response);
