@@ -1,5 +1,6 @@
 import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
+import { DefaultConstants } from "@/constant/DefaultConstant";
 export const validateHelper = {
     data() {
         return {
@@ -19,7 +20,7 @@ export const validateHelper = {
         },
         checkPhone(phone) {
             let numbers = /^[0-9]+$/;
-            if (!phone.match(numbers)) {
+            if (!numbers.test(phone)) {
                 this.list_errors.phoneNumber = "Phone number field only can contain 0-9 digits";
                 this.validate = false;
             }
@@ -40,6 +41,9 @@ export const validateHelper = {
             for (let key of Object.keys(attributes)) {
                 let text = document.querySelector("#" + key);
                 if (Object.prototype.hasOwnProperty.call(error, key)) {
+                    if (key === "facultyId") {
+                        text.style.cssText = "border: 1px solid red";
+                    }
                     text.style.cssText = "border-color: red";
                 } else {
                     text.style.cssText = "border-color: #CED4DA";
@@ -83,7 +87,20 @@ export const validateHelper = {
             if (objectType.password) {
                 if (objectType.password.length < 6) {
                     this.list_errors.password = "Password must have more than 5 characters"
+                    this.validate = false;
                 }
+            }
+
+            //validate faculty when role is marketing coordinator or student
+            if (objectType.roleId === DefaultConstants.MarketingCoordinator && objectType.facultyId == "") {
+                this.list_errors.facultyId = "Please choose faculty for this marketing coordinator"
+                this.validate = false;
+            }
+
+            //validate faculty when role is marketing coordinator or student
+            if (objectType.roleId === DefaultConstants.Student && objectType.facultyId == "") {
+                this.list_errors.facultyId = "Please choose faculty for this student"
+                this.validate = false;
             }
 
         },

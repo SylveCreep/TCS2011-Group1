@@ -60,21 +60,13 @@
           >
             <label class="col-sm-2 control-label">Faculty: </label>
             <div class="col-sm-12">
-              <select
-                class="form-control select2"
+              <input
                 id="facultyId"
-                name="faculty"
-                v-model="user.facultyId"
-              >
-                <option selected v-bind:value="user.facultyId"> {{user.facultyName}}</option>
-                <option
-                  v-for="faculty in list_faculties"
-                  :key="faculty.id"
-                  v-bind:value="faculty.id"
-                >
-                  {{ faculty.faculty_name }}
-                </option>
-              </select>
+                type="text"
+                class="form-control"
+                v-model="user.facultyName"
+                readonly
+              />
             </div>
           </div>
           <div class="position-relative form-group">
@@ -107,14 +99,13 @@
             </div>
           </div>
           <div class="position-relative form-group">
-            <label class="col-sm-2 control-label">Gender </label>
+            <label class="col-sm-2 control-label">Gender: </label>
             <div class="col-sm-12">
               <input
                 type="radio"
                 id="rmale"
                 v-model="user.gender"
                 value="1"
-                checked
               />
               <label for="male" class="label-gender">Male</label>
               <input
@@ -188,6 +179,7 @@ export default {
   },
   created() {
     this.getUser();
+    
     this.getFacultyList();
   },
   methods: {
@@ -196,23 +188,26 @@ export default {
         .get(UrlConstants.User + "/" + this.$route.params.id)
         .then((r) => {
           this.user = r.data.data;
+          console.log(this.user)
         })
         .catch((error) => {
           this.list_errors = error.response;
         });
     },
     updateUser() {
+      let updateUser = {}
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
-      let updateUser = this.user;
+      updateUser = this.user;
       delete updateUser["roleName"];
       delete updateUser["facultyName"];
       delete updateUser["code"];
+      console.log(updateUser)
       if (this.validate) {
         axios
           .patch(UrlConstants.User, updateUser)
           .then((response) => {
-            console.log(response);
+
             alert("success");
             this.$router.push("/users");
           })

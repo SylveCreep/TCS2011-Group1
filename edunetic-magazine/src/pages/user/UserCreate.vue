@@ -50,9 +50,8 @@
               </select>
             </div>
           </div>
-          <div
-            class="position-relative form-group"
-            v-if="this.user.roleId === 3 || this.user.roleId === 4"
+           <div class="position-relative form-group"
+            v-if="this.user.roleId === 3"
           >
             <label class="col-sm-2 control-label">Faculty: </label>
             <div class="col-sm-12">
@@ -62,16 +61,46 @@
                 name="category"
                 v-model="user.facultyId"
               >
+                <option value="" disabled selected>Please choose faculty</option>
                 <option
-                  v-for="faculty in list_faculties"
-                  :key="faculty.id"
-                  v-bind:value="faculty.faculty_id"
+                  v-for="faculty in newFaculty"
+                  :key="faculty.facultyId"
+                  v-bind:value="faculty.facultyId"
                 >
-                  {{ faculty.faculty_name }}
+                  {{ faculty.facultyName }}
                 </option>
               </select>
+               <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.facultyId }}
+              </p>
             </div>
           </div>
+          <div class="position-relative form-group"
+            v-else-if="this.user.roleId === 4"
+          >
+            <label class="col-sm-2 control-label">Faculty: </label>
+            <div class="col-sm-12">
+              <select
+                class="form-control select2"
+                id="facultyId"
+                name="category"
+                v-model="user.facultyId"
+              >
+                <option value="" disabled selected>Please choose faculty</option>
+                <option
+                  v-for="faculty in list_faculties"
+                  :key="faculty.facultyId"
+                  v-bind:value="faculty.facultyId"
+                >
+                  {{ faculty.facultyName }}
+                </option>
+              </select>
+              <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.facultyId }}
+              </p>
+            </div>
+          </div>
+         
           <div class="position-relative form-group">
             <label class="col-sm-2 control-label">Email: </label>
             <div class="col-sm-12">
@@ -212,6 +241,7 @@ export default {
       user: {
         gender: 1,
         roleId: 1,
+        facultyId: ""
       },
       requireAttribute: {
         fullName: "Fullname",
@@ -221,6 +251,7 @@ export default {
         email: "email",
         password: "password",
         confirm_password: "Confirm password",
+        facultyId: "Faculty"
       },
     };
   },
@@ -228,6 +259,9 @@ export default {
     roleList() {
       return this.list_roles.filter((role) => role.id !== 5);
     },
+    newFaculty () {
+      return this.list_faculties.filter((faculty) => faculty.managerId === null)
+    }
   },
   created() {
     this.getRoleList();
@@ -249,6 +283,18 @@ export default {
             this.showError(this.requireAttribute, this.list_errors)
           });
       }
+    },
+    updateMCFaculty() {
+        axios
+          .patch(
+            UrlConstants.Faculty + "/" + this.user.facultyId,
+            
+          )
+          .then((response) => {
+            console.log(response);
+            alert("success");
+            this.$router.push("/faculties");
+          })
     },
     selectFaculty() {
       if (
