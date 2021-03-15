@@ -47,7 +47,6 @@
             <button
               type="submit"
               class="btn btn-success"
-              v-on:click="UpdateFaculty()"
             >
               Update
             </button>
@@ -99,7 +98,7 @@ export default {
           )
           .then((response) => {
             console.log(response);
-            alert("success");
+            alert("Update Successfully");
             this.$router.push("/faculties");
           })
           .catch((error) => {
