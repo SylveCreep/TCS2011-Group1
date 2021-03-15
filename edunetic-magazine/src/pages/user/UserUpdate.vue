@@ -7,7 +7,8 @@
             <i class="pe-7s-display1 icon-gradient bg-premium-dark"> </i>
           </div>
           <div>
-            <h2>User Update</h2>
+            <h2 v-if="loggedUser !== undefined">Profile Update</h2>
+            <h2 v-else>User Update</h2>
           </div>
         </div>
       </div>
@@ -166,6 +167,9 @@ import { commonHelper } from "@/helper/commonHelper";
 export default {
   name: "UserUpdate",
   mixins: [commonHelper, validateHelper],
+  props: {
+    loggedUser: Number
+  },
   data() {
     return {
       user: {},
@@ -179,13 +183,16 @@ export default {
   },
   created() {
     this.getUser();
-    
     this.getFacultyList();
   },
   methods: {
     getUser() {
+      let user_id = this.$route.params.id
+      if (this.loggedUser !== undefined) {
+        user_id = this.loggedUser
+      }
       axios
-        .get(UrlConstants.User + "/" + this.$route.params.id)
+        .get(UrlConstants.User + "/" + user_id )
         .then((r) => {
           this.user = r.data.data;
           console.log(this.user)
