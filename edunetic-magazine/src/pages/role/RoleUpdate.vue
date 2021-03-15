@@ -38,7 +38,6 @@
               <button
                 type="submit"
                 class="btn btn-success"
-                v-on:click="UpdateRoles()"
               >
                 Update
               </button>
@@ -82,11 +81,11 @@ export default {
         });
     },
     updateRole() {
-      this.userValidate(this.requireAttribute, this.role); //this function is called from helperMixin.js file
+      this.requiredValidate(this.requireAttribute, this.role); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
         axios
-          .patch(UrlConstants.Role + "/" + this.$route.params.id, this.role)
+          .patch(UrlConstants.Role, this.role)
           .then((r) => {
             console.log(r);
             alert("Update Successfully");
