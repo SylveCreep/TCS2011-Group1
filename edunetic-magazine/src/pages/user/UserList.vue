@@ -93,9 +93,9 @@
                     <option
                       v-for="faculty in list_faculties"
                       :key="faculty.id"
-                      v-bind:value="faculty.faculty_id"
+                      v-bind:value="faculty.facultyId"
                     >
-                      {{ faculty.faculty_name }}
+                      {{ faculty.facultyName }}
                     </option>
                   </select>
                 </div>
@@ -243,7 +243,6 @@ export default {
     this.getFacultyList();
   },
   methods: {
-   
     showUser(user_id) {
       axios.get(UrlConstants.User + "/" + user_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {

@@ -20,13 +20,13 @@
             <label class="col-sm-2 control-label">Name: </label>
             <div class="col-sm-12">
               <input
-                id="faculty_name"
+                id="facultyName"
                 type="text"
                 class="form-control"
-                v-model="faculty.faculty_name"
+                v-model="faculty.facultyName"
               />
               <p style="color: red" v-if="list_errors !== null">
-                {{ list_errors.faculty_name }}
+                {{ list_errors.facultyName }}
               </p>
             </div>
           </div>
@@ -71,7 +71,7 @@ export default {
     return {
       faculty: {},
       requireAttribute: {
-        faculty_name: "Faculty Name",
+        facultyName: "Faculty Name",
       },
     };
   },
@@ -90,13 +90,12 @@ export default {
         });
     },
     updateFaculty() {
-      this.userValidate(this.requireAttribute, this.faculty); //this function is called from helperMixin.js file
+      this.requiredValidate(this.requireAttribute, this.faculty); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
         axios
           .patch(
-            UrlConstants.Faculty + "/" + this.$route.params.faculty_id,
-            this.faculty
+            UrlConstants.Faculty, this.faculty
           )
           .then((response) => {
             console.log(response);
