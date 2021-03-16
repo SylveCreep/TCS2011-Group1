@@ -45,7 +45,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<?> createUser(CreateAccount user,@RequestParam("file") MultipartFile file, HttpServletRequest httpServletRequest){
+    public ResponseEntity<?> createUser(CreateAccount user,@RequestPart("file") MultipartFile file, HttpServletRequest httpServletRequest){
         try {
             HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(user, file, 0);
             Object validateRes = validateResult.get("result");

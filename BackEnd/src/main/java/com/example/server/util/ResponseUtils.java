@@ -19,6 +19,7 @@ import com.example.server.model.request.CreateAccount;
 import com.example.server.model.request.PagingRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
