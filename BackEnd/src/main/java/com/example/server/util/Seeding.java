@@ -1,6 +1,10 @@
 package com.example.server.util;
 
+import java.lang.StackWalker.Option;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 import static com.example.server.constant.Constant.*;
 
@@ -30,6 +34,9 @@ public class Seeding implements CommandLineRunner {
     private RoleDao roleDao;
 
     @Autowired
+    private FacultyDao facultyDao;
+
+    @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
 
     @Autowired
@@ -41,9 +48,10 @@ public class Seeding implements CommandLineRunner {
             seedingRole();
             seedingUserAdmin();
             seedingUserMM();
-            seedingUserMC();
-            seedingUserStudent();
             seedingUserGUEST();
+            seedingUserMC();
+            seedingFaculty();
+            seedingUserStudent();
             System.out.println();
             System.out.println("Success seeding");
         } catch (Exception e) {
@@ -53,6 +61,7 @@ public class Seeding implements CommandLineRunner {
     }
 
     private void createUser(Faker faker, String pwd, Role role){
+        Random random = new Random();
         User nUser = new User();
                  nUser.setEmail(faker.name().username() + "@gmail.com");
                  nUser.setCode( "U" + String.format("%04d", queryCheck.GetHighestId("user")));
@@ -63,7 +72,14 @@ public class Seeding implements CommandLineRunner {
                  nUser.setDateOfBirth(faker.date().birthday(18, 50));
                  nUser.setIs_deleted(Constant.NOTDELETED);
                  nUser.setCreated_at(new Date());
- 
+                 nUser.setGender(Constant.MALE);
+                 String phoneString = faker.phoneNumber().cellPhone();
+                 Long phoneNumer = Long.parseLong(phoneString.replaceAll("[\\D+]", "").trim());
+                 nUser.setPhoneNumber(phoneNumer);
+                 /*if(role.getId() == 1 || role.getId() == 2 || role.getId() == 5)
+                    nUser.setFaculty(null);
+                 else
+                    nUser.setFaculty(facultyDao.getOne(Long.valueOf(random.nextInt(5))));*/
                  userDao.save(nUser);
     }
 
@@ -148,6 +164,40 @@ public class Seeding implements CommandLineRunner {
        }
        else{
            return;
+       }
+   }
+
+
+   ///Faculty
+   private Boolean createFaculty(Faker faker, Long userId){
+       //Optional<User> managerList = userDao.findById(userId);
+       //User manager = managerList.get();
+       User manager = userDao.findByUserId(userId);
+       Faculty nFaculty = new Faculty();
+            nFaculty.setCode("F" + String.format("%04d", queryCheck.GetHighestId("faculty")));
+            if (manager.getIs_deleted() != Constant.DELETED){
+                nFaculty.setManager(manager);
+            }
+            else{
+               return false;
+            }
+            nFaculty.setName(faker.educator().course());
+
+            facultyDao.save(nFaculty);
+            return true;
+   }
+
+   private void seedingFaculty(){
+       if (queryCheck.CheckItemInTable("faculty") < 5){
+           Random random = new Random();
+           Faker faker = new Faker();
+           List<Long> MCList = userDao.searchMC();
+           int countSeedingFaculty = 0;
+           while(countSeedingFaculty < 5){
+
+               if(createFaculty(faker, Long.valueOf(MCList.get(random.nextInt(MCList.size())))) == true);
+                    countSeedingFaculty++;
+           }
        }
    }
 }

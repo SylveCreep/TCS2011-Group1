@@ -12,7 +12,7 @@ public class UserResponse {
     private String facultyName;
     private String email;
     private String address;
-    private Integer phoneNumber;
+    private Long phoneNumber;
     private Integer gender;
     private String dateOfBirth;
 
@@ -92,11 +92,11 @@ public class UserResponse {
         this.address = address;
     }
 
-    public Integer getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Integer phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

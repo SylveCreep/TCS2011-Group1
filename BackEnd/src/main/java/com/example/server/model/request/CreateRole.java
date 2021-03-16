@@ -3,20 +3,22 @@ package com.example.server.model.request;
 import javax.validation.constraints.Size;
 
 public class CreateRole {
+
+    private Long id;
     
-    //@Size(min = 5, max = 5)
-    //private String code;
+    @Size(min = 5, max = 5)
+    private String code;
 
     @Size(max = 255)
     private String name;
 
-    /*public String getCode(){
+    public String getCode(){
         return code;
     }
 
     public void setCode(String code){
         this.code = code;
-    }*/
+    }
 
     public String getName(){
         return name;
@@ -24,6 +26,14 @@ public class CreateRole {
 
     public void setName(String name){
         this.name = name;
+    }
+
+    public Long getId(){
+        return id;
+    }
+
+    public void setId(Long id){
+        this.id = id;
     }
 
     /*public CreateRole(){

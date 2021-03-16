@@ -20,6 +20,7 @@ public interface UserDao extends JpaRepository<User, Long> {
 
     Optional<User> findById(Long id);
 
+
     @Query("Select u from User u "+
     "where u.is_deleted = 0 "+
     "group by u.id ")
@@ -52,4 +53,16 @@ public interface UserDao extends JpaRepository<User, Long> {
     "WHERE u.is_deleted = 0 "+
     "AND ((f.manager_id IS NULL) OR (u.id <> f.manager_id AND f.is_deleted = 0)) ", nativeQuery = true)
     List<User> searchUserNotIsManager();
+
+    @Query(value = "Select u.id FROM user u " +
+    "LEFT JOIN role r ON r.id = u.role_id " +
+    "Where u.is_deleted = 0 " +
+    "AND u.role_id = r.id " +
+    "AND r.name = 'Marketing Coordinator' ", nativeQuery = true)
+    List<Long> searchMC();
+
+    @Query(value = "Select * FROM user u " +
+    "Where  ((:userId is null) or (u.id = :userId))", nativeQuery = true)
+    User findByUserId(@Param("userId") Long userId);
+
 }

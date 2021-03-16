@@ -25,7 +25,7 @@ public class CreateAccount {
 
     private Long facultyId;
 
-    private Integer phoneNumber;
+    private Long phoneNumber;
 
     private Integer gender;
 
@@ -79,11 +79,11 @@ public class CreateAccount {
         this.roleId = roleId;
     }
 
-    public Integer getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Integer phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
