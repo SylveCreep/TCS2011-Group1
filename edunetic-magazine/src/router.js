@@ -15,6 +15,8 @@ import FacultyList from "@/pages/faculty/FacultyList";
 import FacultyCreate from "@/pages/faculty/FacultyCreate";
 import FacultyUpdate from "@/pages/faculty/FacultyUpdate";
 
+import ContributionList from "@/pages/contribution/ContributionList";
+
 Vue.use(Router);
 export const router = new Router({
     mode: 'history',
@@ -33,6 +35,11 @@ export const router = new Router({
             name:'Faculties',
             path: '/',
             component: FacultyList,
+        },
+        {
+            name:'Contribution',
+            path: '/',
+            component: ContributionList,
         },
 
         {
@@ -75,7 +82,12 @@ export const router = new Router({
             name:'FacultyUpdate',
             path: '/faculties/:id/update',
             component: FacultyUpdate,
-        },
+        },{
+            name:'ContributionList',
+            path:'/contributions',
+            component: ContributionList,
+        }
+        
     ]
 })
 export default router

@@ -9,6 +9,7 @@ export const commonHelper = {
       list_faculties: [],
       list_roles: [],
       list_errors: [],
+      list_contributions:[],
       filter: {
         column: DefaultConstants.Column, //default column = 'id'
         sort: DefaultConstants.Sort, //default sort = 'asc'
@@ -69,6 +70,17 @@ export const commonHelper = {
           this.list_users = response.data.data;
           this.list_users.currentPage = this.filter.page;
           this.list_users.lastPage = response.data.lastPage;
+        })
+        .catch((error) => {
+          this.errors = error.response.data;
+        });
+    },
+    getContributionList() {
+      axios
+        .post(UrlConstants.Contribution , this.filter)
+        .then((response) => {
+          this.list_contributions = response.data;
+          console.log(this.list_contributions)
         })
         .catch((error) => {
           this.errors = error.response.data;

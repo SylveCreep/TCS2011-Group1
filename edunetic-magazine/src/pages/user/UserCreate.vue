@@ -251,7 +251,6 @@ export default {
         email: "email",
         password: "password",
         confirm_password: "Confirm password",
-        facultyId: "Faculty"
       },
     };
   },
@@ -272,6 +271,7 @@ export default {
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
+        delete this.user["confirm_password"];
         axios
           .post(UrlConstants.User, this.user)
           .then((r) => {
@@ -283,18 +283,6 @@ export default {
             this.showError(this.requireAttribute, this.list_errors)
           });
       }
-    },
-    updateMCFaculty() {
-        axios
-          .patch(
-            UrlConstants.Faculty + "/" + this.user.facultyId,
-            
-          )
-          .then((response) => {
-            console.log(response);
-            alert("success");
-            this.$router.push("/faculties");
-          })
     },
     selectFaculty() {
       if (
