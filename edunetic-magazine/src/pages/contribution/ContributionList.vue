@@ -136,7 +136,7 @@
                 Approved by: {{ user.roleName }}
               </div>
               <div class="d-block text-right card-footer">
-                <a href="javascript:void(0);" class="btn-wide btn btn-success"
+                <a href="javascript:void(0);" class="btn-wide btn contribution-detail"
                   >Detail</a
                 >
               </div>
@@ -144,7 +144,7 @@
           </div>
         </div>
       </div>
-      <div class="row card-footer">
+      <div class="row">
         <div class="col-md-6">
           <strong> Items per page: </strong>
           <select v-on:change="getLimit($event)">
@@ -208,6 +208,10 @@ export default {
 };
 </script>
 <style scoped>
+.contribution-detail {
+  background-color: #3f6ad8;
+  color: white;
+}
 .card-body {
   padding-left: 2rem !important;
 }
