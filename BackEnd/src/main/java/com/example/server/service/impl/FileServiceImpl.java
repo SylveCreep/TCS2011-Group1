@@ -23,13 +23,13 @@ public class FileServiceImpl implements FileService{
 
 
     @Override
-    public String storeAvatar(MultipartFile file) {
+    public String storeAvatar(MultipartFile file, String code) {
         try {
             String path = "";
             if(file.isEmpty()){
                 return null;
             }
-            Path destinationPath = avatarLocationPath.resolve(Paths.get(file.getOriginalFilename())).normalize().toAbsolutePath();
+            Path destinationPath = avatarLocationPath.resolve(Paths.get(code)).normalize().toAbsolutePath();
             path = destinationPath.toString();
             if(!destinationPath.getParent().equals(avatarLocationPath.toAbsolutePath())){
                 return null;
@@ -63,13 +63,13 @@ public class FileServiceImpl implements FileService{
     }
 
     @Override
-    public String storeContribution(MultipartFile file) {
+    public String storeContribution(MultipartFile file, String code) {
         try {
             String path = "";
             if(file.isEmpty()){
                 return null;
             }
-            Path destinationPath = contributionLocationPath.resolve(Paths.get(file.getOriginalFilename())).normalize().toAbsolutePath();
+            Path destinationPath = contributionLocationPath.resolve(Paths.get(code)).normalize().toAbsolutePath();
             path = destinationPath.toString();
             if(!destinationPath.getParent().equals(contributionLocationPath.toAbsolutePath())){
                 return null;

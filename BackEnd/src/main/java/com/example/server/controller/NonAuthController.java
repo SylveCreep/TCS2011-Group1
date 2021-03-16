@@ -3,6 +3,7 @@ package com.example.server.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.example.server.config.TokenProvider;
@@ -29,7 +30,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.example.server.constant.Constant.*;
 
@@ -84,9 +87,9 @@ public class NonAuthController {
     }
 
     @PostMapping(value ="/register",  consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> saveUser(@Valid @RequestBody CreateAccount user){
+    public ResponseEntity<?> saveUser(@RequestBody CreateAccount user, @RequestParam("file") MultipartFile file, HttpServletRequest httpServletRequest){
         try {
-            HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(user, 0);
+            HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(user, file, 0);
             Object validateRes = validateResult.get("result");
             if(Integer.parseInt(validateRes.toString()) == -1){
                 return responseUtils.getActionResponseEntity("NULL", FAILURE,"Create user failed",validateResult, HttpStatus.BAD_REQUEST);

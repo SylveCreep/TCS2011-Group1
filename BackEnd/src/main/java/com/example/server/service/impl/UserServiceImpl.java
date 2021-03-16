@@ -20,6 +20,7 @@ import com.example.server.model.request.UserSearchRequest;
 import com.example.server.model.response.UserLastPageResponse;
 import com.example.server.model.response.UserListResponse;
 import com.example.server.model.response.UserResponse;
+import com.example.server.service.FileService;
 import com.example.server.service.RoleService;
 import com.example.server.service.UserService;
 import com.example.server.util.QueryCheck;
@@ -27,6 +28,7 @@ import com.example.server.util.ResponseUtils;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +67,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private FacultyDao facultyDao;
 
     @Autowired(required = true)
-    private ModelMapper modelMapper; 
+    private ModelMapper modelMapper;
+    
+    @Autowired
+    private FileService fileService;
 
     @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
@@ -127,7 +132,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     // Create account by admin
     @Override
-    public User saveRegister(CreateAccount user) {
+    public User saveRegister(CreateAccount user, MultipartFile file) {
         try {
             User nUser = new User();
             if(userDao.findByEmail(user.getEmail()) == null){
@@ -141,7 +146,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             nUser.setDateOfBirth(user.getDateOfBirth());
             nUser.setPhoneNumber(user.getPhoneNumber());
             nUser.setGender(user.getGender());
-            nUser.setAvatar(user.getAvatar());
             nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
             Role role = roleService.findById(user.getRoleId());
             if(user.getFacultyId() != null){
@@ -158,6 +162,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 return null;
             }
             nUser.setRole(role);
+            String path = fileService.storeAvatar(file, nUser.getCode());
+            if(path == null){
+                return null;
+            }
+            nUser.setAvatar(path);
             return userDao.save(nUser);
         } catch (Exception e) {
             return null;

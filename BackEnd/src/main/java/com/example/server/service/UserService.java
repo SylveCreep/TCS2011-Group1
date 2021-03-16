@@ -10,12 +10,13 @@ import com.example.server.model.response.UserListResponse;
 import com.example.server.model.response.UserResponse;
 
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 
 public interface UserService {
     User saveGuestRegister(CreateAccount user);
 
-    User saveRegister(CreateAccount user);
+    User saveRegister(CreateAccount user, MultipartFile file);
 
     Boolean deleteUser(Long id);
 

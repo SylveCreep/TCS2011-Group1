@@ -23,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.example.server.constant.Constant.*;
 
@@ -97,7 +98,7 @@ public class ResponseUtils {
         }
     }
 
-    public HashMap<String, Object> validateCreateAccountRequest(CreateAccount createAccount, int type){
+    public HashMap<String, Object> validateCreateAccountRequest(CreateAccount createAccount, MultipartFile file, int type){
         HashMap<String, Object> form = new HashMap<>();
         HashMap<String, Object> inputForm = new HashMap<>();
         form.put("input", inputForm);
@@ -113,6 +114,7 @@ public class ResponseUtils {
         String valPhone = validatePhoneInput(createAccount.getPhoneNumber());
         String valGen = validateGenderInput(createAccount.getGender());
         String valId = validateUserInput(createAccount.getId());
+        String valAvatar = validateImageFile(file);
 
         // Type 0 for create account request
         // Type 1 for update account request
@@ -171,6 +173,12 @@ public class ResponseUtils {
 
                 if(!valGen.equals("Valid")){
                     inputForm.put("gender", valGen);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if(!valAvatar.equals("Valid")){
+                    inputForm.put("avatar", valAvatar);
                     if(!form.containsKey("result")){
                         form.put("result", -1);
                     }
@@ -241,6 +249,12 @@ public class ResponseUtils {
 
                 if(!valGen.equals("Valid")){
                     inputForm.put("gender", valGen);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if(!valAvatar.equals("Valid")){
+                    inputForm.put("avatar", valAvatar);
                     if(!form.containsKey("result")){
                         form.put("result", -1);
                     }
@@ -399,6 +413,16 @@ public class ResponseUtils {
         } else {
             return "Valid";
         }
+    }
+
+    public String validateImageFile(MultipartFile file){
+        if(file == null){
+            return "Invalid";
+        }
+        if(!file.getContentType().startsWith("image/")){
+            return file.getContentType();
+        }
+        return "Valid";
     }
 
 }

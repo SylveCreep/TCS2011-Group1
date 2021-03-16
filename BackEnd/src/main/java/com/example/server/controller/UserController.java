@@ -40,9 +40,6 @@ public class UserController {
     @Autowired
     private BanService banService;
 
-    @Autowired
-    private FileService fileService;
-
     @Value("${jwt.token.prefix}")
     public String TOKEN_PREFIX;
 
@@ -50,16 +47,15 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody CreateAccount user,@RequestParam("file") MultipartFile file, HttpServletRequest httpServletRequest){
         try {
-            HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(user, 0);
+            HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(user, file, 0);
             Object validateRes = validateResult.get("result");
             if(Integer.parseInt(validateRes.toString()) == -1){
                 return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE,"Create user failed",validateResult, HttpStatus.BAD_REQUEST);
             }
             if(file == null){
-                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Create user failed, missing file", HttpStatus.BAD_REQUEST);
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Create user failed, missing avatar", HttpStatus.BAD_REQUEST);
             }
-            user.setAvatar(fileService.storeAvatar(file));
-            User createdUser = userService.saveRegister(user);
+            User createdUser = userService.saveRegister(user, file);
             if(createdUser == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Create user failed", HttpStatus.BAD_REQUEST);
             }
@@ -123,9 +119,9 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> update(@RequestBody CreateAccount userDto){
+    public ResponseEntity<?> update(@RequestBody CreateAccount userDto, @RequestParam("file") MultipartFile file, HttpServletRequest httpServletRequest){
         try {
-            HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(userDto, 1);
+            HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(userDto, file, 1);
             Object validateRes = validateResult.get("result");
             if(Integer.parseInt(validateRes.toString()) == -1){
                 return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE,"Update user failed",validateResult, HttpStatus.BAD_REQUEST);
