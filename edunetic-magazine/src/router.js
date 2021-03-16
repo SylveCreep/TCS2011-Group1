@@ -14,11 +14,16 @@ import RoleUpdate from "@/pages/role/RoleUpdate";
 import FacultyList from "@/pages/faculty/FacultyList";
 import FacultyCreate from "@/pages/faculty/FacultyCreate";
 import FacultyUpdate from "@/pages/faculty/FacultyUpdate";
-
+import UserProfile from "@/pages/UserProfile"
 Vue.use(Router);
 export const router = new Router({
     mode: 'history',
     routes: [
+        {
+            name:'UserProfile',
+            path: '/profile',
+            component: UserProfile,
+        },
         {
             name:'Users',
             path: '/',

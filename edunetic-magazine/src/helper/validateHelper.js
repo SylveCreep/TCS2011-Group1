@@ -91,13 +91,13 @@ export const validateHelper = {
                 }
             }
 
-            //validate faculty when role is marketing coordinator or student
+            //validate faculty when role is marketing coordinator
             if (objectType.roleId === DefaultConstants.MarketingCoordinator && objectType.facultyId == "") {
                 this.list_errors.facultyId = "Please choose faculty for this marketing coordinator"
                 this.validate = false;
             }
 
-            //validate faculty when role is marketing coordinator or student
+            //validate faculty when role is marketing coordinator
             if (objectType.roleId === DefaultConstants.Student && objectType.facultyId == "") {
                 this.list_errors.facultyId = "Please choose faculty for this student"
                 this.validate = false;

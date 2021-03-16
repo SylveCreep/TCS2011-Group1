@@ -67,9 +67,9 @@
                       aria-hidden="true"
                       class="dropdown-menu dropdown-menu-right"
                     >
-                      <button type="button" tabindex="0" class="dropdown-item">
+                      <router-link to ="/profile" type="button" tabindex="0" class="dropdown-item">
                         User Account
-                      </button>
+                      </router-link>
                       
                       <div tabindex="-1" class="dropdown-divider"></div>
                       <button type="button" tabindex="0" class="dropdown-item" v-on:click="logOut">
