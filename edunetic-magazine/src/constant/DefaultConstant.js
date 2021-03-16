@@ -10,4 +10,10 @@ export const DefaultConstants = Object.freeze({
     Guest: 5,
     female: 0,
     male: 1,
+    ContributionStatuses: {
+        Pending: 1,
+        Approved: 2,
+        Denied: 0
+        
+    }
 });

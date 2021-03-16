@@ -100,8 +100,7 @@ export default {
   name: "TheSidebar",
   data() {
     return {
-      user: null,
-      //currentUser: this.$cookies.get("currentUser")
+      user: {},
     }
   },
   created() {

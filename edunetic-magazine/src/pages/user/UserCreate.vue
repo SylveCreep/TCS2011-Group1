@@ -1,6 +1,6 @@
 <template>
   <div class="app-main__inner" style="background-color: #fff">
-    <div class="app-page-title"> 
+    <div class="app-page-title">
       <div class="page-title-wrapper">
         <div class="page-title-heading">
           <div class="page-title-icon">
@@ -50,7 +50,8 @@
               </select>
             </div>
           </div>
-           <div class="position-relative form-group"
+          <div
+            class="position-relative form-group"
             v-if="this.user.roleId === 3"
           >
             <label class="col-sm-2 control-label">Faculty: </label>
@@ -61,7 +62,9 @@
                 name="category"
                 v-model="user.facultyId"
               >
-                <option value="" disabled selected>Please choose faculty</option>
+                <option value="" disabled selected>
+                  Please choose faculty
+                </option>
                 <option
                   v-for="faculty in newFaculty"
                   :key="faculty.facultyId"
@@ -70,12 +73,13 @@
                   {{ faculty.facultyName }}
                 </option>
               </select>
-               <p style="color: red" v-if="list_errors !== null">
+              <p style="color: red" v-if="list_errors !== null">
                 {{ list_errors.facultyId }}
               </p>
             </div>
           </div>
-          <div class="position-relative form-group"
+          <div
+            class="position-relative form-group"
             v-else-if="this.user.roleId === 4"
           >
             <label class="col-sm-2 control-label">Faculty: </label>
@@ -86,7 +90,9 @@
                 name="category"
                 v-model="user.facultyId"
               >
-                <option value="" disabled selected>Please choose faculty</option>
+                <option value="" disabled selected>
+                  Please choose faculty
+                </option>
                 <option
                   v-for="faculty in list_faculties"
                   :key="faculty.facultyId"
@@ -100,7 +106,7 @@
               </p>
             </div>
           </div>
-         
+
           <div class="position-relative form-group">
             <label class="col-sm-2 control-label">Email: </label>
             <div class="col-sm-12">
@@ -241,7 +247,7 @@ export default {
       user: {
         gender: 1,
         roleId: 1,
-        facultyId: ""
+        facultyId: "",
       },
       requireAttribute: {
         fullName: "Fullname",
@@ -258,13 +264,16 @@ export default {
     roleList() {
       return this.list_roles.filter((role) => role.id !== 5);
     },
-    newFaculty () {
-      return this.list_faculties.filter((faculty) => faculty.managerId === null)
-    }
+    newFaculty() {
+      return this.list_faculties.filter(
+        (faculty) => faculty.managerId === null
+      );
+    },
   },
   created() {
     this.getRoleList();
     this.getFacultyList();
+    console.log(this.user);
   },
   methods: {
     createUser() {
@@ -279,8 +288,8 @@ export default {
             this.$router.push("/users");
           })
           .catch((error) => {
-            this.list_errors = error.response.data.validate.input
-            this.showError(this.requireAttribute, this.list_errors)
+            this.list_errors = error.response.data.validate.input;
+            this.showError(this.requireAttribute, this.list_errors);
           });
       }
     },
@@ -289,9 +298,9 @@ export default {
         this.user.roleId === DefaultConstants.Student ||
         this.user.roleId === DefaultConstants.MarketingCoordinator
       ) {
-        if (this.user.facultyId === undefined) {
-          this.user.facultyId = 1;
-        }
+          if (this.user.facultyId === undefined) {
+            this.user.facultyId = 1;
+          }
       } else {
         if (this.user.facultyId !== undefined) {
           delete this.user.facultyId;
@@ -303,12 +312,11 @@ export default {
 </script>
 
 <style scoped>
-
 .label-gender {
   padding-left: 5px;
   padding-right: 20px;
 }
 .app-page-title {
-  margin:-30px 0 0 -30px;
-};
+  margin: -30px 0 0 -30px;
+}
 </style>
