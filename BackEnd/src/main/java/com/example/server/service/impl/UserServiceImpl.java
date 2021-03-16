@@ -179,7 +179,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         try {
             Sort sort = responseUtils.getSortObj(pagingRequest);
             Page<User> list = userDao.getNonDeletedUser(PageRequest.of(pagingRequest.getPage(), pagingRequest.getLimit(), sort));
-            int lastPage = Math.round(list.getTotalElements()/pagingRequest.getLimit());
+            int lastPage = Math.round(list.getTotalElements() / pagingRequest.getLimit()  + ((list.getTotalElements() % pagingRequest.getLimit() == 0) ? 0 : 1)); 
             List<Object> object = new ArrayList<>();
             List<UserResponse> listResponse = new ArrayList<>();
             for(User user: list){
@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             userSearchRequest.getEmail(),userSearchRequest.getStartDate(),userSearchRequest.getEndDate(),hasDate,userSearchRequest.getGender(), userSearchRequest.getCode(),
             PageRequest.of(offset, userSearchRequest.getLimit(), sort));
 
-            int lastPage = Math.round(list.getTotalElements()/userSearchRequest.getLimit());
+            int lastPage = Math.round(list.getTotalElements() / userSearchRequest.getLimit()  + ((list.getTotalElements() % userSearchRequest.getLimit() == 0) ? 0 : 1)); 
             UserLastPageResponse object = new UserLastPageResponse();
             List<UserResponse> listResponse = new ArrayList<>();
             for(User user: list){

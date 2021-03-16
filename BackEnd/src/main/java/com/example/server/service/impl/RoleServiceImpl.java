@@ -135,7 +135,7 @@ public class RoleServiceImpl implements RoleService {
             Sort sort = responseUtils.getSortObj(roleSearchRequest);
             Page<Role> list = roleDao.searchRoleByName(roleSearchRequest.getRoleId(), roleSearchRequest.getName(), roleSearchRequest.getCode(), PageRequest.of(offset, roleSearchRequest.getLimit(), sort));
 
-            int lastPage = Math.round(list.getTotalElements()/roleSearchRequest.getLimit());
+            int lastPage = Math.round(list.getTotalElements() / roleSearchRequest.getLimit()  + ((list.getTotalElements() % roleSearchRequest.getLimit() == 0) ? 0 : 1)); 
             RoleLastPageResponse object = new RoleLastPageResponse();
             List<RoleResponse> listResponse = new ArrayList<>();
             for(Role role:list){
@@ -159,7 +159,7 @@ public class RoleServiceImpl implements RoleService {
         try {
             Sort sort = responseUtils.getSortObj(pagingRequest);
             Page<Role> list = roleDao.getNonDelRole(PageRequest.of(pagingRequest.getPage(), pagingRequest.getLimit(), sort));
-            int lastPage = Math.round(list.getTotalElements()/pagingRequest.getLimit());
+            int lastPage = Math.round(list.getTotalElements() / pagingRequest.getLimit()  + ((list.getTotalElements() % pagingRequest.getLimit() == 0) ? 0 : 1)); 
             List<Object> object = new ArrayList<>();
             List<RoleResponse> listResponse = new ArrayList<>();
             for(Role role: list){
