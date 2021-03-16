@@ -195,7 +195,6 @@ export default {
         .get(UrlConstants.User + "/" + user_id )
         .then((r) => {
           this.user = r.data.data;
-          console.log(this.user)
         })
         .catch((error) => {
           this.list_errors = error.response;
@@ -214,7 +213,6 @@ export default {
         axios
           .patch(UrlConstants.User, updateUser)
           .then((response) => {
-
             alert("success");
             this.$router.push("/users");
           })

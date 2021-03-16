@@ -273,7 +273,6 @@ export default {
   created() {
     this.getRoleList();
     this.getFacultyList();
-    console.log(this.user);
   },
   methods: {
     createUser() {

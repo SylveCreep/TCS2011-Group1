@@ -21,6 +21,7 @@ import FacultyUpdate from "@/pages/faculty/FacultyUpdate";
 //import Contribution Components
 import ContributionList from "@/pages/contribution/ContributionList";
 import ContributionSubmit from "@/pages/contribution/ContributionSubmit";
+import ContributionDetail from "@/pages/contribution/ContributionDetail";
 import UserProfile from "@/pages/UserProfile";
 
 Vue.use(Router);
@@ -95,6 +96,11 @@ export const router = new Router({
             name: 'ContributionSubmit',
             path: '/contributions/submit',
             component: ContributionSubmit,
+        },
+        {
+            name: 'ContributionDetail',
+            path: '/contributions/:id/detail',
+            component: ContributionDetail,
         },
     ]
 })

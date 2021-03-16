@@ -70,7 +70,6 @@ export const commonHelper = {
           this.list_users = response.data.data;
           this.list_users.currentPage = this.filter.page;
           this.list_users.lastPage = response.data.lastPage;
-          console.log(this.list_users)
         })
         .catch((error) => {
           this.errors = error.response.data;
