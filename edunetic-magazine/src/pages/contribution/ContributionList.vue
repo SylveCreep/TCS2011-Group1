@@ -136,65 +136,15 @@
                 Approved by: {{ user.roleName }}
               </div>
               <div class="d-block text-right card-footer">
-                <a href="javascript:void(0);" class="btn-wide btn btn-success"
+                <a href="javascript:void(0);" class="btn-wide btn contribution-detail"
                   >Detail</a
                 >
               </div>
             </div>
           </div>
-          <!-- <div class="col-md-4">
-            <div class="main-card mb-3 card">
-              <div class="card-header">
-                <i class="header-icon lnr-license icon-gradient bg-plum-plate">
-                </i>
-                Contribution code: C0001
-              </div>
-              <div class="card-body">
-                <p>
-                  StudentName: TanNguyen
-                  <br />
-                  Faculty: IT
-                  <br />
-                  Submit Date: 16/03/2021
-                  <br />
-                  Approved by: Admin
-                </p>
-              </div>
-              <div class="d-block text-right card-footer">
-                <a href="javascript:void(0);" class="btn-wide btn btn-success"
-                  >Detail</a
-                >
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="main-card mb-3 card">
-              <div class="card-header">
-                <i class="header-icon lnr-license icon-gradient bg-plum-plate">
-                </i>
-                Contribution code: C0001
-              </div>
-              <div class="card-body">
-                <p>
-                  StudentName: TanNguyen
-                  <br />
-                  Faculty: IT
-                  <br />
-                  Submit Date: 16/03/2021
-                  <br />
-                  Approved by: Admin
-                </p>
-              </div>
-              <div class="d-block text-right card-footer">
-                <a href="javascript:void(0);" class="btn-wide btn btn-success"
-                  >Detail</a
-                >
-              </div>
-            </div>
-          </div> -->
         </div>
       </div>
-      <div class="row card-footer">
+      <div class="row">
         <div class="col-md-6">
           <strong> Items per page: </strong>
           <select v-on:change="getLimit($event)">
@@ -258,6 +208,10 @@ export default {
 };
 </script>
 <style scoped>
+.contribution-detail {
+  background-color: #3f6ad8;
+  color: white;
+}
 .card-body {
   padding-left: 2rem !important;
 }

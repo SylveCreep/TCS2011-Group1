@@ -316,6 +316,7 @@ export default {
   cursor: pointer;
 }
 .click :hover {
-  color: #d10024;
+  color: #3f6ad8;
 }
 </style>
+
