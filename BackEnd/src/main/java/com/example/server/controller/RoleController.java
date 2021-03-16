@@ -20,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -75,13 +76,13 @@ public class RoleController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(value = "/{id}", consumes = {"test/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> updateRole(@RequestBody RoleDto roleDto) {
+    @PatchMapping(consumes = {"test/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> updateRole(@RequestBody CreateRole roleDto) {
         try{
             if (roleDto.getId() == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Must has role id", HttpStatus.BAD_REQUEST);
             }
-            RoleDto role = roleService.updateRole(roleDto);
+            Boolean role = roleService.updateRole(roleDto);
             if(role == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update role fail", HttpStatus.BAD_REQUEST);
             }

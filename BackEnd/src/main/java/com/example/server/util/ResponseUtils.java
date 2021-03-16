@@ -379,7 +379,7 @@ public class ResponseUtils {
         }
     }
 
-    public String validatePhoneInput(Integer phoneNumber){
+    public String validatePhoneInput(Long phoneNumber){
         if(phoneNumber == null){
             return "Invalid";
         }

@@ -60,7 +60,7 @@ public class User extends BaseEntity {
     private Date dateOfBirth;
 
     @Column(name="phone_number")
-    private Integer phoneNumber;
+    private Long phoneNumber;
 
     @Column(name="background_avatar")
     private String avatar;
@@ -164,11 +164,11 @@ public class User extends BaseEntity {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Integer getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Integer phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -194,7 +194,7 @@ public class User extends BaseEntity {
 
     public User(String email, String code, String password, Role role, Faculty faculty, String fullName, String address,
             List<Contribution> contributions, List<Comment> comments, String resetPasswordKey, Date keyCreatedAt,
-            Date dateOfBirth, Integer phoneNumber, String avatar, Integer gender) {
+            Date dateOfBirth, Long phoneNumber, String avatar, Integer gender) {
         this.email = email;
         this.code = code;
         this.password = password;
@@ -214,7 +214,7 @@ public class User extends BaseEntity {
 
     public User(Long id, int is_deleted, Date created_at, Date updated_at, String email, String code, String password,
             Role role, Faculty faculty, String fullName, String address, List<Contribution> contributions,
-            List<Comment> comments, String resetPasswordKey, Date keyCreatedAt, Date dateOfBirth, Integer phoneNumber,
+            List<Comment> comments, String resetPasswordKey, Date keyCreatedAt, Date dateOfBirth, Long phoneNumber,
             String avatar, Integer gender) {
         super(id, is_deleted, created_at, updated_at);
         this.email = email;

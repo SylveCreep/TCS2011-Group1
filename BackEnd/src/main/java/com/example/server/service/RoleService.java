@@ -23,7 +23,7 @@ public interface RoleService {
 
     Role saveRole(CreateRole role);
 
-    RoleDto updateRole(RoleDto user);
+    Boolean updateRole(CreateRole user);
 
     Boolean deleteRole(Long id);
 
