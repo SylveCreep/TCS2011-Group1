@@ -21,6 +21,7 @@ import FacultyUpdate from "@/pages/faculty/FacultyUpdate";
 //import Contribution Components
 import ContributionList from "@/pages/contribution/ContributionList";
 import ContributionSubmit from "@/pages/contribution/ContributionSubmit";
+import UserProfile from "@/pages/UserProfile";
 
 Vue.use(Router);
 export const router = new Router({
