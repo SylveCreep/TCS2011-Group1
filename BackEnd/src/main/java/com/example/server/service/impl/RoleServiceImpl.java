@@ -104,17 +104,15 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleDto updateRole(RoleDto roleDto) {
+    public Boolean updateRole(CreateRole roleDto) {
         try {
             Role role = roleDao.getOne(roleDto.getId());
             role.setName(roleDto.getName());
             role.setCode(roleDto.getCode());
             roleDao.save(role);
-
-            RoleDto saveRole = modelMapper.map(role, RoleDto.class);
-            return saveRole;
+            return true;
         } catch (Exception e) {
-            return null;
+            return false;
         }
     }
 
