@@ -29,35 +29,22 @@
                 {{ list_errors.facultyName }}
               </p>
             </div>
-          </div>
-          <label class="col-sm-2 control-label">Faculty code: </label>
-          <div class="col-sm-12">
-            <input
-              id="facultycode"
-              type="text"
-              class="form-control"
-              v-model="faculty.code"
-              readonly
-            />
-          </div>
-          <label class="col-sm-2 control-label">Link source: </label>
-          <div class="col-sm-12">
-            <input
-              id="facultycode"
-              type="text"
-              class="form-control"
-              v-model="faculty.code"
-              readonly
-            />
+            <label class="col-sm-2 control-label">Faculty code: </label>
+            <div class="col-sm-12">
+              <input
+                id="facultycode"
+                type="text"
+                class="form-control"
+                v-model="faculty.code"
+                readonly
+              />
+            </div>
           </div>
           <div class="col-sm-offset-2 col-sm-12 text-center">
             <router-link to="/faculties" tag="button" class="btn btn-primary">
               Back
             </router-link>
-            <button
-              type="submit"
-              class="btn btn-success"
-            >
+            <button type="submit" class="btn btn-success">
               Update
             </button>
           </div>
@@ -103,9 +90,7 @@ export default {
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
         axios
-          .patch(
-            UrlConstants.Faculty, this.faculty
-          )
+          .patch(UrlConstants.Faculty, this.faculty)
           .then((response) => {
             console.log(response);
             alert("Update Successfully");
@@ -126,6 +111,6 @@ export default {
   margin: 0 0 30px;
 }
 .app-page-title {
-  margin:-30px 0 0 -30px;
-};
+  margin: -30px 0 0 -30px;
+}
 </style>
