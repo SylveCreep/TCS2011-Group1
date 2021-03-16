@@ -1,43 +1,27 @@
 package com.example.server.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 
 import com.example.server.constant.Constant;
-import com.example.server.dto.UserDto;
 import com.example.server.entity.User;
 import com.example.server.model.request.*;
 import com.example.server.model.response.UserLastPageResponse;
-import com.example.server.model.response.UserListResponse;
 import com.example.server.model.response.UserResponse;
 import com.example.server.service.BanService;
+import com.example.server.service.FileService;
 import com.example.server.service.UserService;
 import com.example.server.util.ResponseUtils;
 
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.example.server.constant.Constant.*;
 
@@ -56,18 +40,25 @@ public class UserController {
     @Autowired
     private BanService banService;
 
+    @Autowired
+    private FileService fileService;
+
     @Value("${jwt.token.prefix}")
     public String TOKEN_PREFIX;
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody CreateAccount user){
+    public ResponseEntity<?> createUser(@RequestBody CreateAccount user,@RequestParam("file") MultipartFile file, HttpServletRequest httpServletRequest){
         try {
             HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(user, 0);
             Object validateRes = validateResult.get("result");
             if(Integer.parseInt(validateRes.toString()) == -1){
                 return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE,"Create user failed",validateResult, HttpStatus.BAD_REQUEST);
             }
+            if(file == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Create user failed, missing file", HttpStatus.BAD_REQUEST);
+            }
+            user.setAvatar(fileService.storeAvatar(file));
             User createdUser = userService.saveRegister(user);
             if(createdUser == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Create user failed", HttpStatus.BAD_REQUEST);
