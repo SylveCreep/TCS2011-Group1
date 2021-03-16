@@ -8,6 +8,8 @@ import javax.validation.constraints.Size;
 
 import com.example.server.util.NameValidation;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class CreateAccount {
 
     private Long id; 
@@ -19,6 +21,7 @@ public class CreateAccount {
 
     private String address;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
 
     private Long roleId;
