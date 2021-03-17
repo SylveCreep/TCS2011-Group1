@@ -146,6 +146,28 @@
               </p>
             </div>
           </div>
+          <div class="position-relative form-group">
+            <label for="exampleFile" class="col-sm-2 control-label">Avatar</label>
+            <div class="col-3">
+              <input
+                name="file"
+                id="exampleFile"
+                type="file"
+                ref="file"
+                class="form-control-file"
+                v-on:change="onFileChange"
+              />
+            </div>
+            <p class="form-text-file"
+              >This is some placeholder block-level help text for the above
+              input. It's a bit lighter and easily wraps to a new line.</p
+            >
+            <div class="col-3">
+              <div id="preview">
+                <img v-if="previewImageUrl" :src="previewImageUrl" />
+              </div>
+            </div>
+          </div>
           <div class="col-sm-offset-2 col-sm-12 text-center">
             <router-link to="/users" tag="button" class="btn btn-primary">
               Back
@@ -179,6 +201,7 @@ export default {
         phoneNumber: "Phone number",
         dateOfBirth: "Date of birth",
       },
+      
     };
   },
   created() {
