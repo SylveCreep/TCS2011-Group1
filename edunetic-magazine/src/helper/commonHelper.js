@@ -76,7 +76,7 @@ export const commonHelper = {
     errorAlert(type, resource) {
       this.$swal({
         icon: 'error',
-        title: 'Oops...Cannot ' + type + ' this ' + resource,
+        title: 'Cannot ' + type + ' this ' + resource,
       })
     },
     async confirmAlert(type, resource) {

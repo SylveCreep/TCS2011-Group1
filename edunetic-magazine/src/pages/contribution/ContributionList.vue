@@ -1,6 +1,6 @@
 <template>
   <div class="app-main__inner" style="background-color: #f0f3f5">
-    <div class="app-page-title" >
+    <div class="app-page-title">
       <div class="page-title-wrapper">
         <div class="page-title-heading">
           <div class="page-title-icon">
@@ -136,7 +136,9 @@
                 Approved by: {{ user.roleName }}
               </div>
               <div class="d-block text-right card-footer">
-                <a href="javascript:void(0);" class="btn-wide btn contribution-detail"
+                <a
+                  class="btn-wide btn contribution-detail"
+                  v-on:click="showDetail(user.id)"
                   >Detail</a
                 >
               </div>
@@ -192,6 +194,16 @@ export default {
     this.getFacultyList();
   },
   methods: {
+    showDetail(user_id) {
+      axios.get(UrlConstants.User + "/" + user_id).then((response) => {
+        if (response.data.code === ResultConstants.Failure) {
+          alert("error");
+          this.getContributionList();
+        } else {
+          router.push("/contributions/" + user_id + "/detail");
+        }
+      });
+    },
     getLimit(event) {
       this.getcommonLimit(event.target.value);
       this.getUserList();
