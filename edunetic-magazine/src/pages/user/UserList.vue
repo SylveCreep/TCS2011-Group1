@@ -243,23 +243,33 @@ export default {
     this.getFacultyList();
   },
   methods: {
-    showUser(user_id) {
-      axios.get(UrlConstants.User + "/" + user_id).then((response) => {
+    async checkUserExisted(user_id) {
+      await axios.get(UrlConstants.User + "/" + user_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
-          this.errorAlert(); //This function are called from commonHelper.js file
+          this.canModify = false;
+        } else {
+          this.canModify = true;
+        }
+      });
+    },
+    async showUser(user_id) {
+      await this.checkUserExisted(user_id)
+        if (!this.canModify) {
+          this.errorAlert('update', 'user');
           this.getUserList();
         } else {
           router.push("/users/" + user_id + "/update");
         }
-      });
     },
-    deleteUser(user_id) {
-      axios.get(UrlConstants.User + "/" + user_id).then((response) => {
-        if (response.data.code === ResultConstants.Failure) {
-          this.errorAlert();
+    async deleteUser(user_id) {
+      await this.checkUserExisted(user_id)
+        if (!this.canModify) {
+          this.errorAlert('delete', 'user');
           this.getUserList();
-        } else {
-          if (confirm("are you sure to delete this user ?")) {
+        }
+        else {
+          await this.confirmAlert('delete', 'user');
+          if (this.confirmResult) {
             axios
               .delete(UrlConstants.User + "/" + user_id)
               .then((res) => {
@@ -271,7 +281,6 @@ export default {
               });
           }
         }
-      });
     },
     setStudentList() {
       if (this.$cookies.isKey("facultyStudent")) {

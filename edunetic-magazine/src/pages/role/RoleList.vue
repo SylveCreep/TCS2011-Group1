@@ -194,15 +194,14 @@ export default {
         }
       }
     },
-    showRole(role_id) {
-      axios.get(UrlConstants.Role + "/" + role_id).then((response) => {
-        if (response.data.code === ResultConstants.Failure) {
-          this.errorAlert('update', 'role'); //this function is called from commonHelper.js file
+    async showRole(role_id) {
+      await this.checkRoleExisted(role_id);
+      if(!this.canModify) {
+         this.errorAlert('update', 'role'); //this function is called from commonHelper.js file
           this.getRoleList();
-        } else {
-          router.push("/roles/" + role_id + "/update");
-        }
-      });
+      } else {
+        router.push("/roles/" + role_id + "/update");
+      }
     },
     getFilter() {
       this.filter.page = 1;

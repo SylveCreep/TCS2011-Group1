@@ -219,7 +219,7 @@
             </div>
           </div>
           <div class="position-relative form-group">
-            <label for="exampleFile" class="col-sm-2 control-label">File</label>
+            <label for="exampleFile" class="col-sm-2 control-label">Avatar</label>
             <div class="col-3">
               <input
                 name="file"
@@ -298,7 +298,7 @@ export default {
     this.getFacultyList();
   },
   methods: {
-    createUser() {
+    async createUser() {
       let formData = new FormData();
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
@@ -308,9 +308,9 @@ export default {
             formData.append(key, value);
           }
         }
-        console.log(formData.get("file"));
-        //delete this.user["confirm_password"];
-        axios
+        await this.confirmAlert('create', 'user');
+        if (this.confirmResult) {
+             axios
           .post(UrlConstants.User, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -325,6 +325,7 @@ export default {
             this.showError(this.requireAttribute, this.list_errors);
           });
       }
+        }
     },
     selectFaculty() {
       if (
