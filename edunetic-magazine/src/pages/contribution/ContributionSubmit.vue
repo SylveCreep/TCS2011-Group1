@@ -30,6 +30,8 @@
                 {{ list_errors.fullName }}
               </p>
             </div>
+          </div>
+          <div class="position-relative form-group">
             <label class="col-sm-2 control-label">Faculty: </label>
             <div class="col-sm-12">
               <input
@@ -40,6 +42,8 @@
                 readonly
               />
             </div>
+          </div>
+          <div class="position-relative form-group">
             <label for="exampleFile" class="col-sm-2 control-label">File</label>
             <div class="row">
               <div class="input-file col-sm-3">
@@ -121,12 +125,6 @@ export default {
 }
 .control-label {
   margin: 0px;
-}
-.form-control {
-  margin: 10px 0px;
-}
-.form-control-file {
-  margin: 0px 0px;
 }
 .input-file {
   margin-left: 30px;

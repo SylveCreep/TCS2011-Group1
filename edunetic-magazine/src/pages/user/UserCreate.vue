@@ -219,7 +219,7 @@
             </div>
           </div>
           <div class="position-relative form-group">
-            <label for="exampleFile" class="">File</label>
+            <label for="exampleFile" class="col-sm-2 control-label">File</label>
             <div class="col-3">
               <input
                 name="file"
@@ -230,9 +230,9 @@
                 v-on:change="onFileChange"
               />
             </div>
-            <small class="form-text text-muted"
+            <p class="form-text-file"
               >This is some placeholder block-level help text for the above
-              input. It's a bit lighter and easily wraps to a new line.</small
+              input. It's a bit lighter and easily wraps to a new line.</p
             >
             <div class="col-3">
               <div id="preview">
@@ -331,8 +331,8 @@ export default {
     },
     selectFaculty() {
       if (
-        this.user.roleId === DefaultConstants.Student ||
-        this.user.roleId === DefaultConstants.MarketingCoordinator
+        this.user.roleId === DefaultConstants.Role.Student ||
+        this.user.roleId === DefaultConstants.Role.MarketingCoordinator
       ) {
         if (this.user.facultyId === undefined) {
           this.user.facultyId = 1;
@@ -359,6 +359,18 @@ export default {
 }
 .app-page-title {
   margin: -30px 0 0 -30px;
+}
+.control-label {
+  margin: 0px;
+}
+.input-file {
+  margin-left: 30px;
+  padding: 0;
+  border-radius: 5px;
+  border: 1px solid;
+}
+.form-text-file {
+  margin: 10px 0 0 15px;
 }
 #preview {
   display: flex;

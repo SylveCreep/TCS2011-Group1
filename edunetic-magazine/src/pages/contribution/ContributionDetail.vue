@@ -17,6 +17,19 @@
         <h5 class="card-title">Contribution Form</h5>
         <form v-on:submit.prevent="submitContribution()">
           <div class="position-relative form-group">
+            <label class="col-sm-2 control-label">CODE: </label>
+            <div class="col-sm-12">
+              <input
+                id="code"
+                type="text"
+                class="form-control"
+                v-model="user.code"
+                readonly
+              />
+              <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.fullName }}
+              </p>
+            </div>
             <label class="col-sm-2 control-label">Student Name: </label>
             <div class="col-sm-12">
               <input
@@ -40,6 +53,16 @@
                 readonly
               />
             </div>
+            <label class="col-sm-2 control-label">Submit date: </label>
+            <div class="col-sm-2">
+              <input
+                id="submitdate"
+                type="date"
+                class="form-control"
+                v-model="user.date_of_birth"
+                readonly
+              />
+            </div>
             <label for="exampleFile" class="col-sm-2 control-label">File</label>
             <div class="row">
               <div class="input-file col-sm-3">
@@ -55,6 +78,26 @@
                   This is the area for student import file contribution to upload
                 </p>
               </div>
+            </div>
+            <label class="col-sm-2 control-label">Approved by: </label>
+            <div class="col-sm-12">
+              <input
+                id="approve"
+                type="test"
+                class="form-control"
+                v-model="user.roleName"
+                readonly
+              />
+            </div>
+            <label class="col-sm-2 control-label">Denied by: </label>
+            <div class="col-sm-12">
+              <input
+                id="deny"
+                type="test"
+                class="form-control"
+                v-model="user.roleName"
+                readonly
+              />
             </div>
           </div>
           <div class="col-sm-offset-2 col-sm-12 text-center">
@@ -95,9 +138,10 @@ export default {
   methods: {
     getStudent() {
       axios
-        .get(UrlConstants.User + "/" + this.$cookies.get("id"))
+        .get(UrlConstants.User + "/" + this.$route.params.id)
         .then((r) => {
           this.user = r.data.data;
+          console.log(this.user)
         })
         .catch((error) => {
           this.errors = error.response;
