@@ -2,7 +2,7 @@
   <div class="app-main__inner">
     <div
       class="app-page-title"
-      style="margin: 0; background-color: #f0f3f5; padding: 5px;"
+      style="margin: 0; background-color: #f0f3f5; padding: 5px"
     >
       <div class="page-title-wrapper">
         <div class="page-title-heading">
@@ -35,11 +35,11 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-12" style="padding: 0;">
+      <div class="col-lg-12" style="padding: 0">
         <div class="main-card mb-3 card">
           <div class="card-body">
             <!--FILTER SECTION-->
-            <div class="card-title" style="padding:20px 20px 0;">
+            <div class="card-title" style="padding: 20px 20px 0">
               <div class="row">
                 <h4><b>Filter</b></h4>
               </div>
@@ -237,7 +237,7 @@ export default {
   },
   created() {
     this.setStudentList();
-    //These function are called from commonHelper.js file 
+    //These functions are called from commonHelper.js file
     this.getUserList();
     this.getRoleList();
     this.getFacultyList();
@@ -246,7 +246,7 @@ export default {
     showUser(user_id) {
       axios.get(UrlConstants.User + "/" + user_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
-          alert("error");
+          this.errorAlert(); //This function are called from commonHelper.js file
           this.getUserList();
         } else {
           router.push("/users/" + user_id + "/update");
@@ -256,22 +256,15 @@ export default {
     deleteUser(user_id) {
       axios.get(UrlConstants.User + "/" + user_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
-          alert("error");
+          this.errorAlert();
           this.getUserList();
         } else {
           if (confirm("are you sure to delete this user ?")) {
             axios
               .delete(UrlConstants.User + "/" + user_id)
               .then((res) => {
-                if (res.data.code === ResultConstants.Success) {
-                  alert("success");
-                  console.log(res.data);
+                  this.successAlert();
                   this.getUserList();
-                }
-                if (res.data.code === ResultConstants.Failure) {
-                  alert("error");
-                  this.getUserList();
-                }
               })
               .catch((error) => {
                 this.errors = error.data;
@@ -285,8 +278,8 @@ export default {
         this.filter.facultyId = this.$cookies.get("facultyStudent");
       }
     },
-    getFilter(){
-      this.filter.page =1;
+    getFilter() {
+      this.filter.page = 1;
       this.getUserList();
     },
     getSort($column) {

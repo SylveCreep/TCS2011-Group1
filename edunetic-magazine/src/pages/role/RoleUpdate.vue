@@ -77,7 +77,8 @@ export default {
           this.role = r.data.data;
         })
         .catch((error) => {
-          this.errors = error.response;
+          this.errorAlert(); //this function is called from commonHelper.js file
+          this.$route.push("/roles")
         });
     },
     updateRole() {
@@ -87,13 +88,11 @@ export default {
         axios
           .patch(UrlConstants.Role, this.role)
           .then((r) => {
-            console.log(r);
-            alert("Update Successfully");
+            this.successAlert(); //this function is called from commonHelper.js file
             this.$router.push("/roles");
           })
           .catch((error) => {
             this.errors = error.response.data.errors;
-            console.log(this.errors);
           });
       }
     },

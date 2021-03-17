@@ -183,7 +183,7 @@ export default {
   },
   created() {
     this.getUser();
-    this.getFacultyList();
+    this.getFacultyList(); //This function are called from commonHelper.js file
   },
   methods: {
     getUser() {
@@ -195,27 +195,30 @@ export default {
         .get(UrlConstants.User + "/" + user_id )
         .then((r) => {
           this.user = r.data.data;
-          console.log(this.user)
         })
         .catch((error) => {
           this.list_errors = error.response;
         });
     },
     updateUser() {
-      let updateUser = {}
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
-      updateUser = this.user;
-      delete updateUser["roleName"];
-      delete updateUser["facultyName"];
-      delete updateUser["code"];
-      console.log(updateUser)
       if (this.validate) {
+        let updateUser = {
+          id: this.user.id,
+          fullName: this.user.fullName,
+          roleId: this.user.roleId,
+          facultyId: this.user.facultyId,
+          email: this.user.email,
+          address: this.user.address,
+          gender: this.user.gender,
+          phoneNumber: this.user.phoneNumber,
+          dateOfBirth: this.user.dateOfBirth
+        }
         axios
           .patch(UrlConstants.User, updateUser)
           .then((response) => {
-
-            alert("success");
+            this.successAlert(); //This function are called from commonHelper.js file
             this.$router.push("/users");
           })
           .catch((error) => {

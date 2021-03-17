@@ -260,7 +260,7 @@ import { commonHelper } from "@/helper/commonHelper";
 import { validateHelper } from "@/helper/validateHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { DefaultConstants } from "@/constant/DefaultConstant";
-
+import Swal from 'sweetalert2'
 export default {
   name: "UserCreate",
   mixins: [validateHelper, commonHelper],
@@ -300,27 +300,24 @@ export default {
   methods: {
     createUser() {
       let formData = new FormData();
-      
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
         for (const [key, value] of Object.entries(this.user)) {
           if (key !== "confirm_password") {
-              formData.append(key, value)
+            formData.append(key, value);
           }
-        
-      }
-      console.log(formData.get('file'))
+        }
+        console.log(formData.get("file"));
         //delete this.user["confirm_password"];
         axios
-          .post(UrlConstants.User, formData, 
-           {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                    
-                }})
+          .post(UrlConstants.User, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
           .then((r) => {
-            alert("Create Successfully");
+           this.successAlert(); //This function are called from commonHelper.js file
             this.$router.push("/users");
           })
           .catch((error) => {

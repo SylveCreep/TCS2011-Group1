@@ -9,13 +9,15 @@ export const commonHelper = {
       list_faculties: [],
       list_roles: [],
       list_errors: [],
-      list_contributions:[],
+      list_contributions: [],
       filter: {
         column: DefaultConstants.Column, //default column = 'id'
         sort: DefaultConstants.Sort, //default sort = 'asc'
         limit: DefaultConstants.Limit, //default limit = 15
         page: DefaultConstants.Page, //default page = 15
       },
+      confirmResult: false,
+      canModify: false,
     }
   },
   methods: {
@@ -63,6 +65,53 @@ export const commonHelper = {
           this.showError(this.errors);
         });
     },
+    successAlert() {
+      this.$swal({
+        icon: 'success',
+        title: 'Your work has been saved',
+        showConfirmButton: false,
+        timer: 1500
+      })
+    },
+    errorAlert(type, resource) {
+      this.$swal({
+        icon: 'error',
+        title: 'Oops...Cannot ' + type + ' this ' + resource,
+      })
+    },
+    async confirmAlert(type, resource) {
+      await this.$swal({
+        title: 'Are you sure to ' + type + ' this ' + resource + ' ?',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: 'Yes',
+        denyButtonText: 'No',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.confirmResult = true;
+        } else if (result.isDenied) {
+          this.confirmResult = false;
+        }
+      })
+      return this.confirmResult;
+    },
+    async checkUserExisted(resource, id) {
+      if (resource === 'faculty') {
+        this.filter.facultyId = id;
+      } else if (resource === 'role') {
+        this.filter.roleId = id;
+      }
+      await axios
+        .post(UrlConstants.User + "/filter", this.filter)
+        .then((response) => {
+          this.list_users = response.data.data;
+          if (Object.keys(this.list_users).length === 0) {
+            this.canModify= true;
+          } else {
+            this.canModify= false;
+          }
+        });
+    },
     getUserList() {
       axios
         .post(UrlConstants.User + "/filter", this.filter)
@@ -70,7 +119,6 @@ export const commonHelper = {
           this.list_users = response.data.data;
           this.list_users.currentPage = this.filter.page;
           this.list_users.lastPage = response.data.lastPage;
-          console.log(this.list_users)
         })
         .catch((error) => {
           this.errors = error.response.data;
@@ -88,16 +136,6 @@ export const commonHelper = {
           this.errors = error.response.data;
         });
     },
-    // getContributionList() {
-    //   axios
-    //     .post(UrlConstants.Contribution , this.filter)
-    //     .then((response) => {
-    //       this.list_contributions = response.data;
-    //       console.log(this.list_contributions)
-    //     })
-    //     .catch((error) => {
-    //       this.errors = error.response.data;
-    //     });
-    // },
+    
   },
 }

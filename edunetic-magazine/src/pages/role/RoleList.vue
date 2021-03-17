@@ -2,7 +2,7 @@
   <div class="app-main__inner">
     <div
       class="app-page-title"
-      style="margin: 0; background-color: #f0f3f5; padding: 5px;"
+      style="margin: 0; background-color: #f0f3f5; padding: 5px"
     >
       <div class="page-title-wrapper">
         <div class="page-title-heading">
@@ -35,11 +35,11 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-12" style="padding: 0;">
+      <div class="col-lg-12" style="padding: 0">
         <div class="main-card mb-3 card">
           <div class="card-body">
             <!--FILTER SECTION-->
-            <div class="card-title" style="padding:20px 20px 0;">
+            <div class="card-title" style="padding: 20px 20px 0">
               <div class="row">
                 <h4><b>Filter</b></h4>
               </div>
@@ -90,7 +90,7 @@
                     <th class="sort" v-on:click="getSort('name')">
                       Name <i class="fas fa-sort"></i>
                     </th>
-                    <th>Action </th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -109,7 +109,7 @@
                       <p
                         class="click"
                         style="display: inline"
-                        v-on:click="checkRole(role.id)"
+                        v-on:click="deleteRole(role.id)"
                       >
                         <b>Delete</b>
                       </p>
@@ -158,49 +158,51 @@ export default {
     this.getRoleList();
   },
   methods: {
-    deleteRole(role_id) {
-      axios.get(UrlConstants.Role + "/" + role_id).then((response) => {
+    async checkRoleExisted(role_id) {
+      await axios.get(UrlConstants.Role + "/" + role_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
-          alert("error");
-          this.getRoleList();
+          this.canModify = false;
         } else {
-          if (confirm("Are you sure to delete this role ?")) {
-            axios
-              .delete(UrlConstants.Role + "/" + role_id)
-              .then((res) => {
-                alert("sucess");
-                this.filter.roleId = ""; 
-                this.getRoleList();
-              })
-              .catch((error) => {
-                this.errors = error.data;
-              });
-          }
+          this.canModify = true;
         }
       });
+    },
+    async preCheckRole(role_id) {
+      await this.checkRoleExisted(role_id);
+      if (this.canModify) {
+        await this.checkUserExisted('role',role_id);
+      }
+      this.filter.roleId=""
+    },
+    async deleteRole(role_id) {
+     await this.preCheckRole(role_id);
+      if (!this.canModify) {
+        this.errorAlert("delete", "role");
+        this.getRoleList();
+      } else {
+        await this.confirmAlert("delete", "role");
+        if (this.confirmResult) {
+          axios
+            .delete(UrlConstants.Role + "/" + role_id)
+            .then((res) => {
+              this.successAlert(); //this function is called from commonHelper.js file
+              this.getRoleList();
+            })
+            .catch((error) => {
+              this.errors = error.data;
+            });
+        }
+      }
     },
     showRole(role_id) {
       axios.get(UrlConstants.Role + "/" + role_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
-          alert("error");
+          this.errorAlert('update', 'role'); //this function is called from commonHelper.js file
           this.getRoleList();
         } else {
           router.push("/roles/" + role_id + "/update");
         }
       });
-    },
-    checkRole(role_id) {
-      this.filter.roleId = role_id;
-      axios
-        .post(UrlConstants.User + "/filter", this.filter)
-        .then((response) => {
-          this.list_users = response.data.data;
-          if (Object.keys(this.list_users).length === 0) {
-            this.deleteRole(role_id);
-          } else {
-            alert("Çannot Delete This role");
-          }
-        });
     },
     getFilter() {
       this.filter.page = 1;
