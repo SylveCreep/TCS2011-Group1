@@ -85,21 +85,22 @@ export default {
           this.errors = error.response;
         });
     },
-    updateFaculty() {
+    async updateFaculty() {
       this.requiredValidate(this.requireAttribute, this.faculty); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
-        axios
-          .patch(UrlConstants.Faculty, this.faculty)
-          .then((response) => {
-            console.log(response);
-            alert("Update Successfully");
-            this.$router.push("/faculties");
-          })
-          .catch((error) => {
-            this.errors = error.response.data.errors;
-            this.showError(this.errors);
-          });
+        await this.confirmAlert("update", "faculty");
+        if (this.confirmResult) {
+          axios
+            .patch(UrlConstants.Faculty, this.faculty)
+            .then((r) => {
+              this.successAlert();
+              this.$router.push("/faculties");
+            })
+            .catch((error) => {
+              this.errors = error.response;
+            });
+        }
       }
     },
   },

@@ -141,7 +141,6 @@ export default {
         .get(UrlConstants.User + "/" + this.$route.params.id)
         .then((r) => {
           this.user = r.data.data;
-          console.log(this.user)
         })
         .catch((error) => {
           this.errors = error.response;
