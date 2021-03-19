@@ -104,7 +104,7 @@
                     <th class="sort" v-on:click="getSort('manager_name')">
                       Co-cordinator's name <i class="fas fa-sort"></i>
                     </th>
-                    <th>Action </th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -127,7 +127,7 @@
                       <p
                         class="click"
                         style="display: inline"
-                        v-on:click="checkStudent(faculty.facultyId)"
+                        v-on:click="deleteFaculty(faculty.facultyId)"
                       >
                         <b>Delete</b>
                       </p>
@@ -184,37 +184,52 @@ export default {
     this.getFacultyList();
   },
   methods: {
-    deleteFaculty(facultyId) {
-      axios.get(UrlConstants.Faculty + "/" + facultyId).then((response) => {
+    async checkFacultyExisted(facultyId) {
+      await axios.get(UrlConstants.Faculty + "/" + facultyId).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
-          alert("error");
-          this.getFacultyList();
+          this.canModify = false;
         } else {
-          if (confirm("Are you sure to delete this faculty ?")) {
-            axios
-              .delete(UrlConstants.Faculty + "/" + facultyId)
-              .then((res) => {
-                  alert("sucess");
-                  this.filter.facultyId = "";
-                  this.getFacultyList();
-              })
-              .catch((error) => {
-                this.errors = error.data;
-              });
-          }
+          this.canModify = true;
         }
       });
     },
-    showFaculty(facultyId) {
-      axios.get(UrlConstants.Faculty + "/" + facultyId).then((response) => {
-        if (response.data.code === ResultConstants.Failure) {
-          alert("error");
-          this.getFacultyList();
-        } else {
-          router.push("/faculties/" + facultyId + "/update");
-        }
-      });
+    async preCheckFaculty(facultyId) {
+      await this.checkFacultyExisted(facultyId);
+      if (this.canModify) {
+        await this.checkUserExisted("faculty", facultyId);
+      }
+      this.filter.facultyId = "";
     },
+    async deleteFaculty(facultyId) {
+      await this.preCheckFaculty(facultyId);
+      if (!this.canModify) {
+        this.errorAlert("delete", "faculty");
+        this.getFacultyList();
+      } else {
+        await this.confirmAlert("delete", "faculty");
+        if (this.confirmResult) {
+          axios
+            .delete(UrlConstants.Faculty + "/" + facultyId)
+            .then((res) => {
+              this.successAlert(); //this function is called from commonHelper.js file
+              this.getFacultyList();
+            })
+            .catch((error) => {
+              this.errors = error.data;
+            });
+        }
+      }
+    },
+    async showFaculty(facultyId) {
+      await this.checkFacultyExisted(facultyId);
+      if (!this.canModify) {
+        this.errorAlert("update", "faculty"); //this function is called from commonHelper.js file
+        this.getFacultyList();
+      } else {
+        router.push("/faculties/" + facultyId + "/update");
+      }
+    },
+
     showStundent(facultyId) {
       axios.get(UrlConstants.Faculty + "/" + facultyId).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
@@ -225,19 +240,6 @@ export default {
           this.$router.push("/users");
         }
       });
-    },
-    checkStudent(facultyId) {
-      this.filter.facultyId = facultyId;
-      axios
-        .post(UrlConstants.User + "/filter", this.filter)
-        .then((response) => {
-          this.list_users = response.data.data;
-          if (Object.keys(this.list_users).length === 0) {
-            this.deleteFaculty(facultyId);
-          } else {
-            alert("Çannot Delete This user");
-          }
-        });
     },
     getFilter() {
       this.filter.page = 1;
@@ -270,6 +272,6 @@ export default {
   cursor: pointer;
 }
 .click :hover {
-  color: #d10024;
+  color: #3f6ad8;
 }
 </style>

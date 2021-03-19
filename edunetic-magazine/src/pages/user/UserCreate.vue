@@ -218,6 +218,28 @@
               </p>
             </div>
           </div>
+          <div class="position-relative form-group">
+            <label for="exampleFile" class="col-sm-2 control-label">Avatar</label>
+            <div class="col-3">
+              <input
+                name="file"
+                id="exampleFile"
+                type="file"
+                ref="file"
+                class="form-control-file"
+                v-on:change="onFileChange"
+              />
+            </div>
+            <p class="form-text-file"
+              >This is some placeholder block-level help text for the above
+              input. It's a bit lighter and easily wraps to a new line.</p
+            >
+            <div class="col-3">
+              <div id="preview">
+                <img v-if="previewImageUrl" :src="previewImageUrl" />
+              </div>
+            </div>
+          </div>
           <div class="position-relative form-group text-center">
             <div class="col-sm-offset-2 col-sm-12">
               <router-link to="/users" tag="button" class="btn btn-primary">
@@ -238,7 +260,7 @@ import { commonHelper } from "@/helper/commonHelper";
 import { validateHelper } from "@/helper/validateHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { DefaultConstants } from "@/constant/DefaultConstant";
-
+import Swal from 'sweetalert2'
 export default {
   name: "UserCreate",
   mixins: [validateHelper, commonHelper],
@@ -258,6 +280,7 @@ export default {
         password: "password",
         confirm_password: "Confirm password",
       },
+      previewImageUrl: null,
     };
   },
   computed: {
@@ -273,18 +296,28 @@ export default {
   created() {
     this.getRoleList();
     this.getFacultyList();
-    console.log(this.user);
   },
   methods: {
-    createUser() {
+    async createUser() {
+      let formData = new FormData();
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
-        delete this.user["confirm_password"];
-        axios
-          .post(UrlConstants.User, this.user)
+        for (const [key, value] of Object.entries(this.user)) {
+          if (key !== "confirm_password") {
+            formData.append(key, value);
+          }
+        }
+        await this.confirmAlert('create', 'user');
+        if (this.confirmResult) {
+             axios
+          .post(UrlConstants.User, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
           .then((r) => {
-            alert("Create Successfully");
+           this.successAlert(); //This function are called from commonHelper.js file
             this.$router.push("/users");
           })
           .catch((error) => {
@@ -292,20 +325,26 @@ export default {
             this.showError(this.requireAttribute, this.list_errors);
           });
       }
+        }
     },
     selectFaculty() {
       if (
-        this.user.roleId === DefaultConstants.Student ||
-        this.user.roleId === DefaultConstants.MarketingCoordinator
+        this.user.roleId === DefaultConstants.Role.Student ||
+        this.user.roleId === DefaultConstants.Role.MarketingCoordinator
       ) {
-          if (this.user.facultyId === undefined) {
-            this.user.facultyId = 1;
-          }
+        if (this.user.facultyId === undefined) {
+          this.user.facultyId = 1;
+        }
       } else {
         if (this.user.facultyId !== undefined) {
           delete this.user.facultyId;
         }
       }
+    },
+    onFileChange() {
+      const tfile = this.$refs.file.files[0];
+      this.user.file = tfile;
+      this.previewImageUrl = URL.createObjectURL(tfile);
     },
   },
 };
@@ -318,5 +357,28 @@ export default {
 }
 .app-page-title {
   margin: -30px 0 0 -30px;
+}
+.control-label {
+  margin: 0px;
+}
+.input-file {
+  margin-left: 30px;
+  padding: 0;
+  border-radius: 5px;
+  border: 1px solid;
+}
+.form-text-file {
+  margin: 10px 0 0 15px;
+}
+#preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+}
+
+#preview img {
+  max-width: 100%;
+  max-height: 300px;
 }
 </style>

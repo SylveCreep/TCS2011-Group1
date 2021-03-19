@@ -2,7 +2,7 @@
   <div class="app-main__inner">
     <div
       class="app-page-title"
-      style="margin: 0; background-color: #f0f3f5; padding: 5px;"
+      style="margin: 0; background-color: #f0f3f5; padding: 5px"
     >
       <div class="page-title-wrapper">
         <div class="page-title-heading">
@@ -35,11 +35,11 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-12" style="padding: 0;">
+      <div class="col-lg-12" style="padding: 0">
         <div class="main-card mb-3 card">
           <div class="card-body">
             <!--FILTER SECTION-->
-            <div class="card-title" style="padding:20px 20px 0;">
+            <div class="card-title" style="padding: 20px 20px 0">
               <div class="row">
                 <h4><b>Filter</b></h4>
               </div>
@@ -237,56 +237,58 @@ export default {
   },
   created() {
     this.setStudentList();
-    //These function are called from commonHelper.js file 
+    //These functions are called from commonHelper.js file
     this.getUserList();
     this.getRoleList();
     this.getFacultyList();
   },
   methods: {
-    showUser(user_id) {
-      axios.get(UrlConstants.User + "/" + user_id).then((response) => {
+    async checkUserExisted(user_id) {
+      await axios.get(UrlConstants.User + "/" + user_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
-          alert("error");
+          this.canModify = false;
+        } else {
+          this.canModify = true;
+        }
+      });
+    },
+    async showUser(user_id) {
+      await this.checkUserExisted(user_id)
+        if (!this.canModify) {
+          this.errorAlert('update', 'user');
           this.getUserList();
         } else {
           router.push("/users/" + user_id + "/update");
         }
-      });
     },
-    deleteUser(user_id) {
-      axios.get(UrlConstants.User + "/" + user_id).then((response) => {
-        if (response.data.code === ResultConstants.Failure) {
-          alert("error");
+    async deleteUser(user_id) {
+      await this.checkUserExisted(user_id)
+        if (!this.canModify) {
+          this.errorAlert('delete', 'user');
           this.getUserList();
-        } else {
-          if (confirm("are you sure to delete this user ?")) {
+        }
+        else {
+          await this.confirmAlert('delete', 'user');
+          if (this.confirmResult) {
             axios
               .delete(UrlConstants.User + "/" + user_id)
               .then((res) => {
-                if (res.data.code === ResultConstants.Success) {
-                  alert("success");
-                  console.log(res.data);
+                  this.successAlert();
                   this.getUserList();
-                }
-                if (res.data.code === ResultConstants.Failure) {
-                  alert("error");
-                  this.getUserList();
-                }
               })
               .catch((error) => {
                 this.errors = error.data;
               });
           }
         }
-      });
     },
     setStudentList() {
       if (this.$cookies.isKey("facultyStudent")) {
         this.filter.facultyId = this.$cookies.get("facultyStudent");
       }
     },
-    getFilter(){
-      this.filter.page =1;
+    getFilter() {
+      this.filter.page = 1;
       this.getUserList();
     },
     getSort($column) {
@@ -316,6 +318,7 @@ export default {
   cursor: pointer;
 }
 .click :hover {
-  color: #d10024;
+  color: #3f6ad8;
 }
 </style>
+

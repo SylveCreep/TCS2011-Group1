@@ -146,6 +146,28 @@
               </p>
             </div>
           </div>
+          <div class="position-relative form-group">
+            <label for="exampleFile" class="col-sm-2 control-label">Avatar</label>
+            <div class="col-3">
+              <input
+                name="file"
+                id="exampleFile"
+                type="file"
+                ref="file"
+                class="form-control-file"
+                v-on:change="onFileChange"
+              />
+            </div>
+            <p class="form-text-file"
+              >This is some placeholder block-level help text for the above
+              input. It's a bit lighter and easily wraps to a new line.</p
+            >
+            <div class="col-3">
+              <div id="preview">
+                <img v-if="previewImageUrl" :src="previewImageUrl" />
+              </div>
+            </div>
+          </div>
           <div class="col-sm-offset-2 col-sm-12 text-center">
             <router-link to="/users" tag="button" class="btn btn-primary">
               Back
@@ -179,11 +201,12 @@ export default {
         phoneNumber: "Phone number",
         dateOfBirth: "Date of birth",
       },
+      
     };
   },
   created() {
     this.getUser();
-    this.getFacultyList();
+    this.getFacultyList(); //This function are called from commonHelper.js file
   },
   methods: {
     getUser() {
@@ -195,27 +218,30 @@ export default {
         .get(UrlConstants.User + "/" + user_id )
         .then((r) => {
           this.user = r.data.data;
-          console.log(this.user)
         })
         .catch((error) => {
           this.list_errors = error.response;
         });
     },
     updateUser() {
-      let updateUser = {}
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
-      updateUser = this.user;
-      delete updateUser["roleName"];
-      delete updateUser["facultyName"];
-      delete updateUser["code"];
-      console.log(updateUser)
       if (this.validate) {
+        let updateUser = {
+          id: this.user.id,
+          fullName: this.user.fullName,
+          roleId: this.user.roleId,
+          facultyId: this.user.facultyId,
+          email: this.user.email,
+          address: this.user.address,
+          gender: this.user.gender,
+          phoneNumber: this.user.phoneNumber,
+          dateOfBirth: this.user.dateOfBirth
+        }
         axios
           .patch(UrlConstants.User, updateUser)
           .then((response) => {
-
-            alert("success");
+            this.successAlert(); //This function are called from commonHelper.js file
             this.$router.push("/users");
           })
           .catch((error) => {
