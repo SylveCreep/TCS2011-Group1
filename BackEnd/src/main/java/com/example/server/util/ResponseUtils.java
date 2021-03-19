@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 
+import com.example.server.constant.Constant;
 import com.example.server.dao.FacultyDao;
 import com.example.server.dao.RoleDao;
 import com.example.server.dao.UserDao;
@@ -16,6 +17,7 @@ import com.example.server.entity.Faculty;
 import com.example.server.entity.Role;
 import com.example.server.entity.User;
 import com.example.server.model.request.CreateAccount;
+import com.example.server.model.request.CreateRole;
 import com.example.server.model.request.PagingRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -424,6 +426,113 @@ public class ResponseUtils {
             return file.getContentType();
         }
         return "Valid";
+    }
+
+
+    //Validate Role
+    public HashMap<String, Object> validateRoleRequest(CreateRole createRole, int type){
+        HashMap<String, Object> form = new HashMap<>();
+        HashMap<String, Object> inputForm = new HashMap<>();
+        form.put("input", inputForm);
+
+        //String valUpdateNameRole = validateNameRoleUpdateInput(createRole.getName(), createRole.getId());
+        //String valUpdateCodeRole = validateCodeRoleUpdateInput(createRole.getCode(), createRole.getId());
+        String valNameRole  = validateNameRoleInput(createRole.getName());
+        String valCodeRole = validateCodeRoleInput(createRole.getCode());
+        String valId = validateIdInput(createRole.getId());
+
+        switch(type){
+            case 0:
+               if (!valNameRole.equals("Valid")){
+                   inputForm.put("name", valNameRole);
+                   if (!form.containsKey("result")){
+                       form.put("result", -1);
+                   }
+               }
+               if (!valCodeRole.equals("Valid")){
+                   inputForm.put("code", valCodeRole);
+                   if (!form.containsKey("result")){
+                       form.put("result", -1);
+                   }
+               }
+               if (!form.containsKey("result")){
+                   form.put("result", 0);
+               }
+               break;
+            case 1:
+               if (!valId.equals("Valid")){
+                   inputForm.put("id", valId);
+                   if (!form.containsKey("result")){
+                       form.put("result", -1);
+                   }
+               }
+               if (!valNameRole.equals("Valid")){
+                   inputForm.put("name", valNameRole);
+                   if (!form.containsKey("result")){
+                       form.put("result", -1);
+                   }
+               }
+               if (!valCodeRole.equals("Valid")){
+                   inputForm.put("code", valCodeRole);
+                   if (!form.containsKey("result")){
+                       form.put("result", -1);
+                   }
+               }
+               if (!form.containsKey("result")){
+                   form.put("result", 0);
+               }
+               break;
+            default:
+               break;
+        }
+
+        return form;
+    }
+
+    public String validateNameRoleInput(String name){
+        if (name == null){
+            return "Invalid";
+        }
+        if (NameValidation.containSpecialCharacter(name)){
+            return "Invalid";
+        }
+        Role role = roleDao.findRoleByName(name);
+            if (role != null){
+                return "Name existed";
+            } else {
+                return "Valid";
+            } 
+    }
+
+    public String validateCodeRoleInput(String code){
+        if (code == null){
+            return "Invalid";
+        }
+        if  (NameValidation.containSpecialCharacter(code)){
+            return "Invalid";
+        }
+        Role role = roleDao.findRoleByCode(code);
+            if (role != null){
+                return "Code existed";
+            }else {
+                return "Valid";
+            }
+    }
+
+    public String validateIdInput(Long id){
+        if (id == null){
+            return "Must have role id";
+        }
+        Optional<Role> role = roleDao.findById(id);
+        if (!role.isEmpty()){
+            if (role.get().getIs_deleted() != Constant.DELETED){
+                return "Valid";
+            }else{
+                return "Role is deleted";
+            }
+        } else{
+            return "Role not existed";
+        }
     }
 
 }
