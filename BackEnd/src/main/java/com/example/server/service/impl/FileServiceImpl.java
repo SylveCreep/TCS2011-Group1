@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import com.example.server.service.FileService;
 
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,8 +64,18 @@ public class FileServiceImpl implements FileService{
 
     @Override
     public Resource loadAsResource(String filename) {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            Path file = load("avatar_"+filename);
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            }
+            else {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

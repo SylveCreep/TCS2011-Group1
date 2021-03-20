@@ -17,6 +17,8 @@ import com.example.server.util.ResponseUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,6 +41,9 @@ public class UserController {
 
     @Autowired
     private BanService banService;
+
+    @Autowired
+    private FileService fileService;
 
     @Value("${jwt.token.prefix}")
     public String TOKEN_PREFIX;
@@ -179,6 +184,25 @@ public class UserController {
             return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Get user successfully", HttpStatus.OK);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Get user fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value="/avatar/{id}",consumes = {"text/plain", "application/*"})
+    @ResponseBody
+    public ResponseEntity<?> getUserAvatarById(@PathVariable(name="id") Long id) {
+        try {
+            if(id == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Must has user id", HttpStatus.BAD_REQUEST);
+            }
+            UserResponse user = userService.findById(id);
+            if(user == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Cant find user matched with provided id", HttpStatus.OK);
+            }
+            Resource file = fileService.loadAsResource(user.getCode());
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Get user avatar fail", HttpStatus.BAD_REQUEST);
         }
     }
 
