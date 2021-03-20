@@ -36,7 +36,6 @@ public class FileServiceImpl implements FileService{
             String olfFileName = file.getOriginalFilename().substring(0, f);
             String fileName = file.getOriginalFilename().replace(olfFileName, "avatar_"+code);
             Path destinationPath = avatarLocationPath.resolve(Paths.get(fileName)).normalize().toAbsolutePath();
-            path = destinationPath.toString();
             if(!destinationPath.getParent().equals(avatarLocationPath.toAbsolutePath())){
                 return null;
             }
@@ -44,6 +43,7 @@ public class FileServiceImpl implements FileService{
                 Files.copy(inputStream, destinationPath,
                         StandardCopyOption.REPLACE_EXISTING);
             }
+            path = fileName;
             return path;
         } catch (Exception e) {
             return null;
