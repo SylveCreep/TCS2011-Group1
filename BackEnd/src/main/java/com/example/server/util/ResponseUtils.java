@@ -18,6 +18,7 @@ import com.example.server.entity.Role;
 import com.example.server.entity.User;
 import com.example.server.model.request.CreateAccount;
 import com.example.server.model.request.CreateRole;
+import com.example.server.model.request.FacultyRequest;
 import com.example.server.model.request.PagingRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -449,12 +450,12 @@ public class ResponseUtils {
                        form.put("result", -1);
                    }
                }
-               if (!valCodeRole.equals("Valid")){
-                   inputForm.put("code", valCodeRole);
-                   if (!form.containsKey("result")){
-                       form.put("result", -1);
-                   }
-               }
+            //    if (!valCodeRole.equals("Valid")){
+            //        inputForm.put("code", valCodeRole);
+            //        if (!form.containsKey("result")){
+            //            form.put("result", -1);
+            //        }
+            //    }
                if (!form.containsKey("result")){
                    form.put("result", 0);
                }
@@ -533,6 +534,24 @@ public class ResponseUtils {
         } else{
             return "Role not existed";
         }
+    }
+
+    //Validate faculty
+    public HashMap<String, Object> validateFacultyRequest(FacultyRequest facultyRequest, int type){
+        HashMap<String, Object> form = new HashMap<>();
+        HashMap<String, Object> inputForm = new HashMap<>();
+        form.put("input", inputForm);
+        switch (type) {
+            case 0:
+                
+                break;
+            case 1:
+                break;
+        
+            default:
+                break;
+        }
+        return form;
     }
 
 }
