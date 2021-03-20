@@ -62,7 +62,11 @@ export default {
     };
   },
   methods: {
+<<<<<<< HEAD
     async createRole() {
+=======
+    createRole() {
+>>>>>>> 7c2cee6399834c241ce3e5f0c3b56fa334f6b2d5
       this.requiredValidate(this.requireAttribute, this.role); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       

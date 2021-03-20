@@ -1,5 +1,5 @@
 <template>
-  <div class="app-main__inner"  style="background-color: #fff">
+  <div class="app-main__inner" style="background-color: #fff">
     <div class="app-page-title">
       <div class="page-title-wrapper">
         <div class="page-title-heading">
@@ -67,6 +67,7 @@ export default {
     async createFaculty() {
       this.requiredValidate(this.requireAttribute, this.faculty); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
+<<<<<<< HEAD
       await this.confirmAlert('create', 'faculty');
       if (this.confirmResult) {
         axios 
@@ -78,6 +79,21 @@ export default {
           .catch((error) => {
             this.errors = error.response;
           });
+=======
+      if (this.validate) {  
+        await this.confirmAlert("create", "faculty");
+        if (this.confirmResult) {
+          axios
+            .post(UrlConstants.Faculty, this.faculty)
+            .then((r) => {
+              this.successAlert();
+              this.$router.push("/faculties");
+            })
+            .catch((error) => {
+              this.errors = error.response;
+            });
+        }
+>>>>>>> 7c2cee6399834c241ce3e5f0c3b56fa334f6b2d5
       }
     },
   },
@@ -89,6 +105,6 @@ export default {
   margin: 0 0 30px;
 }
 .app-page-title {
-  margin:-30px 0 0 -30px;
-};
+  margin: -30px 0 0 -30px;
+}
 </style>
