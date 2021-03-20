@@ -1,5 +1,7 @@
 package com.example.server.controller;
 
+import java.util.HashMap;
+
 import javax.validation.Valid;
 
 import com.example.server.entity.Role;
@@ -49,7 +51,15 @@ public class RoleController {
     @PostMapping
     public ResponseEntity<?> createRole(@Valid @RequestBody CreateRole role){
         try{
-            roleService.saveRole(role);
+            HashMap<String, Object> validateResult = responseUtils.validateRoleRequest(role, 0);
+            Object valideRes = validateResult.get("result");
+            if(Integer.parseInt(valideRes.toString()) == -1){
+                return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE, "Create role failed", validateResult, HttpStatus.BAD_REQUEST);
+            }
+            Role createRole = roleService.saveRole(role);
+            if (createRole == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Create role failed", HttpStatus.BAD_REQUEST);
+            }
             return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, "Create role successfully", HttpStatus.OK);
         }
         catch (Exception e) {
@@ -79,11 +89,16 @@ public class RoleController {
     @PatchMapping(consumes = {"test/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> updateRole(@RequestBody CreateRole roleDto) {
         try{
+            HashMap<String, Object> validateResult = responseUtils.validateRoleRequest(roleDto, 1);
+            Object validateRes = validateResult.get("result");
+            if (Integer.parseInt(validateRes.toString()) == -1){
+                return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE, "Update role failed", validateResult, HttpStatus.BAD_REQUEST);
+            }
             if (roleDto.getId() == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Must has role id", HttpStatus.BAD_REQUEST);
             }
             Boolean role = roleService.updateRole(roleDto);
-            if(role == null){
+            if(role == false){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update role fail", HttpStatus.BAD_REQUEST);
             }
             return responseUtils.getResponseEntity(role, Constant.SUCCESS, "Update role successfully", HttpStatus.OK);
