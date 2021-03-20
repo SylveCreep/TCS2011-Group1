@@ -315,6 +315,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             userRes.setPhoneNumber(user.getPhoneNumber()==null?null:user.getPhoneNumber());
             userRes.setDateOfBirth(dateFormat(user.getDateOfBirth()));
             userRes.setGender(user.getGender());
+            userRes.setAvatar(user.getAvatar());
             return userRes;
         } catch (Exception e) {
             return null;

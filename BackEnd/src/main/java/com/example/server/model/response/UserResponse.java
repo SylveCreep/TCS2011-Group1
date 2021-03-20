@@ -15,6 +15,7 @@ public class UserResponse {
     private Long phoneNumber;
     private Integer gender;
     private String dateOfBirth;
+    private String avatar;
 
     public UserResponse(){
 
@@ -114,6 +115,14 @@ public class UserResponse {
 
     public void setGender(Integer gender) {
         this.gender = gender;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
 }
