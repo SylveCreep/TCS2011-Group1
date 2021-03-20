@@ -23,6 +23,10 @@ import ContributionList from "@/pages/contribution/ContributionList";
 import ContributionSubmit from "@/pages/contribution/ContributionSubmit";
 import ContributionDetail from "@/pages/contribution/ContributionDetail";
 import UserProfile from "@/pages/UserProfile";
+//import Magazine Components
+import MagazineList from "@/pages/magazine/MagazineList";
+import MagazineCreate from "@/pages/magazine/MagazineCreate";
+import MagazineUpdate from "@/pages/magazine/MagazineUpdate";
 
 Vue.use(Router);
 export const router = new Router({
@@ -102,6 +106,22 @@ export const router = new Router({
             path: '/contributions/:id/detail',
             component: ContributionDetail,
         },
+        //Magazine Routes
+        {
+            name: 'MagazineList',
+            path: '/magazines',
+            component: MagazineList,
+        },
+        {
+            name: 'MagazineCreate',
+            path: '/magazines/create',
+            component: MagazineCreate,
+        },
+        {
+            name: 'MagazineUpdate',
+            path: '/magazines/:id/update',
+            component: MagazineUpdate,
+        }
     ]
 })
 export default router

@@ -80,6 +80,23 @@
                 
               </div>
             </div>
+              <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
+                <li
+                    class="nav-item "
+                    v-for="(status, index) of list_statuses"
+                    :key="index"
+                  >
+                  <a
+                    role="tab"
+                    class="nav-link"
+                    v-bind:id="'tab-' + status"
+                    data-toggle="tab"
+                    v-bind:href="'#tab-content-' + status"
+                  >
+                  <span>{{ index }}</span>
+                  </a>
+                </li>
+              </ul>
             <!--/.FILTER SECTION-->
             <div class="table-responsive">
               <table class="mb-0 table">
@@ -125,14 +142,6 @@
                       >
                         <b>Close</b>
                       </p>
-                      |
-                      <p
-                        class="click"
-                        style="display: inline"
-                        v-on:click="showStundent(faculty.facultyId)"
-                      >
-                        <b>Stundent's list</b>
-                      </p>
                     </td>
                   </tr>
                 </tbody>
@@ -150,7 +159,7 @@
             </div>
             <div class="col-lg-6">
               <the-pagination
-                v-bind:pagination="list_faculties"
+                v-bind:pagination="list_magazines"
                 v-on:currentPage="changePage"
               ></the-pagination>
             </div>
@@ -163,13 +172,22 @@
 <script>
 import ThePagination from "@/components/ThePagination";
 import { commonHelper } from "@/helper/commonHelper";
-
+import { DefaultConstants } from "@/constant/DefaultConstant";
 export default {
     name: "MagazineList",
     components: {
     ThePagination,
   },
   mixins: [commonHelper],
+  data(){
+    return{
+      list_statuses: DefaultConstants.MagazineStatuses,
+      list_magazines:[]
+    };
+  },
+  mounted() {
+    document.querySelector("#tab-1").click(); //default click to tab 1
+  },
   created() {
     this.getMagazineList();
   },

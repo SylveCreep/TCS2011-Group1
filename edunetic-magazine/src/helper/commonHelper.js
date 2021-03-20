@@ -10,6 +10,7 @@ export const commonHelper = {
       list_roles: [],
       list_errors: [],
       list_contributions: [],
+      list_magazines:[],
       filter: {
         column: DefaultConstants.Column, //default column = 'id'
         sort: DefaultConstants.Sort, //default sort = 'asc'
@@ -135,6 +136,19 @@ export const commonHelper = {
         .catch((error) => {
           this.errors = error.response.data;
         });
+    },
+    getMagazineList(){
+      axios
+      .post(UrlConstants.Magazine + "/filter", this.filter)
+      .then((response) => {
+        this.list_magazines = response.data.data;
+        this.list_magazines.currentPage = this.filter.page;
+        this.list_magazines.lastPage = response.data.lastPage;
+      })
+      .catch((error) => {
+        this.errors = error.response.data.errors;
+        this.showError(this.errors);
+      });
     },
     
   },
