@@ -473,12 +473,12 @@ public class ResponseUtils {
                        form.put("result", -1);
                    }
                }
-               if (!valCodeRole.equals("Valid")){
-                   inputForm.put("code", valCodeRole);
-                   if (!form.containsKey("result")){
-                       form.put("result", -1);
-                   }
-               }
+            //    if (!valCodeRole.equals("Valid")){
+            //        inputForm.put("code", valCodeRole);
+            //        if (!form.containsKey("result")){
+            //            form.put("result", -1);
+            //        }
+            //    }
                if (!form.containsKey("result")){
                    form.put("result", 0);
                }
