@@ -260,7 +260,6 @@ import { commonHelper } from "@/helper/commonHelper";
 import { validateHelper } from "@/helper/validateHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { DefaultConstants } from "@/constant/DefaultConstant";
-import Swal from 'sweetalert2'
 export default {
   name: "UserCreate",
   mixins: [validateHelper, commonHelper],

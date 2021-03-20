@@ -56,6 +56,8 @@ export const validateHelper = {
                 if (!Object.prototype.hasOwnProperty.call(objectType, key) || objectType[key] === "" || objectType[key] === null) {
                     this.list_errors[key] = value + " field is required";
                     this.validate = false;
+                } else {
+                    this.validate = true;
                 }
             }
         },
