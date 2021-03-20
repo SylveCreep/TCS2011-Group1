@@ -58,8 +58,7 @@ public class FileServiceImpl implements FileService{
 
     @Override
     public Path load(String filename) {
-        // TODO Auto-generated method stub
-        return null;
+        return avatarLocationPath.resolve(filename).normalize();
     }
 
     @Override
@@ -67,11 +66,11 @@ public class FileServiceImpl implements FileService{
         try {
             Path file = load("avatar_"+filename);
             Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable()) {
+            if (resource.exists()) {
                 return resource;
             }
             else {
-                return null;
+                 return null;
             }
         } catch (Exception e) {
             return null;
