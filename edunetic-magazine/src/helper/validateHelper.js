@@ -56,6 +56,8 @@ export const validateHelper = {
                 if (!Object.prototype.hasOwnProperty.call(objectType, key) || objectType[key] === "" || objectType[key] === null) {
                     this.list_errors[key] = value + " field is required";
                     this.validate = false;
+                } else {
+                    this.validate = true;
                 }
             }
         },
@@ -75,6 +77,8 @@ export const validateHelper = {
                 if (age < 18) {
                     this.list_errors.dateOfBirth = "User must be older than 18";
                     this.validate = false;
+                } else {
+                    this.validate = true;
                 }
             }
 

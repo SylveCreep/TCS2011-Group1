@@ -64,14 +64,15 @@ export default {
     };
   },
   methods: {
-    createFaculty() {
-      this.userValidate(this.requireAttribute, this.faculty); //this function is called from helperMixin.js file
+    async createFaculty() {
+      this.requiredValidate(this.requireAttribute, this.faculty); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
-      if (this.validate) {
-        axios
+      await this.confirmAlert('create', 'faculty');
+      if (this.confirmResult) {
+        axios 
           .post(UrlConstants.Faculty, this.faculty)
           .then((r) => {
-            alert("Create Successfully");
+            this.successAlert();
             this.$router.push("/faculties");
           })
           .catch((error) => {
