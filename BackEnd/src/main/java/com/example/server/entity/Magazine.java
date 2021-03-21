@@ -13,7 +13,7 @@ public class Magazine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private int id;
+    private Long id;
 
 
     @Column(nullable = false, unique = true)
@@ -31,11 +31,11 @@ public class Magazine {
     @OneToMany(mappedBy = "magazine")
     private List<Contribution> contribution;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -79,13 +79,25 @@ public class Magazine {
         this.contribution = contribution;
     }
 
-    public Magazine(int id, String code, Date submitAt, Date publishedAt, int is_deleted,
+    public Magazine(){
+        
+    }
+
+    public Magazine(Long id, String code, Date submitAt, Date publishedAt, int is_deleted,
             List<Contribution> contribution) {
         this.id = id;
         this.code = code;
         this.submitAt = submitAt;
         this.publishedAt = publishedAt;
         this.is_deleted = is_deleted;
+        this.contribution = contribution;
+    }
+
+    public Magazine(String code, Date submitAt, Date publishedAt,
+    List<Contribution> contribution){
+        this.code = code;
+        this.publishedAt = publishedAt;
+        this.submitAt = submitAt;
         this.contribution = contribution;
     }
 }
