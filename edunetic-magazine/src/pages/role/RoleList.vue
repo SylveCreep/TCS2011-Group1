@@ -156,6 +156,7 @@ export default {
   mixins: [commonHelper],
   created() {
     this.getRoleList();
+    
   },
   methods: {
     async checkRoleExisted(role_id) {

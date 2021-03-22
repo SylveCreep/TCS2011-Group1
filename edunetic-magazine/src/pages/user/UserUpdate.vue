@@ -164,7 +164,7 @@
             >
             <div class="col-3">
               <div id="preview">
-                <img v-if="previewImageUrl" :src="previewImageUrl" />
+                <img src="http://localhost:8080/file/users/avatar_U0217.png" />   
               </div>
             </div>
           </div>
@@ -250,6 +250,9 @@ export default {
           });
       }
     },
+    onFileChange() {
+      
+    }
   },
 };
 </script>

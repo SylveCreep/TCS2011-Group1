@@ -223,6 +223,7 @@ import { UrlConstants } from "@/constant/UrlConstant";
 import { ResultConstants } from "@/constant/ResultConstant";
 import router from "@/router";
 import ThePagination from "@/components/ThePagination";
+import Swal from 'sweetalert2'
 
 export default {
   name: "UserList",
@@ -236,6 +237,7 @@ export default {
     };
   },
   created() {
+    //this.successAlert();
     this.setStudentList();
     //These functions are called from commonHelper.js file
     this.getUserList();
