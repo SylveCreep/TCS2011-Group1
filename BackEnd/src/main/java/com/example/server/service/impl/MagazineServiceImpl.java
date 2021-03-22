@@ -15,10 +15,11 @@ import com.example.server.dao.MagazineDao;
 import com.example.server.dto.MagazineDto;
 import com.example.server.entity.Magazine;
 import com.example.server.model.request.CreateMagazine;
+import com.example.server.service.MagazineService;
 import com.example.server.util.QueryCheck;
 
 @Service
-public class MagazineService {
+public class MagazineServiceImpl implements MagazineService {
     @Autowired
     private MagazineDao magazineDao;
 
@@ -31,19 +32,23 @@ public class MagazineService {
         return list;
     }
 
+    @Override
     public Magazine findByDateSubmit(Date submitAt){
-        return magazineDao.findMagazineByDateSubmit(submitAt);
+        return magazineDao.findMagazineBySubmitAt(submitAt);
     }
 
+    @Override
     public Magazine findDatePublished(Date publishedAt){
-        return magazineDao.findMagazineByDatePublished(publishedAt);
+        return magazineDao.findMagazineByPublishedAt(publishedAt);
     }
 
+    @Override
     public Magazine findById(Long id){
         Magazine magazine = magazineDao.findMagazineById(id);
         return magazine;
     }
 
+    @Override
     public Magazine saveMagazine(MagazineDto magazineDto){
         try{
             Magazine nMagazine = magazineDto.getMagazineFromDto();
@@ -57,6 +62,7 @@ public class MagazineService {
         }
     }
 
+    @Override
     public Magazine saveMagazine(CreateMagazine magazineDto){
         try{
             Magazine nMagazine = new Magazine();
@@ -70,6 +76,7 @@ public class MagazineService {
         }
     }
 
+    @Override
     public Boolean updateMagazine(CreateMagazine magazineDto){
         try {
             Magazine magazine = magazineDao.getOne(magazineDto.getId());
@@ -84,6 +91,7 @@ public class MagazineService {
         }
     }
 
+    @Override
     public Boolean deleteMagazine(Long id){
         try{
             Magazine magazine = magazineDao.getOne(id);

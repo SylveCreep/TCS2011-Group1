@@ -5,7 +5,7 @@ import javax.validation.Valid;
 import com.example.server.constant.Constant;
 import com.example.server.entity.Magazine;
 import com.example.server.model.request.CreateMagazine;
-import com.example.server.service.impl.MagazineService;
+import com.example.server.service.MagazineService;
 import com.example.server.util.ResponseUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
