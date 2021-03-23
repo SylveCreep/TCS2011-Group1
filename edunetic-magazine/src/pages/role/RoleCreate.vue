@@ -65,10 +65,9 @@ export default {
     async createRole() {
       this.requiredValidate(this.requireAttribute, this.role); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
-      
       if (this.validate) {
         await this.confirmAlert('create', 'role')
-        if (this.conformResult) {
+        if (this.confirmResult) {
             axios
           .post(UrlConstants.Role, this.role)
           .then((r) => {

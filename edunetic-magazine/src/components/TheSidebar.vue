@@ -75,7 +75,7 @@
             </router-link>
           </li>
           <li>
-           <router-link to="/Magazine">
+           <router-link to="/magazines">
               <i class="metismenu-icon fas fa-th"></i>
               <p>Magazine List</p>
             </router-link>

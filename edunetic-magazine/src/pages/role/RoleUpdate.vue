@@ -81,19 +81,24 @@ export default {
           this.$route.push("/roles")
         });
     },
-    updateRole() {
+    async updateRole() {
       this.requiredValidate(this.requireAttribute, this.role); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
-        axios
+        await this.confirmAlert('update', 'role')
+        if (this.confirmResult) {
+          axios
           .patch(UrlConstants.Role, this.role)
           .then((r) => {
             this.successAlert(); //this function is called from commonHelper.js file
             this.$router.push("/roles");
           })
           .catch((error) => {
-            this.errors = error.response.data.errors;
+            this.list_errors = error.response.data.validate.input;
+            this.showError(this.requireAttribute,this.list_errors)
           });
+        }
+        
       }
     },
   },

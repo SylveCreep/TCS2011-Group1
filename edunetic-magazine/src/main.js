@@ -4,12 +4,12 @@ import axios from "axios";
 import router from "@/router";
 import VueCookies from 'vue-cookies'
 import moment from 'moment';
-import VueSweetalert2 from 'vue-sweetalert2';
+// import VueSweetalert2 from 'vue-sweetalert2';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@/assets/css/main.css'
 
-Vue.use(VueSweetalert2);
+// Vue.use(VueSweetalert2);
 Vue.use(VueCookies);
 Vue.filter('formatDate', function(value) {
   if (value) {
