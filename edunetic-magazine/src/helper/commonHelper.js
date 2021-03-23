@@ -1,7 +1,7 @@
 import { DefaultConstants } from "@/constant/DefaultConstant";
 import { UrlConstants } from "@/constant/UrlConstant";
 import axios from "axios";
-
+import Swal from 'sweetalert2'
 export const commonHelper = {
   data() {
     return {
@@ -66,8 +66,11 @@ export const commonHelper = {
           this.showError(this.errors);
         });
     },
+    test() {
+      Swal.fire('Any fool can use a computer')
+    },
     successAlert() {
-      this.$swal({
+      Swal.fire({
         icon: 'success',
         title: 'Your work has been saved',
         showConfirmButton: false,
@@ -75,13 +78,13 @@ export const commonHelper = {
       })
     },
     errorAlert(type, resource) {
-      this.$swal({
+      Swal.fire({
         icon: 'error',
         title: 'Cannot ' + type + ' this ' + resource,
       })
     },
     async confirmAlert(type, resource) {
-      await this.$swal({
+      await Swal.fire({
         title: 'Are you sure to ' + type + ' this ' + resource + ' ?',
         showDenyButton: true,
         showCancelButton: false,

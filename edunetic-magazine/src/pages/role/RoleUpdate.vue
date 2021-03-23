@@ -95,9 +95,10 @@ export default {
           })
           .catch((error) => {
             this.list_errors = error.response.data.validate.input;
-            this.showError(this.requireAttribute, this.list_errors)
+            this.showError(this.requireAttribute,this.list_errors)
           });
         }
+        
       }
     },
   },
