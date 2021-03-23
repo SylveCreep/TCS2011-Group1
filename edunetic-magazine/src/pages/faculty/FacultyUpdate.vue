@@ -98,7 +98,8 @@ export default {
               this.$router.push("/faculties");
             })
             .catch((error) => {
-              this.errors = error.response;
+              this.list_errors = error.response.data.validate.input;
+              this.showError(this.requireAttribute, this.list_errors);
             });
         }
       }

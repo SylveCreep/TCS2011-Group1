@@ -47,7 +47,7 @@
 <script>
 import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
-import { validateHelper } from "@/helper/validateHelper"; 
+import { validateHelper } from "@/helper/validateHelper";
 import { commonHelper } from "@/helper/commonHelper";
 
 export default {
@@ -65,19 +65,20 @@ export default {
     async createRole() {
       this.requiredValidate(this.requireAttribute, this.role); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
-      
       if (this.validate) {
-        await this.confirmAlert('create', 'role')
-        if (this.conformResult) {
-            axios
-          .post(UrlConstants.Role, this.role)
-          .then((r) => {
-            this.successAlert();
-            this.$router.push("/roles");
-          })
-          .catch((error) => {
-            this.list_errors = error.response;
-          });
+        await this.confirmAlert("create", "role");
+        if (this.confirmResult) {
+          axios
+            .post(UrlConstants.Role, this.role)
+            .then((r) => {
+              this.successAlert();
+              this.$router.push("/roles");
+            })
+            .catch((error) => {
+              this.list_errors = error.response.data.validate.input;
+              this.showError(this.list_errors);
+              
+            });
         }
       }
     },
@@ -94,6 +95,6 @@ export default {
   padding-right: 20px;
 }
 .app-page-title {
-  margin:-30px 0 0 -30px;
+  margin: -30px 0 0 -30px;
 }
 </style>

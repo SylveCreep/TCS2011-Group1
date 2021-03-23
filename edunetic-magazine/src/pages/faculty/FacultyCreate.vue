@@ -67,7 +67,7 @@ export default {
     async createFaculty() {
       this.requiredValidate(this.requireAttribute, this.faculty); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
-      if (this.validate) {  
+      if (this.validate) {
         await this.confirmAlert("create", "faculty");
         if (this.confirmResult) {
           axios
@@ -77,7 +77,8 @@ export default {
               this.$router.push("/faculties");
             })
             .catch((error) => {
-              this.errors = error.response;
+              this.list_errors = error.response.data.validate.input;
+              this.showError(this.requireAttribute, this.list_errors);
             });
         }
       }

@@ -245,8 +245,8 @@ export default {
             this.$router.push("/users");
           })
           .catch((error) => {
-            this.errors = error.response.data.errors;
-            this.showError(this.errors);
+            this.list_errors = error.response.data.validate.input;
+            this.showError(this.requireAttribute, this.list_errors)
           });
       }
     },
