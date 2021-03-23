@@ -5,6 +5,7 @@ import java.util.Date;
 public class ContributionRequest  extends PagingRequest{
     private String code;
     private String studentName;
+    private Integer status;
     private Long facultyId;
     private Long studentId;
     private Long magazineId;
@@ -50,20 +51,28 @@ public class ContributionRequest  extends PagingRequest{
     public void setMagazineId(Long magazineId) {
         this.magazineId = magazineId;
     }
-    public ContributionRequest(String code, String studentName, Long facultyId, Long studentId, Long magazineId,
-            Date submitDate) {
+    public Integer getStatus() {
+        return status;
+    }
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+    public ContributionRequest(String code, String studentName, Integer status, Long facultyId, Long studentId,
+            Long magazineId, Date submitDate) {
         this.code = code;
         this.studentName = studentName;
+        this.status = status;
         this.facultyId = facultyId;
         this.studentId = studentId;
         this.magazineId = magazineId;
         this.submitDate = submitDate;
     }
     public ContributionRequest(int limit, int page, String sort, String column, String code, String studentName,
-            Long facultyId, Long studentId, Long magazineId, Date submitDate) {
+            Integer status, Long facultyId, Long studentId, Long magazineId, Date submitDate) {
         super(limit, page, sort, column);
         this.code = code;
         this.studentName = studentName;
+        this.status = status;
         this.facultyId = facultyId;
         this.studentId = studentId;
         this.magazineId = magazineId;

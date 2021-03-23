@@ -123,8 +123,8 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> update(@RequestBody CreateAccount userDto, @RequestParam("file") MultipartFile file, HttpServletRequest httpServletRequest){
+    @PatchMapping(produces = "application/json")
+    public ResponseEntity<?> update(CreateAccount userDto, @RequestParam("file") MultipartFile file, HttpServletRequest httpServletRequest){
         try {
             HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(userDto, file, 1);
             Object validateRes = validateResult.get("result");

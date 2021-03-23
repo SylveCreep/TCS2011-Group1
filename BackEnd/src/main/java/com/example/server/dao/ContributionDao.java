@@ -21,7 +21,8 @@ public interface ContributionDao extends JpaRepository<Contribution, Long> {
     "AND (:studentName IS NULL OR lower(u.full_name) LIKE CONCAT('%',lower(:studentName),'%')) "+ 
     "AND (:facultyId IS NULL OR c.faculty_id = :facultyId ) "+ 
     "AND (:hasDate = 0 OR CAST(c.created_at as date) = CAST(:submitDate as date) )"+
-    "AND (:magazineId IS NULL OR c.magazine_id = :magazineId )"+ 
+    "AND (:magazineId IS NULL OR c.magazine_id = :magazineId )"+
+    "AND c.is_approved = :status "+ 
     "AND c.is_deleted = 0 ", nativeQuery = true)
-    Page<ContributionResponse> getContributionList(@Param("code")String code, @Param("studentName") String studentName, @Param("facultyId")Long facultyId, @Param("magazineId")Long magazineId, @Param("submitDate")Date submitDate, @Param("hasDate") int hasDate, Pageable pageable);
+    Page<ContributionResponse> getContributionList(@Param("code")String code, @Param("studentName") String studentName, @Param("facultyId")Long facultyId, @Param("magazineId")Long magazineId, @Param("submitDate")Date submitDate, @Param("hasDate") int hasDate, @Param("status") Integer status, Pageable pageable);
 }
