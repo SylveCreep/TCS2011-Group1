@@ -149,6 +149,11 @@
           <div class="position-relative form-group">
             <label for="exampleFile" class="col-sm-2 control-label">Avatar</label>
             <div class="col-3">
+              <div id="preview">
+                <img v-if="previewImageUrl" :src="previewImageUrl"  width="150px"/>   
+              </div>
+            </div>
+            <div class="col-3" style="margin-top: 10px">
               <input
                 name="file"
                 id="exampleFile"
@@ -158,15 +163,7 @@
                 v-on:change="onFileChange"
               />
             </div>
-            <p class="form-text-file"
-              >This is some placeholder block-level help text for the above
-              input. It's a bit lighter and easily wraps to a new line.</p
-            >
-            <div class="col-3">
-              <div id="preview">
-                <img src="http://localhost:8080/file/users/avatar_U0217.png" />   
-              </div>
-            </div>
+            
           </div>
           <div class="col-sm-offset-2 col-sm-12 text-center">
             <router-link to="/users" tag="button" class="btn btn-primary">
@@ -201,7 +198,7 @@ export default {
         phoneNumber: "Phone number",
         dateOfBirth: "Date of birth",
       },
-      
+      previewImageUrl: null,
     };
   },
   created() {
@@ -218,28 +215,36 @@ export default {
         .get(UrlConstants.User + "/" + user_id )
         .then((r) => {
           this.user = r.data.data;
+          this.previewImageUrl = UrlConstants.AvatarSource + this.user.avatar
+
         })
         .catch((error) => {
           this.list_errors = error.response;
         });
     },
-    updateUser() {
+    async updateUser() {
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
-        let updateUser = {
-          id: this.user.id,
-          fullName: this.user.fullName,
-          roleId: this.user.roleId,
-          facultyId: this.user.facultyId,
-          email: this.user.email,
-          address: this.user.address,
-          gender: this.user.gender,
-          phoneNumber: this.user.phoneNumber,
-          dateOfBirth: this.user.dateOfBirth
+        let formData = new FormData();
+        for (const [key, value] of Object.entries(this.user)) {
+          if (key !== "confirm_password" && key !== "password" && key !== "roleName" && key !== "facultyName" && key !== "avatar"  && key !== "code") {
+              if (key === "facultyId" && value === null) {
+                formData.append("facultyId", "")
+              } else {
+                   formData.append(key, value);
+              }
+             
+          }
         }
-        axios
-          .patch(UrlConstants.User, updateUser)
+        await this.confirmAlert('update', 'user');
+        if (this.confirmResult) {
+           axios
+          .patch(UrlConstants.User, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
           .then((response) => {
             this.successAlert(); //This function are called from commonHelper.js file
             this.$router.push("/users");
@@ -248,9 +253,13 @@ export default {
             this.list_errors = error.response.data.validate.input;
             this.showError(this.requireAttribute, this.list_errors)
           });
+        }
       }
     },
     onFileChange() {
+      const tfile = this.$refs.file.files[0];
+      this.user.file = tfile;
+      this.previewImageUrl = URL.createObjectURL(tfile);
       
     }
   },

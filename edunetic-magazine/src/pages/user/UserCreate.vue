@@ -230,10 +230,6 @@
                 v-on:change="onFileChange"
               />
             </div>
-            <p class="form-text-file"
-              >This is some placeholder block-level help text for the above
-              input. It's a bit lighter and easily wraps to a new line.</p
-            >
             <div class="col-3">
               <div id="preview">
                 <img v-if="previewImageUrl" :src="previewImageUrl" />
@@ -316,7 +312,7 @@ export default {
             },
           })
           .then((r) => {
-           this.successAlert(); //This function are called from commonHelper.js file
+            this.successAlert(); //This function are called from commonHelper.js file
             this.$router.push("/users");
           })
           .catch((error) => {

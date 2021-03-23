@@ -222,7 +222,7 @@ export default {
 <style scoped>
 .contribution-detail {
   background-color: #3f6ad8;
-  color: white;
+  color: white !important;
 }
 .card-body {
   padding-left: 2rem !important;

@@ -32,12 +32,12 @@
           </div>
           <div class="col-sm-offset-2 col-sm-12 text-center">
             <div class="col-sm-offset-2 col-sm-12">
-              <router-link to="/roles" tag="button" class="btn btn-primary">
+              <router-link to="/roles" tag="button" class="mb-2 mr-2 btn btn-primary">
                 Back
               </router-link>
               <button
                 type="submit"
-                class="btn btn-success"
+                class="mb-2 mr-2 btn btn-success"
               >
                 Update
               </button>

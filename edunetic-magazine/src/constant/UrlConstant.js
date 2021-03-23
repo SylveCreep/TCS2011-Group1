@@ -4,7 +4,9 @@ export  const UrlConstants = Object.freeze({
     User: BaseUrl + "/users",
     Role: BaseUrl + "/roles",
     Faculty: BaseUrl + "/faculties",
-    Contribution: "https://601956c3fa0b1f0017acce88.mockapi.io/contributions",
+    Contribution: "/contributions",
     Comment: "/comments",
     Magazine: "/magazines",
+    AvatarSource: "http://localhost:8080/file/users/",
+    ContributionSource: "http://localhost:8080/file/contributions/",
 });
