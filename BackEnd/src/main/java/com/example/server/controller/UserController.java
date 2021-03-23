@@ -134,7 +134,7 @@ public class UserController {
             if(userDto.getId() == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE ,"Must has user id", HttpStatus.BAD_REQUEST);
             }
-            Boolean user = userService.update(userDto);
+            Boolean user = userService.update(userDto, file);
             if(user == false){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Update user fail", HttpStatus.BAD_REQUEST);
             }

@@ -45,7 +45,7 @@ public class Contribution extends BaseEntity {
     private Date publishedAt;
 
     @Column(name="is_approved",nullable = false)
-    private int isApproved = NOTAPPROVED;
+    private int isApproved = PENDING;
 
     public User getUser() {
         return user;

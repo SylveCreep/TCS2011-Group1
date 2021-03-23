@@ -262,7 +262,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public Boolean update(CreateAccount userDto){
+    public Boolean update(CreateAccount userDto, MultipartFile file){
         try {
             User user = userDao.getOne(userDto.getId());
             if(userDto.getRoleId() != null){
@@ -279,15 +279,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 }
                 user.setFaculty(facult.get());
             }
-            // if(userDao.findByEmail(userDto.getEmail()) != null){
-            //     return false;
-            // }
             user.setEmail(userDto.getEmail());
             user.setFullName(userDto.getFullName());
             user.setAddress(userDto.getAddress());
             user.setDateOfBirth(userDto.getDateOfBirth());
             user.setPhoneNumber(userDto.getPhoneNumber());
             user.setGender(userDto.getGender());
+            String path = fileService.storeAvatar(file, user.getCode());
+            if(path == null){
+                return null;
+            }
+            
+            user.setAvatar(path);
             userDao.save(user);
             return true;
         } catch (Exception e) {
