@@ -15,7 +15,7 @@
     <div class="main-card mb-3 card">
       <div class="card-body">
         <h5 class="card-title">Update Form</h5>
-        <form v-on:submit.prevent="updateFaculty()">
+        <form v-on:submit.prevent="updateMagazine()">
           <div class="position-relative form-group">
             <label class="col-sm-2 control-label">Student's name: </label>
             <div class="col-sm-12">
@@ -23,10 +23,12 @@
                 id="magazineName"
                 type="text"
                 class="form-control"
-                v-model="filter.fullName"
-                v-on:keyup="getFilter"
+                v-model="user.fullName"
                 readonly
               />
+              <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.fullName }}
+              </p>
             </div>
             <label class="col-sm-2 control-label">Faculty: </label>
             <div class="col-sm-12">
@@ -34,8 +36,23 @@
                 id="facultyName"
                 type="text"
                 class="form-control"
-                v-model="faculty.facultyName"                
+                v-model="user.facultyName"   
+                readonly            
               />
+              <!-- <select
+                id="facultyName"
+                type="text"
+                class="form-control select2"
+                v-model="user.facultyName"                                
+              >
+                <option
+                      v-for="faculty in list_faculties"
+                      :key="faculty.id"
+                      v-bind:value="faculty.facultyId"
+                    >
+                      {{ faculty.facultyName }}
+                </option>
+              </select>-->
             </div>
             <label class="col-sm-2 control-label">Code: </label>
               <div class="col-sm-12">
@@ -47,29 +64,27 @@
                   readonly
                 />
               </div>
-            <label class="col-sm-2 control-label">Closure date: </label>
+            <label class="col-sm-2 control-label">Closed At: </label>
               <div class="col-sm-12">
                 <input
                   id="magazineClosure"
                   type="date"
                   class="form-control"
-                  v-model="magazine.magazineClosure"
-                  readonly
+                  v-model="magazine.magazineClosed"                  
                 />
               </div>
-            <label class="col-sm-2 control-label">Published date: </label>
+            <label class="col-sm-2 control-label">Published At: </label>
               <div class="col-sm-12">
                 <input
                   id="magazinePublished"
                   type="date"
                   class="form-control"
-                  v-model="magazine.magazinePublished"
-                  readonly
+                  v-model="magazine.magazinePublished"                  
                 />
               </div>
           </div>
           <div class="col-sm-offset-2 col-sm-12 text-center">
-            <router-link to="/faculties" tag="button" class="btn btn-primary">
+            <router-link to="/magazines" tag="button" class="btn btn-primary">
               Back
             </router-link>
             <button type="submit" class="btn btn-success">
@@ -93,27 +108,39 @@ export default {
   data() {
     return {
       magazine: {},
+      user:{},
       requireAttribute: {
-        magazineName: "Magazine Name",
       },
     };
   },
   created() {
     this.getMagazine();
+    this.getStudent();
+    // this.getFacultyList();
   },
   methods: {
     getMagazine() {
       axios
         .get(UrlConstants.Magazine + "/" + this.$route.params.id)
         .then((r) => {
-          this.faculty = r.data.data;
+          this.magazine = r.data.data;
+        })
+        .catch((error) => {
+          this.errors = error.response;
+        });
+    },
+    getStudent() {
+      axios
+        .get(UrlConstants.User + "/" + this.$route.params.id)
+        .then((r) => {
+          this.user = r.data.data;
         })
         .catch((error) => {
           this.errors = error.response;
         });
     },
     async updateMagazine() {
-      this.requiredValidate(this.requireAttribute, this.faculty); //this function is called from helperMixin.js file
+      this.requiredValidate(this.requireAttribute, this.magazine); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
         await this.confirmAlert("update", "magazine");

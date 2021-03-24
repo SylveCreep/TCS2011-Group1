@@ -56,18 +56,18 @@
                   />
                 </div>
                 <div class="form-group">
-                  <label>Closure Date</label>
+                  <label>Closed At</label>
                   <input
                     class="form-control"
                     type="date"
                     placeholder="Search"
                     aria-label="Search"
-                    v-model="filter.closure"
+                    v-model="filter.closed"
                     v-on:keyup="getFilter"
                   />
                 </div>
                 <div class="form-group">
-                  <label>Published Date</label>
+                  <label>Published At</label>
                   <input
                     class="form-control"
                     type="date"
@@ -108,11 +108,14 @@
                     <th class="sort" v-on:click="getSort('theme')">
                       Theme <i class="fas fa-sort"></i>
                     </th>
-                    <th class="sort" v-on:click="getSort('published')">
-                      Published Date <i class="fas fa-sort"></i>
+                    <th class="sort" v-on:click="getSort('opening')">
+                      Open At <i class="fas fa-sort"></i>
                     </th>
-                    <th class="sort" v-on:click="getSort('closure')">
-                      Closure Date <i class="fas fa-sort"></i>
+                    <th class="sort" v-on:click="getSort('published')">
+                      Published At <i class="fas fa-sort"></i>
+                    </th>
+                    <th class="sort" v-on:click="getSort('closed')">
+                      Closed At <i class="fas fa-sort"></i>
                     </th>
                     <th>Action </th>
                   </tr>
@@ -120,12 +123,13 @@
                 <tbody>
                   <tr
                     v-for="magazine of list_magazines"
-                    :key="magazine.magazine_id"
+                    :key="magazine.id"
                   >
                     <td>{{ magazine.magazineCode }}</td>
                     <td>{{ magazine.magazineTheme }}</td>
+                    <td>{{ magazine.magazineOpen }}</td>
                     <td>{{ magazine.magazinePublished }}</td>
-                    <td>{{ magazine.magazineClosure }}</td>
+                    <td>{{ magazine.magazineClosed }}</td>
                     <td>
                       <p
                         class="click"
@@ -133,22 +137,14 @@
                         v-on:click="showMagazine(magazine.magazineId)"
                       >
                         <b>Update</b>
-                      </p>
-                      |
-                      <p
-                        class="click"
-                        style="display: inline"
-                        v-on:click="closeMagazine(magazine.magazineId)"
-                      >
-                        <b>Close</b>
-                      </p>
+                      </p>                      
                       |
                       <p
                         class="click"
                         style="display: inline"
                         v-on:click="deleteMagazine(magazine.magazineId)"
                       >
-                        <b>Close</b>
+                        <b>Delete</b>
                       </p>
                     </td>
                   </tr>
@@ -222,10 +218,7 @@ export default {
       } else {
         router.push("/magazines/" + magazineId + "/update");
       }
-    },
-    closeMagazine(){
-
-    },
+    },    
     async deleteMagazine(magazineId){
       await this.preCheckFaculty(magazineId);
       if (!this.canModify) {

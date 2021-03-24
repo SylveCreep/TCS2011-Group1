@@ -29,16 +29,16 @@
                 {{ list_errors.magazineTheme }}
               </p>
             </div>
-            <label class="col-sm-2 control-label">Closure date: </label>
+            <label class="col-sm-2 control-label">Closed At: </label>
             <div class="col-sm-12">
               <input
-                id="magazineClosure"
+                id="magazineClosed"
                 type="date"
                 class="form-control"
-                v-model="magazine.magazineClosure"
+                v-model="magazine.magazineClosed"
               />
               <p style="color: red" v-if="list_errors !== null">
-                {{ list_errors.magazineClosure }}
+                {{ list_errors.magazineClosed }}
               </p>
             </div>
           </div>
