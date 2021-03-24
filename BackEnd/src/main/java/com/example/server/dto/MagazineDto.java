@@ -67,7 +67,6 @@ public class MagazineDto {
 
     public Magazine getMagazineFromDto(){
         Magazine magazine = new Magazine();
-        magazine.setSubmitAt(submitAt);
         magazine.setPublishedAt(publishedAt);
         magazine.setContribution(contribution);
         magazine.setCode(code);

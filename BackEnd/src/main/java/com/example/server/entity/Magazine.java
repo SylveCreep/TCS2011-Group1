@@ -19,11 +19,17 @@ public class Magazine {
     @Column(nullable = false, unique = true)
     private String code;
 
-    @Column(name="submit_at")
-    private Date submitAt;
-
     @Column(name="published_at", nullable = false)
     private Date publishedAt;
+
+    @Column(name="expired_at", nullable = false)
+    private Date expiredAt;
+
+    @Column(name="closed_at")
+    private Date closedAt;
+
+    @Column(name="theme")
+    private String theme;
 
     @Column(nullable = false)
     private int is_deleted = NOTDELETED;
@@ -45,14 +51,6 @@ public class Magazine {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public Date getSubmitAt() {
-        return submitAt;
-    }
-
-    public void setSubmitAt(Date submitAt) {
-        this.submitAt = submitAt;
     }
 
     public Date getPublishedAt() {
@@ -83,21 +81,39 @@ public class Magazine {
         
     }
 
-    public Magazine(Long id, String code, Date submitAt, Date publishedAt, int is_deleted,
-            List<Contribution> contribution) {
-        this.id = id;
-        this.code = code;
-        this.submitAt = submitAt;
-        this.publishedAt = publishedAt;
-        this.is_deleted = is_deleted;
-        this.contribution = contribution;
+    public Date getExpiredAt() {
+        return expiredAt;
     }
 
-    public Magazine(String code, Date submitAt, Date publishedAt,
-    List<Contribution> contribution){
+    public void setExpiredAt(Date expiredAt) {
+        this.expiredAt = expiredAt;
+    }
+
+    public Date getClosedAt() {
+        return closedAt;
+    }
+
+    public void setClosedAt(Date closedAt) {
+        this.closedAt = closedAt;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+    public Magazine(Long id, String code, Date publishedAt, Date expiredAt, Date closedAt, String theme,
+            int is_deleted, List<Contribution> contribution) {
+        this.id = id;
         this.code = code;
         this.publishedAt = publishedAt;
-        this.submitAt = submitAt;
+        this.expiredAt = expiredAt;
+        this.closedAt = closedAt;
+        this.theme = theme;
+        this.is_deleted = is_deleted;
         this.contribution = contribution;
     }
 }

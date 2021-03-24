@@ -33,11 +33,6 @@ public class MagazineServiceImpl implements MagazineService {
     }
 
     @Override
-    public Magazine findByDateSubmit(Date submitAt){
-        return magazineDao.findMagazineBySubmitAt(submitAt);
-    }
-
-    @Override
     public Magazine findDatePublished(Date publishedAt){
         return magazineDao.findMagazineByPublishedAt(publishedAt);
     }
@@ -54,7 +49,6 @@ public class MagazineServiceImpl implements MagazineService {
             Magazine nMagazine = magazineDto.getMagazineFromDto();
             nMagazine.setCode("M" + String.format("%04d", queryCheck.GetHighestId("magazine")));
             nMagazine.setPublishedAt(magazineDto.getPublishedAt());
-            nMagazine.setSubmitAt(magazineDto.getSubmitAt());
             nMagazine.setContribution(magazineDto.getContribution());
             return magazineDao.save(nMagazine);
         }catch(Exception exception){
@@ -68,7 +62,6 @@ public class MagazineServiceImpl implements MagazineService {
             Magazine nMagazine = new Magazine();
             nMagazine.setCode("M" + String.format("%04d", queryCheck.GetHighestId("magazine")));
             nMagazine.setPublishedAt(magazineDto.getPublishedAt());
-            nMagazine.setSubmitAt(magazineDto.getSubmitAt());
             nMagazine.setContribution(magazineDto.getContribution());
             return magazineDao.save(nMagazine);
         }catch(Exception exception){
@@ -82,7 +75,6 @@ public class MagazineServiceImpl implements MagazineService {
             Magazine magazine = magazineDao.getOne(magazineDto.getId());
             magazine.setCode(magazineDto.getCode());
             magazine.setPublishedAt(magazineDto.getPublishedAt());
-            magazine.setSubmitAt(magazineDto.getSubmitAt());
             magazine.setContribution(magazineDto.getContribution());
             magazineDao.save(magazine);
             return true;

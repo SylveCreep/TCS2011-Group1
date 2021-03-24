@@ -42,8 +42,22 @@ public class ContributionServiceImpl implements ContributionService {
                 hasDate = 1;
             }
             Page<ContributionResponse> list = contributionDao.getContributionList(code, studentName, contributionRequest.getFacultyId(), contributionRequest.getMagazineId(), contributionRequest.getSubmitDate(), hasDate, contributionRequest.getStatus(), PageRequest.of(offset, contributionRequest.getLimit(), sort));
-            int lastPage = 0;
+            int lastPage = Math.round(list.getTotalElements() / contributionRequest.getLimit()  + ((list.getTotalElements() % contributionRequest.getLimit() == 0) ? 0 : 1)); 
             List<ContributionResponse> contributionResponse = new ArrayList<>();
+            for(ContributionResponse contribution: list){
+                ContributionResponse contributionRes = new ContributionResponse();
+                contributionRes.setId(contribution.getId());
+                contributionRes.setUserId(contribution.getUserId());
+                contributionRes.setUserName(contribution.getUserName());
+                contributionRes.setCheckedById(contribution.getCheckedById());
+                contributionRes.setCheckedByName(contribution.getCheckedByName());
+                contributionRes.setPublishedAt(contribution.getPublishedAt());
+                contributionRes.setCreatedAt(contribution.getCreatedAt());
+                contributionRes.setStatus(contribution.getStatus());
+                contributionRes.setMagazineId(contribution.getMagazineId());
+                contributionRes.setLinkSource(contribution.getLinkSource());
+                contributionResponse.add(contributionRes);
+            }
             ContributionPagingResponse response = new ContributionPagingResponse();
             response.setList(contributionResponse);
             response.setLastPage(lastPage);
