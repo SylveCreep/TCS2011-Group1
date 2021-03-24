@@ -11,6 +11,8 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "core-js": "^3.6.5",
+    "file-saver": "^2.0.5",
+    "jszip": "^3.6.0",
     "sweetalert2": "^10.15.5",
     "vue": "^2.6.11",
     "vue-cookies": "^1.7.4",

@@ -5,6 +5,8 @@ import Swal from 'sweetalert2'
 export const commonHelper = {
   data() {
     return {
+      loggedRole: this.$cookies.get("currentRole"),
+      loggedUser: {},
       list_users: [],
       list_faculties: [],
       list_roles: [],
@@ -17,11 +19,38 @@ export const commonHelper = {
         limit: DefaultConstants.Limit, //default limit = 15
         page: DefaultConstants.Page, //default page = 15
       },
+      avatarUrl: null,
       confirmResult: false,
       canModify: false,
     }
   },
   methods: {
+    getCurrentUser() {
+      axios
+        .get(UrlConstants.User + "/" + this.$cookies.get("id"))
+        .then((res) => {
+          this.loggedUser = res.data.data;
+          this.loggedRole = this.loggedUser.roleId
+          this.avatarUrl = UrlConstants.AvatarSource + this.loggedUser.avatar;
+        });
+    },
+    logOut() {
+      Swal.fire({
+        title: 'Are you sure to logout ?',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: 'Yes',
+        denyButtonText: 'No',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$cookies.remove("jwt");
+          this.$cookies.remove("currentUser");
+          this.$cookies.remove("currentRole");
+          this.$emit("user-logout", null);
+          this.$router.push("/login");
+        } 
+      })
+    },
     getcommonSort($column) {
       if (this.filter.sort === "asc") {
         this.filter.sort = "desc";
@@ -65,9 +94,6 @@ export const commonHelper = {
           this.errors = error.response.data.errors;
           this.showError(this.errors);
         });
-    },
-    test() {
-      Swal.fire('Any fool can use a computer')
     },
     successAlert() {
       Swal.fire({

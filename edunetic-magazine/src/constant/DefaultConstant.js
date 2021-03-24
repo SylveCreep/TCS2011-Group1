@@ -3,6 +3,8 @@ export const DefaultConstants = Object.freeze({
     Column: 'id',
     Sort: 'asc',
     Page: 1,
+    female: 0,
+    male: 1,
     Role: {
         Admin : 1,
         MarketingManager : 2,
@@ -10,8 +12,6 @@ export const DefaultConstants = Object.freeze({
         Student : 4,
         Guest: 5
     },
-    female: 0,
-    male: 1,
     ContributionStatuses: {
         Pending: 1,
         Approved: 2,

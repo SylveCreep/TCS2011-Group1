@@ -16,6 +16,24 @@
       <div class="card-body">
         <h5 class="card-title">Create Form</h5>
         <form v-on:submit.prevent="createUser()">
+           <div class="position-relative form-group">
+            <label for="exampleFile" class="col-sm-2 control-label">Avatar</label>
+            <div class="col-3">
+              <input
+                name="file"
+                id="exampleFile"
+                type="file"
+                ref="file"
+                class="form-control-file"
+                v-on:change="onFileChange"
+              />
+            </div>
+            <div class="col-3">
+              <div id="preview">
+                <img v-if="previewImageUrl" :src="previewImageUrl" />
+              </div>
+            </div>
+          </div>
           <div class="position-relative form-group">
             <label class="col-sm-2 control-label">Full Name: </label>
             <div class="col-sm-12">
@@ -216,24 +234,6 @@
               <p style="color: red" v-if="list_errors !== null">
                 {{ list_errors.dateOfBirth }}
               </p>
-            </div>
-          </div>
-          <div class="position-relative form-group">
-            <label for="exampleFile" class="col-sm-2 control-label">Avatar</label>
-            <div class="col-3">
-              <input
-                name="file"
-                id="exampleFile"
-                type="file"
-                ref="file"
-                class="form-control-file"
-                v-on:change="onFileChange"
-              />
-            </div>
-            <div class="col-3">
-              <div id="preview">
-                <img v-if="previewImageUrl" :src="previewImageUrl" />
-              </div>
             </div>
           </div>
           <div class="position-relative form-group text-center">

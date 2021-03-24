@@ -43,7 +43,7 @@
     <div class="scrollbar-sidebar">
       <div class="app-sidebar__inner">
         <ul class="vertical-nav-menu">
-          <li class="app-sidebar__heading">Hello {{user.fullName}}</li>
+          <li class="app-sidebar__heading">Hello {{loggedUser.fullName}}</li>
           <li>
             <router-link to="/">
               <i class="metismenu-icon fas fa-th"></i>
@@ -93,36 +93,15 @@
 </template>
 
 <script>
-import axios from "axios";
-import { UrlConstants } from "@/constant/UrlConstant";
+import { commonHelper } from "@/helper/commonHelper";
 
 export default {
   name: "TheSidebar",
-  data() {
-    return {
-      user: {},
-    }
-  },
+  mixins: [commonHelper],
   created() {
     this.getCurrentUser();
   },
   methods: {
-     getCurrentUser() {
-      axios
-        .get(UrlConstants.User + "/" + this.$cookies.get("id"))
-        .then((res) => {
-          this.user = res.data.data;
-        });
-    },
-    logOut() {
-      let result = confirm("Do you want to log out?");
-      if (result) {
-        this.$cookies.remove("jwt");
-        this.$cookies.remove("currentUser");
-        this.$emit("user-logout", null);
-        this.$router.push("/login");
-      }
-    },
     deleteUserKey() {
       if (this.$cookies.isKey("facultyStudent")) {
         this.$cookies.remove("facultyStudent");

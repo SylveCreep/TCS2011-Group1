@@ -18,6 +18,30 @@
         <h5 class="card-title">Update Form</h5>
         <form v-on:submit.prevent="updateUser()">
           <div class="position-relative form-group">
+            <label for="exampleFile" class="col-sm-2 control-label"
+              >Avatar</label
+            >
+            <div class="col-3">
+              <div id="preview">
+                <img
+                  v-if="previewImageUrl"
+                  :src="previewImageUrl"
+                  width="150px"
+                />
+              </div>
+            </div>
+            <div v-if="loggedRole == 1" class="col-3" style="margin-top: 10px">
+              <input
+                name="file"
+                id="exampleFile"
+                type="file"
+                ref="file"
+                class="form-control-file"
+                v-on:change="onFileChange"
+              />
+            </div>
+          </div>
+          <div class="position-relative form-group">
             <label class="col-sm-2 control-label">Full Name: </label>
             <div class="col-sm-12">
               <input
@@ -102,12 +126,7 @@
           <div class="position-relative form-group">
             <label class="col-sm-2 control-label">Gender: </label>
             <div class="col-sm-12">
-              <input
-                type="radio"
-                id="rmale"
-                v-model="user.gender"
-                value="1"
-              />
+              <input type="radio" id="rmale" v-model="user.gender" value="1" />
               <label for="male" class="label-gender">Male</label>
               <input
                 type="radio"
@@ -146,25 +165,8 @@
               </p>
             </div>
           </div>
-          <div class="position-relative form-group">
-            <label for="exampleFile" class="col-sm-2 control-label">Avatar</label>
-            <div class="col-3">
-              <div id="preview">
-                <img v-if="previewImageUrl" :src="previewImageUrl"  width="150px"/>   
-              </div>
-            </div>
-            <div class="col-3" style="margin-top: 10px">
-              <input
-                name="file"
-                id="exampleFile"
-                type="file"
-                ref="file"
-                class="form-control-file"
-                v-on:change="onFileChange"
-              />
-            </div>
-            
-          </div>
+          
+          <button v-on:click.prevent="downloadImage()">DownLoad</button>
           <div class="col-sm-offset-2 col-sm-12 text-center">
             <router-link to="/users" tag="button" class="btn btn-primary">
               Back
@@ -182,12 +184,13 @@ import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { validateHelper } from "@/helper/validateHelper";
 import { commonHelper } from "@/helper/commonHelper";
-
+import JSZip from "jszip";
+import FileSaver from "file-saver";
 export default {
   name: "UserUpdate",
   mixins: [commonHelper, validateHelper],
   props: {
-    loggedUser: Number
+    loggedUser: Number,
   },
   data() {
     return {
@@ -204,19 +207,20 @@ export default {
   created() {
     this.getUser();
     this.getFacultyList(); //This function are called from commonHelper.js file
+    console.log(this.loggedRole)
   },
   methods: {
     getUser() {
-      let user_id = this.$route.params.id
+      let user_id = this.$route.params.id;
+      //check is the profile page
       if (this.loggedUser !== undefined) {
-        user_id = this.loggedUser
+        user_id = this.loggedUser;
       }
       axios
-        .get(UrlConstants.User + "/" + user_id )
+        .get(UrlConstants.User + "/" + user_id)
         .then((r) => {
           this.user = r.data.data;
-          this.previewImageUrl = UrlConstants.AvatarSource + this.user.avatar
-
+          this.previewImageUrl = UrlConstants.AvatarSource + this.user.avatar;
         })
         .catch((error) => {
           this.list_errors = error.response;
@@ -228,31 +232,35 @@ export default {
       if (this.validate) {
         let formData = new FormData();
         for (const [key, value] of Object.entries(this.user)) {
-          if (key !== "confirm_password" && key !== "password" && key !== "roleName" && key !== "facultyName" && key !== "avatar"  && key !== "code") {
-              if (key === "facultyId" && value === null) {
-                formData.append("facultyId", "")
-              } else {
-                   formData.append(key, value);
-              }
-             
+          if (
+            key !== "roleName" &&
+            key !== "facultyName" &&
+            key !== "avatar" &&
+            key !== "code"
+          ) {
+            if (key === "facultyId" && value === null) {
+              formData.append("facultyId", "");
+            } else {
+              formData.append(key, value);
+            }
           }
         }
-        await this.confirmAlert('update', 'user');
+        await this.confirmAlert("update", "user");
         if (this.confirmResult) {
-           axios
-          .patch(UrlConstants.User, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((response) => {
-            this.successAlert(); //This function are called from commonHelper.js file
-            this.$router.push("/users");
-          })
-          .catch((error) => {
-            this.list_errors = error.response.data.validate.input;
-            this.showError(this.requireAttribute, this.list_errors)
-          });
+          axios
+            .patch(UrlConstants.User, formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .then((response) => {
+              this.successAlert(); //This function are called from commonHelper.js file
+              this.$router.push("/users");
+            })
+            .catch((error) => {
+              this.list_errors = error.response.data.validate.input;
+              this.showError(this.requireAttribute, this.list_errors);
+            });
         }
       }
     },
@@ -260,17 +268,29 @@ export default {
       const tfile = this.$refs.file.files[0];
       this.user.file = tfile;
       this.previewImageUrl = URL.createObjectURL(tfile);
-      
-    }
+    },
+    downloadImage() {
+      let zip = new JSZip();
+      axios
+        .get(this.previewImageUrl, {
+          responseType: "blob",
+        })
+        .then((response) => {
+          zip.file("image.jpg", response.data);
+          zip.generateAsync({ type: "blob" }).then(function (content) {
+            // see FileSaver.js
+            FileSaver.saveAs(content, "example.zip");
+          });
+        });
+    },
   },
 };
 </script>
 
 <style scoped>
-
 .app-page-title {
-  margin:-30px 0 0 -30px;
-};
+  margin: -30px 0 0 -30px;
+}
 .label-gender {
   padding-left: 5px !important;
   padding-right: 20px !important;
