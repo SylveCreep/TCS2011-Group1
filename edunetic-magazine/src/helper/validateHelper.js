@@ -155,5 +155,15 @@ export const validateHelper = {
                 this.showError(this.errors);
             });
     },
-
+    getMagazineList() {
+        axios
+            .post(UrlConstants.Magazine + "/filter", this.filter)
+            .then((response) => {
+                this.list_magazines = response.data.data;
+            })
+            .catch((error) => {
+                this.errors = error.response.data.errors;
+                this.showError(this.errors);
+            });
+    },
 }

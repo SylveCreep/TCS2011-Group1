@@ -24,7 +24,7 @@
             <i class="fa fa-star"></i>
           </button>
           <div class="d-inline-block dropdown">
-            <router-link to="/faculties/create" class="btn-shadow btn btn-info">
+            <router-link to="/magazines/create" class="btn-shadow btn btn-info">
               <span class="btn-icon-wrapper pr-2 opacity-7">
                 <i class="fa fa-business-time fa-w-20"></i>
               </span>
@@ -59,7 +59,7 @@
                   <label>Closure Date</label>
                   <input
                     class="form-control"
-                    type="text"
+                    type="date"
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.closure"
@@ -70,7 +70,7 @@
                   <label>Published Date</label>
                   <input
                     class="form-control"
-                    type="text"
+                    type="date"
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.published"
@@ -119,18 +119,18 @@
                 </thead>
                 <tbody>
                   <tr
-                    v-for="magazine of list_magazine"
+                    v-for="magazine of list_magazines"
                     :key="magazine.magazine_id"
                   >
-                    <td>{{ magazine.code }}</td>
-                    <td>{{ magazine.theme }}</td>
-                    <td>{{ magazine.publishedDate }}</td>
-                    <td>{{ magazine.closureDate }}</td>
+                    <td>{{ magazine.magazineCode }}</td>
+                    <td>{{ magazine.magazineTheme }}</td>
+                    <td>{{ magazine.magazinePublished }}</td>
+                    <td>{{ magazine.magazineClosure }}</td>
                     <td>
                       <p
                         class="click"
                         style="display: inline"
-                        v-on:click="showFaculty(magazine.magazineId)"
+                        v-on:click="showMagazine(magazine.magazineId)"
                       >
                         <b>Update</b>
                       </p>
@@ -139,6 +139,14 @@
                         class="click"
                         style="display: inline"
                         v-on:click="closeMagazine(magazine.magazineId)"
+                      >
+                        <b>Close</b>
+                      </p>
+                      |
+                      <p
+                        class="click"
+                        style="display: inline"
+                        v-on:click="deleteMagazine(magazine.magazineId)"
                       >
                         <b>Close</b>
                       </p>
@@ -170,9 +178,13 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+import { UrlConstants } from "@/constant/UrlConstant";
+import { DefaultConstants } from "@/constant/DefaultConstant";
+import { ResultConstants } from "@/constant/ResultConstant";
+import router from "@/router";
 import ThePagination from "@/components/ThePagination";
 import { commonHelper } from "@/helper/commonHelper";
-import { DefaultConstants } from "@/constant/DefaultConstant";
 export default {
     name: "MagazineList",
     components: {
@@ -192,11 +204,47 @@ export default {
     this.getMagazineList();
   },
   methods:{
-    showMagazine(){
-
+    async checkMagazineExisted(magazineId){
+      await axios.get(UrlConstants.Magazine + "/" + magazineId)
+      .then((response) => {
+        if (response.data.code === ResultConstants.Failure) {
+          this.canModify = false;
+        } else {
+          this.canModify = true;
+        }
+      });
+    },
+    async showMagazine(magazineId){
+      await this.checkFacultyExisted(magazineId);
+      if (!this.canModify) {
+        this.errorAlert("update", "magazine"); //this function is called from commonHelper.js file
+        this.getFacultyList();
+      } else {
+        router.push("/magazines/" + magazineId + "/update");
+      }
     },
     closeMagazine(){
 
+    },
+    async deleteMagazine(magazineId){
+      await this.preCheckFaculty(magazineId);
+      if (!this.canModify) {
+        this.errorAlert("delete", "magazine");
+        this.getFacultyList();
+      } else {
+        await this.confirmAlert("delete", "magazine");
+        if (this.confirmResult) {
+          axios
+            .delete(UrlConstants.Magazine + "/" + magazineId)
+            .then((res) => {
+              this.successAlert(); //this function is called from commonHelper.js file
+              this.getFacultyList();
+            })
+            .catch((error) => {
+              this.errors = error.data;
+            });
+        }
+      }
     },
     getFilter() {
       this.filter.page = 1;
