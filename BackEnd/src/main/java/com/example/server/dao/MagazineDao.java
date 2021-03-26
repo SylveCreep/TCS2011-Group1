@@ -15,20 +15,24 @@ import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface MagazineDao extends JpaRepository<Magazine, Long> {
-    Magazine findMagazineBySubmitAt(Date submitAt);
+    Magazine findByTheme(String theme);
 
-    Magazine findMagazineByPublishedAt(Date publishedAt);
+    Magazine findByOpenAt(Date open_at);
 
-    Magazine findMagazineByCode(String code);
+    Magazine findByPublishedAt(Date published_at);
 
-    Magazine findMagazineById(Long id);
+    Magazine findByCloseAt(Date close_at);
+
+    Magazine findByCode(String code);
+
+    Optional<Magazine> findById(Long id);
 
     @Query("select m from Magazine m " +
     "where m.is_deleted = 0 " + 
     "group by m.id")
     Page<Magazine> getNonDelRole(Pageable pageable);
 
-    @Query(value = "Select * FROM magazine m " +
+    /*@Query(value = "Select * FROM magazine m " +
     "Where  ((:mId is null) or (m.id = :mId))", nativeQuery = true)
-    Optional<Magazine> findById(@Param("mId") Long id);
+    Optional<Magazine> findById(@Param("mId") Long id);*/
 }

@@ -33,18 +33,28 @@ public class MagazineServiceImpl implements MagazineService {
     }
 
     @Override
-    public Magazine findByDateSubmit(Date submitAt){
-        return magazineDao.findMagazineBySubmitAt(submitAt);
+    public Magazine findMagazineByOpen_at(Date open_at){
+        return magazineDao.findByOpenAt(open_at);
     }
 
     @Override
-    public Magazine findDatePublished(Date publishedAt){
-        return magazineDao.findMagazineByPublishedAt(publishedAt);
+    public Magazine findMagazineByPublished_at(Date published_at){
+        return magazineDao.findByPublishedAt(published_at);
+    }
+
+    @Override
+    public Magazine findMagazineByClose_at(Date close_at){
+        return magazineDao.findByCloseAt(close_at);
+    }
+
+    @Override
+    public Magazine findMagazineByTheme(String theme){
+        return magazineDao.findByTheme(theme);
     }
 
     @Override
     public Magazine findById(Long id){
-        Magazine magazine = magazineDao.findMagazineById(id);
+        Magazine magazine = magazineDao.findById(id).get();
         return magazine;
     }
 
@@ -53,9 +63,10 @@ public class MagazineServiceImpl implements MagazineService {
         try{
             Magazine nMagazine = magazineDto.getMagazineFromDto();
             nMagazine.setCode("M" + String.format("%04d", queryCheck.GetHighestId("magazine")));
-            nMagazine.setPublishedAt(magazineDto.getPublishedAt());
-            nMagazine.setSubmitAt(magazineDto.getSubmitAt());
-            nMagazine.setContribution(magazineDto.getContribution());
+            nMagazine.setOpen_at(magazineDto.getOpen_at());
+            nMagazine.setPublished_at(magazineDto.getPublished_at());
+            nMagazine.setClose_at(magazineDto.getClose_at());
+            nMagazine.setTheme(magazineDto.getTheme());
             return magazineDao.save(nMagazine);
         }catch(Exception exception){
             return null;
@@ -67,9 +78,10 @@ public class MagazineServiceImpl implements MagazineService {
         try{
             Magazine nMagazine = new Magazine();
             nMagazine.setCode("M" + String.format("%04d", queryCheck.GetHighestId("magazine")));
-            nMagazine.setPublishedAt(magazineDto.getPublishedAt());
-            nMagazine.setSubmitAt(magazineDto.getSubmitAt());
-            nMagazine.setContribution(magazineDto.getContribution());
+            nMagazine.setOpen_at(magazineDto.getOpen_at());
+            nMagazine.setPublished_at(magazineDto.getPublished_at());
+            nMagazine.setClose_at(magazineDto.getClose_at());
+            nMagazine.setTheme(magazineDto.getTheme());
             return magazineDao.save(nMagazine);
         }catch(Exception exception){
             return null;
@@ -81,9 +93,9 @@ public class MagazineServiceImpl implements MagazineService {
         try {
             Magazine magazine = magazineDao.getOne(magazineDto.getId());
             magazine.setCode(magazineDto.getCode());
-            magazine.setPublishedAt(magazineDto.getPublishedAt());
-            magazine.setSubmitAt(magazineDto.getSubmitAt());
-            magazine.setContribution(magazineDto.getContribution());
+            magazine.setOpen_at(magazineDto.getOpen_at());
+            magazine.setPublished_at(magazineDto.getPublished_at());
+            magazine.setClose_at(magazineDto.getClose_at());
             magazineDao.save(magazine);
             return true;
         }catch (Exception exception){

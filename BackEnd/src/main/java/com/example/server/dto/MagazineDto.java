@@ -19,11 +19,13 @@ public class MagazineDto {
     @Size(min = 5, max = 5)
     private String code;
 
-    private Date submitAt;
+    private String theme;
 
-    private Date publishedAt;
+    private Date open_at;
 
-    private List<Contribution> contribution;
+    private Date published_at;
+
+    private Date close_at;
 
     public Long getId() {
         return id;
@@ -41,35 +43,44 @@ public class MagazineDto {
         this.code = code;
     }
 
-    public Date getSubmitAt() {
-        return submitAt;
+    public String getTheme(){
+        return theme;
     }
 
-    public void setSubmitAt(Date submitAt) {
-        this.submitAt = submitAt;
+    public void setTheme(String theme){
+        this.theme = theme;
     }
 
-    public Date getPublishedAt() {
-        return publishedAt;
+    public Date getOpen_at() {
+        return open_at;
     }
 
-    public void setPublishedAt(Date publishedAt) {
-        this.publishedAt = publishedAt;
+    public void setOpen_at(Date open_at) {
+        this.open_at = open_at;
     }
 
-    public List<Contribution> getContribution() {
-        return contribution;
+    public Date getPublished_at() {
+        return published_at;
     }
 
-    public void setContribution(List<Contribution> contribution) {
-        this.contribution = contribution;
+    public void setPublished_at(Date publishedAt) {
+        this.published_at = publishedAt;
+    }
+
+    public Date getClose_at(){
+        return close_at;
+    }
+
+    public void setClose_at(Date close_at){
+        this.close_at = close_at;
     }
 
     public Magazine getMagazineFromDto(){
         Magazine magazine = new Magazine();
-        magazine.setSubmitAt(submitAt);
-        magazine.setPublishedAt(publishedAt);
-        magazine.setContribution(contribution);
+        magazine.setOpen_at(open_at);;
+        magazine.setPublished_at(published_at);;
+        magazine.setClose_at(close_at);
+        magazine.setTheme(theme);
         magazine.setCode(code);
         return magazine;
     }

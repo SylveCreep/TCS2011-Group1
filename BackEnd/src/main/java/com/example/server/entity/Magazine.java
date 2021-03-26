@@ -1,10 +1,10 @@
 package com.example.server.entity;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.*;
-import static com.example.server.constant.Constant.*;
+
+import com.example.server.constant.Constant;
 
 
 @Entity
@@ -19,17 +19,20 @@ public class Magazine {
     @Column(nullable = false, unique = true)
     private String code;
 
-    @Column(name="submit_at")
-    private Date submitAt;
+    @Column(name = "theme", nullable = false)
+    private String theme;
+
+    @Column(name="open_at", nullable = false)
+    private Date openAt;
 
     @Column(name="published_at", nullable = false)
     private Date publishedAt;
 
-    @Column(nullable = false)
-    private int is_deleted = NOTDELETED;
+    @Column(name="close_at", nullable = false)
+    private Date closeAt;
 
-    @OneToMany(mappedBy = "magazine")
-    private List<Contribution> contribution;
+    @Column(nullable = false)
+    private int is_deleted = Constant.NOTDELETED;
 
     public Long getId() {
         return id;
@@ -47,20 +50,36 @@ public class Magazine {
         this.code = code;
     }
 
-    public Date getSubmitAt() {
-        return submitAt;
+    public String getTheme(){
+        return theme;
     }
 
-    public void setSubmitAt(Date submitAt) {
-        this.submitAt = submitAt;
+    public void setTheme(String theme){
+        this.theme = theme;
     }
 
-    public Date getPublishedAt() {
+    public Date getOpen_at() {
+        return openAt;
+    }
+
+    public void setOpen_at(Date openAt) {
+        this.openAt = openAt;
+    }
+
+    public Date getPublished_at() {
         return publishedAt;
     }
 
-    public void setPublishedAt(Date publishedAt) {
-        this.publishedAt = publishedAt;
+    public void setPublished_at(Date published_at) {
+        this.publishedAt = published_at;
+    }
+
+    public Date getClose_at(){
+        return closeAt;
+    }
+
+    public void setClose_at(Date closeAt){
+        this.closeAt = closeAt;
     }
 
     public int getIs_deleted() {
@@ -71,33 +90,23 @@ public class Magazine {
         this.is_deleted = is_deleted;
     }
 
-    public List<Contribution> getContribution() {
-        return contribution;
-    }
-
-    public void setContribution(List<Contribution> contribution) {
-        this.contribution = contribution;
-    }
-
     public Magazine(){
         
     }
 
-    public Magazine(Long id, String code, Date submitAt, Date publishedAt, int is_deleted,
-            List<Contribution> contribution) {
+    public Magazine(Long id, String code, Date openAt, Date publishedAt, Date closeAt, int is_deleted) {
         this.id = id;
         this.code = code;
-        this.submitAt = submitAt;
+        this.openAt = openAt;
         this.publishedAt = publishedAt;
+        this.closeAt = closeAt;
         this.is_deleted = is_deleted;
-        this.contribution = contribution;
     }
 
-    public Magazine(String code, Date submitAt, Date publishedAt,
-    List<Contribution> contribution){
+    public Magazine(String code, Date openAt, Date publishedAt, Date closeAt){
         this.code = code;
+        this.openAt = openAt;
         this.publishedAt = publishedAt;
-        this.submitAt = submitAt;
-        this.contribution = contribution;
+        this.closeAt = closeAt;
     }
 }

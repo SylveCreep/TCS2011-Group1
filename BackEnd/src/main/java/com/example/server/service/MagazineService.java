@@ -10,9 +10,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface MagazineService {
-    Magazine findByDateSubmit(Date submitAt);
+    Magazine findMagazineByOpen_at(Date open_at);
 
-    Magazine findDatePublished(Date publishedAt);
+    Magazine findMagazineByPublished_at(Date published_at);
+
+    Magazine findMagazineByClose_at(Date close_at);
+
+    Magazine findMagazineByTheme(String theme);
 
     Magazine findById(Long id);
 
