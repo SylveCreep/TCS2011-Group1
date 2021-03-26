@@ -123,8 +123,8 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping(consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> update(@RequestBody CreateAccount userDto, @RequestParam("file") MultipartFile file, HttpServletRequest httpServletRequest){
+    @PatchMapping(produces = "application/json")
+    public ResponseEntity<?> update(CreateAccount userDto, @RequestParam("file") MultipartFile file, HttpServletRequest httpServletRequest){
         try {
             HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(userDto, file, 1);
             Object validateRes = validateResult.get("result");
@@ -134,7 +134,7 @@ public class UserController {
             if(userDto.getId() == null){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE ,"Must has user id", HttpStatus.BAD_REQUEST);
             }
-            Boolean user = userService.update(userDto);
+            Boolean user = userService.update(userDto, file);
             if(user == false){
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Update user fail", HttpStatus.BAD_REQUEST);
             }

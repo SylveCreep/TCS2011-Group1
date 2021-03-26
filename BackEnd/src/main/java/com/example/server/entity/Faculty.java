@@ -1,5 +1,6 @@
 package com.example.server.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -22,10 +23,6 @@ public class Faculty extends BaseEntity {
 
     @OneToMany(mappedBy = "faculty")
     private List<User> users;
-
-    @OneToOne
-    @JoinColumn(name= "manager_id", referencedColumnName = "id")
-    private User manager;
 
     @OneToMany(mappedBy = "faculty")
     private List<Contribution> contribution;
@@ -54,14 +51,6 @@ public class Faculty extends BaseEntity {
         this.users = users;
     }
 
-    public User getManager() {
-        return manager;
-    }
-
-    public void setManager(User manager) {
-        this.manager = manager;
-    }
-
     public List<Contribution> getContribution() {
         return contribution;
     }
@@ -73,12 +62,22 @@ public class Faculty extends BaseEntity {
     public Faculty() {
     }
 
-    public Faculty(String code, List<User> users, User manager, List<Contribution> contribution) {
+    public Faculty(Long id, int is_deleted, Date created_at, Date updated_at, String code, String name,
+            List<User> users, List<Contribution> contribution) {
+        super(id, is_deleted, created_at, updated_at);
         this.code = code;
+        this.name = name;
         this.users = users;
-        this.manager = manager;
         this.contribution = contribution;
     }
+
+    public Faculty(String code, String name, List<User> users, List<Contribution> contribution) {
+        this.code = code;
+        this.name = name;
+        this.users = users;
+        this.contribution = contribution;
+    }
+
 
 
     

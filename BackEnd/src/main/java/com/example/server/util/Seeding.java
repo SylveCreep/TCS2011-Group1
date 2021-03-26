@@ -172,15 +172,8 @@ public class Seeding implements CommandLineRunner {
    private Boolean createFaculty(Faker faker, Long userId){
        //Optional<User> managerList = userDao.findById(userId);
        //User manager = managerList.get();
-       User manager = userDao.findByUserId(userId);
        Faculty nFaculty = new Faculty();
             nFaculty.setCode("F" + String.format("%04d", queryCheck.GetHighestId("faculty")));
-            if (manager.getIs_deleted() != Constant.DELETED){
-                nFaculty.setManager(manager);
-            }
-            else{
-               return false;
-            }
             nFaculty.setName(faker.educator().course());
 
             facultyDao.save(nFaculty);

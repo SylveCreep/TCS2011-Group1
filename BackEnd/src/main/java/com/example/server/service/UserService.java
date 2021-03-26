@@ -26,7 +26,7 @@ public interface UserService {
 
     UserResponse findById(Long id);
 
-    Boolean update(CreateAccount user);
+    Boolean update(CreateAccount user, MultipartFile file);
 
     List<Object> getUserListResponse(PagingRequest pagingRequest);
 
