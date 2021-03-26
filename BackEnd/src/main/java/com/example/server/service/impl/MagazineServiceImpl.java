@@ -1,6 +1,10 @@
 package com.example.server.service.impl;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import static com.example.server.constant.Constant.*;
@@ -15,8 +19,13 @@ import com.example.server.dao.MagazineDao;
 import com.example.server.dto.MagazineDto;
 import com.example.server.entity.Magazine;
 import com.example.server.model.request.CreateMagazine;
+import com.example.server.model.request.MagazineSearchRequest;
+import com.example.server.model.request.PagingRequest;
+import com.example.server.model.response.MagazineLastPageResponse;
+import com.example.server.model.response.MagazineResponse;
 import com.example.server.service.MagazineService;
 import com.example.server.util.QueryCheck;
+import com.example.server.util.ResponseUtils;
 
 @Service
 public class MagazineServiceImpl implements MagazineService {
@@ -25,6 +34,12 @@ public class MagazineServiceImpl implements MagazineService {
 
     @Autowired
     private QueryCheck queryCheck;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private ResponseUtils responseUtils;
 
     public List<Magazine> findAll(){
         List<Magazine> list = new ArrayList<>();
@@ -55,6 +70,12 @@ public class MagazineServiceImpl implements MagazineService {
     @Override
     public Magazine findById(Long id){
         Magazine magazine = magazineDao.findById(id).get();
+        return magazine;
+    }
+
+    @Override
+    public MagazineResponse findMagazineById(Long id){
+        MagazineResponse magazine = magazineDao.findMagazineById(id).get();
         return magazine;
     }
 
@@ -112,6 +133,62 @@ public class MagazineServiceImpl implements MagazineService {
             return true;
         } catch(Exception exception){
             return false;
+        }
+    }
+
+    @Override
+    public MagazineLastPageResponse searchMagazineByTheme(MagazineSearchRequest magazineSearchRequest){
+        try{
+            int offset = magazineSearchRequest.getPage() - 1;
+            Sort sort = responseUtils.getSortObj(magazineSearchRequest);
+            Page<Magazine> list = magazineDao.searchMagazineByName(magazineSearchRequest.getId(), magazineSearchRequest.getTheme(), magazineSearchRequest.getCode() /*, magazineSearchRequest.getOpen_at(), magazineSearchRequest.getPublished_at(), magazineSearchRequest.getClose_at()*/, PageRequest.of(offset, magazineSearchRequest.getLimit(), sort));
+
+            int lastPage = Math.round(list.getTotalElements() / magazineSearchRequest.getLimit()  + ((list.getTotalElements() % magazineSearchRequest.getLimit() == 0) ? 0 : 1)); 
+            MagazineLastPageResponse object = new MagazineLastPageResponse();
+            List<MagazineResponse> listResponse = new ArrayList<>();
+            for(Magazine magazine:list){
+                MagazineResponse magazineResponse = new MagazineResponse();
+                magazineResponse.setId(magazine.getId());
+                magazineResponse.setTheme(magazine.getTheme() == null ?"":magazine.getTheme());
+                magazineResponse.setCode(magazine.getCode() == null ?"": magazine.getCode());
+                magazineResponse.setOpen_at(magazine.getOpen_at() == null ?null: magazine.getOpen_at());
+                magazineResponse.setPublished_at(magazine.getPublished_at() == null ?null: magazine.getPublished_at());
+                magazineResponse.setClose_at(magazine.getClose_at() == null ?null: magazine.getClose_at());
+                listResponse.add(magazineResponse);
+            }
+            object.setLastPage(lastPage);
+            object.setList(listResponse);
+            return object;
+        } catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+        @Override
+        public List<Object> getMagazineListResponse(PagingRequest pagingRequest) {
+        try {
+            Sort sort = responseUtils.getSortObj(pagingRequest);
+            Page<Magazine> list = magazineDao.getNonDelRole(PageRequest.of(pagingRequest.getPage(), pagingRequest.getLimit(), sort));
+            int lastPage = Math.round(list.getTotalElements() / pagingRequest.getLimit()  + ((list.getTotalElements() % pagingRequest.getLimit() == 0) ? 0 : 1)); 
+            List<Object> object = new ArrayList<>();
+            List<MagazineResponse> listResponse = new ArrayList<>();
+            for(Magazine magazine: list){
+                MagazineResponse magazineResponse = new MagazineResponse();
+                magazine.setId(magazine.getId());
+                magazine.setTheme(magazine.getTheme() == null ?"":magazine.getTheme());
+                magazine.setCode(magazine.getCode() == null ?"":magazine.getCode() );
+                magazineResponse.setOpen_at(magazine.getOpen_at() == null ?null: magazine.getOpen_at());
+                magazineResponse.setPublished_at(magazine.getPublished_at() == null ?null: magazine.getPublished_at());
+                magazineResponse.setClose_at(magazine.getClose_at() == null ?null: magazine.getClose_at());
+                listResponse.add(magazineResponse);
+            }
+            object.add(listResponse);
+            object.add(lastPage);
+            return object;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
 }
