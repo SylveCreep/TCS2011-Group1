@@ -117,7 +117,7 @@ public class ContributionServiceImpl implements ContributionService {
             }
             nContribution.setFaculty(facultyDao.findFacultyById(contribution.getFacultyId()));
             if(contribution.getMagazineId() != null){
-                nContribution.setMagazine(magazineDao.findMagazineById(contribution.getMagazineId()));
+                nContribution.setMagazine(magazineDao.findExistedMagazineById(contribution.getMagazineId()));
             }
             nContribution.setCode("C" + String.format("%04d", queryCheck.GetHighestId("contribution")));
             nContribution.setCreated_at(new Date());
@@ -153,7 +153,7 @@ public class ContributionServiceImpl implements ContributionService {
                 uContribution.setFaculty(facultyDao.findFacultyById(contribution.getFacultyId()));
             }
             if(contribution.getMagazineId() != null){
-                uContribution.setMagazine(magazineDao.findMagazineById(contribution.getMagazineId()));
+                uContribution.setMagazine(magazineDao.findExistedMagazineById(contribution.getMagazineId()));
             }
             if(contribution.getPublishedAt() != null){
                 uContribution.setPublishedAt(contribution.getPublishedAt());
