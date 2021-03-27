@@ -14,6 +14,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ContributionDao extends JpaRepository<Contribution, Long> {
+
+    @Query(value = "SELECT c.* FROM contribution c WHERE c.is_deleted = 0 AND c.id = :id ", nativeQuery = true)
+    Contribution findExistedContributionById(Long id);
     
     @Query(value = "SELECT c.* FROM contribution c "+
     "LEFT JOIN user u ON u.id = c.user_id "+
@@ -24,5 +27,5 @@ public interface ContributionDao extends JpaRepository<Contribution, Long> {
     "AND (:magazineId IS NULL OR c.magazine_id = :magazineId )"+
     "AND c.is_approved = :status "+ 
     "AND c.is_deleted = 0 ", nativeQuery = true)
-    Page<ContributionResponse> getContributionList(@Param("code")String code, @Param("studentName") String studentName, @Param("facultyId")Long facultyId, @Param("magazineId")Long magazineId, @Param("submitDate")Date submitDate, @Param("hasDate") int hasDate, @Param("status") Integer status, Pageable pageable);
+    Page<Contribution> getContributionList(@Param("code")String code, @Param("studentName") String studentName, @Param("facultyId")Long facultyId, @Param("magazineId")Long magazineId, @Param("submitDate")Date submitDate, @Param("hasDate") int hasDate, @Param("status") Integer status, Pageable pageable);
 }

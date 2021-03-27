@@ -22,6 +22,9 @@ public interface MagazineDao extends JpaRepository<Magazine, Long> {
 
     Magazine findMagazineById(Long id);
 
+    @Query(value = "SELECT m.* FROM magazine m WHERE m.is_deleted = 0 AND m.id = :id ", nativeQuery = true)
+    Magazine findExistedMagazineById(Long id);
+
     @Query("select m from Magazine m " +
     "where m.is_deleted = 0 " + 
     "group by m.id")

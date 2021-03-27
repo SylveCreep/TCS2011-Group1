@@ -21,7 +21,7 @@ public class Contribution extends BaseEntity {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="checked_by", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name="checked_by", referencedColumnName = "id", nullable = true)
     private User checkedBy;
 
     @ManyToOne
@@ -29,7 +29,7 @@ public class Contribution extends BaseEntity {
     private Faculty faculty;
 
     @ManyToOne
-    @JoinColumn(name="magazine_id",  referencedColumnName = "id", nullable = false)
+    @JoinColumn(name="magazine_id",  referencedColumnName = "id")
     private Magazine magazine;
 
     @OneToMany(mappedBy = "contribution")
@@ -46,6 +46,9 @@ public class Contribution extends BaseEntity {
 
     @Column(name="is_approved",nullable = false)
     private int isApproved = PENDING;
+
+    @Column(name="extension", nullable = false)
+    private String extension;
 
     public User getUser() {
         return user;
@@ -119,8 +122,20 @@ public class Contribution extends BaseEntity {
         this.isApproved = isApproved;
     }
 
+    public Contribution(){
+
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
+
     public Contribution(User user, User checkedBy, Faculty faculty, Magazine magazine, List<Comment> comments,
-            String code, String linkSource, Date publishedAt, int isApproved) {
+            String code, String linkSource, Date publishedAt, int isApproved, String extension) {
         this.user = user;
         this.checkedBy = checkedBy;
         this.faculty = faculty;
@@ -130,11 +145,12 @@ public class Contribution extends BaseEntity {
         this.linkSource = linkSource;
         this.publishedAt = publishedAt;
         this.isApproved = isApproved;
+        this.extension = extension;
     }
 
     public Contribution(Long id, int is_deleted, Date created_at, Date updated_at, User user, User checkedBy,
             Faculty faculty, Magazine magazine, List<Comment> comments, String code, String linkSource,
-            Date publishedAt, int isApproved) {
+            Date publishedAt, int isApproved, String extension) {
         super(id, is_deleted, created_at, updated_at);
         this.user = user;
         this.checkedBy = checkedBy;
@@ -145,6 +161,7 @@ public class Contribution extends BaseEntity {
         this.linkSource = linkSource;
         this.publishedAt = publishedAt;
         this.isApproved = isApproved;
+        this.extension = extension;
     }
 
 

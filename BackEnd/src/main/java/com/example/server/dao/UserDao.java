@@ -20,6 +20,8 @@ public interface UserDao extends JpaRepository<User, Long> {
 
     Optional<User> findById(Long id);
 
+    User findUserById(Long id);
+
 
     @Query("Select u from User u "+
     "where u.is_deleted = 0 "+
@@ -62,7 +64,11 @@ public interface UserDao extends JpaRepository<User, Long> {
     List<Long> searchMC();
 
     @Query(value = "Select * FROM user u " +
-    "Where  ((:userId is null) or (u.id = :userId))", nativeQuery = true)
+    "Where  ((:userId is null) or (u.id = :userId))"+ 
+    "AND u.is_deleted = 0 ", nativeQuery = true)
     User findByUserId(@Param("userId") Long userId);
+
+    @Query(value = "SELECT u.* FROM user u WHERE u.is_deleted = 0 AND u.id = :id ", nativeQuery = true)
+    User findExistedUserById(Long id);
 
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 public class ContributionResponse {
     private Long id;
     private Long userId;
+    private String code;
     private String userName;
     private Long checkedById;
     private String checkedByName;
@@ -13,6 +14,7 @@ public class ContributionResponse {
     private Integer status;
     private Long magazineId;
     private String linkSource;
+    private String extension;
 
     public Long getId() {
         return id;
@@ -78,10 +80,24 @@ public class ContributionResponse {
     public ContributionResponse() {
 
     }
-    public ContributionResponse(Long id, Long userId, String userName, Long checkedById, String checkedByName,
-            Date publishedAt, Date createdAt, Integer status, Long magazineId, String linkSource) {
+    public String getCode() {
+        return code;
+    }
+    public void setCode(String code) {
+        this.code = code;
+    }
+    public String getExtension() {
+        return extension;
+    }
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
+    public ContributionResponse(Long id, Long userId, String code, String userName, Long checkedById,
+            String checkedByName, Date publishedAt, Date createdAt, Integer status, Long magazineId, String linkSource,
+            String extension) {
         this.id = id;
         this.userId = userId;
+        this.code = code;
         this.userName = userName;
         this.checkedById = checkedById;
         this.checkedByName = checkedByName;
@@ -90,5 +106,7 @@ public class ContributionResponse {
         this.status = status;
         this.magazineId = magazineId;
         this.linkSource = linkSource;
+        this.extension = extension;
     }
+    
 }

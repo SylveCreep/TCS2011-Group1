@@ -19,6 +19,9 @@ public class Magazine {
     @Column(nullable = false, unique = true)
     private String code;
 
+    @Column(name="created_at", nullable = false)
+    private Date createdAt;
+
     @Column(name="published_at", nullable = false)
     private Date publishedAt;
 
@@ -105,10 +108,19 @@ public class Magazine {
         this.theme = theme;
     }
 
-    public Magazine(Long id, String code, Date publishedAt, Date expiredAt, Date closedAt, String theme,
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Magazine(Long id, String code, Date createdAt, Date publishedAt, Date expiredAt, Date closedAt, String theme,
             int is_deleted, List<Contribution> contribution) {
         this.id = id;
         this.code = code;
+        this.createdAt = createdAt;
         this.publishedAt = publishedAt;
         this.expiredAt = expiredAt;
         this.closedAt = closedAt;

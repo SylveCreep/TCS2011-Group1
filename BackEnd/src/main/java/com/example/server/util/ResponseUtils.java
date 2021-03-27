@@ -11,9 +11,11 @@ import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 
 import com.example.server.constant.Constant;
 import com.example.server.dao.FacultyDao;
+import com.example.server.dao.MagazineDao;
 import com.example.server.dao.RoleDao;
 import com.example.server.dao.UserDao;
 import com.example.server.entity.Faculty;
+import com.example.server.entity.Magazine;
 import com.example.server.entity.Role;
 import com.example.server.entity.User;
 import com.example.server.model.request.CreateAccount;
@@ -42,6 +44,9 @@ public class ResponseUtils {
 
     @Autowired
     private FacultyDao facultyDao;
+
+    @Autowired
+    private MagazineDao magazineDao;
     
     //Get sort object for sort
     public Sort getSortObj(PagingRequest pagingRequest){
@@ -385,13 +390,9 @@ public class ResponseUtils {
         if(facultyId == null){
             return "Valid";
         }
-        Faculty faculty = facultyDao.getOne(facultyId);
+        Faculty faculty = facultyDao.findExistedFacultyById(facultyId);
         if(faculty != null){
-            if(faculty.getIs_deleted() != DELETED){
-                return "Valid";
-            } else {
-                return "Faculty is deleted";
-            }
+            return "Valid";
         } else {
             return "Faculty not existed";
         }
@@ -554,4 +555,66 @@ public class ResponseUtils {
         return form;
     }
 
+    //Validate contribution
+
+
+    public String validateContributionFile(MultipartFile file){
+        if(file == null){
+            return "Invalid";
+        }
+        String fileName = file.getOriginalFilename();
+        String extension = fileName.substring(fileName.lastIndexOf("."), fileName.length());
+        if(!file.getContentType().startsWith("image/") && !extension.equals("docx") && !extension.equals("xlsx") && !extension.equals("pdf")){
+            return file.getContentType();
+        }
+        return "Valid";
+    }
+
+    public String validateMagazineInput(Long magazineId, int allowNull, int actionType){
+        //0: Nullable 
+        //1: Non nullable
+        switch (allowNull) {
+            case 0:
+                return "Valid";
+            case 1:
+                //0: Create action
+                //1: Update action
+                Magazine magazine = magazineDao.findExistedMagazineById(magazineId);
+                if(magazine == null){
+                    return "Magazine not existed";
+                }
+                switch (actionType) {
+                    case 0:
+                        if(magazine.getExpiredAt().compareTo(new Date()) > 0 && magazine.getCreatedAt().compareTo(new Date()) < 0){
+                            return "Valid";
+                        } else {
+                            return "Cannot create new contribution during expired peroid";
+                        }
+                    case 1:
+                        if(magazine.getPublishedAt().compareTo(new Date()) > 0 && magazine.getCreatedAt().compareTo(new Date()) < 0){
+                            return "Valid";
+                        } else {
+                            return "Cannot update new contribution after published date";
+                        }
+                    default:
+                        return "Invalid";
+                }
+            default:
+                return "Invalid";
+        }
+    }
+
+    public String validatePublishedDate(Date publishedDate, int allowNull, int actionType){
+        //0: Nullable 
+        //1: Non nullable
+        switch (allowNull) {
+            case 0:
+                return "Valid";
+            case 1:
+                //0: Create action
+                //1: Update action
+            default:
+                return "Invalid";
+        }
+    }
 }

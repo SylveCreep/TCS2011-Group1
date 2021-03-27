@@ -1,5 +1,6 @@
 package com.example.server.service.impl;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
+import com.example.server.model.response.FileResponse;
 import com.example.server.service.FileService;
 
 import org.springframework.core.io.Resource;
@@ -57,14 +59,14 @@ public class FileServiceImpl implements FileService{
     }
 
     @Override
-    public Path load(String filename) {
+    public Path loadAvatarPath(String filename) {
         return avatarLocationPath.resolve(filename).normalize();
     }
 
     @Override
     public Resource loadAsResource(String filename) {
         try {
-            Path file = load("avatar_"+filename);
+            Path file = loadAvatarPath("avatar_"+filename);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists()) {
                 return resource;
@@ -78,13 +80,16 @@ public class FileServiceImpl implements FileService{
     }
 
     @Override
-    public String storeContribution(MultipartFile file, String code) {
+    public FileResponse storeContribution(MultipartFile file, String code) {
         try {
             String path = "";
             if(file.isEmpty()){
                 return null;
             }
-            Path destinationPath = contributionLocationPath.resolve(Paths.get(code)).normalize().toAbsolutePath();
+            int f = file.getOriginalFilename().lastIndexOf(".", file.getOriginalFilename().length());
+            String olfFileName = file.getOriginalFilename().substring(0, f);
+            String fileName = file.getOriginalFilename().replace(olfFileName, "contribution_"+code);
+            Path destinationPath = contributionLocationPath.resolve(Paths.get(fileName)).normalize().toAbsolutePath();
             path = destinationPath.toString();
             if(!destinationPath.getParent().equals(contributionLocationPath.toAbsolutePath())){
                 return null;
@@ -93,10 +98,21 @@ public class FileServiceImpl implements FileService{
                 Files.copy(inputStream, destinationPath,
                         StandardCopyOption.REPLACE_EXISTING);
             }
-            return path;
+            FileResponse fileResponse = new FileResponse();
+            fileResponse.setExtension(path.substring(path.lastIndexOf(".")+1, path.length()));
+            fileResponse.setPath(path);
+            return fileResponse;
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public File loadContributionPath(String code, String extenstion) {
+        Path path = contributionLocationPath.resolve(Paths.get("contribution_"+code)).toAbsolutePath();
+        String filePath = path.toString()+"."+extenstion;
+        File file = new File(filePath);
+        return file;
     }
     
 }

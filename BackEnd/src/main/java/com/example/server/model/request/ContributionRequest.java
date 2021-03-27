@@ -2,14 +2,30 @@ package com.example.server.model.request;
 
 import java.util.Date;
 
-public class ContributionRequest  extends PagingRequest{
+import org.springframework.format.annotation.DateTimeFormat;
+
+public class ContributionRequest extends PagingRequest{
+    private Long id;
     private String code;
     private String studentName;
     private Integer status;
     private Long facultyId;
     private Long studentId;
     private Long magazineId;
-    private Date submitDate;
+    private Long checkedBy;
+
+
+    private Long userId;
+    private String linkSource;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date publishedAt;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date createdAt;
+
+    public Integer withFile;
+
 
     public String getCode() {
         return code;
@@ -28,12 +44,6 @@ public class ContributionRequest  extends PagingRequest{
     }
     public void setFacultyId(Long facultyId) {
         this.facultyId = facultyId;
-    }
-    public Date getSubmitDate() {
-        return submitDate;
-    }
-    public void setSubmitDate(Date submitDate) {
-        this.submitDate = submitDate;
     }
 
     public ContributionRequest(){
@@ -57,26 +67,85 @@ public class ContributionRequest  extends PagingRequest{
     public void setStatus(Integer status) {
         this.status = status;
     }
-    public ContributionRequest(String code, String studentName, Integer status, Long facultyId, Long studentId,
-            Long magazineId, Date submitDate) {
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public Long getUserId() {
+        return userId;
+    }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+    public String getLinkSource() {
+        return linkSource;
+    }
+    public void setLinkSource(String linkSource) {
+        this.linkSource = linkSource;
+    }
+    public Date getPublishedAt() {
+        return publishedAt;
+    }
+    public void setPublishedAt(Date publishedAt) {
+        this.publishedAt = publishedAt;
+    }
+    public Integer getWithFile() {
+        return withFile;
+    }
+    public void setWithFile(Integer withFile) {
+        this.withFile = withFile;
+    }
+    public Long getCheckedBy() {
+        return checkedBy;
+    }
+    public void setCheckedBy(Long checkedBy) {
+        this.checkedBy = checkedBy;
+    }
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+    public ContributionRequest(Long id, String code, String studentName, Integer status, Long facultyId, Long studentId,
+            Long magazineId, Long checkedBy, Long userId, String linkSource, Date publishedAt, Date createdAt,
+            Integer withFile) {
+        this.id = id;
         this.code = code;
         this.studentName = studentName;
         this.status = status;
         this.facultyId = facultyId;
         this.studentId = studentId;
         this.magazineId = magazineId;
-        this.submitDate = submitDate;
+        this.checkedBy = checkedBy;
+        this.userId = userId;
+        this.linkSource = linkSource;
+        this.publishedAt = publishedAt;
+        this.createdAt = createdAt;
+        this.withFile = withFile;
     }
-    public ContributionRequest(int limit, int page, String sort, String column, String code, String studentName,
-            Integer status, Long facultyId, Long studentId, Long magazineId, Date submitDate) {
+    public ContributionRequest(int limit, int page, String sort, String column, Long id, String code,
+            String studentName, Integer status, Long facultyId, Long studentId, Long magazineId, Long checkedBy,
+            Long userId, String linkSource, Date publishedAt, Date createdAt, Integer withFile) {
         super(limit, page, sort, column);
+        this.id = id;
         this.code = code;
         this.studentName = studentName;
         this.status = status;
         this.facultyId = facultyId;
         this.studentId = studentId;
         this.magazineId = magazineId;
-        this.submitDate = submitDate;
+        this.checkedBy = checkedBy;
+        this.userId = userId;
+        this.linkSource = linkSource;
+        this.publishedAt = publishedAt;
+        this.createdAt = createdAt;
+        this.withFile = withFile;
     }
+    
+    
     
 }
