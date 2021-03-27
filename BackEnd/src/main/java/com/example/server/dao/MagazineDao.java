@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import com.example.server.entity.Magazine;
+import com.example.server.model.response.MagazineResponse;
 
 import org.springframework.stereotype.Repository;
 
@@ -15,12 +16,17 @@ import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface MagazineDao extends JpaRepository<Magazine, Long> {
+    Magazine findByTheme(String theme);
 
-    Magazine findMagazineByPublishedAt(Date publishedAt);
+    Magazine findByOpenAt(Date open_at);
 
-    Magazine findMagazineByCode(String code);
+    Magazine findByPublishedAt(Date published_at);
 
-    Magazine findMagazineById(Long id);
+    Magazine findByCloseAt(Date close_at);
+
+    Magazine findByCode(String code);
+
+    Optional<Magazine> findById(Long id);
 
     @Query(value = "SELECT m.* FROM magazine m WHERE m.is_deleted = 0 AND m.id = :id ", nativeQuery = true)
     Magazine findExistedMagazineById(Long id);
@@ -30,7 +36,14 @@ public interface MagazineDao extends JpaRepository<Magazine, Long> {
     "group by m.id")
     Page<Magazine> getNonDelRole(Pageable pageable);
 
+    @Query(value = "Select * from magazine m where m.is_deleted = 0 " +
+    "AND ((:theme IS NULL) OR LOWER(m.theme) LIKE CONCAT('%',IFNULL(LOWER(:theme), LOWER(m.theme)), '%')) " +
+    "AND ((:code IS NULL) OR LOWER (m.code) LIKE CONCAT('%',IFNULL(LOWER(:code),LOWER(m.code)),'%')) " +
+    "AND ((:id IS NULL) OR (m.id = :id))" +
+    "group by r.id", nativeQuery = true)
+    Page<Magazine> searchMagazineByName(@Param("id") Long id, @Param("theme") String theme, @Param("code") String code/*, @Param("openAt") Date openAt, @Param("publishedAt") Date publishedAt, @Param("closeAt") Date closeAt*/, Pageable pageable);
+
     @Query(value = "Select * FROM magazine m " +
     "Where  ((:mId is null) or (m.id = :mId))", nativeQuery = true)
-    Optional<Magazine> findById(@Param("mId") Long id);
+    Optional<MagazineResponse> findMagazineById(@Param("mId") Long id);
 }

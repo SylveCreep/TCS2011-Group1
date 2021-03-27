@@ -5,6 +5,9 @@ import javax.validation.Valid;
 import com.example.server.constant.Constant;
 import com.example.server.entity.Magazine;
 import com.example.server.model.request.CreateMagazine;
+import com.example.server.model.request.MagazineSearchRequest;
+import com.example.server.model.response.MagazineLastPageResponse;
+import com.example.server.model.response.MagazineResponse;
 import com.example.server.service.MagazineService;
 import com.example.server.util.ResponseUtils;
 
@@ -14,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -79,6 +83,40 @@ public class MagazineController {
         }
         catch(Exception e){
             return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update magazine fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(value = "/filter")
+    public ResponseEntity<?> showMagazineBySearch(@RequestBody MagazineSearchRequest magazineSearchRequest){
+        try{
+            if (magazineSearchRequest.getLimit() < 0 || magazineSearchRequest.getPage() < 0){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Limit must larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
+            }
+            MagazineLastPageResponse magazines = magazineService.searchMagazineByTheme(magazineSearchRequest);
+            if (magazines == null){
+                return responseUtils.getResponseEntity(magazines, Constant.SUCCESS, "Don't have magazine", HttpStatus.OK);
+            }
+            return responseUtils.getResponseEntity(magazines.getList(), Constant.SUCCESS, "Show magazine success", magazines    .getLastPage(), HttpStatus.OK);
+        } catch(Exception e){
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Show magazine failed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(value = "/{id}", consumes = {"text/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> getMagazine(@PathVariable(name = "id") Long id){
+        try{
+            if(id == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Must has magazine id", HttpStatus.BAD_REQUEST);
+            }
+            MagazineResponse magazineResponse = magazineService.findMagazineById(id);
+            if (magazineResponse == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get magazine fail", HttpStatus.OK);
+            }
+            return responseUtils.getResponseEntity(magazineResponse, Constant.SUCCESS, "Get magazine successfully", HttpStatus.OK);
+        } catch (Exception e){
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get magazine fail", HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -1,39 +1,15 @@
-package com.example.server.entity;
+package com.example.server.model.request;
 
 import java.util.Date;
 
-import javax.persistence.*;
-
-import com.example.server.constant.Constant;
-
-
-@Entity
-@Table(name="magazine")
-public class Magazine {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+public class MagazineSearchRequest extends PagingRequest {
     private Long id;
-
-
-    @Column(nullable = false, unique = true)
     private String code;
-
-    @Column(name = "theme", nullable = false)
     private String theme;
-
-    @Column(name="open_at", nullable = false)
     private Date openAt;
-
-    @Column(name="published_at", nullable = false)
     private Date publishedAt;
-
-    @Column(name="close_at", nullable = false)
     private Date closeAt;
-
-    @Column(nullable = false)
-    private int is_deleted = Constant.NOTDELETED;
-
+    
     public Long getId() {
         return id;
     }
@@ -82,31 +58,22 @@ public class Magazine {
         this.closeAt = closeAt;
     }
 
-    public int getIs_deleted() {
-        return is_deleted;
-    }
+    public MagazineSearchRequest(){}
 
-    public void setIs_deleted(int is_deleted) {
-        this.is_deleted = is_deleted;
-    }
-
-    public Magazine(){
-        
-    }
-
-    public Magazine(Long id, String code, Date openAt, Date publishedAt, Date closeAt, int is_deleted) {
+    public MagazineSearchRequest(Long id, Date openAt, Date closeAt, Date publishedAt, String theme){
         this.id = id;
-        this.code = code;
         this.openAt = openAt;
         this.publishedAt = publishedAt;
         this.closeAt = closeAt;
-        this.is_deleted = is_deleted;
+        this.theme = theme;
     }
 
-    public Magazine(String code, Date openAt, Date publishedAt, Date closeAt){
-        this.code = code;
+    public MagazineSearchRequest(int limit, int page, String sort, String column, Long id, Date openAt, Date closeAt, Date publishedAt, String theme){
+        super(limit, page, sort, column);
+        this.id = id;
         this.openAt = openAt;
-        this.publishedAt = publishedAt;
         this.closeAt = closeAt;
+        this.publishedAt = publishedAt;
+        this.theme = theme;
     }
 }
