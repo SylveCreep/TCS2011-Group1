@@ -41,9 +41,6 @@ public class Contribution extends BaseEntity {
     @Column(name="link_source",nullable = false)
     private String linkSource;
 
-    @Column(name="published_at",nullable = false)
-    private Date publishedAt;
-
     @Column(name="is_approved",nullable = false)
     private int isApproved = PENDING;
 
@@ -106,13 +103,6 @@ public class Contribution extends BaseEntity {
         this.linkSource = linkSource;
     }
 
-    public Date getPublishedAt() {
-        return publishedAt;
-    }
-
-    public void setPublishedAt(Date publishedAt) {
-        this.publishedAt = publishedAt;
-    }
 
     public int getIsApproved() {
         return isApproved;
@@ -135,7 +125,7 @@ public class Contribution extends BaseEntity {
     }
 
     public Contribution(User user, User checkedBy, Faculty faculty, Magazine magazine, List<Comment> comments,
-            String code, String linkSource, Date publishedAt, int isApproved, String extension) {
+            String code, String linkSource, int isApproved, String extension) {
         this.user = user;
         this.checkedBy = checkedBy;
         this.faculty = faculty;
@@ -143,14 +133,12 @@ public class Contribution extends BaseEntity {
         this.comments = comments;
         this.code = code;
         this.linkSource = linkSource;
-        this.publishedAt = publishedAt;
         this.isApproved = isApproved;
         this.extension = extension;
     }
 
     public Contribution(Long id, int is_deleted, Date created_at, Date updated_at, User user, User checkedBy,
-            Faculty faculty, Magazine magazine, List<Comment> comments, String code, String linkSource,
-            Date publishedAt, int isApproved, String extension) {
+            Faculty faculty, Magazine magazine, List<Comment> comments, String code, String linkSource, int isApproved, String extension) {
         super(id, is_deleted, created_at, updated_at);
         this.user = user;
         this.checkedBy = checkedBy;
@@ -159,7 +147,6 @@ public class Contribution extends BaseEntity {
         this.comments = comments;
         this.code = code;
         this.linkSource = linkSource;
-        this.publishedAt = publishedAt;
         this.isApproved = isApproved;
         this.extension = extension;
     }

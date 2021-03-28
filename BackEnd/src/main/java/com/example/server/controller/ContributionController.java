@@ -7,6 +7,7 @@ import com.example.server.util.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -19,10 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import static com.example.server.constant.Constant.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -63,32 +68,30 @@ public class ContributionController {
         }
     }
 
-    @RequestMapping(value = "/download/{id}")
-    public ResponseEntity<?> downloadContribution(@PathVariable(name="id") Long id) {
-        try {
-            if(id == null){
-                return responseUtils.getResponseEntity("NULL", FAILURE,"Missing id", HttpStatus.BAD_REQUEST);
-            }
-            ContributionResponse response = contributionService.getContributionById(id);
-            if(response == null){
-                return responseUtils.getResponseEntity("NULL", FAILURE,"Not existed contribution", HttpStatus.BAD_REQUEST);
-            }
-            HttpHeaders header = new HttpHeaders();
-            header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=contribution_"+response.getCode()+"."+response.getExtension());
+    // @RequestMapping(value = "/download/{id}")
+    // public ResponseEntity<?> downloadContribution(@PathVariable(name="id") Long id) {
+    //     try {
+    //         if(id == null){
+    //             return responseUtils.getResponseEntity("NULL", FAILURE,"Missing id", HttpStatus.BAD_REQUEST);
+    //         }
+    //         ContributionResponse response = contributionService.getContributionById(id);
+    //         if(response == null){
+    //             return responseUtils.getResponseEntity("NULL", FAILURE,"Not existed contribution", HttpStatus.BAD_REQUEST);
+    //         }
+    //         HttpHeaders header = new HttpHeaders();
+    //         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=contribution_"+response.getCode()+"."+response.getExtension());
     
-            File file = fileService.loadContributionPath(response.getCode(), response.getExtension());
-            //File file = new File("C:\\Users\\DELL\\Documents\\GitHub\\TCS2011-Group1\\BackEnd\\src\\main\\resources\\static\\file\\contributions\\contribution_C0003.jpg");
-            //ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-            return ResponseEntity.ok()
-                    .headers(header)
-                    .contentType(MediaType.parseMediaType("application/octet-stream"))
-                    .body(resource);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return responseUtils.getResponseEntity("NULL", FAILURE,"Dowload user failed", HttpStatus.BAD_REQUEST);
-        }
-    }
+    //         File file = fileService.loadContributionPath(response.getCode(), response.getExtension());
+    //         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+    //         return ResponseEntity.ok()
+    //                 .headers(header)
+    //                 .contentType(MediaType.parseMediaType("application/octet-stream"))
+    //                 .body(resource);
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         return responseUtils.getResponseEntity("NULL", FAILURE,"Dowload user failed", HttpStatus.BAD_REQUEST);
+    //     }
+    // }
 
     @PostMapping
     public ResponseEntity<?> createContribution(ContributionRequest request,@RequestPart("file") MultipartFile file, HttpServletRequest httpServletRequest){
@@ -166,6 +169,43 @@ public class ContributionController {
             return responseUtils.getResponseEntity("NULL", SUCCESS,"Delete contribution successfully", HttpStatus.OK);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", FAILURE,"Delete contribution fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/download/{id}")
+    public ResponseEntity<?> downloadContribution(@PathVariable(name="id") Long id) {
+        try {
+            if(id == null){
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Missing id", HttpStatus.BAD_REQUEST);
+            }
+            ContributionResponse response = contributionService.getContributionById(id);
+            if(response == null){
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Not existed contribution", HttpStatus.BAD_REQUEST);
+            }
+            HttpHeaders header = new HttpHeaders();
+            header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=contribution_"+response.getCode()+"."+"zip");
+    
+            File file = fileService.loadContributionPath(response.getCode(), response.getExtension());
+            ByteArrayOutputStream  baos = new ByteArrayOutputStream ();
+            ZipOutputStream zipOut = new ZipOutputStream(baos);
+            FileInputStream fis = new FileInputStream(file);
+            ZipEntry zipEntry = new ZipEntry(file.getName());
+            zipOut.putNextEntry(zipEntry);
+            byte[] bytes = new byte[1024];
+            int length;
+            while((length = fis.read(bytes)) >= 0) {
+                zipOut.write(bytes, 0, length);
+            }
+            zipOut.close();
+            fis.close();
+            baos.close();
+            return ResponseEntity.ok()
+                    .headers(header)
+                    .contentType(MediaType.parseMediaType("application/zip"))
+                    .body(baos.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return responseUtils.getResponseEntity("NULL", FAILURE,"Dowload user failed", HttpStatus.BAD_REQUEST);
         }
     }
 }

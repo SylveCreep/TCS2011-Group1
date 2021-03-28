@@ -9,7 +9,6 @@ public class ContributionResponse {
     private String userName;
     private Long checkedById;
     private String checkedByName;
-    private Date publishedAt;
     private Date createdAt;
     private Integer status;
     private Long magazineId;
@@ -45,12 +44,6 @@ public class ContributionResponse {
     }
     public void setCheckedByName(String checkedByName) {
         this.checkedByName = checkedByName;
-    }
-    public Date getPublishedAt() {
-        return publishedAt;
-    }
-    public void setPublishedAt(Date publishedAt) {
-        this.publishedAt = publishedAt;
     }
     public Date getCreatedAt() {
         return createdAt;
@@ -93,7 +86,7 @@ public class ContributionResponse {
         this.extension = extension;
     }
     public ContributionResponse(Long id, Long userId, String code, String userName, Long checkedById,
-            String checkedByName, Date publishedAt, Date createdAt, Integer status, Long magazineId, String linkSource,
+            String checkedByName, Date createdAt, Integer status, Long magazineId, String linkSource,
             String extension) {
         this.id = id;
         this.userId = userId;
@@ -101,7 +94,6 @@ public class ContributionResponse {
         this.userName = userName;
         this.checkedById = checkedById;
         this.checkedByName = checkedByName;
-        this.publishedAt = publishedAt;
         this.createdAt = createdAt;
         this.status = status;
         this.magazineId = magazineId;

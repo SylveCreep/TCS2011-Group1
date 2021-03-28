@@ -20,9 +20,11 @@ import java.util.List;
 import com.example.server.dao.*;
 import com.example.server.entity.Contribution;
 import com.example.server.entity.Magazine;
+import com.example.server.entity.User;
 import com.example.server.model.request.*;
 
 import static com.example.server.constant.Constant.*;
+import static com.example.server.util.SessionUtils.*;
 
 @Service(value = "contributionService")
 public class ContributionServiceImpl implements ContributionService {
@@ -74,7 +76,6 @@ public class ContributionServiceImpl implements ContributionService {
                 contributionRes.setUserName(contribution.getUser().getFullName());
                 contributionRes.setCheckedById(contribution.getCheckedBy().getId());
                 contributionRes.setCheckedByName(contribution.getCheckedBy().getFullName());
-                contributionRes.setPublishedAt(contribution.getPublishedAt());
                 contributionRes.setCreatedAt(contribution.getCreated_at());
                 contributionRes.setStatus(contribution.getIsApproved());
                 contributionRes.setMagazineId(contribution.getMagazine() == null? null:contribution.getMagazine().getId());
@@ -111,17 +112,18 @@ public class ContributionServiceImpl implements ContributionService {
     public Boolean createContribution(ContributionRequest contribution, MultipartFile file) {
         try {
             Contribution nContribution = new Contribution();
-            nContribution.setUser(userDao.findByUserId(contribution.getUserId()));
+            String email = getEmail();
+            User user = userDao.findExistedUserByEmail(email);
+            nContribution.setUser(user);
             if(contribution.getCheckedBy() != null){
                 nContribution.setCheckedBy(userDao.findByUserId(contribution.getCheckedBy()));
             }
-            nContribution.setFaculty(facultyDao.findFacultyById(contribution.getFacultyId()));
+            nContribution.setFaculty(user.getFaculty());
             if(contribution.getMagazineId() != null){
                 nContribution.setMagazine(magazineDao.findExistedMagazineById(contribution.getMagazineId()));
             }
             nContribution.setCode("C" + String.format("%04d", queryCheck.GetHighestId("contribution")));
             nContribution.setCreated_at(new Date());
-            nContribution.setPublishedAt(contribution.getPublishedAt());
             FileResponse fileResponse = fileService.storeContribution(file, nContribution.getCode());
             nContribution.setLinkSource(fileResponse.getPath());
             nContribution.setExtension(fileResponse.getExtension());
@@ -143,20 +145,19 @@ public class ContributionServiceImpl implements ContributionService {
             if(uContribution == null){
                 return null;
             }
-            if(contribution.getUserId() != null){
-                uContribution.setUser(userDao.findByUserId(contribution.getUserId()));
-            }
+            // String email = getEmail();
+            // User user = userDao.findExistedUserByEmail(email);
+            // if(contribution.getUserId() != null){
+            //     uContribution.setUser(userDao.findByUserId(contribution.getUserId()));
+            // }
             if(contribution.getCheckedBy() != null){
                 uContribution.setCheckedBy(userDao.findByUserId(contribution.getCheckedBy()));
             }
-            if(contribution.getFacultyId() != null){
-                uContribution.setFaculty(facultyDao.findFacultyById(contribution.getFacultyId()));
-            }
+            // if(contribution.getFacultyId() != null){
+            //     uContribution.setFaculty(facultyDao.findFacultyById(contribution.getFacultyId()));
+            // }
             if(contribution.getMagazineId() != null){
                 uContribution.setMagazine(magazineDao.findExistedMagazineById(contribution.getMagazineId()));
-            }
-            if(contribution.getPublishedAt() != null){
-                uContribution.setPublishedAt(contribution.getPublishedAt());
             }
             if(contribution.getStatus() != null){
                 uContribution.setIsApproved(contribution.getStatus());
@@ -207,7 +208,6 @@ public class ContributionServiceImpl implements ContributionService {
             contributionRes.setUserName(contribution.getUser().getFullName());
             contributionRes.setCheckedById(contribution.getCheckedBy().getId());
             contributionRes.setCheckedByName(contribution.getCheckedBy().getFullName());
-            contributionRes.setPublishedAt(contribution.getPublishedAt());
             contributionRes.setCreatedAt(contribution.getCreated_at());
             contributionRes.setStatus(contribution.getIsApproved());
             contributionRes.setMagazineId(contribution.getMagazine() == null? null:contribution.getMagazine().getId());
