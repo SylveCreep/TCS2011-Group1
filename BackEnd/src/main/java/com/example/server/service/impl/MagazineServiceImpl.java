@@ -175,9 +175,9 @@ public class MagazineServiceImpl implements MagazineService {
             List<MagazineResponse> listResponse = new ArrayList<>();
             for(Magazine magazine: list){
                 MagazineResponse magazineResponse = new MagazineResponse();
-                magazine.setId(magazine.getId());
-                magazine.setTheme(magazine.getTheme() == null ?"":magazine.getTheme());
-                magazine.setCode(magazine.getCode() == null ?"":magazine.getCode() );
+                magazineResponse.setId(magazine.getId());
+                magazineResponse.setTheme(magazine.getTheme() == null ?"":magazine.getTheme());
+                magazineResponse.setCode(magazine.getCode() == null ?"":magazine.getCode() );
                 magazineResponse.setOpen_at(magazine.getOpen_at() == null ?null: magazine.getOpen_at());
                 magazineResponse.setPublished_at(magazine.getPublished_at() == null ?null: magazine.getPublished_at());
                 magazineResponse.setClose_at(magazine.getClose_at() == null ?null: magazine.getClose_at());
