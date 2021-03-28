@@ -162,11 +162,9 @@ public class ContributionServiceImpl implements ContributionService {
             if(contribution.getStatus() != null){
                 uContribution.setIsApproved(contribution.getStatus());
             }
-            if(withFile == 1){
-                FileResponse fileResponse = fileService.storeContribution(file, uContribution.getCode());
-                uContribution.setLinkSource(fileResponse.getPath());
-                uContribution.setExtension(fileResponse.getExtension());
-            }
+            FileResponse fileResponse = fileService.storeContribution(file, uContribution.getCode());
+            uContribution.setLinkSource(fileResponse.getPath());
+            uContribution.setExtension(fileResponse.getExtension());
             try {
                 uContribution.setUpdated_at(new Date());
                 contributionDao.save(uContribution);
