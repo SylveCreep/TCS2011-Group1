@@ -1,6 +1,7 @@
 package com.example.server.dao;
 
 import java.util.Date;
+import java.util.List;
 
 import com.example.server.entity.Contribution;
 import com.example.server.model.response.ContributionResponse;
@@ -28,4 +29,13 @@ public interface ContributionDao extends JpaRepository<Contribution, Long> {
     "AND c.is_approved = :status "+ 
     "AND c.is_deleted = 0 ", nativeQuery = true)
     Page<Contribution> getContributionList(@Param("code")String code, @Param("studentName") String studentName, @Param("facultyId")Long facultyId, @Param("magazineId")Long magazineId, @Param("submitDate")Date submitDate, @Param("hasDate") int hasDate, @Param("status") Integer status, Pageable pageable);
+
+    @Query(value="SELECT c.* FROM contribution c "+
+    "LEFT JOIN user u ON u.id = c.user_id "+
+    "LEFT JOIN magazine m ON m.id = c.magazine_id "+ 
+    "WHERE ((:type = 1) OR u.id = :id) "+
+    "AND ((:type = 0) OR m.id = :id) "+
+    "AND c.is_deleted = 0 "+ 
+    "AND u.is_deleted = 0",nativeQuery = true)
+    List<Contribution> getExistedContributionsByUserId(Long id, int type);
 }

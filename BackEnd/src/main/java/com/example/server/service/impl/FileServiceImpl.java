@@ -6,12 +6,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
+import com.example.server.dao.ContributionDao;
+import com.example.server.entity.Contribution;
 import com.example.server.model.response.FileResponse;
 import com.example.server.service.FileService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -19,6 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileServiceImpl implements FileService{
+    @Autowired
+    ContributionDao contributionDao;
+
     ResourceBundle rb = ResourceBundle.getBundle("file");
     String avatar_location = rb.getString("avatar_location");
     String contribution_location = rb.getString("contribution_location");
@@ -113,6 +121,34 @@ public class FileServiceImpl implements FileService{
         String filePath = path.toString()+"."+extenstion;
         File file = new File(filePath);
         return file;
+    }
+
+    @Override
+    public List<File> loadContributionPathsByUserIdOrMagazineId(Long Id, int type) {
+        List<File> files = new ArrayList<>();
+        switch (type) {
+            case 0:
+                List<Contribution> contributionsOfUser = contributionDao.getExistedContributionsByUserId(Id, type);
+                for (Contribution contribution : contributionsOfUser) {
+                    Path path = contributionLocationPath.resolve(Paths.get("contribution_"+contribution.getCode())).toAbsolutePath();
+                    String filePath = path.toString()+"."+contribution.getExtension();
+                    File file = new File(filePath);
+                    files.add(file);
+                }
+                break;
+            case 1:
+                List<Contribution> contributionsOfMagazine = contributionDao.getExistedContributionsByUserId(Id, type);
+                for (Contribution contribution : contributionsOfMagazine) {
+                    Path path = contributionLocationPath.resolve(Paths.get("contribution_"+contribution.getCode())).toAbsolutePath();
+                    String filePath = path.toString()+"."+contribution.getExtension();
+                    File file = new File(filePath);
+                    files.add(file);
+                }
+                break;
+            default:
+                break;
+        }
+        return files;
     }
     
 }

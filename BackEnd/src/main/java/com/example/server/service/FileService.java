@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.stream.Stream;
 
 import com.example.server.model.response.FileResponse;
@@ -20,6 +21,8 @@ public interface FileService {
     Path loadAvatarPath(String filename);
 
     File loadContributionPath(String code, String extenstion);
+
+    List<File> loadContributionPathsByUserIdOrMagazineId(Long Id, int type);
 
     Resource loadAsResource(String filename);
 }

@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -173,7 +174,7 @@ public class ContributionController {
     }
 
     @RequestMapping(value = "/download/{id}")
-    public ResponseEntity<?> downloadContribution(@PathVariable(name="id") Long id) {
+    public ResponseEntity<?> downloadContributionByContributionId(@PathVariable(name="id") Long id) {
         try {
             if(id == null){
                 return responseUtils.getResponseEntity("NULL", FAILURE,"Missing id", HttpStatus.BAD_REQUEST);
@@ -205,7 +206,75 @@ public class ContributionController {
                     .body(baos.toByteArray());
         } catch (Exception e) {
             e.printStackTrace();
-            return responseUtils.getResponseEntity("NULL", FAILURE,"Dowload user failed", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", FAILURE,"Dowload contribution failed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/download/user")
+    public ResponseEntity<?> downloadContributionsByUserId(@RequestParam(name="userId") Long userId) {
+        try {
+            if(userId == null){
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Missing user id", HttpStatus.BAD_REQUEST);
+            }
+            List<File> files = fileService.loadContributionPathsByUserIdOrMagazineId(userId, 0);
+            HttpHeaders header = new HttpHeaders();
+            header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+userId+"_contributions.zip");
+            ByteArrayOutputStream  baos = new ByteArrayOutputStream();
+            ZipOutputStream zipOut = new ZipOutputStream(baos);
+            for(File file: files){
+                FileInputStream fis = new FileInputStream(file);
+                ZipEntry zipEntry = new ZipEntry(file.getName());
+                zipOut.putNextEntry(zipEntry);
+                byte[] bytes = new byte[1024];
+                int length;
+                while((length = fis.read(bytes)) >= 0) {
+                zipOut.write(bytes, 0, length);
+                }
+                fis.close();
+            }
+            zipOut.close();
+            baos.close();
+            return ResponseEntity.ok()
+                    .headers(header)
+                    .contentType(MediaType.parseMediaType("application/zip"))
+                    .body(baos.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return responseUtils.getResponseEntity("NULL", FAILURE,"Dowload contributions of user failed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/download/magazine")
+    public ResponseEntity<?> downloadContributionsByMagazineId(@RequestParam(name="magazineId") Long magazineId) {
+        try {
+            if(magazineId == null){
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Missing user id", HttpStatus.BAD_REQUEST);
+            }
+            List<File> files = fileService.loadContributionPathsByUserIdOrMagazineId(magazineId, 1);
+            HttpHeaders header = new HttpHeaders();
+            header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+magazineId+"_contributions.zip");
+            ByteArrayOutputStream  baos = new ByteArrayOutputStream();
+            ZipOutputStream zipOut = new ZipOutputStream(baos);
+            for(File file: files){
+                FileInputStream fis = new FileInputStream(file);
+                ZipEntry zipEntry = new ZipEntry(file.getName());
+                zipOut.putNextEntry(zipEntry);
+                byte[] bytes = new byte[1024];
+                int length;
+                while((length = fis.read(bytes)) >= 0) {
+                zipOut.write(bytes, 0, length);
+                }
+                fis.close();
+            }
+            zipOut.close();
+            baos.close();
+            return ResponseEntity.ok()
+                    .headers(header)
+                    .contentType(MediaType.parseMediaType("application/zip"))
+                    .body(baos.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return responseUtils.getResponseEntity("NULL", FAILURE,"Dowload contributions of magazine failed", HttpStatus.BAD_REQUEST);
         }
     }
 }
