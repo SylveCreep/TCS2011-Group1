@@ -6,13 +6,13 @@ export const commonHelper = {
   data() {
     return {
       loggedRole: this.$cookies.get("currentRole"),
-      loggedUser: {},
+      loggedUser: this.$cookies.get("currentUser"),
       list_users: [],
       list_faculties: [],
       list_roles: [],
       list_errors: [],
       list_contributions: [],
-      list_magazines:[],
+      list_magazines: [],
       filter: {
         column: DefaultConstants.Column, //default column = 'id'
         sort: DefaultConstants.Sort, //default sort = 'asc'
@@ -22,7 +22,11 @@ export const commonHelper = {
       avatarUrl: null,
       confirmResult: false,
       canModify: false,
+      isMC: false,
     }
+  },
+  created() {
+    this.getCurrentUser();
   },
   methods: {
     getCurrentUser() {
@@ -48,7 +52,7 @@ export const commonHelper = {
           this.$cookies.remove("currentRole");
           this.$emit("user-logout", null);
           this.$router.push("/login");
-        } 
+        }
       })
     },
     getcommonSort($column) {
@@ -136,13 +140,14 @@ export const commonHelper = {
         .then((response) => {
           this.list_users = response.data.data;
           if (Object.keys(this.list_users).length === 0) {
-            this.canModify= true;
+            this.canModify = true;
           } else {
-            this.canModify= false;
+            this.canModify = false;
           }
         });
     },
     getUserList() {
+      this.setRole();
       axios
         .post(UrlConstants.User + "/filter", this.filter)
         .then((response) => {
@@ -166,18 +171,18 @@ export const commonHelper = {
           this.errors = error.response.data;
         });
     },
-    getMagazineList(){
+    getMagazineList() {
       axios
-      .post(UrlConstants.Magazine + "/filter", this.filter)
-      .then((response) => {
-        this.list_magazines = response.data.data;
-        this.list_magazines.currentPage = this.filter.page;
-        this.list_magazines.lastPage = response.data.lastPage;
-      })
-      .catch((error) => {
-        this.errors = error.response.data;        
-      });
+        .post(UrlConstants.Magazine + "/filter", this.filter)
+        .then((response) => {
+          this.list_magazines = response.data.data;
+          this.list_magazines.currentPage = this.filter.page;
+          this.list_magazines.lastPage = response.data.lastPage;
+        })
+        .catch((error) => {
+          this.errors = error.response.data;
+        });
     },
-    
+
   },
 }

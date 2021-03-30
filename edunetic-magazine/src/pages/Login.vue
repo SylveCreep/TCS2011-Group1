@@ -66,6 +66,7 @@ export default {
         .get(UrlConstants.User + "/" + this.$cookies.get("id"))
         .then((res) => {
           this.$cookies.set("currentUser", res.data.data, "30min");
+          this.$cookies.set("currentRole", res.data.data.roleId);
         });
     },
   },
