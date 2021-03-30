@@ -25,15 +25,12 @@ public interface FacultyDao extends JpaRepository<Faculty, Long> {
     "group by f.id ")
     List<Faculty> getNonDelFaculty();
 
-    @Query(value ="SELECT * FROM faculty f "+
-    "LEFT JOIN user u ON u.id =  f.manager_id "+ 
+    @Query(value ="SELECT * FROM faculty f "+ 
     "WHERE f.is_deleted = 0 "+
     "AND ((:facultyName IS NULL) OR (f.faculty_name LIKE CONCAT('%',:facultyName,'%'))) "+ 
-    "AND ((:code IS NULL) OR (f.code LIKE CONCAT('%',:code,'%'))) "+ 
-    "AND ((:managerName IS NULL) OR (u.full_name LIKE CONCAT('%',:managerName,'%'))) "+ 
+    "AND ((:code IS NULL) OR (f.code LIKE CONCAT('%',:code,'%'))) "+
     "AND ((:hasDate = 0) OR (f.created_at BETWEEN :startDate AND :endDate)) "+ 
     "group by f.id ", nativeQuery = true)
-    Page<Faculty> searchFaculty(@Param("code")String code, @Param("facultyName")String facultyName,
-    @Param("managerName")String managerName, @Param("startDate")Date startDate,
+    Page<Faculty> searchFaculty(@Param("code")String code, @Param("facultyName")String facultyName, @Param("startDate")Date startDate,
     @Param("endDate")Date endDate, @Param("hasDate") int hasDate, Pageable page);
 }
