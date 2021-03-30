@@ -81,6 +81,8 @@ public class ContributionServiceImpl implements ContributionService {
                 ContributionResponse contributionRes = new ContributionResponse();
                 contributionRes.setId(contribution.getId());
                 contributionRes.setUserId(contribution.getUser().getId());
+                contributionRes.setFacultyId(contribution.getFaculty().getId());
+                contributionRes.setFacultyName(contribution.getFaculty().getName());
                 contributionRes.setUserName(contribution.getUser().getFullName());
                 contributionRes.setCheckedById(contribution.getCheckedBy().getId());
                 contributionRes.setCheckedByName(contribution.getCheckedBy().getFullName());
@@ -122,10 +124,9 @@ public class ContributionServiceImpl implements ContributionService {
             Contribution nContribution = new Contribution();
             String email = getEmail();
             User user = userDao.findExistedUserByEmail(email);
+            User mcUser = userDao.findUserManagerByFacultyIdAndRoleId(user.getFaculty().getId(), (long) 3);
             nContribution.setUser(user);
-            if(contribution.getCheckedBy() != null){
-                nContribution.setCheckedBy(userDao.findByUserId(contribution.getCheckedBy()));
-            }
+            nContribution.setCheckedBy(mcUser);
             nContribution.setFaculty(user.getFaculty());
             if(contribution.getMagazineId() != null){
                 nContribution.setMagazine(magazineDao.findExistedMagazineById(contribution.getMagazineId()));
@@ -136,7 +137,6 @@ public class ContributionServiceImpl implements ContributionService {
             nContribution.setLinkSource(fileResponse.getPath());
             nContribution.setExtension(fileResponse.getExtension());
 
-            User mcUser = userDao.findUserManagerByFacultyIdAndRoleId(user.getFaculty().getId(), (long) 3);
             User mmUser = userDao.findUserManagerByFacultyIdAndRoleId(null, (long) 2);
             List<String> ccList = new ArrayList<>();
             ccList.add(mmUser.getEmail());
