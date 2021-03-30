@@ -7,7 +7,7 @@
             <i class="pe-7s-display1 icon-gradient bg-premium-dark"> </i>
           </div>
           <div>
-            <h2 v-if="loggedUser !== undefined">Profile Update</h2>
+            <h2 v-if="loggedUserId !== undefined">Profile Update</h2>
             <h2 v-else>User Update</h2>
           </div>
         </div>
@@ -30,7 +30,7 @@
                 />
               </div>
             </div>
-            <div v-if="loggedRole == 1" class="col-3" style="margin-top: 10px">
+            <div v-if="loginUser.roleId == 1" class="col-3" style="margin-top: 10px">
               <input
                 name="file"
                 id="exampleFile"
@@ -190,7 +190,7 @@ export default {
   name: "UserUpdate",
   mixins: [commonHelper, validateHelper],
   props: {
-    loggedUser: Number,
+    loginUserId: Number,
   },
   data() {
     return {
@@ -207,14 +207,13 @@ export default {
   created() {
     this.getUser();
     this.getFacultyList(); //This function are called from commonHelper.js file
-    console.log(this.loggedRole)
   },
   methods: {
     getUser() {
       let user_id = this.$route.params.id;
       //check is the profile page
-      if (this.loggedUser !== undefined) {
-        user_id = this.loggedUser;
+      if (this.loginUserId !== undefined) {
+        user_id = this.loginUserId;
       }
       axios
         .get(UrlConstants.User + "/" + user_id)

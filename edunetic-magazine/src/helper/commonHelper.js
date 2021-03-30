@@ -5,8 +5,7 @@ import Swal from 'sweetalert2'
 export const commonHelper = {
   data() {
     return {
-      loggedRole: this.$cookies.get("currentRole"),
-      loggedUser: this.$cookies.get("currentUser"),
+      loginUser: {},
       list_users: [],
       list_faculties: [],
       list_roles: [],
@@ -22,22 +21,12 @@ export const commonHelper = {
       avatarUrl: null,
       confirmResult: false,
       canModify: false,
-      isMC: false,
     }
   },
   created() {
-    this.getCurrentUser();
+    this.loginUser = this.$cookies.get("loginUser")
   },
   methods: {
-    getCurrentUser() {
-      axios
-        .get(UrlConstants.User + "/" + this.$cookies.get("id"))
-        .then((res) => {
-          this.loggedUser = res.data.data;
-          this.loggedRole = this.loggedUser.roleId
-          this.avatarUrl = UrlConstants.AvatarSource + this.loggedUser.avatar;
-        });
-    },
     logOut() {
       Swal.fire({
         title: 'Are you sure to logout ?',
@@ -87,6 +76,7 @@ export const commonHelper = {
         });
     },
     getFacultyList() {
+
       axios
         .post(UrlConstants.Faculty + "/filter", this.filter)
         .then((response) => {
@@ -147,17 +137,25 @@ export const commonHelper = {
         });
     },
     getUserList() {
-      this.setRole();
+      this.checkIsCoordinator();
       axios
         .post(UrlConstants.User + "/filter", this.filter)
         .then((response) => {
           this.list_users = response.data.data;
           this.list_users.currentPage = this.filter.page;
           this.list_users.lastPage = response.data.lastPage;
+          if(this.filter.facultyId) {
+            delete this.filter.facultyId
+          }
         })
         .catch((error) => {
           this.errors = error.response.data;
         });
+    },
+    checkIsCoordinator() {
+      if (this.loginUser.roleId ===  DefaultConstants.Role.MarketingCoordinator) {
+        this.filter.facultyId = this.loginUser.facultyId;
+      }
     },
     getContributionList() {
       axios

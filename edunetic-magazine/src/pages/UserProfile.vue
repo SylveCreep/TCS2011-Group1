@@ -1,5 +1,5 @@
 <template>
-    <user-update v-bind:loggedUser="currentUser"></user-update>
+    <user-update v-bind:loginUserId="currentUserId"></user-update>
 </template>
 
 <script>
@@ -12,7 +12,7 @@ export default {
   },
   data() {
     return {
-      currentUser: this.$cookies.get("id")
+      currentUserId: this.$cookies.get("id")
     };
   },
 };

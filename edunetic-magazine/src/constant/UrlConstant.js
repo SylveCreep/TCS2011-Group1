@@ -8,6 +8,6 @@ export  const UrlConstants = Object.freeze({
     Contribution: "/contributions",
     Comment: "/comments",
     Magazine: "/magazines",
-    AvatarSource: "http://localhost:8080/file/users/",
+    AvatarSource: BaseUrl + "/file/users/",
     ContributionSource: "http://localhost:8080/file/contributions/",
 });

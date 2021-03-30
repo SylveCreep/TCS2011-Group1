@@ -43,7 +43,7 @@
     <div class="scrollbar-sidebar">
       <div class="app-sidebar__inner">
         <ul class="vertical-nav-menu">
-          <li class="app-sidebar__heading">Hello {{loggedUser.fullName}}</li>
+          <li class="app-sidebar__heading">Hello {{loginUser.fullName}}</li>
           <li>
             <router-link to="/">
               <i class="metismenu-icon fas fa-th"></i>
@@ -98,9 +98,6 @@ import { commonHelper } from "@/helper/commonHelper";
 export default {
   name: "TheSidebar",
   mixins: [commonHelper],
-  created() {
-    this.getCurrentUser();
-  },
   methods: {
     deleteUserKey() {
       if (this.$cookies.isKey("facultyStudent")) {

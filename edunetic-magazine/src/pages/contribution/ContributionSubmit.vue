@@ -17,33 +17,6 @@
         <h5 class="card-title">Submit Form</h5>
         <form v-on:submit.prevent="submitContribution()">
           <div class="position-relative form-group">
-            <label class="col-sm-2 control-label">Student Name: </label>
-            <div class="col-sm-12">
-              <input
-                id="fullName"
-                type="text"
-                class="form-control"
-                v-model="user.fullName"
-                readonly
-              />
-              <p style="color: red" v-if="list_errors !== null">
-                {{ list_errors.fullName }}
-              </p>
-            </div>
-          </div>
-          <div class="position-relative form-group">
-            <label class="col-sm-2 control-label">Faculty: </label>
-            <div class="col-sm-12">
-              <input
-                id="facultyName"
-                type="text"
-                class="form-control"
-                v-model="user.facultyName"
-                readonly
-              />
-            </div>
-          </div>
-          <div class="position-relative form-group">
             <label for="exampleFile" class="col-sm-2 control-label">File</label>
             <div class="row">
               <div class="input-file col-sm-3">
@@ -91,20 +64,8 @@ export default {
       user: [],
     };
   },
-  created() {
-    this.getStudent();
-  },
   methods: {
-    getStudent() {
-      axios
-        .get(UrlConstants.User + "/" + this.$cookies.get("id"))
-        .then((r) => {
-          this.user = r.data.data;
-        })
-        .catch((error) => {
-          this.errors = error.response;
-        });
-    },
+    
   },
   props: {},
 };

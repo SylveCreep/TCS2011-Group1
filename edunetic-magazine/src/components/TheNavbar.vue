@@ -57,6 +57,7 @@
                       v-if="avatarUrl"
                       :src="avatarUrl"
                       width="42"
+                      height="40"
                     />
                     <i class="fa fa-angle-down ml-2 opacity-8"></i>
                   </a>
@@ -88,8 +89,8 @@
                 </div>
               </div>
               <div class="widget-content-left ml-3 header-user-info">
-                <div class="widget-heading">{{ loggedUser.fullName }}</div>
-                <div class="widget-subheading">{{ loggedUser.roleName }}</div>
+                <div class="widget-heading">{{ loginUser.fullName }}</div>
+                <div class="widget-subheading">{{ loginUser.roleName }}</div>
               </div>
               <div class="widget-content-right header-user-info ml-3">
                 <button
@@ -111,16 +112,15 @@
 import { commonHelper } from "@/helper/commonHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
 export default {
+  created () {
+    this.avatarUrl = UrlConstants.AvatarSource + this.loginUser.avatar
+  },
   name: "TheNavbar",
   mixins: [commonHelper],
    data() {
     return {
-      avatarUrl: null,
+      avatarUrl: null
     };
-  },
-  created() {
-    this.getCurrentUser();
-    
   },
 };
 </script>

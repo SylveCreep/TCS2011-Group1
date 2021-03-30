@@ -223,7 +223,7 @@ import { UrlConstants } from "@/constant/UrlConstant";
 import { ResultConstants } from "@/constant/ResultConstant";
 import router from "@/router";
 import ThePagination from "@/components/ThePagination";
-import { RoleConstants } from "@/constant/RoleConstants";
+import { DefaultConstants } from "@/constant/DefaultConstant";
 
 export default {
   name: "UserList",
@@ -242,6 +242,7 @@ export default {
     this.getUserList();
     this.getRoleList();
     this.getFacultyList();
+    
   },
   methods: {
     async checkUserExisted(user_id) {
@@ -304,13 +305,7 @@ export default {
       this.changecommonPage(e);
       this.getUserList();
     },
-    setRole() {
-      if (this.loggedRole == RoleConstants.Admin) {
-        this.filter.facultyId = this.loggedUser.facultyId;
-        console.log(this.filter);
-        console.log(this.loggedUser);
-      }
-    },
+   
   },
 };
 </script>
