@@ -187,24 +187,24 @@ public class UserController {
         }
     }
 
-    @GetMapping(value="/avatar/{id}",consumes = {"text/plain", "application/*"})
-    @ResponseBody
-    public ResponseEntity<?> getUserAvatarById(@PathVariable(name="id") Long id) {
-        try {
-            if(id == null){
-                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Must has user id", HttpStatus.BAD_REQUEST);
-            }
-            UserResponse user = userService.findById(id);
-            if(user == null){
-                return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Cant find user matched with provided id", HttpStatus.OK);
-            }
-            Resource file = fileService.loadAsResource(user.getCode());
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-        } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Get user avatar fail", HttpStatus.BAD_REQUEST);
-        }
-    }
+    // @GetMapping(value="/avatar/{id}",consumes = {"text/plain", "application/*"})
+    // @ResponseBody
+    // public ResponseEntity<?> getUserAvatarById(@PathVariable(name="id") Long id) {
+    //     try {
+    //         if(id == null){
+    //             return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Must has user id", HttpStatus.BAD_REQUEST);
+    //         }
+    //         UserResponse user = userService.findById(id);
+    //         if(user == null){
+    //             return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Cant find user matched with provided id", HttpStatus.OK);
+    //         }
+    //         Resource file = fileService.loadAsResource(user.getCode());
+    //         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+    //             "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    //     } catch (Exception e) {
+    //         return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Get user avatar fail", HttpStatus.BAD_REQUEST);
+    //     }
+    // }
 
 
 }

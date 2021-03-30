@@ -74,4 +74,10 @@ public interface UserDao extends JpaRepository<User, Long> {
     @Query(value = "SELECT u.* FROM user u WHERE u.is_deleted = 0 AND u.email = :email ", nativeQuery = true)
     User findExistedUserByEmail(String email);
 
+    @Query(value = "SELECT u.* FROM user u "+
+    "WHERE u.is_deleted = 0 "+ 
+    "AND u.role_id = :roleId " +
+    "AND ((:facultyId IS NULL) OR u.faculty_id = :facultyId)", nativeQuery = true)
+    User findUserManagerByFacultyIdAndRoleId(@Param("facultyId")Long facultyId, @Param("roleId")Long roleId);
+
 }

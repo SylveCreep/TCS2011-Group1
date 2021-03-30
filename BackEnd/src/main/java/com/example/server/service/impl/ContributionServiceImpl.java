@@ -12,10 +12,12 @@ import com.example.server.service.ContributionService;
 import com.example.server.service.FileService;
 import com.example.server.util.QueryCheck;
 import com.example.server.util.ResponseUtils;
+import com.example.server.util.Mail.MailService;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import com.example.server.dao.*;
 import com.example.server.entity.Contribution;
@@ -41,6 +43,9 @@ public class ContributionServiceImpl implements ContributionService {
     MagazineDao magazineDao;
 
     @Autowired
+    MailService mailService;
+
+    @Autowired
     private FileService fileService;
 
     @Autowired
@@ -48,6 +53,9 @@ public class ContributionServiceImpl implements ContributionService {
 
     @Autowired
     private ResponseUtils responseUtils;
+
+    ResourceBundle rb = ResourceBundle.getBundle("email");
+    String host_email = rb.getString("SEND_FROM");
 
     @Override
     public ContributionPagingResponse getContributionList(ContributionRequest contributionRequest) {
@@ -127,8 +135,16 @@ public class ContributionServiceImpl implements ContributionService {
             FileResponse fileResponse = fileService.storeContribution(file, nContribution.getCode());
             nContribution.setLinkSource(fileResponse.getPath());
             nContribution.setExtension(fileResponse.getExtension());
+
+            User mcUser = userDao.findUserManagerByFacultyIdAndRoleId(user.getFaculty().getId(), (long) 3);
+            User mmUser = userDao.findUserManagerByFacultyIdAndRoleId(null, (long) 2);
+            List<String> ccList = new ArrayList<>();
+            ccList.add(mmUser.getEmail());
+            String subject = "New commited contribution from student "+ user.getFullName() + " (code:" + user.getCode() + ")";
+            String html = "<p>Student " + user.getFullName()+ " has commited following code "+ nContribution.getCode()+ " contribution</p>"+"<p>Please follow url link to see contribution: "+ "http://..." +"</p>";
             try {
                 contributionDao.save(nContribution);
+                mailService.sendAsHtml(host_email, mcUser.getEmail(), ccList, subject, html);
                 return true;
             } catch (Exception e) {
                 return false;
