@@ -53,7 +53,7 @@ public class FacultyServiceImpl implements FacultyService {
                 startDate = facultyRequest.getStartDate();
                 endDate = facultyRequest.getEndDate();
             }
-            Page<Faculty> data = facultyDao.searchFaculty(facultyRequest.getCode(), facultyRequest.getFacultyName(), facultyRequest.getManagerName(), startDate, endDate, hasDate, PageRequest.of(offset, facultyRequest.getLimit(), sort));
+            Page<Faculty> data = facultyDao.searchFaculty(facultyRequest.getCode(), facultyRequest.getFacultyName(), startDate, endDate, hasDate, PageRequest.of(offset, facultyRequest.getLimit(), sort));
             int lastPage = Math.round(data.getTotalElements() / facultyRequest.getLimit()  + ((data.getTotalElements() % facultyRequest.getLimit() == 0) ? 0 : 1)); 
             FacultyPagingResponse response = new FacultyPagingResponse();
             List<FacultyResponse> listResponse = new ArrayList<>();
