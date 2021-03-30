@@ -62,8 +62,6 @@ public class FacultyServiceImpl implements FacultyService {
                 faclRes.setCode(facl.getCode() == null? "":facl.getCode());
                 faclRes.setFacultyId(facl.getId() == null? null:facl.getId());
                 faclRes.setFacultyName(facl.getName() == null? "": facl.getName());
-                faclRes.setManagerName(facl.getManager() == null? "": facl.getManager().getFullName());
-                faclRes.setManagerId(facl.getManager()== null? null: facl.getManager().getId());
                 listResponse.add(faclRes);
             }
             response.setFacultyResponses(listResponse);
@@ -81,15 +79,6 @@ public class FacultyServiceImpl implements FacultyService {
             Faculty facl = faclOptional.get();
             if(facl.getIs_deleted() == 1){
                 return false;
-            }
-            if(facultyRequest.getManagerId() != null){
-                Optional<User> managerOptional = userDao.findById(facultyRequest.getManagerId());
-                User manager = managerOptional.get();
-                if(manager.getIs_deleted() == 0){
-                    facl.setManager(manager);
-                } else {
-                    return false;
-                }
             }
             facl.setName(facultyRequest.getFacultyName());
             facultyDao.save(facl);
@@ -136,8 +125,6 @@ public class FacultyServiceImpl implements FacultyService {
                     faculResponse.setCode(falc.getCode() == null? "":falc.getCode());
                     faculResponse.setFacultyId(falc.getId());
                     faculResponse.setFacultyName(falc.getName() == null? "": falc.getName());
-                    faculResponse.setManagerId(falc.getManager() == null? null: falc.getManager().getId());
-                    faculResponse.setManagerName(falc.getManager() == null? "": falc.getManager().getFullName());
                     return faculResponse;
                 }
             }

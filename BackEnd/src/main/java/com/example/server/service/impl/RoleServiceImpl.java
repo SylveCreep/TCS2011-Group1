@@ -165,8 +165,8 @@ public class RoleServiceImpl implements RoleService {
             for(Role role: list){
                 RoleResponse roleResponse = new RoleResponse();
                 roleResponse.setId(role.getId());
-                roleResponse.setName(role.getName() == null ?"":role.getCode());
-                roleResponse.setCode(role.getCode() );
+                roleResponse.setName(role.getName() == null ?"":role.getName());
+                roleResponse.setCode(role.getCode() == null ?"":role.getCode() );
                 listResponse.add(roleResponse);
             }
             object.add(listResponse);

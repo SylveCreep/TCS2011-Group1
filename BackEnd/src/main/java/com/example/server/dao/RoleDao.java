@@ -19,6 +19,9 @@ public interface RoleDao extends JpaRepository<Role, Long> {
 
     Role findRoleByCode(String code);
 
+    @Query(value = "SELECT r.* FROM role r WHERE r.is_deleted = 0 AND r.id = :id ", nativeQuery = true)
+    Role findExistedRoleById(Long id);
+
     @Query("select r from Role r " +
     "where r.is_deleted = 0 " + 
     "group by r.id")

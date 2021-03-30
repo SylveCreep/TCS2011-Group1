@@ -5,14 +5,15 @@ import java.util.Date;
 public class ContributionResponse {
     private Long id;
     private Long userId;
+    private String code;
     private String userName;
     private Long checkedById;
     private String checkedByName;
-    private Date publishedAt;
     private Date createdAt;
     private Integer status;
     private Long magazineId;
     private String linkSource;
+    private String extension;
 
     public Long getId() {
         return id;
@@ -44,12 +45,6 @@ public class ContributionResponse {
     public void setCheckedByName(String checkedByName) {
         this.checkedByName = checkedByName;
     }
-    public Date getPublishedAt() {
-        return publishedAt;
-    }
-    public void setPublishedAt(Date publishedAt) {
-        this.publishedAt = publishedAt;
-    }
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -78,17 +73,32 @@ public class ContributionResponse {
     public ContributionResponse() {
 
     }
-    public ContributionResponse(Long id, Long userId, String userName, Long checkedById, String checkedByName,
-            Date publishedAt, Date createdAt, Integer status, Long magazineId, String linkSource) {
+    public String getCode() {
+        return code;
+    }
+    public void setCode(String code) {
+        this.code = code;
+    }
+    public String getExtension() {
+        return extension;
+    }
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
+    public ContributionResponse(Long id, Long userId, String code, String userName, Long checkedById,
+            String checkedByName, Date createdAt, Integer status, Long magazineId, String linkSource,
+            String extension) {
         this.id = id;
         this.userId = userId;
+        this.code = code;
         this.userName = userName;
         this.checkedById = checkedById;
         this.checkedByName = checkedByName;
-        this.publishedAt = publishedAt;
         this.createdAt = createdAt;
         this.status = status;
         this.magazineId = magazineId;
         this.linkSource = linkSource;
+        this.extension = extension;
     }
+    
 }

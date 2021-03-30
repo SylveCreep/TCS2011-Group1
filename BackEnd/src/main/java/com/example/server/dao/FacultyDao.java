@@ -14,6 +14,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FacultyDao extends JpaRepository<Faculty, Long> {
+
+    Faculty findFacultyById(Long id);
+
+    @Query(value = "SELECT f.* FROM faculty f WHERE f.is_deleted = 0 AND f.id = :id ", nativeQuery = true)
+    Faculty findExistedFacultyById(Long id);
     
     @Query("select f from Faculty f "+ 
     "where f.is_deleted = 0 "+ 

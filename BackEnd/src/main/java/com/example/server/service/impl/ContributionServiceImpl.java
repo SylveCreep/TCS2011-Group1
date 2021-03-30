@@ -5,16 +5,28 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.server.model.response.*;
 import com.example.server.service.ContributionService;
+import com.example.server.service.FileService;
+import com.example.server.util.QueryCheck;
 import com.example.server.util.ResponseUtils;
+import com.example.server.util.Mail.MailService;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
-import com.example.server.dao.ContributionDao;
+import com.example.server.dao.*;
+import com.example.server.entity.Contribution;
+import com.example.server.entity.Magazine;
+import com.example.server.entity.User;
 import com.example.server.model.request.*;
+
+import static com.example.server.constant.Constant.*;
+import static com.example.server.util.SessionUtils.*;
 
 @Service(value = "contributionService")
 public class ContributionServiceImpl implements ContributionService {
@@ -22,7 +34,28 @@ public class ContributionServiceImpl implements ContributionService {
     ContributionDao contributionDao;
 
     @Autowired
+    UserDao userDao;
+
+    @Autowired
+    FacultyDao facultyDao;
+
+    @Autowired
+    MagazineDao magazineDao;
+
+    @Autowired
+    MailService mailService;
+
+    @Autowired
+    private FileService fileService;
+
+    @Autowired
+    private QueryCheck queryCheck;
+
+    @Autowired
     private ResponseUtils responseUtils;
+
+    ResourceBundle rb = ResourceBundle.getBundle("email");
+    String host_email = rb.getString("SEND_FROM");
 
     @Override
     public ContributionPagingResponse getContributionList(ContributionRequest contributionRequest) {
@@ -38,12 +71,26 @@ public class ContributionServiceImpl implements ContributionService {
             if(studentName.isEmpty()){
                 studentName = null;
             }
-            if(contributionRequest.getSubmitDate() != null){
+            if(contributionRequest.getCreatedAt() != null){
                 hasDate = 1;
             }
-            Page<ContributionResponse> list = contributionDao.getContributionList(code, studentName, contributionRequest.getFacultyId(), contributionRequest.getMagazineId(), contributionRequest.getSubmitDate(), hasDate, contributionRequest.getStatus(), PageRequest.of(offset, contributionRequest.getLimit(), sort));
-            int lastPage = 0;
+            Page<Contribution> list = contributionDao.getContributionList(code, studentName, contributionRequest.getFacultyId(), contributionRequest.getMagazineId(), contributionRequest.getCreatedAt(), hasDate, contributionRequest.getStatus(), PageRequest.of(offset, contributionRequest.getLimit(), sort));
+            int lastPage = Math.round(list.getTotalElements() / contributionRequest.getLimit()  + ((list.getTotalElements() % contributionRequest.getLimit() == 0) ? 0 : 1)); 
             List<ContributionResponse> contributionResponse = new ArrayList<>();
+            for(Contribution contribution: list){
+                ContributionResponse contributionRes = new ContributionResponse();
+                contributionRes.setId(contribution.getId());
+                contributionRes.setUserId(contribution.getUser().getId());
+                contributionRes.setUserName(contribution.getUser().getFullName());
+                contributionRes.setCheckedById(contribution.getCheckedBy().getId());
+                contributionRes.setCheckedByName(contribution.getCheckedBy().getFullName());
+                contributionRes.setCreatedAt(contribution.getCreated_at());
+                contributionRes.setStatus(contribution.getIsApproved());
+                contributionRes.setMagazineId(contribution.getMagazine() == null? null:contribution.getMagazine().getId());
+                contributionRes.setLinkSource(contribution.getLinkSource());
+                contributionRes.setCode(contribution.getCode());
+                contributionResponse.add(contributionRes);
+            }
             ContributionPagingResponse response = new ContributionPagingResponse();
             response.setList(contributionResponse);
             response.setLastPage(lastPage);
@@ -55,8 +102,136 @@ public class ContributionServiceImpl implements ContributionService {
 
     @Override
     public Boolean deleted(Long id) {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            Contribution contribution = contributionDao.findExistedContributionById(id);
+            contribution.setIs_deleted(DELETED);
+            try {
+                contributionDao.save(contribution);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean createContribution(ContributionRequest contribution, MultipartFile file) {
+        try {
+            Contribution nContribution = new Contribution();
+            String email = getEmail();
+            User user = userDao.findExistedUserByEmail(email);
+            nContribution.setUser(user);
+            if(contribution.getCheckedBy() != null){
+                nContribution.setCheckedBy(userDao.findByUserId(contribution.getCheckedBy()));
+            }
+            nContribution.setFaculty(user.getFaculty());
+            if(contribution.getMagazineId() != null){
+                nContribution.setMagazine(magazineDao.findExistedMagazineById(contribution.getMagazineId()));
+            }
+            nContribution.setCode("C" + String.format("%04d", queryCheck.GetHighestId("contribution")));
+            nContribution.setCreated_at(new Date());
+            FileResponse fileResponse = fileService.storeContribution(file, nContribution.getCode());
+            nContribution.setLinkSource(fileResponse.getPath());
+            nContribution.setExtension(fileResponse.getExtension());
+
+            User mcUser = userDao.findUserManagerByFacultyIdAndRoleId(user.getFaculty().getId(), (long) 3);
+            User mmUser = userDao.findUserManagerByFacultyIdAndRoleId(null, (long) 2);
+            List<String> ccList = new ArrayList<>();
+            ccList.add(mmUser.getEmail());
+            String subject = "New commited contribution from student "+ user.getFullName() + " (code:" + user.getCode() + ")";
+            String html = "<p>Student " + user.getFullName()+ " has commited following code "+ nContribution.getCode()+ " contribution</p>"+"<p>Please follow url link to see contribution: "+ "http://..." +"</p>";
+            try {
+                contributionDao.save(nContribution);
+                mailService.sendAsHtml(host_email, mcUser.getEmail(), ccList, subject, html);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean updateContribution(ContributionRequest contribution, MultipartFile file, int withFile) {
+        try {
+            Contribution uContribution = contributionDao.findExistedContributionById(contribution.getId());
+            if(uContribution == null){
+                return null;
+            }
+            // String email = getEmail();
+            // User user = userDao.findExistedUserByEmail(email);
+            // if(contribution.getUserId() != null){
+            //     uContribution.setUser(userDao.findByUserId(contribution.getUserId()));
+            // }
+            if(contribution.getCheckedBy() != null){
+                uContribution.setCheckedBy(userDao.findByUserId(contribution.getCheckedBy()));
+            }
+            // if(contribution.getFacultyId() != null){
+            //     uContribution.setFaculty(facultyDao.findFacultyById(contribution.getFacultyId()));
+            // }
+            if(contribution.getMagazineId() != null){
+                uContribution.setMagazine(magazineDao.findExistedMagazineById(contribution.getMagazineId()));
+            }
+            if(contribution.getStatus() != null){
+                uContribution.setIsApproved(contribution.getStatus());
+            }
+            FileResponse fileResponse = fileService.storeContribution(file, uContribution.getCode());
+            uContribution.setLinkSource(fileResponse.getPath());
+            uContribution.setExtension(fileResponse.getExtension());
+            try {
+                uContribution.setUpdated_at(new Date());
+                contributionDao.save(uContribution);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean updateStatusContribution(ContributionRequest contribution) {
+        try {
+            Contribution uContribution = contributionDao.findExistedContributionById(contribution.getId());
+            uContribution.setIsApproved(contribution.getStatus());
+            try {
+                contributionDao.save(uContribution);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public ContributionResponse getContributionById(Long id) {
+        try {
+            Contribution contribution = contributionDao.findExistedContributionById(id);
+            if(contribution == null){
+                return null;
+            }
+            ContributionResponse contributionRes = new ContributionResponse();
+            contributionRes.setId(contribution.getId());
+            contributionRes.setUserId(contribution.getUser().getId());
+            contributionRes.setUserName(contribution.getUser().getFullName());
+            contributionRes.setCheckedById(contribution.getCheckedBy().getId());
+            contributionRes.setCheckedByName(contribution.getCheckedBy().getFullName());
+            contributionRes.setCreatedAt(contribution.getCreated_at());
+            contributionRes.setStatus(contribution.getIsApproved());
+            contributionRes.setMagazineId(contribution.getMagazine() == null? null:contribution.getMagazine().getId());
+            contributionRes.setLinkSource(contribution.getLinkSource());
+            contributionRes.setCode(contribution.getCode());
+            contributionRes.setExtension(contribution.getExtension());
+            return contributionRes;
+        } catch (Exception e) {
+            return null;
+        }
     }
     
 }

@@ -1,18 +1,28 @@
 package com.example.server.service;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.stream.Stream;
+
+import com.example.server.model.response.FileResponse;
+
 import org.springframework.core.io.Resource;
 
 public interface FileService {
     String storeAvatar(MultipartFile file, String code);
 
-    String storeContribution(MultipartFile file, String code);
+    FileResponse storeContribution(MultipartFile file, String code);
 
     Stream<Path> loadAll();
 
-    Path load(String filename);
+    Path loadAvatarPath(String filename);
+
+    File loadContributionPath(String code, String extenstion);
+
+    List<File> loadContributionPathsByUserIdOrMagazineId(Long Id, int type);
 
     Resource loadAsResource(String filename);
 }

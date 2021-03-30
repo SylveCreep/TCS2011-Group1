@@ -20,8 +20,8 @@ public class CommentDto {
     public Comment getCommentFromDto(){
         Comment comment = new Comment();
         comment.setContent(content);
-        //comment.setUser(user);
-        //comment.setContribution(contribution);
+        comment.setUser(user);
+        comment.setContribution(contribution);
         return comment;
     }
 
