@@ -240,7 +240,7 @@ export default {
       }
     },
     getFilter() {
-      this.filter.page = 1;
+      this.filter.page = DefaultConstants.firstPage;
       this.getFacultyList();
     },
     getSort($column) {

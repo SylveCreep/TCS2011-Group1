@@ -5,6 +5,7 @@ export const DefaultConstants = Object.freeze({
     Page: 1,
     female: 0,
     male: 1,
+    firstPage: 1,
     Role: {
         Admin : 1,
         MarketingManager : 2,

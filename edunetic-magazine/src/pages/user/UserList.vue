@@ -290,8 +290,8 @@ export default {
       }
     },
     getFilter() {
-      this.filter.page = 1;
-      this.getUserList();
+      this.filter.page = DefaultConstants.firstPage;
+      this.getUserList(this.filter.page);
     },
     getSort($column) {
       this.getcommonSort($column);

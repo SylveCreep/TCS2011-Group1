@@ -171,6 +171,7 @@
 import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { ResultConstants } from "@/constant/ResultConstant";
+import { DefaultConstants } from "@/constant/DefaultConstant";
 import router from "@/router";
 import ThePagination from "@/components/ThePagination";
 import { commonHelper } from "@/helper/commonHelper";
@@ -242,7 +243,7 @@ export default {
       });
     },
     getFilter() {
-      this.filter.page = 1;
+      this.filter.page = DefaultConstants.firstPage;
       this.getFacultyList();
     },
     getSort($column) {

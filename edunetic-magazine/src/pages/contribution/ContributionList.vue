@@ -46,6 +46,7 @@
           v-bind:id="'tab-' + status"
           data-toggle="tab"
           v-bind:href="'#tab-content-' + status"
+          v-on:change="getStatus(status)"
         >
           <span>{{ index }}</span>
         </a>
@@ -104,7 +105,7 @@
             type="date"
             placeholder="Search"
             aria-label="Search"
-            v-model="filter.date_of_birth"
+            v-model="filter.publishedAt"
             v-on:keyup="getFilter"
           />
         </div>
@@ -124,16 +125,18 @@
               <div class="card-header">
                 <i class="header-icon lnr-license icon-gradient bg-plum-plate">
                 </i>
-                code: {{ user.code }}
+                code: {{ contribution.code }}
               </div>
               <div class="card-body">
-                StudentName: {{ user.fullName }}
+                <p>StudentName: {{ contribution.fullName }}</p>
                 <br />
-                Faculty: {{ user.facultyName }}
+                <p>Faculty: {{ contribution.facultyName }}</p>
                 <br />
-                Submit Date: {{ user.date_of_birth }}
+                <p>Submit Date: {{ contribution.createdAt }}</p>
                 <br />
-                Approved by: {{ user.roleName }}
+                <p v-if="status = 2">Approved by: {{ contribution.roleName }}</p>
+                <br />
+                <p v-if="status = 0">Denied by: {{ contribution.roleName }}</p>
               </div>
               <div class="d-block text-right card-footer">
                 <a
@@ -182,7 +185,7 @@ export default {
   data() {
     return {
       list_statuses: DefaultConstants.ContributionStatuses,
-      list_users: [],
+      list_contributions: [],
     };
   },
 
@@ -194,28 +197,34 @@ export default {
     this.getFacultyList();
   },
   methods: {
-    showDetail(user_id) {
-      axios.get(UrlConstants.User + "/" + user_id).then((response) => {
-        if (response.data.code === ResultConstants.Failure) {
-          alert("error");
-          this.getContributionList();
-        } else {
-          router.push("/contributions/" + user_id + "/detail");
-        }
-      });
+    showDetail(contribution_id) {
+      axios
+        .get(UrlConstants.Contribution + "/" + contribution_id)
+        .then((response) => {
+          if (response.data.code === ResultConstants.Failure) {
+            alert("error");
+            this.getContributionList();
+          } else {
+            router.push("/contributions/" + contribution_id + "/detail");
+          }
+        });
     },
     getLimit(event) {
       this.getcommonLimit(event.target.value);
-      this.getUserList();
+      this.getContributionList();
     },
     changePage(e) {
       this.changecommonPage(e);
-      this.getUserList();
+      this.getContributionList();
     },
     getFilter() {
-      this.filter.page = 1;
-      this.getUserList();
+      this.filter.page = DefaultConstants.firstPage;
+      this.getContributionList();
     },
+    getStatus(status) {
+      this.filter.status = status
+      this.getContributionList();
+    }
   },
 };
 </script>

@@ -156,11 +156,11 @@ export const commonHelper = {
     },
     getContributionList() {
       axios
-        .post(UrlConstants.User + "/filter", this.filter)
+        .post(UrlConstants.Contribution + "/filter", this.filter)
         .then((response) => {
-          this.list_users = response.data.data;
-          this.list_users.currentPage = this.filter.page;
-          this.list_users.lastPage = response.data.lastPage;
+          this.list_contributions = response.data.data;
+          this.list_contributions.currentPage = this.filter.page;
+          this.list_contributions.lastPage = response.data.lastPage;
         })
         .catch((error) => {
           this.errors = error.response.data;

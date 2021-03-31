@@ -16,8 +16,10 @@
       <div class="card-body">
         <h5 class="card-title">Create Form</h5>
         <form v-on:submit.prevent="createUser()">
-           <div class="position-relative form-group">
-            <label for="exampleFile" class="col-sm-2 control-label">Avatar</label>
+          <div class="position-relative form-group">
+            <label for="exampleFile" class="col-sm-2 control-label"
+              >Avatar</label
+            >
             <div class="col-3">
               <input
                 name="file"
@@ -281,7 +283,7 @@ export default {
   },
   computed: {
     roleList() {
-      return this.list_roles.filter((role) => role.id !== 5);
+      return this.list_roles.filter((role) => role.id !== DefaultConstants.Role.Guest);
     },
   },
   created() {
@@ -300,24 +302,24 @@ export default {
             formData.append(key, value);
           }
         }
-        await this.confirmAlert('create', 'user');
+        await this.confirmAlert("create", "user");
         if (this.confirmResult) {
-             axios
-          .post(UrlConstants.User, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((r) => {
-            this.successAlert(); //This function are called from commonHelper.js file
-            this.$router.push("/users");
-          })
-          .catch((error) => {
-            this.list_errors = error.response.data.validate.input;
-            this.showError(this.requireAttribute, this.list_errors);
-          });
-      }
+          axios
+            .post(UrlConstants.User, formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .then((r) => {
+              this.successAlert(); //This function are called from commonHelper.js file
+              this.$router.push("/users");
+            })
+            .catch((error) => {
+              this.list_errors = error.response.data.validate.input;
+              this.showError(this.requireAttribute, this.list_errors);
+            });
         }
+      }
     },
     getNoMcFaculty() {
         axios.get(UrlConstants.Faculty + "/getFacultyHasNoMc")
@@ -334,9 +336,7 @@ export default {
           this.user.facultyId = 1;
         }
       } else {
-        if (this.user.facultyId !== undefined) {
-          delete this.user.facultyId;
-        }
+        delete this.user.facultyId;
       }
     },
     onFileChange() {
