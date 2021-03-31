@@ -33,4 +33,11 @@ public interface FacultyDao extends JpaRepository<Faculty, Long> {
     "group by f.id ", nativeQuery = true)
     Page<Faculty> searchFaculty(@Param("code")String code, @Param("facultyName")String facultyName, @Param("startDate")Date startDate,
     @Param("endDate")Date endDate, @Param("hasDate") int hasDate, Pageable page);
+
+    @Query(value="SELECT * FROM faculty f "+ 
+    "WHERE f.id NOT IN (SELECT f1.id FROM faculty f1 "+ 
+    "INNER JOIN user u ON f1.id = u.faculty_id "+
+    "WHERE u.role_id = 3 "+
+    ") ", nativeQuery = true)
+    List<Faculty> getFacultyHasNoMC();
 }

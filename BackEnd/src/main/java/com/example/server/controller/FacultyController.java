@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.example.server.constant.Constant.*;
 
+import java.util.List;
+
 import com.example.server.dao.FacultyDao;
 import com.example.server.model.request.*;
 import com.example.server.model.response.*;
@@ -98,15 +100,28 @@ public class FacultyController {
     public ResponseEntity<?> getFacultyById(@PathVariable(name="id") Long id){
         try {
             if(id == null){
-                return responseUtils.getResponseEntity("NULL", FAILURE,"Must has user id", HttpStatus.BAD_REQUEST);
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Must has faculty id", HttpStatus.BAD_REQUEST);
             }
             FacultyResponse facultyResponse = facultyService.getById(id);
             if(facultyResponse == null){
-                return responseUtils.getResponseEntity("NULL", FAILURE,"Get user fail", HttpStatus.BAD_REQUEST);
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Get faculty fail", HttpStatus.BAD_REQUEST);
             }
-            return responseUtils.getResponseEntity(facultyResponse, SUCCESS,"Get user successfully", HttpStatus.OK);
+            return responseUtils.getResponseEntity(facultyResponse, SUCCESS,"Get faculty successfully", HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", FAILURE,"Get user fail", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", FAILURE,"Get faculty fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value="/getFacultyHasNoMc",consumes = {"text/plain", "application/*"}, produces = "application/json")
+    public ResponseEntity<?> getFacultyById(){
+        try {
+            List<FacultyResponse> facultyResponse = facultyService.getFacultyHasNoMc();
+            if(facultyResponse == null){
+                return responseUtils.getResponseEntity("NULL", FAILURE,"Get faculty fail", HttpStatus.BAD_REQUEST);
+            }
+            return responseUtils.getResponseEntity(facultyResponse, SUCCESS,"Get faculty successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", FAILURE,"Get faculty fail", HttpStatus.BAD_REQUEST);
         }
     }
     

@@ -133,5 +133,23 @@ public class FacultyServiceImpl implements FacultyService {
             return null;
         }
     }
+
+    @Override
+    public List<FacultyResponse> getFacultyHasNoMc() {
+        try {
+            List<Faculty> faculList = facultyDao.getFacultyHasNoMC();
+            List<FacultyResponse> facultyResponses = new ArrayList<>();
+            for(Faculty facul: faculList){
+                FacultyResponse faculResponse = new FacultyResponse();
+                faculResponse.setCode(facul.getCode() == null? "":facul.getCode());
+                faculResponse.setFacultyId(facul.getId());
+                faculResponse.setFacultyName(facul.getName() == null? "": facul.getName());
+                facultyResponses.add(faculResponse);
+            }
+            return facultyResponses;
+        } catch (Exception e) {
+            return null;
+        }
+    }
     
 }
