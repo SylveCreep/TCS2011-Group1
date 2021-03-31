@@ -111,17 +111,31 @@
 <script>
 import { commonHelper } from "@/helper/commonHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
+import axios from "axios";
 export default {
-  created () {
-    this.avatarUrl = UrlConstants.AvatarSource + this.loginUser.avatar
-  },
+  
   name: "TheNavbar",
   mixins: [commonHelper],
-   data() {
+  data() {
     return {
-      avatarUrl: null
+      loginUser: {},
+      avatarUrl: null,
     };
   },
+  created () {
+    this.getLoginUser();
+    
+  },
+  methods: {
+    getLoginUser() {
+      axios
+        .get(UrlConstants.User + "/" + this.$cookies.get("id"))
+        .then((res) => {
+          this.loginUser = res.data.data;
+          this.avatarUrl = UrlConstants.AvatarSource + this.loginUser.avatar
+        });
+    },
+  }
 };
 </script>
 

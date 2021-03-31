@@ -2,7 +2,7 @@
   <div
     class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
   >
-    <the-navbar v-if="this.token !== null"></the-navbar>
+    <the-navbar v-if="this.token !== null" v-on:user-logout="userLogout"></the-navbar>
     <div class="app-main">
       <!--Sidebar section -->
       <the-sidebar v-if="this.token !== null" v-on:user-logout="userLogout"></the-sidebar>
@@ -11,7 +11,7 @@
       
       <div class="app-main__outer">
         <!--Main section -->
-        <router-view v-on:user-logged="userLogin"></router-view>
+        <router-view v-on:user-login="userLogin"></router-view>
         <!--End main section -->
 
         <!--Footer section -->

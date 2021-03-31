@@ -144,9 +144,6 @@ export const commonHelper = {
           this.list_users = response.data.data;
           this.list_users.currentPage = this.filter.page;
           this.list_users.lastPage = response.data.lastPage;
-          if(this.filter.facultyId) {
-            delete this.filter.facultyId
-          }
         })
         .catch((error) => {
           this.errors = error.response.data;

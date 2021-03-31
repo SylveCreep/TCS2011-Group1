@@ -49,21 +49,14 @@ export default {
         .then((r) => {
           let jwt = this.$cookies.set("jwt", r.data.data.token, "30min");
           this.$cookies.set("id", r.data.data.id, "30min");
-          this.$emit("user-logged", jwt);
-          this.getLoginUser();
+          this.$emit("user-login", jwt);
           this.$router.push("/users");
         })
         .catch((e) => {
           this.error = "Wrong user or password";
         });
     },
-    getLoginUser() {
-      axios
-        .get(UrlConstants.User + "/" + this.$cookies.get("id"))
-        .then((res) => {
-          this.$cookies.set("loginUser", res.data.data, "30min")
-        });
-    },
+    
   },
 };
 </script>

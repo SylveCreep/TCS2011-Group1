@@ -24,12 +24,15 @@
                   name="file"
                   id="exampleFile"
                   type="file"
+                  ref="file"
                   class="form-control-file"
+                  v-on:change="onFileChange"
                 />
               </div>
               <div class="col-sm-12">
                 <p class="form-text-file">
-                  This is the area for student import file contribution to upload
+                  This is the area for student import file contribution to
+                  upload
                 </p>
               </div>
             </div>
@@ -42,9 +45,7 @@
             >
               Back
             </router-link>
-            <button type="submit" class="btn btn-success">
-              Submit
-            </button>
+            <button type="submit" class="btn btn-success">Submit</button>
           </div>
         </form>
       </div>
@@ -61,11 +62,37 @@ export default {
   mixins: [commonHelper, validateHelper],
   data() {
     return {
-      user: [],
+      contribution: {},
     };
   },
   methods: {
-    
+    async submitContribution() {
+      let formData = new FormData();
+      formData.append("magazineId", 1);
+      formData.append("file", this.contribution.file);
+      await this.confirmAlert('create', 'user');
+      if (this.confirmResult){
+        axios
+        .post(UrlConstants.Contribution, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((r) => {
+          this.successAlert(); //This function are called from commonHelper.js file
+          this.$router.push("/contributions");
+        })
+        .catch((error) => {
+          this.list_errors = error.response.data.validate.input;
+          this.showError(this.requireAttribute, this.list_errors);
+        });
+      }
+      
+    },
+    onFileChange() {
+      const tfile = this.$refs.file.files[0];
+      this.contribution.file = tfile;
+    },
   },
   props: {},
 };
@@ -76,7 +103,7 @@ export default {
   margin: 0 0 30px;
 }
 .app-page-title {
-  margin:-30px 0 0 -30px;
+  margin: -30px 0 0 -30px;
 }
 .text-center {
   padding: 20px 0px;

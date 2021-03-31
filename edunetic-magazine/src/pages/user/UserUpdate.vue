@@ -30,7 +30,7 @@
                 />
               </div>
             </div>
-            <div v-if="loginUser.roleId == 1" class="col-3" style="margin-top: 10px">
+            <div v-if="loginUser.roleId === 1" class="col-3" style="margin-top: 10px">
               <input
                 name="file"
                 id="exampleFile"

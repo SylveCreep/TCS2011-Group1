@@ -94,15 +94,32 @@
 
 <script>
 import { commonHelper } from "@/helper/commonHelper";
-
+import { UrlConstants } from "@/constant/UrlConstant";
+import axios from "axios";
 export default {
   name: "TheSidebar",
   mixins: [commonHelper],
+  created() {
+    this.getLoginUser();
+  },
+  data() {
+    return {
+      loginUser: {}
+    }
+  },
   methods: {
     deleteUserKey() {
       if (this.$cookies.isKey("facultyStudent")) {
         this.$cookies.remove("facultyStudent");
       }
+    },
+    getLoginUser() {
+      axios
+        .get(UrlConstants.User + "/" + this.$cookies.get("id"))
+        .then((res) => {
+          this.loginUser = res.data.data;
+          this.$cookies.set("loginUser", res.data.data, "30min")
+        });
     },
   },
 };

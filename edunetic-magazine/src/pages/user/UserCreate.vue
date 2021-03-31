@@ -84,7 +84,7 @@
                   Please choose faculty
                 </option>
                 <option
-                  v-for="faculty in newFaculty"
+                  v-for="faculty in list_faculties_no_mc"
                   :key="faculty.facultyId"
                   v-bind:value="faculty.facultyId"
                 >
@@ -266,6 +266,7 @@ export default {
         roleId: 1,
         facultyId: "",
       },
+      list_faculties_no_mc: [],
       requireAttribute: {
         fullName: "Fullname",
         address: "Address",
@@ -282,15 +283,11 @@ export default {
     roleList() {
       return this.list_roles.filter((role) => role.id !== 5);
     },
-    newFaculty() {
-      return this.list_faculties.filter(
-        (faculty) => faculty.managerId === null
-      );
-    },
   },
   created() {
     this.getRoleList();
     this.getFacultyList();
+    this.getNoMcFaculty();
   },
   methods: {
     async createUser() {
@@ -321,6 +318,12 @@ export default {
           });
       }
         }
+    },
+    getNoMcFaculty() {
+        axios.get(UrlConstants.Faculty + "/getFacultyHasNoMc")
+        .then(r => {
+          this.list_faculties_no_mc = r.data.data
+        })
     },
     selectFaculty() {
       if (
