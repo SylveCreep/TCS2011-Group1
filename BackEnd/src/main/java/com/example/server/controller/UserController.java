@@ -144,7 +144,7 @@ public class UserController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value="/{id}",consumes = {"text/plain", "application/*"}, produces = "application/json")
     public ResponseEntity<?> getUser(@PathVariable(name="id") Long id){
         try {
