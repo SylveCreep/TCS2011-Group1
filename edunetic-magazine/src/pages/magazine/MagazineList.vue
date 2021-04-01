@@ -56,6 +56,17 @@
                   />
                 </div>
                 <div class="form-group">
+                  <label>Theme</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Search"
+                    aria-label="Search"
+                    v-model="filter.theme"
+                    v-on:keyup="getFilter"
+                  />
+                </div>
+                <div class="form-group">
                   <label>Closed At</label>
                   <input
                     class="form-control"
