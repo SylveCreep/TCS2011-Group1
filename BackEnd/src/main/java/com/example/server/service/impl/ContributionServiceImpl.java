@@ -27,6 +27,7 @@ import com.example.server.model.request.*;
 
 import static com.example.server.constant.Constant.*;
 import static com.example.server.util.SessionUtils.*;
+import static com.example.server.util.ResponseUtils.*;
 
 @Service(value = "contributionService")
 public class ContributionServiceImpl implements ContributionService {
@@ -84,13 +85,14 @@ public class ContributionServiceImpl implements ContributionService {
                 contributionRes.setFacultyId(contribution.getFaculty().getId());
                 contributionRes.setFacultyName(contribution.getFaculty().getName());
                 contributionRes.setUserName(contribution.getUser().getFullName());
-                contributionRes.setCheckedById(contribution.getCheckedBy().getId());
-                contributionRes.setCheckedByName(contribution.getCheckedBy().getFullName());
-                contributionRes.setCreatedAt(contribution.getCreated_at());
+                contributionRes.setCheckedById(contribution.getCheckedBy()==null?null:contribution.getCheckedBy().getId());
+                contributionRes.setCheckedByName(contribution.getCheckedBy()==null?"":contribution.getCheckedBy().getFullName());
+                contributionRes.setCreatedAt(contribution.getCreated_at() == null? null: convertDateToFormat(contribution.getCreated_at().toString()));
                 contributionRes.setStatus(contribution.getIsApproved());
                 contributionRes.setMagazineId(contribution.getMagazine() == null? null:contribution.getMagazine().getId());
                 contributionRes.setLinkSource(contribution.getLinkSource());
                 contributionRes.setCode(contribution.getCode());
+                contributionRes.setEmail(contribution.getUser().getEmail());
                 contributionResponse.add(contributionRes);
             }
             ContributionPagingResponse response = new ContributionPagingResponse();
@@ -124,9 +126,9 @@ public class ContributionServiceImpl implements ContributionService {
             Contribution nContribution = new Contribution();
             String email = getEmail();
             User user = userDao.findExistedUserByEmail(email);
-            User mcUser = userDao.findUserManagerByFacultyIdAndRoleId(user.getFaculty().getId(), (long) 3);
+            //User mcUser = userDao.findUserManagerByFacultyIdAndRoleId(user.getFaculty().getId(), (long) 3);
             nContribution.setUser(user);
-            nContribution.setCheckedBy(mcUser);
+            //nContribution.setCheckedBy(mcUser);
             nContribution.setFaculty(user.getFaculty());
             if(contribution.getMagazineId() != null){
                 nContribution.setMagazine(magazineDao.findExistedMagazineById(contribution.getMagazineId()));
@@ -137,14 +139,14 @@ public class ContributionServiceImpl implements ContributionService {
             nContribution.setLinkSource(fileResponse.getPath());
             nContribution.setExtension(fileResponse.getExtension());
 
-            User mmUser = userDao.findUserManagerByFacultyIdAndRoleId(null, (long) 2);
-            List<String> ccList = new ArrayList<>();
-            ccList.add(mmUser.getEmail());
-            String subject = "New commited contribution from student "+ user.getFullName() + " (code:" + user.getCode() + ")";
-            String html = "<p>Student " + user.getFullName()+ " has commited following code "+ nContribution.getCode()+ " contribution</p>"+"<p>Please follow url link to see contribution: "+ "http://..." +"</p>";
+            //User mmUser = userDao.findUserManagerByFacultyIdAndRoleId(null, (long) 2);
+            //List<String> ccList = new ArrayList<>();
+            //ccList.add(mmUser.getEmail());
+            //String subject = "New commited contribution from student "+ user.getFullName() + " (code:" + user.getCode() + ")";
+            //String html = "<p>Student " + user.getFullName()+ " has commited following code "+ nContribution.getCode()+ " contribution</p>"+"<p>Please follow url link to see contribution: "+ "http://..." +"</p>";
             try {
                 contributionDao.save(nContribution);
-                mailService.sendAsHtml(host_email, mcUser.getEmail(), ccList, subject, html);
+                //mailService.sendAsHtml(host_email, mcUser.getEmail(), ccList, subject, html);
                 return true;
             } catch (Exception e) {
                 return false;
@@ -219,15 +221,18 @@ public class ContributionServiceImpl implements ContributionService {
             ContributionResponse contributionRes = new ContributionResponse();
             contributionRes.setId(contribution.getId());
             contributionRes.setUserId(contribution.getUser().getId());
+            contributionRes.setFacultyId(contribution.getFaculty().getId());
+            contributionRes.setFacultyName(contribution.getFaculty().getName());
             contributionRes.setUserName(contribution.getUser().getFullName());
-            contributionRes.setCheckedById(contribution.getCheckedBy().getId());
-            contributionRes.setCheckedByName(contribution.getCheckedBy().getFullName());
-            contributionRes.setCreatedAt(contribution.getCreated_at());
+            contributionRes.setCheckedById(contribution.getCheckedBy()==null?null:contribution.getCheckedBy().getId());
+            contributionRes.setCheckedByName(contribution.getCheckedBy()==null?"":contribution.getCheckedBy().getFullName());
+            contributionRes.setCreatedAt(contribution.getCreated_at() == null? null: convertDateToFormat(contribution.getCreated_at().toString()));
             contributionRes.setStatus(contribution.getIsApproved());
             contributionRes.setMagazineId(contribution.getMagazine() == null? null:contribution.getMagazine().getId());
             contributionRes.setLinkSource(contribution.getLinkSource());
             contributionRes.setCode(contribution.getCode());
             contributionRes.setExtension(contribution.getExtension());
+            contributionRes.setEmail(contribution.getUser().getEmail());
             return contributionRes;
         } catch (Exception e) {
             return null;

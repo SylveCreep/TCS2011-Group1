@@ -617,4 +617,14 @@ public class ResponseUtils {
                 return "Invalid";
         }
     }
+
+    public static Date convertDateToFormat(String date){
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date returnDate = formatter.parse(date);
+            return returnDate;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

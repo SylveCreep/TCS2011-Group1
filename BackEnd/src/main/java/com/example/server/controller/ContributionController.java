@@ -62,11 +62,11 @@ public class ContributionController {
             }
             ContributionPagingResponse contributions = contributionService.getContributionList(contributionRequest);
             if(contributions.getList() == null){
-                return responseUtils.getResponseEntity(contributions, SUCCESS,"Don't have user", HttpStatus.OK);
+                return responseUtils.getResponseEntity(contributions, SUCCESS,"Don't have contribution", HttpStatus.OK);
             }
             return responseUtils.getResponseEntity(contributions.getList(), SUCCESS,"Show user success", contributions.getLastPage(), HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", FAILURE,"Show user failed", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", FAILURE,"Show contribution failed", HttpStatus.BAD_REQUEST);
         }
     }
 

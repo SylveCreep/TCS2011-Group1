@@ -16,6 +16,7 @@ public class ContributionResponse {
     private Long magazineId;
     private String linkSource;
     private String extension;
+    private String email;
 
     public Long getId() {
         return id;
@@ -99,9 +100,15 @@ public class ContributionResponse {
     public void setFacultyName(String facultyName) {
         this.facultyName = facultyName;
     }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
     public ContributionResponse(Long id, Long userId, Long facultyId, String facultyName, String code, String userName,
             Long checkedById, String checkedByName, Date createdAt, Integer status, Long magazineId, String linkSource,
-            String extension) {
+            String extension, String email) {
         this.id = id;
         this.userId = userId;
         this.facultyId = facultyId;
@@ -115,7 +122,9 @@ public class ContributionResponse {
         this.magazineId = magazineId;
         this.linkSource = linkSource;
         this.extension = extension;
+        this.email = email;
     }
+    
     
     
 }
