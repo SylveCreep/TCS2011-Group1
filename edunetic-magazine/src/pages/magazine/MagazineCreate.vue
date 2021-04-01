@@ -20,27 +20,52 @@
             <label class="col-sm-2 control-label">Theme: </label>
             <div class="col-sm-12">
               <input
-                id="magazineTheme"
+                id="theme"
                 type="text"
                 class="form-control"
-                v-model="magazine.magazineTheme"
+                v-model="magazine.theme"
               />
               <p style="color: red" v-if="list_errors !== null">
-                {{ list_errors.magazineTheme }}
+                {{ list_errors.theme }}
+              </p>
+            </div>
+            <label class="col-sm-2 control-label">Open At: </label>
+            <div class="col-sm-12">
+              <input
+                id="openAt"
+                type="date"
+                class="form-control"
+                v-model="magazine.openAt"
+              />
+              <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.openAt }}
+              </p>
+            </div>
+            <label class="col-sm-2 control-label">Published At: </label>
+            <div class="col-sm-12">
+              <input
+                id="publishedAt"
+                type="date"
+                class="form-control"
+                v-model="magazine.publishedAt"
+              />
+              <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.publishedAt }}
               </p>
             </div>
             <label class="col-sm-2 control-label">Closed At: </label>
             <div class="col-sm-12">
               <input
-                id="magazineClosed"
+                id="closeAt"
                 type="date"
                 class="form-control"
-                v-model="magazine.magazineClosed"
+                v-model="magazine.closeAt"
               />
               <p style="color: red" v-if="list_errors !== null">
-                {{ list_errors.magazineClosed }}
+                {{ list_errors.closeAt }}
               </p>
             </div>
+            
           </div>
           <div class="position-relative form-group text-center">
             <div class="col-sm-offset-2 col-sm-12">
@@ -70,7 +95,7 @@ export default {
     return {
       magazine: {},
       requireAttribute: {
-        magazineTheme: "Magazine Theme",
+        theme: "Theme",
       },
     };
   },
@@ -88,7 +113,8 @@ export default {
               this.$router.push("/magazines");
             })
             .catch((error) => {
-              this.errors = error.response;
+              this.list_errors = error.response.data.validate.input;
+              this.showError(this.list_errors);
             });
         }
       }

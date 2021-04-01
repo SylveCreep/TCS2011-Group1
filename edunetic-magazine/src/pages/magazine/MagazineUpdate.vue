@@ -20,7 +20,7 @@
             <label class="col-sm-2 control-label">Student's name: </label>
             <div class="col-sm-12">
               <input
-                id="magazineName"
+                id="fullName"
                 type="text"
                 class="form-control"
                 v-model="user.fullName"
@@ -57,29 +57,29 @@
             <label class="col-sm-2 control-label">Code: </label>
               <div class="col-sm-12">
                 <input
-                  id="magazineCode"
+                  id="code"
                   type="text"
                   class="form-control"
-                  v-model="magazine.magazineCode"
+                  v-model="magazine.code"
                   readonly
                 />
               </div>
             <label class="col-sm-2 control-label">Closed At: </label>
               <div class="col-sm-12">
                 <input
-                  id="magazineClosure"
+                  id="closedAt"
                   type="date"
                   class="form-control"
-                  v-model="magazine.magazineClosed"                  
+                  v-model="magazine.closeAt"                  
                 />
               </div>
             <label class="col-sm-2 control-label">Published At: </label>
               <div class="col-sm-12">
                 <input
-                  id="magazinePublished"
+                  id="publishedAt"
                   type="date"
                   class="form-control"
-                  v-model="magazine.magazinePublished"                  
+                  v-model="magazine.publishedAt"                  
                 />
               </div>
           </div>
@@ -152,7 +152,8 @@ export default {
               this.$router.push("/magazines");
             })
             .catch((error) => {
-              this.errors = error.response;
+              this.list_errors = error.response.data.validate.input;
+              this.showError(this.requireAttribute, this.list_errors);
             });
         }
       }

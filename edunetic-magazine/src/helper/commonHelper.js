@@ -176,6 +176,7 @@ export const commonHelper = {
         })
         .catch((error) => {
           this.errors = error.response.data;
+          
         });
     },
 

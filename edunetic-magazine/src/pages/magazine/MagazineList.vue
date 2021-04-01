@@ -62,7 +62,7 @@
                     type="date"
                     placeholder="Search"
                     aria-label="Search"
-                    v-model="filter.closed"
+                    v-model="filter.closeAt"
                     v-on:keyup="getFilter"
                   />
                 </div>
@@ -73,7 +73,7 @@
                     type="date"
                     placeholder="Search"
                     aria-label="Search"
-                    v-model="filter.published"
+                    v-model="filter.publishedAt"
                     v-on:keyup="getFilter"
                   />
                 </div>
@@ -92,13 +92,14 @@
                     v-bind:id="'tab-' + status"
                     data-toggle="tab"
                     v-bind:href="'#tab-content-' + status"
+                    v-on:change="getStatus(status)"
                   >
                   <span>{{ index }}</span>
                   </a>
                 </li>
               </ul>
             <!--/.FILTER SECTION-->
-            <div class="table-responsive">
+            <div class="table-responsive">                    
               <table class="mb-0 table">
                 <thead>
                   <tr>
@@ -108,33 +109,34 @@
                     <th class="sort" v-on:click="getSort('theme')">
                       Theme <i class="fas fa-sort"></i>
                     </th>
-                    <th class="sort" v-on:click="getSort('opening')">
+                    <th class="sort" v-on:click="getSort('open_at')">
                       Open At <i class="fas fa-sort"></i>
                     </th>
-                    <th class="sort" v-on:click="getSort('published')">
+                    <th class="sort" v-on:click="getSort('published_at')">
                       Published At <i class="fas fa-sort"></i>
                     </th>
-                    <th class="sort" v-on:click="getSort('closed')">
+                    <th class="sort" v-on:click="getSort('close_at')">
                       Closed At <i class="fas fa-sort"></i>
                     </th>
                     <th>Action </th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr
-                    v-for="magazine of list_magazines"
-                    :key="magazine.id"
-                  >
-                    <td>{{ magazine.magazineCode }}</td>
-                    <td>{{ magazine.magazineTheme }}</td>
-                    <td>{{ magazine.magazineOpen }}</td>
-                    <td>{{ magazine.magazinePublished }}</td>
-                    <td>{{ magazine.magazineClosed }}</td>
+                <tbody> <!-- v-for="(status, index) of list_statuses"
+                  :key="index"
+                  class="tab-pane tabs-animation fade"
+                  v-bind:id="'tab-content-' + status"
+                  role="tabpanel" -->
+                  <tr v-for="magazine of list_magazines" :key="magazine.id">
+                    <td>{{ magazine.code }}</td>
+                    <td>{{ magazine.theme }}</td>
+                    <td>{{ magazine.openAt }}</td>
+                    <td>{{ magazine.publishedAt }}</td>
+                    <td>{{ magazine.closeAt }}</td>
                     <td>
                       <p
                         class="click"
                         style="display: inline"
-                        v-on:click="showMagazine(magazine.magazineId)"
+                        v-on:click="showMagazine(magazine.id)"
                       >
                         <b>Update</b>
                       </p>                      
@@ -142,7 +144,7 @@
                       <p
                         class="click"
                         style="display: inline"
-                        v-on:click="deleteMagazine(magazine.magazineId)"
+                        v-on:click="deleteMagazine(magazine.id)"
                       >
                         <b>Delete</b>
                       </p>
@@ -150,6 +152,7 @@
                   </tr>
                 </tbody>
               </table>
+              
             </div>
           </div>
           <div class="card-footer">
@@ -200,9 +203,8 @@ export default {
     this.getMagazineList();
   },
   methods:{
-    async checkMagazineExisted(magazineId){
-      await axios.get(UrlConstants.Magazine + "/" + magazineId)
-      .then((response) => {
+    async checkMagazineExisted(magazine_id){
+      await axios.get(UrlConstants.Magazine + "/" + magazine_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
           this.canModify = false;
         } else {
@@ -210,28 +212,35 @@ export default {
         }
       });
     },
-    async showMagazine(magazineId){
-      await this.checkFacultyExisted(magazineId);
+    async preCheckMagazine(magazine_id) {
+      await this.checkMagazineExisted(magazine_id);
+      if (this.canModify) {
+        await this.checkUserExisted('magazine', magazine_id);
+      }
+      this.filter.magazineid = ""
+    },
+    async showMagazine(magazine_id){
+      await this.checkMagazineExisted(magazine_id);
       if (!this.canModify) {
         this.errorAlert("update", "magazine"); //this function is called from commonHelper.js file
-        this.getFacultyList();
+        this.getMagazineList();
       } else {
-        router.push("/magazines/" + magazineId + "/update");
+        router.push("/magazines/" + magazine_id + "/update");
       }
     },    
-    async deleteMagazine(magazineId){
-      await this.preCheckFaculty(magazineId);
+    async deleteMagazine(magazine_id){
+      await this.preCheckMagazine(magazine_id);
       if (!this.canModify) {
         this.errorAlert("delete", "magazine");
-        this.getFacultyList();
+        this.getMagazineList();
       } else {
         await this.confirmAlert("delete", "magazine");
         if (this.confirmResult) {
           axios
-            .delete(UrlConstants.Magazine + "/" + magazineId)
+            .delete(UrlConstants.Magazine + "/" + magazine_id)
             .then((res) => {
               this.successAlert(); //this function is called from commonHelper.js file
-              this.getFacultyList();
+              this.getMagazineList();
             })
             .catch((error) => {
               this.errors = error.data;
@@ -239,22 +248,22 @@ export default {
         }
       }
     },
-    getFilter() {
-      this.filter.page = DefaultConstants.firstPage;
-      this.getFacultyList();
-    },
-    getSort($column) {
-      this.getcommonSort($column);
-      this.getFacultyList();
-    },
     getLimit(event) {
       this.getcommonLimit(event.target.value);
-      this.getFacultyList();
+      this.getMagazineList();
     },
     changePage(e) {
       this.changecommonPage(e);
-      this.getFacultyList();
+      this.getMagazineList();
     },
+    getFilter() {
+      this.filter.page = DefaultConstants.firstPage;
+      this.getMagazineList();
+    },
+    getStatus(status) {
+      this.filter.status = status
+      this.getMagazineList();
+    }
   },
 
 };
