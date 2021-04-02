@@ -8,8 +8,6 @@ import moment from 'moment';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@/assets/css/main.css'
-
-// Vue.use(VueSweetalert2);
 Vue.use(VueCookies);
 Vue.filter('formatDate', function(value) {
   if (value) {

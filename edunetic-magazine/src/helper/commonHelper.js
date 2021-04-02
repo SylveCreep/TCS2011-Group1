@@ -36,11 +36,15 @@ export const commonHelper = {
         denyButtonText: 'No',
       }).then((result) => {
         if (result.isConfirmed) {
-          this.$cookies.remove("jwt");
-          this.$cookies.remove("currentUser");
-          this.$cookies.remove("currentRole");
-          this.$emit("user-logout", null);
-          this.$router.push("/login");
+          axios.delete(UrlConstants.Logout)
+            .then(r => {
+              this.$cookies.remove("jwt");
+              this.$cookies.remove("loginUser");
+              this.$cookies.remove("id");
+              this.$emit("user-logout", null);
+              this.$router.push("/login");
+            })
+
         }
       })
     },
@@ -150,7 +154,7 @@ export const commonHelper = {
         });
     },
     checkIsCoordinator() {
-      if (this.loginUser.roleId ===  DefaultConstants.Role.MarketingCoordinator) {
+      if (this.loginUser.roleId === DefaultConstants.Role.MarketingCoordinator) {
         this.filter.facultyId = this.loginUser.facultyId;
       }
     },

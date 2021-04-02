@@ -129,18 +129,19 @@ export default {
   mixins: [commonHelper, validateHelper],
   data() {
     return {
-      user: [],
+      contribution: {},
     };
   },
   created() {
-    this.getStudent();
+    this.getContribution();
   },
   methods: {
-    getStudent() {
+    getContribution() {
       axios
-        .get(UrlConstants.User + "/" + this.$route.params.id)
+        .get(UrlConstants.Constribution + "/" + this.$route.params.id)
         .then((r) => {
-          this.user = r.data.data;
+          this.contribution = r.data.data;
+          console.log(this.contribution)
         })
         .catch((error) => {
           this.errors = error.response;
