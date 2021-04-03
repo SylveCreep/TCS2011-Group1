@@ -50,7 +50,7 @@
               <p>Dashboard</p>
             </router-link>
           </li>
-          <li v-if="loginUser.roleId !== 4"> <!--Student cannot access this route-->
+          <li v-if="loginUser.roleId !== 4"> <!--Only studnet cannot access this route-->
             <router-link to="/users">
               <i class="metismenu-icon fas fa-th"></i>
               <p v-on:click="deleteUserKey()">User List</p>
@@ -62,7 +62,7 @@
               <p>Role List</p>
             </router-link>
           </li>
-          <li v-if="loginUser.roleId === 2"> <!--Only admin or MM can access this route-->
+          <li v-if="loginUser.roleId === 2"> <!--Only MM can access this route-->
             <router-link to="/faculties">
               <i class="metismenu-icon fas fa-th"></i>
               <p>Faculty List</p>
@@ -75,7 +75,7 @@
             </router-link>
           </li>
           <li>
-           <router-link to="/magazines" v-if="loginUser.roleId === 2"> <!--Only marketing manager cannot access this route-->
+           <router-link to="/magazines" v-if="loginUser.roleId === 2"> <!--Only marketing manager can access this route-->
               <i class="metismenu-icon fas fa-th"></i>
               <p>Magazine List</p>
             </router-link>

@@ -28,19 +28,19 @@
               <p style="color: red" v-if="list_errors !== null">
                 {{ list_errors.theme }}
               </p>
-            </div>
-            <label class="col-sm-2 control-label">Open At: </label>
+            </div>       
+            <label class="col-sm-2 control-label">Closed At: </label>
             <div class="col-sm-12">
               <input
-                id="openAt"
+                id="closeAt"
                 type="date"
                 class="form-control"
-                v-model="magazine.openAt"
+                v-model="magazine.closeAt"
               />
               <p style="color: red" v-if="list_errors !== null">
-                {{ list_errors.openAt }}
+                {{ list_errors.closeAt }}
               </p>
-            </div>
+            </div>     
             <label class="col-sm-2 control-label">Published At: </label>
             <div class="col-sm-12">
               <input
@@ -53,18 +53,7 @@
                 {{ list_errors.publishedAt }}
               </p>
             </div>
-            <label class="col-sm-2 control-label">Closed At: </label>
-            <div class="col-sm-12">
-              <input
-                id="closeAt"
-                type="date"
-                class="form-control"
-                v-model="magazine.closeAt"
-              />
-              <p style="color: red" v-if="list_errors !== null">
-                {{ list_errors.closeAt }}
-              </p>
-            </div>
+            
             
           </div>
           <div class="position-relative form-group text-center">

@@ -23,7 +23,8 @@
           >
             <i class="fa fa-star"></i>
           </button>
-          <div class="d-inline-block dropdown">
+          <div class="d-inline-block dropdown" v-if="loginUser.roleId === 2">
+            <!--Only MarketingCoordinator can access this route -->
             <router-link to="/magazines/create" class="btn-shadow btn btn-info">
               <span class="btn-icon-wrapper pr-2 opacity-7">
                 <i class="fa fa-business-time fa-w-20"></i>
@@ -88,29 +89,30 @@
                     v-on:keyup="getFilter"
                   />
                 </div>
-                
               </div>
             </div>
-              <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
-                <li
-                    class="nav-item "
-                    v-for="(status, index) of list_statuses"
-                    :key="index"
-                  >
-                  <a
-                    role="tab"
-                    class="nav-link"
-                    v-bind:id="'tab-' + status"
-                    data-toggle="tab"
-                    v-bind:href="'#tab-content-' + status"
-                    v-on:change="getStatus(status)"
-                  >
+            <ul
+              class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav"
+            >
+              <li
+                class="nav-item "
+                v-for="(status, index) of list_statuses"
+                :key="index"
+              >
+                <a
+                  role="tab"
+                  class="nav-link"
+                  v-bind:id="'tab-' + status"
+                  data-toggle="tab"
+                  v-bind:href="'#tab-content-' + status"
+                  v-on:change="getStatus(status)"
+                >
                   <span>{{ index }}</span>
-                  </a>
-                </li>
-              </ul>
+                </a>
+              </li>
+            </ul>
             <!--/.FILTER SECTION-->
-            <div class="table-responsive">                    
+            <div class="table-responsive">
               <table class="mb-0 table">
                 <thead>
                   <tr>
@@ -122,17 +124,18 @@
                     </th>
                     <th class="sort" v-on:click="getSort('open_at')">
                       Open At <i class="fas fa-sort"></i>
-                    </th>
+                    </th>                    
                     <th class="sort" v-on:click="getSort('published_at')">
                       Published At <i class="fas fa-sort"></i>
                     </th>
                     <th class="sort" v-on:click="getSort('close_at')">
                       Closed At <i class="fas fa-sort"></i>
                     </th>
-                    <th>Action </th>
+                    <th>Action</th>
                   </tr>
                 </thead>
-                <tbody> <!-- v-for="(status, index) of list_statuses"
+                <tbody>
+                  <!-- v-for="(status, index) of list_statuses"
                   :key="index"
                   class="tab-pane tabs-animation fade"
                   v-bind:id="'tab-content-' + status"
@@ -140,7 +143,7 @@
                   <tr v-for="magazine of list_magazines" :key="magazine.id">
                     <td>{{ magazine.code }}</td>
                     <td>{{ magazine.theme }}</td>
-                    <td>{{ magazine.openAt }}</td>
+                    <td>{{ magazine.openAt }}</td>                    
                     <td>{{ magazine.publishedAt }}</td>
                     <td>{{ magazine.closeAt }}</td>
                     <td>
@@ -148,10 +151,12 @@
                         class="click"
                         style="display: inline"
                         v-on:click="showMagazine(magazine.id)"
+                        v-if="loginUser.roleId === 2"
                       >
                         <b>Update</b>
-                      </p>                      
-                      |
+                        <!--Only MarketingCoordinator can access this route -->
+                        |
+                      </p>
                       <p
                         class="click"
                         style="display: inline"
@@ -159,11 +164,18 @@
                       >
                         <b>Delete</b>
                       </p>
+                      |
+                      <p
+                        class="click"
+                        style="display: inline"
+                        v-on:click="showContribution(magazine.id)"
+                      >
+                        <b>Contribution's list</b>
+                      </p>
                     </td>
                   </tr>
                 </tbody>
               </table>
-              
             </div>
           </div>
           <div class="card-footer">
@@ -196,41 +208,43 @@ import router from "@/router";
 import ThePagination from "@/components/ThePagination";
 import { commonHelper } from "@/helper/commonHelper";
 export default {
-    name: "MagazineList",
-    components: {
+  name: "MagazineList",
+  components: {
     ThePagination,
   },
   mixins: [commonHelper],
-  data(){
-    return{
+  data() {
+    return {
       list_statuses: DefaultConstants.MagazineStatuses,
-      list_magazines:[]
+      list_magazines: [],
     };
   },
   mounted() {
-    document.querySelector("#tab-1").click(); //default click to tab 1
+    document.querySelector("#tab-0").click(); //default click to tab 0
   },
   created() {
     this.getMagazineList();
   },
-  methods:{
-    async checkMagazineExisted(magazine_id){
-      await axios.get(UrlConstants.Magazine + "/" + magazine_id).then((response) => {
-        if (response.data.code === ResultConstants.Failure) {
-          this.canModify = false;
-        } else {
-          this.canModify = true;
-        }
-      });
+  methods: {
+    async checkMagazineExisted(magazine_id) {
+      await axios
+        .get(UrlConstants.Magazine + "/" + magazine_id)
+        .then((response) => {
+          if (response.data.code === ResultConstants.Failure) {
+            this.canModify = false;
+          } else {
+            this.canModify = true;
+          }
+        });
     },
     async preCheckMagazine(magazine_id) {
       await this.checkMagazineExisted(magazine_id);
       if (this.canModify) {
-        await this.checkUserExisted('magazine', magazine_id);
+        await this.checkUserExisted("magazine", magazine_id);
       }
-      this.filter.magazineid = ""
+      this.filter.magazineid = "";
     },
-    async showMagazine(magazine_id){
+    async showMagazine(magazine_id) {
       await this.checkMagazineExisted(magazine_id);
       if (!this.canModify) {
         this.errorAlert("update", "magazine"); //this function is called from commonHelper.js file
@@ -238,8 +252,8 @@ export default {
       } else {
         router.push("/magazines/" + magazine_id + "/update");
       }
-    },    
-    async deleteMagazine(magazine_id){
+    },
+    async deleteMagazine(magazine_id) {
       await this.preCheckMagazine(magazine_id);
       if (!this.canModify) {
         this.errorAlert("delete", "magazine");
@@ -259,6 +273,17 @@ export default {
         }
       }
     },
+    showContribution(magazine_id) {
+      axios.get(UrlConstants.Magazine + "/" + magazine_id).then((response) => {
+        if (response.data.code === ResultConstants.Failure) {
+          alert("This magazine is null");
+          this.getMagazineList();
+        } else {
+          this.$cookies.set("magazineContribution", magazine_id);
+          this.$router.push("/contributions");
+        }
+      });
+    },
     getLimit(event) {
       this.getcommonLimit(event.target.value);
       this.getMagazineList();
@@ -272,11 +297,10 @@ export default {
       this.getMagazineList();
     },
     getStatus(status) {
-      this.filter.status = status
+      this.filter.status = status;
       this.getMagazineList();
-    }
+    },
   },
-
 };
 </script>
 <style scoped>
