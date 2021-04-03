@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired(required = true)
     private ModelMapper modelMapper;
-    
+
     @Autowired
     private FileService fileService;
 
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         // user.getRoles().forEach(role -> {
         // authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
         // });
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getCode()));
         return authorities;
     }
 
@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public User saveGuestRegister(CreateAccount user) {
         try {
             User nUser = new User();
-            if(userDao.findByEmail(user.getEmail()) == null){
+            if (userDao.findByEmail(user.getEmail()) == null) {
                 nUser.setEmail(user.getEmail());
             } else {
                 return null;
@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public User saveRegister(CreateAccount user, MultipartFile file) {
         try {
             User nUser = new User();
-            if(userDao.findByEmail(user.getEmail()) == null){
+            if (userDao.findByEmail(user.getEmail()) == null) {
                 nUser.setEmail(user.getEmail());
             } else {
                 return null;
@@ -148,22 +148,22 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             nUser.setGender(user.getGender());
             nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
             Role role = roleService.findById(user.getRoleId());
-            if(user.getFacultyId() != null){
+            if (user.getFacultyId() != null) {
                 Optional<Faculty> faculty = facultyDao.findById(user.getFacultyId());
-                if(faculty.get() == null){
+                if (faculty.get() == null) {
                     return null;
                 }
-                if(faculty.get().getIs_deleted() == DELETED){
+                if (faculty.get().getIs_deleted() == DELETED) {
                     return null;
                 }
                 nUser.setFaculty(faculty.get());
             }
-            if(role == null || role.getIs_deleted() == DELETED){
+            if (role == null || role.getIs_deleted() == DELETED) {
                 return null;
             }
             nUser.setRole(role);
             String path = fileService.storeAvatar(file, nUser.getCode());
-            if(path == null){
+            if (path == null) {
                 return null;
             }
             nUser.setAvatar(path);
@@ -173,27 +173,29 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
     }
 
-    //Get non deleted users
+    // Get non deleted users
     @Override
     public List<Object> getUserListResponse(PagingRequest pagingRequest) {
         try {
             Sort sort = responseUtils.getSortObj(pagingRequest);
-            Page<User> list = userDao.getNonDeletedUser(PageRequest.of(pagingRequest.getPage(), pagingRequest.getLimit(), sort));
-            int lastPage = Math.round(list.getTotalElements() / pagingRequest.getLimit()  + ((list.getTotalElements() % pagingRequest.getLimit() == 0) ? 0 : 1)); 
+            Page<User> list = userDao
+                    .getNonDeletedUser(PageRequest.of(pagingRequest.getPage(), pagingRequest.getLimit(), sort));
+            int lastPage = Math.round(list.getTotalElements() / pagingRequest.getLimit()
+                    + ((list.getTotalElements() % pagingRequest.getLimit() == 0) ? 0 : 1));
             List<Object> object = new ArrayList<>();
             List<UserResponse> listResponse = new ArrayList<>();
-            for(User user: list){
+            for (User user : list) {
                 UserResponse userRes = new UserResponse();
                 userRes.setId(user.getId());
-                userRes.setRoleId(user.getRole() == null?null:user.getRole().getId());
-                userRes.setFacultyId(user.getFaculty() == null?null:user.getFaculty().getId());
-                userRes.setCode(user.getCode() == null?"":user.getCode());
-                userRes.setFullName(user.getFullName() == null?"":user.getFullName());
-                userRes.setRoleName(user.getRole() == null?"":user.getRole().getName());
-                userRes.setFacultyName(user.getFaculty() == null?"":user.getFaculty().getName());
-                userRes.setEmail(user.getEmail()==null?"":user.getEmail());
-                userRes.setAddress(user.getAddress()==null?"":user.getAddress());
-                userRes.setPhoneNumber(user.getPhoneNumber()==null?null:user.getPhoneNumber());
+                userRes.setRoleId(user.getRole() == null ? null : user.getRole().getId());
+                userRes.setFacultyId(user.getFaculty() == null ? null : user.getFaculty().getId());
+                userRes.setCode(user.getCode() == null ? "" : user.getCode());
+                userRes.setFullName(user.getFullName() == null ? "" : user.getFullName());
+                userRes.setRoleName(user.getRole() == null ? "" : user.getRole().getName());
+                userRes.setFacultyName(user.getFaculty() == null ? "" : user.getFaculty().getName());
+                userRes.setEmail(user.getEmail() == null ? "" : user.getEmail());
+                userRes.setAddress(user.getAddress() == null ? "" : user.getAddress());
+                userRes.setPhoneNumber(user.getPhoneNumber() == null ? null : user.getPhoneNumber());
                 userRes.setDateOfBirth(dateFormat(user.getDateOfBirth()));
                 listResponse.add(userRes);
             }
@@ -206,36 +208,39 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
     }
 
-    //Get users by search
+    // Get users by search
     @Override
     public UserLastPageResponse searchUserByRoleAndFacul(UserSearchRequest userSearchRequest) {
         try {
-            int offset = userSearchRequest.getPage() -1;
+            int offset = userSearchRequest.getPage() - 1;
             Sort sort = responseUtils.getSortObj(userSearchRequest);
             int hasDate = 0;
-            if(userSearchRequest.getStartDate() != null && userSearchRequest.getEndDate() != null){
+            if (userSearchRequest.getStartDate() != null && userSearchRequest.getEndDate() != null) {
                 hasDate = 1;
             }
-            Page<User> list = userDao.searchUserByRoleAndFac(userSearchRequest.getUserId(),userSearchRequest.getRoleId(),userSearchRequest.getFacultyId(),
-            userSearchRequest.getFullName(),userSearchRequest.getRoleName(),userSearchRequest.getFacultyName(),
-            userSearchRequest.getEmail(),userSearchRequest.getStartDate(),userSearchRequest.getEndDate(),hasDate,userSearchRequest.getGender(), userSearchRequest.getCode(),
-            PageRequest.of(offset, userSearchRequest.getLimit(), sort));
+            Page<User> list = userDao.searchUserByRoleAndFac(userSearchRequest.getUserId(),
+                    userSearchRequest.getRoleId(), userSearchRequest.getFacultyId(), userSearchRequest.getFullName(),
+                    userSearchRequest.getRoleName(), userSearchRequest.getFacultyName(), userSearchRequest.getEmail(),
+                    userSearchRequest.getStartDate(), userSearchRequest.getEndDate(), hasDate,
+                    userSearchRequest.getGender(), userSearchRequest.getCode(),
+                    PageRequest.of(offset, userSearchRequest.getLimit(), sort));
 
-            int lastPage = Math.round(list.getTotalElements() / userSearchRequest.getLimit()  + ((list.getTotalElements() % userSearchRequest.getLimit() == 0) ? 0 : 1)); 
+            int lastPage = Math.round(list.getTotalElements() / userSearchRequest.getLimit()
+                    + ((list.getTotalElements() % userSearchRequest.getLimit() == 0) ? 0 : 1));
             UserLastPageResponse object = new UserLastPageResponse();
             List<UserResponse> listResponse = new ArrayList<>();
-            for(User user: list){
+            for (User user : list) {
                 UserResponse userRes = new UserResponse();
                 userRes.setId(user.getId());
-                userRes.setRoleId(user.getRole() == null?null:user.getRole().getId());
-                userRes.setFacultyId(user.getFaculty() == null?null:user.getFaculty().getId());
-                userRes.setCode(user.getCode() == null?"":user.getCode());
-                userRes.setFullName(user.getFullName() == null?"":user.getFullName());
-                userRes.setRoleName(user.getRole() == null?"":user.getRole().getName());
-                userRes.setFacultyName(user.getFaculty() == null?"":user.getFaculty().getName());
-                userRes.setEmail(user.getEmail()==null?"":user.getEmail());
-                userRes.setAddress(user.getAddress()==null?"":user.getAddress());
-                userRes.setPhoneNumber(user.getPhoneNumber()==null?null:user.getPhoneNumber());
+                userRes.setRoleId(user.getRole() == null ? null : user.getRole().getId());
+                userRes.setFacultyId(user.getFaculty() == null ? null : user.getFaculty().getId());
+                userRes.setCode(user.getCode() == null ? "" : user.getCode());
+                userRes.setFullName(user.getFullName() == null ? "" : user.getFullName());
+                userRes.setRoleName(user.getRole() == null ? "" : user.getRole().getName());
+                userRes.setFacultyName(user.getFaculty() == null ? "" : user.getFaculty().getName());
+                userRes.setEmail(user.getEmail() == null ? "" : user.getEmail());
+                userRes.setAddress(user.getAddress() == null ? "" : user.getAddress());
+                userRes.setPhoneNumber(user.getPhoneNumber() == null ? null : user.getPhoneNumber());
                 userRes.setDateOfBirth(dateFormat(user.getDateOfBirth()));
                 userRes.setGender(user.getGender());
                 listResponse.add(userRes);
@@ -262,19 +267,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public Boolean update(CreateAccount userDto, MultipartFile file){
+    public Boolean update(CreateAccount userDto, MultipartFile file) {
         try {
             User user = userDao.getOne(userDto.getId());
-            if(userDto.getRoleId() != null){
+            if (userDto.getRoleId() != null) {
                 Optional<Role> role = roleDao.findById(userDto.getRoleId());
-                if(role.get() == null){
+                if (role.get() == null) {
                     return false;
                 }
                 user.setRole(role.get());
             }
-            if(userDto.getFacultyId() != null){
+            if (userDto.getFacultyId() != null) {
                 Optional<Faculty> facult = facultyDao.findById(userDto.getFacultyId());
-                if(facult.get() == null){
+                if (facult.get() == null) {
                     return false;
                 }
                 user.setFaculty(facult.get());
@@ -286,15 +291,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             user.setPhoneNumber(userDto.getPhoneNumber());
             user.setGender(userDto.getGender());
             String path = fileService.storeAvatar(file, user.getCode());
-            if(path == null){
+            if (path == null) {
                 return null;
             }
-            
+
             user.setAvatar(path);
             userDao.save(user);
             return true;
         } catch (Exception e) {
-           return false;
+            return false;
         }
     }
 
@@ -302,20 +307,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public UserResponse findById(Long id) {
         try {
             User user = userDao.getOne(id);
-            if(user.getIs_deleted() == DELETED){
+            if (user.getIs_deleted() == DELETED) {
                 return null;
             }
             UserResponse userRes = new UserResponse();
             userRes.setId(user.getId());
-            userRes.setRoleId(user.getRole() == null?null:user.getRole().getId());
-            userRes.setFacultyId(user.getFaculty() == null?null:user.getFaculty().getId());
-            userRes.setCode(user.getCode() == null?"":user.getCode());
-            userRes.setFullName(user.getFullName() == null?"":user.getFullName());
-            userRes.setRoleName(user.getRole() == null?"":user.getRole().getName());
-            userRes.setFacultyName(user.getFaculty() == null?"":user.getFaculty().getName());
-            userRes.setEmail(user.getEmail()==null?"":user.getEmail());
-            userRes.setAddress(user.getAddress()==null?"":user.getAddress());
-            userRes.setPhoneNumber(user.getPhoneNumber()==null?null:user.getPhoneNumber());
+            userRes.setRoleId(user.getRole() == null ? null : user.getRole().getId());
+            userRes.setFacultyId(user.getFaculty() == null ? null : user.getFaculty().getId());
+            userRes.setCode(user.getCode() == null ? "" : user.getCode());
+            userRes.setFullName(user.getFullName() == null ? "" : user.getFullName());
+            userRes.setRoleName(user.getRole() == null ? "" : user.getRole().getName());
+            userRes.setFacultyName(user.getFaculty() == null ? "" : user.getFaculty().getName());
+            userRes.setEmail(user.getEmail() == null ? "" : user.getEmail());
+            userRes.setAddress(user.getAddress() == null ? "" : user.getAddress());
+            userRes.setPhoneNumber(user.getPhoneNumber() == null ? null : user.getPhoneNumber());
             userRes.setDateOfBirth(dateFormat(user.getDateOfBirth()));
             userRes.setGender(user.getGender());
             userRes.setAvatar(user.getAvatar());
@@ -330,18 +335,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         try {
             List<User> users = userDao.searchUserNotIsManager();
             List<UserResponse> list = new ArrayList<>();
-            for(User user: users){
+            for (User user : users) {
                 UserResponse userRes = new UserResponse();
                 userRes.setId(user.getId());
-                userRes.setRoleId(user.getRole() == null?null:user.getRole().getId());
-                userRes.setFacultyId(user.getFaculty() == null?null:user.getFaculty().getId());
-                userRes.setCode(user.getCode() == null?"":user.getCode());
-                userRes.setFullName(user.getFullName() == null?"":user.getFullName());
-                userRes.setRoleName(user.getRole() == null?"":user.getRole().getName());
-                userRes.setFacultyName(user.getFaculty() == null?"":user.getFaculty().getName());
-                userRes.setEmail(user.getEmail()==null?"":user.getEmail());
-                userRes.setAddress(user.getAddress()==null?"":user.getAddress());
-                userRes.setPhoneNumber(user.getPhoneNumber()==null?null:user.getPhoneNumber());
+                userRes.setRoleId(user.getRole() == null ? null : user.getRole().getId());
+                userRes.setFacultyId(user.getFaculty() == null ? null : user.getFaculty().getId());
+                userRes.setCode(user.getCode() == null ? "" : user.getCode());
+                userRes.setFullName(user.getFullName() == null ? "" : user.getFullName());
+                userRes.setRoleName(user.getRole() == null ? "" : user.getRole().getName());
+                userRes.setFacultyName(user.getFaculty() == null ? "" : user.getFaculty().getName());
+                userRes.setEmail(user.getEmail() == null ? "" : user.getEmail());
+                userRes.setAddress(user.getAddress() == null ? "" : user.getAddress());
+                userRes.setPhoneNumber(user.getPhoneNumber() == null ? null : user.getPhoneNumber());
                 userRes.setDateOfBirth(dateFormat(user.getDateOfBirth()));
                 list.add(userRes);
             }
@@ -350,8 +355,5 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             return null;
         }
     }
-
-    
-    
 
 }
