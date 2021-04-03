@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
@@ -48,20 +49,26 @@ public class FacultyServiceImpl implements FacultyService {
             int hasDate = 0;
             Date startDate = null;
             Date endDate = null;
-            if(facultyRequest.getStartDate() != null && facultyRequest.getEndDate() != null){
+            if (facultyRequest.getStartDate() != null && facultyRequest.getEndDate() != null) {
                 hasDate = 1;
                 startDate = facultyRequest.getStartDate();
                 endDate = facultyRequest.getEndDate();
             }
-            Page<Faculty> data = facultyDao.searchFaculty(facultyRequest.getCode(), facultyRequest.getFacultyName(), startDate, endDate, hasDate, PageRequest.of(offset, facultyRequest.getLimit(), sort));
-            int lastPage = Math.round(data.getTotalElements() / facultyRequest.getLimit()  + ((data.getTotalElements() % facultyRequest.getLimit() == 0) ? 0 : 1)); 
+            Page<Faculty> data = facultyDao.searchFaculty(facultyRequest.getCode(), facultyRequest.getFacultyName(),
+                    startDate, endDate, hasDate, PageRequest.of(offset, facultyRequest.getLimit(), sort));
+            int lastPage = Math.round(data.getTotalElements() / facultyRequest.getLimit()
+                    + ((data.getTotalElements() % facultyRequest.getLimit() == 0) ? 0 : 1));
+            List<User> mcList = userDao.findMCByRoleId((long) 3);
             FacultyPagingResponse response = new FacultyPagingResponse();
             List<FacultyResponse> listResponse = new ArrayList<>();
-            for(Faculty facl : data){
+            for (Faculty facl : data) {
+                Optional<User> mc = mcList.stream().filter(user -> user.getFaculty().getId() == facl.getId()).findAny();
                 FacultyResponse faclRes = new FacultyResponse();
-                faclRes.setCode(facl.getCode() == null? "":facl.getCode());
-                faclRes.setFacultyId(facl.getId() == null? null:facl.getId());
-                faclRes.setFacultyName(facl.getName() == null? "": facl.getName());
+                faclRes.setCode(facl.getCode() == null ? "" : facl.getCode());
+                faclRes.setFacultyId(facl.getId() == null ? null : facl.getId());
+                faclRes.setFacultyName(facl.getName() == null ? "" : facl.getName());
+                faclRes.setMcId(mc.isEmpty() ? null : mc.get().getId());
+                faclRes.setMcName(mc.isEmpty() ? "" : mc.get().getFullName());
                 listResponse.add(faclRes);
             }
             response.setFacultyResponses(listResponse);
@@ -77,7 +84,7 @@ public class FacultyServiceImpl implements FacultyService {
         try {
             Optional<Faculty> faclOptional = facultyDao.findById(facultyRequest.getFacultyId());
             Faculty facl = faclOptional.get();
-            if(facl.getIs_deleted() == 1){
+            if (facl.getIs_deleted() == 1) {
                 return false;
             }
             facl.setName(facultyRequest.getFacultyName());
@@ -119,12 +126,17 @@ public class FacultyServiceImpl implements FacultyService {
         try {
             Optional<Faculty> faclOptional = facultyDao.findById(id);
             Faculty falc = faclOptional.get();
-            if(falc != null){
-                if(falc.getIs_deleted() == NOTDELETED){
+            if (falc != null) {
+                if (falc.getIs_deleted() == NOTDELETED) {
+                    List<User> mcList = userDao.findMCByRoleId((long) 3);
+                    Optional<User> mc = mcList.stream().filter(user -> user.getFaculty().getId() == falc.getId())
+                            .findAny();
                     FacultyResponse faculResponse = new FacultyResponse();
-                    faculResponse.setCode(falc.getCode() == null? "":falc.getCode());
+                    faculResponse.setCode(falc.getCode() == null ? "" : falc.getCode());
                     faculResponse.setFacultyId(falc.getId());
-                    faculResponse.setFacultyName(falc.getName() == null? "": falc.getName());
+                    faculResponse.setFacultyName(falc.getName() == null ? "" : falc.getName());
+                    faculResponse.setMcId(mc.isEmpty() ? null : mc.get().getId());
+                    faculResponse.setMcName(mc.isEmpty() ? "" : mc.get().getFullName());
                     return faculResponse;
                 }
             }
@@ -139,11 +151,11 @@ public class FacultyServiceImpl implements FacultyService {
         try {
             List<Faculty> faculList = facultyDao.getFacultyHasNoMC();
             List<FacultyResponse> facultyResponses = new ArrayList<>();
-            for(Faculty facul: faculList){
+            for (Faculty facul : faculList) {
                 FacultyResponse faculResponse = new FacultyResponse();
-                faculResponse.setCode(facul.getCode() == null? "":facul.getCode());
+                faculResponse.setCode(facul.getCode() == null ? "" : facul.getCode());
                 faculResponse.setFacultyId(facul.getId());
-                faculResponse.setFacultyName(facul.getName() == null? "": facul.getName());
+                faculResponse.setFacultyName(facul.getName() == null ? "" : facul.getName());
                 facultyResponses.add(faculResponse);
             }
             return facultyResponses;
@@ -151,5 +163,5 @@ public class FacultyServiceImpl implements FacultyService {
             return null;
         }
     }
-    
+
 }
