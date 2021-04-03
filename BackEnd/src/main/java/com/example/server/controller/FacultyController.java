@@ -51,6 +51,7 @@ public class FacultyController {
         }
     }
 
+    @PreAuthorize("hasRole('R0002')")
     @DeleteMapping(value = "/{id}", consumes = { "text/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
         try {
@@ -67,6 +68,7 @@ public class FacultyController {
         }
     }
 
+    @PreAuthorize("hasRole('R0002')")
     @PatchMapping(consumes = { "text/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> update(@RequestBody FacultyRequest faculty) {
         try {
@@ -119,6 +121,7 @@ public class FacultyController {
         }
     }
 
+    @PreAuthorize("hasRole('R0002')")
     @GetMapping(value = "/getFacultyHasNoMc", consumes = { "text/plain",
             "application/*" }, produces = "application/json")
     public ResponseEntity<?> getFacultyById() {

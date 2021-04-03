@@ -65,7 +65,7 @@ public class ContributionController {
         }
     }
 
-    @PreAuthorize("hasRole('R0002')")
+    @PreAuthorize("hasRole('R0002') or hasRole('R0004')")
     @PostMapping
     public ResponseEntity<?> createContribution(ContributionRequest request, @RequestPart("file") MultipartFile file,
             HttpServletRequest httpServletRequest) {
@@ -93,6 +93,7 @@ public class ContributionController {
         }
     }
 
+    @PreAuthorize("hasRole('R0004')")
     @PatchMapping(produces = "application/json")
     public ResponseEntity<?> update(ContributionRequest request, @RequestParam("file") MultipartFile file,
             HttpServletRequest httpServletRequest) {
@@ -143,6 +144,7 @@ public class ContributionController {
         }
     }
 
+    @PreAuthorize("hasRole('R0004')")
     @DeleteMapping(value = "/{id}", consumes = { "text/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
         try {
@@ -160,6 +162,7 @@ public class ContributionController {
         }
     }
 
+    @PreAuthorize("hasRole('R0002') or hasRole('R0003') or hasRole('R0004')")
     @RequestMapping(value = "/download")
     public ResponseEntity<?> downloadContributionByContributionId(
             @RequestParam(name = "contributionId") @Nullable Long contributionId,

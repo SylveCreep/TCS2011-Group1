@@ -52,7 +52,7 @@ public class MagazineController {
         }
     }
 
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('R0002')")
     @DeleteMapping(value = "/{id}", consumes = { "test/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> deleteMagazine(@PathVariable(name = "id") Long id) {
         try {
@@ -72,7 +72,7 @@ public class MagazineController {
         }
     }
 
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('R0002')")
     @PatchMapping(consumes = { "test/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> updateMagazine(@RequestBody CreateMagazine magazineDto) {
         try {
