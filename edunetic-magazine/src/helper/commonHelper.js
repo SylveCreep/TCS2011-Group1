@@ -141,7 +141,6 @@ export const commonHelper = {
         });
     },
     getUserList() {
-      this.checkIsCoordinator();
       axios
         .post(UrlConstants.User + "/filter", this.filter)
         .then((response) => {
@@ -152,11 +151,6 @@ export const commonHelper = {
         .catch((error) => {
           this.errors = error.response.data;
         });
-    },
-    checkIsCoordinator() {
-      if (this.loginUser.roleId === DefaultConstants.Role.MarketingCoordinator) {
-        this.filter.facultyId = this.loginUser.facultyId;
-      }
     },
     getContributionList() {
       axios

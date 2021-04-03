@@ -14,16 +14,7 @@
           </div>
         </div>
         <div class="page-title-actions">
-          <button
-            type="button"
-            data-toggle="tooltip"
-            title="Example Tooltip"
-            data-placement="bottom"
-            class="btn-shadow mr-3 btn btn-dark"
-          >
-            <i class="fa fa-star"></i>
-          </button>
-          <div class="d-inline-block dropdown">
+          <div class="d-inline-block dropdown" v-if="loginUser.roleId === 1"> <!-- Only admin can create user -->
             <router-link to="/users/create" class="btn-shadow btn btn-info">
               <span class="btn-icon-wrapper pr-2 opacity-7">
                 <i class="fa fa-business-time fa-w-20"></i>
@@ -80,7 +71,7 @@
                     <option value="0" selected>Female</option>
                   </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group" v-if="loginUser.roleId !== 3"> <!-- coordinatio cannot filter by faculty-->
                   <label>Faculty</label>
                   <select
                     class="form-control select2"
@@ -99,7 +90,7 @@
                     </option>
                   </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group"  v-if="loginUser.roleId !== 3"><!-- coordinatio cannot filter by role-->
                   <label>Role</label>
                   <select
                     class="form-control select2"
@@ -126,17 +117,6 @@
                     placeholder="Search"
                     aria-label="Search"
                     v-model="filter.email"
-                    v-on:keyup="getFilter"
-                  />
-                </div>
-                <div class="form-group">
-                  <label>Date of birth </label>
-                  <input
-                    class="form-control"
-                    type="date"
-                    placeholder="Search"
-                    aria-label="Search"
-                    v-model="filter.date_of_birth"
                     v-on:keyup="getFilter"
                   />
                 </div>
@@ -236,8 +216,14 @@ export default {
       list_users: [],
     };
   },
+  computed: {
+    mmUserList() {
+      return this.list_users.filter(user => user.roleId !== 1)
+    },
+  },
   created() {
     this.setStudentList();
+    this.checkLoginRoleFilter();
     //These functions are called from commonHelper.js file
     this.getUserList();
     this.getRoleList();
@@ -291,7 +277,13 @@ export default {
     },
     getFilter() {
       this.filter.page = DefaultConstants.firstPage;
-      this.getUserList(this.filter.page);
+      this.getUserList();
+    },
+    checkLoginRoleFilter() {
+      if (this.loginUser.roleId === DefaultConstants.Role.MarketingCoordinator) {
+        this.filter.facultyId = this.loginUser.facultyId;
+        this.filter.roleId = this.DefaultConstants.Role.Student
+      }
     },
     getSort($column) {
       this.getcommonSort($column);

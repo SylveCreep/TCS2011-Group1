@@ -62,7 +62,7 @@
               <p>Role List</p>
             </router-link>
           </li>
-          <li v-if="loginUser.roleId === 1 && loginUser.roleId === 2"> <!--Only admin or MM can access this route-->
+          <li v-if="loginUser.roleId === 2"> <!--Only admin or MM can access this route-->
             <router-link to="/faculties">
               <i class="metismenu-icon fas fa-th"></i>
               <p>Faculty List</p>

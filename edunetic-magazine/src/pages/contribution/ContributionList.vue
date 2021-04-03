@@ -129,13 +129,13 @@
               </div>
               <div class="card-body">
                 <p>StudentName: {{ contribution.fullName }}</p>
-                <br />
+               
                 <p>Faculty: {{ contribution.facultyName }}</p>
-                <br />
-                <p>Submit Date: {{ contribution.createdAt }}</p>
-                <br />
+               
+                <p>Submit Date: {{ contribution.createdAt | formatDate }}</p>
+         
                 <p v-if="status = 2">Approved by: {{ contribution.roleName }}</p>
-                <br />
+                
                 <p v-if="status = 0">Denied by: {{ contribution.roleName }}</p>
               </div>
               <div class="d-block text-right card-footer">

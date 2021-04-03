@@ -7,113 +7,61 @@
             <i class="pe-7s-display1 icon-gradient bg-premium-dark"> </i>
           </div>
           <div>
-            <h2>Detail</h2>
+            <h2>Contribution Detail</h2>
           </div>
         </div>
       </div>
     </div>
     <div class="main-card mb-3 card">
-      <div class="card-body">
-        <h5 class="card-title">Contribution Form</h5>
-        <form v-on:submit.prevent="submitContribution()">
-          <div class="position-relative form-group">
-            <label class="col-sm-2 control-label">CODE: </label>
-            <div class="col-sm-12">
-              <input
-                id="code"
-                type="text"
-                class="form-control"
-                v-model="user.code"
-                readonly
-              />
-              <p style="color: red" v-if="list_errors !== null">
-                {{ list_errors.fullName }}
-              </p>
-            </div>
-            <label class="col-sm-2 control-label">Student Name: </label>
-            <div class="col-sm-12">
-              <input
-                id="fullName"
-                type="text"
-                class="form-control"
-                v-model="user.fullName"
-                readonly
-              />
-              <p style="color: red" v-if="list_errors !== null">
-                {{ list_errors.fullName }}
-              </p>
-            </div>
-            <label class="col-sm-2 control-label">Faculty: </label>
-            <div class="col-sm-12">
-              <input
-                id="facultyName"
-                type="text"
-                class="form-control"
-                v-model="user.facultyName"
-                readonly
-              />
-            </div>
-            <label class="col-sm-2 control-label">Submit date: </label>
-            <div class="col-sm-2">
-              <input
-                id="submitdate"
-                type="date"
-                class="form-control"
-                v-model="user.date_of_birth"
-                readonly
-              />
-            </div>
-            <label for="exampleFile" class="col-sm-2 control-label">File</label>
-            <div class="row">
-              <div class="input-file col-sm-3">
-                <input
-                  name="file"
-                  id="exampleFile"
-                  type="file"
-                  class="form-control-file"
-                />
-              </div>
-              <div class="col-sm-12">
-                <p class="form-text-file">
-                  This is the area for student import file contribution to upload
-                </p>
-              </div>
-            </div>
-            <label class="col-sm-2 control-label">Approved by: </label>
-            <div class="col-sm-12">
-              <input
-                id="approve"
-                type="test"
-                class="form-control"
-                v-model="user.roleName"
-                readonly
-              />
-            </div>
-            <label class="col-sm-2 control-label">Denied by: </label>
-            <div class="col-sm-12">
-              <input
-                id="deny"
-                type="test"
-                class="form-control"
-                v-model="user.roleName"
-                readonly
-              />
-            </div>
-          </div>
-          <div class="col-sm-offset-2 col-sm-12 text-center">
-            <router-link
-              to="/contributions"
-              tag="button"
-              class="btn btn-primary"
-            >
-              Back
-            </router-link>
-            <button type="submit" class="btn btn-success">
-              Submit
-            </button>
-          </div>
-        </form>
+      <div class="card-header">
+        <i class="header-icon lnr-license icon-gradient bg-plum-plate"> </i>
+        code: {{ contribution.code }}
       </div>
+      <div class="card-body">
+        <p><b>Student Name:</b> {{ contribution.userName }}</p>
+
+        <p><b>Student Email:</b> {{ contribution.email }}</p>
+
+        <p><b>Faculty:</b> {{ contribution.facultyName }}</p>
+
+        <p><b>Submit Date:</b> {{ contribution.createdAt | formatDate }}</p>
+
+        <p>
+          <b>File:</b>
+          <span class="file-source" v-on:click="downloadContribution">{{
+            contribution.linkSource
+          }}</span>
+        </p>
+        <input type="file" v-bind:value="contribution.file" multiple />
+        <p v-if="contribution.status == 0">
+          <b>Pending:</b> Waiting for reviewing
+        </p>
+
+        <p v-if="contribution.status == 1">
+          <b>Approved by:</b>{{ contribution.checkedByName }}
+        </p>
+
+        <p v-if="contribution.status == 2">
+          <b>Denied by:</b>{{ contribution.checkedByName }}
+        </p>
+      </div>
+      <div class="d-block text-right card-footer">
+        <p
+          v-if="showComment === false"
+          class="btn-wide btn contribution-detail"
+          v-on:click="getCommentList"
+          >Show Comments</p
+        >
+        <p
+          v-else
+          class="btn-wide btn contribution-detail"
+          v-on:click="getCommentList"
+          >Hide Comments</p
+        >
+      </div>
+    </div>
+    <div class="comment-list" v-if="showComment">
+      ppppp
     </div>
   </div>
 </template>
@@ -124,12 +72,14 @@ import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { validateHelper } from "@/helper/validateHelper";
 import { commonHelper } from "@/helper/commonHelper";
+import FileSaver from "file-saver";
 export default {
-  name: "ContributionSubmit",
+  name: "ContributionDetail",
   mixins: [commonHelper, validateHelper],
   data() {
     return {
       contribution: {},
+      showComment: false,
     };
   },
   created() {
@@ -138,50 +88,53 @@ export default {
   methods: {
     getContribution() {
       axios
-        .get(UrlConstants.Constribution + "/" + this.$route.params.id)
+        .get(UrlConstants.Contribution + "/" + this.$route.params.id)
         .then((r) => {
           this.contribution = r.data.data;
-          console.log(this.contribution)
         })
         .catch((error) => {
           this.errors = error.response;
         });
     },
+    downloadContribution() {
+      axios
+        .get(
+          UrlConstants.Contribution +
+            "/download?contributionId=" +
+            this.$route.params.id,
+          { responseType: "blob" }
+        )
+        .then((r) => {
+          FileSaver.saveAs(r.data, "contribution.zip");
+        })
+        .catch((error) => {
+          this.errors = error.response;
+        });
+    },
+    getCommentList() {
+    this.showComment = !this.showComment
   },
+  },
+  
   props: {},
 };
 </script>
 
 
 <style scoped>
-.card {
-  margin: 0 0 30px;
+.contribution-detail {
+  background-color: #3f6ad8;
+  color: white !important;
 }
-.app-page-title {
-  margin:-30px 0 0 -30px;
+.card-body {
+  padding-left: 2rem !important;
 }
-.text-center {
-  padding: 20px 0px;
+.row .card-footer {
+  background-color: #f0f3f5;
 }
-.from-text {
-  margin: 15px;
-}
-.control-label {
-  margin: 0px;
-}
-.form-control {
-  margin: 10px 0px;
-}
-.form-control-file {
-  margin: 0px 0px;
-}
-.input-file {
-  margin-left: 30px;
-  padding: 0;
-  border-radius: 5px;
-  border: 1px solid;
-}
-.form-text-file {
-  margin: 10px 0 0 15px;
+.file-source {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>

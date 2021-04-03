@@ -79,8 +79,8 @@ export const router = new Router({
             meta: { 
                 admin: true,
                 student: false,
-                mc: false,
-                mm: false, 
+                mc: true,
+                mm: true, 
              }
         }, {
             name: 'UserCreate',

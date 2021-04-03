@@ -165,8 +165,6 @@
               </p>
             </div>
           </div>
-          
-          <button v-on:click.prevent="downloadImage()">DownLoad</button>
           <div class="col-sm-offset-2 col-sm-12 text-center">
             <router-link to="/users" tag="button" class="btn btn-primary">
               Back
@@ -267,20 +265,6 @@ export default {
       const tfile = this.$refs.file.files[0];
       this.user.file = tfile;
       this.previewImageUrl = URL.createObjectURL(tfile);
-    },
-    downloadImage() {
-      let zip = new JSZip();
-      axios
-        .get(this.previewImageUrl, {
-          responseType: "blob",
-        })
-        .then((response) => {
-          zip.file("image.jpg", response.data);
-          zip.generateAsync({ type: "blob" }).then(function (content) {
-            // see FileSaver.js
-            FileSaver.saveAs(content, "example.zip");
-          });
-        });
     },
   },
 };
