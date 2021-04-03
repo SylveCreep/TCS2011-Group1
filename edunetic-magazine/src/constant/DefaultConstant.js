@@ -19,8 +19,9 @@ export const DefaultConstants = Object.freeze({
         Denied: 0
     },
     MagazineStatuses:{
-        Opening: 1,
-        Published: 2,
-        Closed: 0,
+        Opening: 0,
+        Processing: 1,
+        Publising: 2,
+        Closed: 3,
     }
 });
