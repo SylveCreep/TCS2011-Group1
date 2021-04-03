@@ -124,7 +124,7 @@
                     </th>
                     <th class="sort" v-on:click="getSort('open_at')">
                       Open At <i class="fas fa-sort"></i>
-                    </th>
+                    </th>                    
                     <th class="sort" v-on:click="getSort('published_at')">
                       Published At <i class="fas fa-sort"></i>
                     </th>
@@ -143,7 +143,7 @@
                   <tr v-for="magazine of list_magazines" :key="magazine.id">
                     <td>{{ magazine.code }}</td>
                     <td>{{ magazine.theme }}</td>
-                    <td>{{ magazine.openAt }}</td>
+                    <td>{{ magazine.openAt }}</td>                    
                     <td>{{ magazine.publishedAt }}</td>
                     <td>{{ magazine.closeAt }}</td>
                     <td>
@@ -163,6 +163,14 @@
                         v-on:click="deleteMagazine(magazine.id)"
                       >
                         <b>Delete</b>
+                      </p>
+                      |
+                      <p
+                        class="click"
+                        style="display: inline"
+                        v-on:click="showContribution(magazine.id)"
+                      >
+                        <b>Contribution's list</b>
                       </p>
                     </td>
                   </tr>
@@ -212,7 +220,7 @@ export default {
     };
   },
   mounted() {
-    document.querySelector("#tab-1").click(); //default click to tab 1
+    document.querySelector("#tab-0").click(); //default click to tab 0
   },
   created() {
     this.getMagazineList();
@@ -264,6 +272,17 @@ export default {
             });
         }
       }
+    },
+    showContribution(magazine_id) {
+      axios.get(UrlConstants.Magazine + "/" + magazine_id).then((response) => {
+        if (response.data.code === ResultConstants.Failure) {
+          alert("This magazine is null");
+          this.getMagazineList();
+        } else {
+          this.$cookies.set("magazineContribution", magazine_id);
+          this.$router.push("/contributions");
+        }
+      });
     },
     getLimit(event) {
       this.getcommonLimit(event.target.value);

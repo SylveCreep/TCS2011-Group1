@@ -64,7 +64,7 @@
                   readonly
                 />
               </div>
-            <label class="col-sm-2 control-label">Closed At: </label>
+              <label class="col-sm-2 control-label">Closed At: </label>
               <div class="col-sm-12">
                 <input
                   id="closedAt"
@@ -73,7 +73,7 @@
                   v-model="magazine.closeAt"                  
                 />
               </div>
-            <label class="col-sm-2 control-label">Published At: </label>
+              <label class="col-sm-2 control-label">Published At: </label>
               <div class="col-sm-12">
                 <input
                   id="publishedAt"
@@ -81,7 +81,7 @@
                   class="form-control"
                   v-model="magazine.publishedAt"                  
                 />
-              </div>
+              </div>             
           </div>
           <div class="col-sm-offset-2 col-sm-12 text-center">
             <router-link to="/magazines" tag="button" class="btn btn-primary">
