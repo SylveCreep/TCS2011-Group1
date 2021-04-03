@@ -14,9 +14,9 @@ export const DefaultConstants = Object.freeze({
         Guest: 5
     },
     ContributionStatuses: {
-        Pending: 1,
-        Approved: 2,
-        Denied: 0
+        Pending: 0,
+        Approved: 1,
+        Denied: 2
     },
     MagazineStatuses:{
         Opening: 1,

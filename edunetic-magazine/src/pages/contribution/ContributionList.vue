@@ -20,7 +20,7 @@
           >
             <i class="fa fa-star"></i>
           </button>
-          <div class="d-inline-block dropdown">
+          <div class="d-inline-block dropdown" v-if="loginUser.roleId === 4"> <!--Only student can access this route -->
             <router-link
               to="/contributions/submit"
               class="btn-shadow btn btn-info"
@@ -46,7 +46,7 @@
           v-bind:id="'tab-' + status"
           data-toggle="tab"
           v-bind:href="'#tab-content-' + status"
-          v-on:change="getStatus(status)"
+          v-on:click="getStatus(status)"
         >
           <span>{{ index }}</span>
         </a>
@@ -120,7 +120,7 @@
         role="tabpanel"
       >
         <div class="row">
-          <div class="col-md-4" v-for="user of list_users" :key="user.id">
+          <div class="col-md-4" v-for="contribution of list_contributions" :key="contribution.id">
             <div class="main-card mb-3 card">
               <div class="card-header">
                 <i class="header-icon lnr-license icon-gradient bg-plum-plate">
@@ -128,21 +128,23 @@
                 code: {{ contribution.code }}
               </div>
               <div class="card-body">
-                <p>StudentName: {{ contribution.fullName }}</p>
-                <br />
-                <p>Faculty: {{ contribution.facultyName }}</p>
-                <br />
-                <p>Submit Date: {{ contribution.createdAt }}</p>
-                <br />
-                <p v-if="status = 2">Approved by: {{ contribution.roleName }}</p>
-                <br />
-                <p v-if="status = 0">Denied by: {{ contribution.roleName }}</p>
+                <p><b>StudentName:</b> {{ contribution.userName }}</p>
+                <p><b>Faculty:</b> {{ contribution.facultyName }}</p>
+                <p><b>Submit Date:</b> {{ contribution.createdAt | formatDate }}</p>
+                <p v-if="status === 1"><b>Approved by:</b> {{ contribution.checkedByName }}</p>
+                <p v-if="status === 2"><b>Denied by:</b> {{ contribution.checkedByName }}</p>
               </div>
               <div class="d-block text-right card-footer">
                 <a
                   class="btn-wide btn contribution-detail"
-                  v-on:click="showDetail(user.id)"
+                  v-on:click="showDetail(contribution.id)"
                   >Detail</a
+                >
+                <a
+                  class="btn-wide btn contribution-delete"
+                  v-on:click="deleteContribution(contribution.id)"
+                  v-if="status === 0"
+                  >Delete</a
                 >
               </div>
             </div>
@@ -190,7 +192,7 @@ export default {
   },
 
   mounted() {
-    document.querySelector("#tab-1").click(); //default click to tab 1
+    document.querySelector("#tab-0").click(); //default click to tab 1
   },
   created() {
     this.getContributionList();
@@ -209,6 +211,20 @@ export default {
           }
         });
     },
+    async deleteContribution(contribution_id) {
+      await this.confirmAlert('delete', 'contribution');
+      if (this.confirmResult) {
+        axios
+        .delete(UrlConstants.Contribution + '/' + contribution_id)
+        .then((res) =>{
+          this.successAlert();
+          this.getContributionList();
+        })
+        .catch((error) => {
+          this.errors = error.data;
+        })
+      }
+    },
     getLimit(event) {
       this.getcommonLimit(event.target.value);
       this.getContributionList();
@@ -222,7 +238,7 @@ export default {
       this.getContributionList();
     },
     getStatus(status) {
-      this.filter.status = status
+      this.filter.status = status;
       this.getContributionList();
     }
   },
@@ -230,6 +246,11 @@ export default {
 </script>
 <style scoped>
 .contribution-detail {
+  background-color: green;
+  color: white !important;
+}
+.contribution-delete {
+  margin-left: 10px ;
   background-color: #3f6ad8;
   color: white !important;
 }

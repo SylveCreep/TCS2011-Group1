@@ -141,7 +141,7 @@ export const router = new Router({
             path: '/faculties',
             component: FacultyList,
             meta: { 
-                admin: true,
+                admin: false,
                 student: false,
                 mc: false,
                 mm: true, 
@@ -151,7 +151,7 @@ export const router = new Router({
             path: '/faculties/create',
             component: FacultyCreate,
             meta: { 
-                admin: true,
+                admin: false,
                 student: false,
                 mc: false,
                 mm: true, 
@@ -161,7 +161,7 @@ export const router = new Router({
             path: '/faculties/:id/update',
             component: FacultyUpdate,
             meta: { 
-                admin: true,
+                admin: false,
                 student: false,
                 mc: false,
                 mm: true, 
@@ -223,7 +223,6 @@ export const router = new Router({
                 mc: false,
                 mm: true, 
             }
-
         },
         {
             name: 'MagazineUpdate',

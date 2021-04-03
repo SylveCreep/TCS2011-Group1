@@ -23,7 +23,7 @@
                 id="code"
                 type="text"
                 class="form-control"
-                v-model="user.code"
+                v-model="contribution.code"
                 readonly
               />
               <p style="color: red" v-if="list_errors !== null">
@@ -36,7 +36,7 @@
                 id="fullName"
                 type="text"
                 class="form-control"
-                v-model="user.fullName"
+                v-model="contribution.fullName"
                 readonly
               />
               <p style="color: red" v-if="list_errors !== null">
@@ -49,7 +49,7 @@
                 id="facultyName"
                 type="text"
                 class="form-control"
-                v-model="user.facultyName"
+                v-model="contribution.facultyName"
                 readonly
               />
             </div>
@@ -59,7 +59,7 @@
                 id="submitdate"
                 type="date"
                 class="form-control"
-                v-model="user.date_of_birth"
+                v-model="contribution.createdAt"
                 readonly
               />
             </div>
@@ -85,7 +85,7 @@
                 id="approve"
                 type="test"
                 class="form-control"
-                v-model="user.roleName"
+                v-model="contribution.roleName"
                 readonly
               />
             </div>
@@ -95,7 +95,7 @@
                 id="deny"
                 type="test"
                 class="form-control"
-                v-model="user.roleName"
+                v-model="contribution.roleName"
                 readonly
               />
             </div>
