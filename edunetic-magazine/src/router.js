@@ -94,13 +94,13 @@ export const router = new Router({
              }
         }, {
             name: 'UserUpdate',
-            path: '/users/:id/update',
+            path: '/users/:id/detail',
             component: UserUpdate,
             meta: { 
                 admin: true,
                 student: false,
-                mc: false,
-                mm: false, 
+                mc: true,
+                mm: true, 
              }
         },
         //Role Routes

@@ -90,7 +90,7 @@
                     </option>
                   </select>
                 </div>
-                <div class="form-group"  v-if="loginUser.roleId !== 3"><!-- coordinatio cannot filter by role-->
+                <div class="form-group"  v-if="loginUser.roleId === 1"><!-- Only Admin can filter by role-->
                   <label>Role</label>
                   <select
                     class="form-control select2"
@@ -154,19 +154,30 @@
                     <td>{{ user.email }}</td>
                     <td>
                       <p
+                        
                         class="click"
                         style="display: inline"
                         v-on:click="showUser(user.id)"
                       >
-                        <b>Update</b>
+                        <b v-if="loginUser.roleId === 1">Update</b>
+                        <b v-else>Detail</b>
                       </p>
                       |
+                      <!--Only admin can delete user-->
                       <p
+                        v-if="loginUser.roleId === 1"
                         class="click"
                         style="display: inline"
                         v-on:click="deleteUser(user.id)"
                       >
                         <b>Delete</b>
+                      </p>
+                      <p v-else
+                        class="click"
+                        style="display: inline"
+                        v-on:click="showUserContribution(user.id)"
+                      >
+                        <b>Contribution list</b>
                       </p>
                     </td>
                   </tr>
@@ -246,7 +257,7 @@ export default {
           this.errorAlert('update', 'user');
           this.getUserList();
         } else {
-          router.push("/users/" + user_id + "/update");
+          router.push("/users/" + user_id + "/detail");
         }
     },
     async deleteUser(user_id) {
@@ -270,6 +281,15 @@ export default {
           }
         }
     },
+    async showUserContribution(user_id) {
+      await this.checkUserExisted(user_id)
+        if (!this.canModify) {
+          this.errorAlert('show contribution list', 'user');
+          this.getUserList();
+        } else {
+          router.push("/users/" + user_id + "/update");
+        }
+    },
     setStudentList() {
       if (this.$cookies.isKey("facultyStudent")) {
         this.filter.facultyId = this.$cookies.get("facultyStudent");
@@ -282,7 +302,10 @@ export default {
     checkLoginRoleFilter() {
       if (this.loginUser.roleId === DefaultConstants.Role.MarketingCoordinator) {
         this.filter.facultyId = this.loginUser.facultyId;
-        this.filter.roleId = this.DefaultConstants.Role.Student
+        this.filter.roleId = DefaultConstants.Role.Student
+      }
+      if (this.loginUser.roleId === DefaultConstants.Role.MarketingManager) {
+        this.filter.roleId = DefaultConstants.Role.Student
       }
     },
     getSort($column) {
@@ -297,7 +320,7 @@ export default {
       this.changecommonPage(e);
       this.getUserList();
     },
-   
+
   },
 };
 </script>

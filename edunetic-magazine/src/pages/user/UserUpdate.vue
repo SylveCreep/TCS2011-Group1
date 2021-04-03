@@ -7,15 +7,15 @@
             <i class="pe-7s-display1 icon-gradient bg-premium-dark"> </i>
           </div>
           <div>
-            <h2 v-if="loggedUserId !== undefined">Profile Update</h2>
-            <h2 v-else>User Update</h2>
+            <h2 v-if="loginUserId !== undefined">Profile</h2>
+            <h2 v-else>User Detail</h2>
           </div>
         </div>
       </div>
     </div>
     <div class="main-card mb-3 card">
       <div class="card-body">
-        <h5 class="card-title">Update Form</h5>
+        <h5 class="card-title">Detail Form</h5>
         <form v-on:submit.prevent="updateUser()">
           <div class="position-relative form-group">
             <label for="exampleFile" class="col-sm-2 control-label"
@@ -30,7 +30,11 @@
                 />
               </div>
             </div>
-            <div v-if="loginUser.roleId === 1" class="col-3" style="margin-top: 10px">
+            <div
+              v-if="loginUser.roleId === 1"
+              class="col-3"
+              style="margin-top: 10px"
+            >
               <input
                 name="file"
                 id="exampleFile"
@@ -133,6 +137,7 @@
                 id="rfemale"
                 v-model="user.gender"
                 value="0"
+                class="gender"
               />
               <label for="female" class="label-gender">Female</label>
             </div>
@@ -143,7 +148,7 @@
               <input
                 id="phoneNumber"
                 type="tel"
-                class="form-control"
+                class="form-control ed"
                 v-model="user.phoneNumber"
               />
               <p style="color: red" v-if="list_errors !== null">
@@ -152,12 +157,14 @@
             </div>
           </div>
           <div class="position-relative form-group">
-            <label class="col-sm-2 control-label">Date of birth: </label>
+            <label class="col-sm-2 control-label" id="ok"
+              >Date of birth:
+            </label>
             <div class="col-sm-12">
               <input
                 id="dateOfBirth"
                 type="date"
-                class="form-control"
+                class="form-control ed"
                 v-model="user.dateOfBirth"
               />
               <p style="color: red" v-if="list_errors !== null">
@@ -169,7 +176,14 @@
             <router-link to="/users" tag="button" class="btn btn-primary">
               Back
             </router-link>
-            <button type="submit" class="btn btn-success">Update</button>
+            <button
+              type="submit"
+              class="btn btn-success"
+              v-if="loginUser.roleId === 1"
+            >
+              Update
+            </button>
+            <!--Only admin can edit user-->
           </div>
         </form>
       </div>
@@ -182,8 +196,6 @@ import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { validateHelper } from "@/helper/validateHelper";
 import { commonHelper } from "@/helper/commonHelper";
-import JSZip from "jszip";
-import FileSaver from "file-saver";
 export default {
   name: "UserUpdate",
   mixins: [commonHelper, validateHelper],
@@ -206,6 +218,22 @@ export default {
     this.getUser();
     this.getFacultyList(); //This function are called from commonHelper.js file
   },
+  mounted() {
+    if (this.loginUser.roleId !== 1) {
+        //only admin can edit user detail
+        let readonlyArray = [
+          "fullName",
+          "address",
+          "phoneNumber",
+          "dateOfBirth",
+        ];
+        readonlyArray.forEach((element) => {
+          let text = document.querySelector("#" + element);
+          text.readOnly = true
+          document.querySelector(".gender").disabled = true
+        });
+      }
+  },
   methods: {
     getUser() {
       let user_id = this.$route.params.id;
@@ -222,6 +250,9 @@ export default {
         .catch((error) => {
           this.list_errors = error.response;
         });
+    },
+    checkLoginRole() {
+      
     },
     async updateUser() {
       this.userValidate(this.requireAttribute, this.user); //this function is called from helperMixin.js file
