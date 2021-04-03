@@ -31,6 +31,14 @@
               Submit
             </router-link>
           </div>
+          <div class="d-inline-block dropdown" v-if="loginUser.roleId === 2 || loginUser.roleId === 3"> <!--Only MM & MC can access this route -->
+            <button
+              class="btn-shadow btn btn-info"
+              v-on:click="downloadAllContribution"
+            >
+              Download all contributions
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -143,7 +151,7 @@
                 <a
                   class="btn-wide btn contribution-delete"
                   v-on:click="deleteContribution(contribution.id)"
-                  v-if="status === 0"
+                  v-if="loginUser.roleId === 4 && magazine.status === 0"
                   >Delete</a
                 >
               </div>
@@ -177,6 +185,7 @@ import { UrlConstants } from "@/constant/UrlConstant";
 import { DefaultConstants } from "@/constant/DefaultConstant";
 import { ResultConstants } from "@/constant/ResultConstant";
 import router from "@/router";
+import FileSaver from "file-saver";
 import ThePagination from "@/components/ThePagination";
 export default {
   name: "ContributionList",
@@ -188,6 +197,7 @@ export default {
     return {
       list_statuses: DefaultConstants.ContributionStatuses,
       list_contributions: [],
+      magazine: {},
     };
   },
 
@@ -195,6 +205,7 @@ export default {
     document.querySelector("#tab-0").click(); //default click to tab 1
   },
   created() {
+    this.checkMagazine();
     this.getContributionList();
     this.getFacultyList();
   },
@@ -240,6 +251,27 @@ export default {
     getStatus(status) {
       this.filter.status = status;
       this.getContributionList();
+    },
+    checkMagazine() {
+      if (this.$cookies.isKey("magazine")) {
+        this.magazine = this.$cookies.get("magazine");
+        this.filter.magazineId = this.magazine.id;
+      }
+    },
+    downloadAllContribution() {
+      axios
+        .get(
+          UrlConstants.Contribution +
+            "/download?magazineId=" +
+            this.magazine.id,
+          { responseType: "blob" }
+        )
+        .then((r) => {
+          FileSaver.saveAs(r.data, "contribution.zip");
+        })
+        .catch((error) => {
+          this.errors = error.response;
+        });
     }
   },
 };
