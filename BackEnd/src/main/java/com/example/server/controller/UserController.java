@@ -74,29 +74,6 @@ public class UserController {
         }
     }
 
-    // @PreAuthorize("hasRole('ADMIN')")
-    // @GetMapping
-    // public ResponseEntity<?> showUser(@RequestBody PagingRequest pagingRequest){
-    // try {
-    // if(pagingRequest.getLimit() < 0 || pagingRequest.getPage() < 0){
-    // return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Limit must
-    // larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
-    // }
-    // List<UserListResponse> users =
-    // userService.getUserListResponse(pagingRequest);
-    // if(users == null){
-    // return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Show
-    // failed", HttpStatus.BAD_REQUEST);
-    // }
-
-    // return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Show
-    // success",users.size(), HttpStatus.OK);
-    // } catch (Exception e) {
-    // return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Show
-    // failed", HttpStatus.BAD_REQUEST);
-    // }
-    // }
-
     @PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003')")
     @PostMapping(value = "/filter")
     public ResponseEntity<?> showUserBySearch(@RequestBody UserSearchRequest userSearchRequest) {
@@ -163,7 +140,7 @@ public class UserController {
         }
     }
 
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003')")
     @GetMapping(value = "/{id}", consumes = { "text/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> getUser(@PathVariable(name = "id") Long id) {
         try {
@@ -194,41 +171,5 @@ public class UserController {
             return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Log out failed", HttpStatus.BAD_REQUEST);
         }
     }
-
-    @GetMapping(value = "/nrm", consumes = { "text/plain", "application/*" }, produces = "application/json")
-    public ResponseEntity<?> getUserNormal() {
-        try {
-            List<UserResponse> users = userService.getUserNotIsManager();
-            if (users == null) {
-                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get user fail", HttpStatus.OK);
-            }
-            return responseUtils.getResponseEntity(users, Constant.SUCCESS, "Get user successfully", HttpStatus.OK);
-        } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get user fail", HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    // @GetMapping(value="/avatar/{id}",consumes = {"text/plain", "application/*"})
-    // @ResponseBody
-    // public ResponseEntity<?> getUserAvatarById(@PathVariable(name="id") Long id)
-    // {
-    // try {
-    // if(id == null){
-    // return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Must has
-    // user id", HttpStatus.BAD_REQUEST);
-    // }
-    // UserResponse user = userService.findById(id);
-    // if(user == null){
-    // return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Cant find
-    // user matched with provided id", HttpStatus.OK);
-    // }
-    // Resource file = fileService.loadAsResource(user.getCode());
-    // return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-    // "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-    // } catch (Exception e) {
-    // return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Get user
-    // avatar fail", HttpStatus.BAD_REQUEST);
-    // }
-    // }
 
 }

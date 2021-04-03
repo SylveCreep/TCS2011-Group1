@@ -88,6 +88,7 @@ public class RoleController {
         }
     }
 
+    @PreAuthorize("hasRole('R0001')")
     @PatchMapping(consumes = { "test/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> updateRole(@RequestBody CreateRole roleDto) {
         try {
