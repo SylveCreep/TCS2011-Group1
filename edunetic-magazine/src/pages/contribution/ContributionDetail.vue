@@ -1,5 +1,5 @@
 <template>
-  <div class="app-main__inner" style="background-color: #fff">
+  <div class="app-main__inner">
     <div class="app-page-title">
       <div class="page-title-wrapper">
         <div class="page-title-heading">
@@ -32,7 +32,13 @@
             contribution.linkSource
           }}</span>
         </p>
-        <input type="file" v-bind:value="contribution.file" multiple />
+        <input
+          type="file"
+          v-bind:value="contribution.file"
+          multiple
+          v-if="loginUser.roleId === 4"
+        />
+        <!--Only student can edit their contribution-->
         <p v-if="contribution.status == 0">
           <b>Pending:</b> Waiting for reviewing
         </p>
@@ -47,22 +53,25 @@
       </div>
       <div class="d-block text-right card-footer">
         <p
-          v-if="showComment === false"
-          class="btn-wide btn contribution-detail"
-          v-on:click="getCommentList"
-          >Show Comments</p
+          v-if="loginUser.roleId !== 4 && contribution.status === 0"
+          class="btn btn-danger"
+          v-on:click="updateContributionStatus(contribution.id, -1, 'deny')"
         >
+          Deny
+        </p>
         <p
-          v-else
-          class="btn-wide btn contribution-detail"
-          v-on:click="getCommentList"
-          >Hide Comments</p
+          v-if="loginUser.roleId !== 4 && contribution.status === 0"
+          class="btn btn-success"
+          v-on:click="updateContributionStatus(contribution.id, 1, 'approve')"
         >
+          Approve
+        </p>
+        <router-link to="/contributions" class="btn back-btn">
+          Back
+        </router-link>
       </div>
     </div>
-    <div class="comment-list" v-if="showComment">
-      ppppp
-    </div>
+    <comment-list></comment-list>
   </div>
 </template>
 
@@ -73,13 +82,16 @@ import { UrlConstants } from "@/constant/UrlConstant";
 import { validateHelper } from "@/helper/validateHelper";
 import { commonHelper } from "@/helper/commonHelper";
 import FileSaver from "file-saver";
+import CommentList from "@/pages/comment/CommentList";
 export default {
   name: "ContributionDetail",
   mixins: [commonHelper, validateHelper],
+  components: {
+    CommentList,
+  },
   data() {
     return {
       contribution: {},
-      showComment: false,
     };
   },
   created() {
@@ -111,11 +123,23 @@ export default {
           this.errors = error.response;
         });
     },
-    getCommentList() {
-    this.showComment = !this.showComment
+    async updateContributionStatus(contribution_id, statusId, statusName) {
+      await this.confirmAlert(statusName, "this contribution");
+      if (this.confirmResult) {
+        let contributionUpdate = {
+          id: contribution_id,
+          status: statusId,
+        };
+        axios
+          .post(UrlConstants.Contribution + "/updateStatus", contributionUpdate)
+          .then((r) => {
+            this.successAlert();
+            this.getContribution();
+          });
+      }
+    },
   },
-  },
-  
+
   props: {},
 };
 </script>
@@ -133,8 +157,16 @@ export default {
   background-color: #f0f3f5;
 }
 .file-source {
-  color: blue;
+  color: #3f6ad8;
   text-decoration: underline;
   cursor: pointer;
+}
+.btn {
+  margin-left: 10px;
+}
+.back-btn {
+  margin-bottom: 1rem;
+  background-color: #3f6ad8;
+  color:white
 }
 </style>

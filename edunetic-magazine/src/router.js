@@ -51,7 +51,7 @@ export const router = new Router({
         {
             name: 'Dashboard',
             path: '/',
-            component: UserList,
+            component: ContributionList,
             meta: { 
                 admin: true,
                 student: true,

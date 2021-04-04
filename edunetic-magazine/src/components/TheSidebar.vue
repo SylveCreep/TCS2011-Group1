@@ -75,7 +75,7 @@
             </router-link>
           </li>
           <li>
-           <router-link to="/magazines" v-if="loginUser.roleId === 2"> <!--Only marketing manager can access this route-->
+           <router-link to="/magazines" v-if="loginUser.roleId !== 1"> <!--Only marketing manager can access this route-->
               <i class="metismenu-icon fas fa-th"></i>
               <p>Magazine List</p>
             </router-link>
