@@ -140,7 +140,7 @@ public class UserController {
         }
     }
 
-    @PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003')")
+    //@PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003')")
     @GetMapping(value = "/{id}", consumes = { "text/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> getUser(@PathVariable(name = "id") Long id) {
         try {
