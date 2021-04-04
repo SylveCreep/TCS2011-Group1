@@ -8,7 +8,7 @@ public class ContributionResponse {
     private Long facultyId;
     private String facultyName;
     private String code;
-    private String userName;
+    private String studentName;
     private Long checkedById;
     private String checkedByName;
     private Date createdAt;
@@ -30,12 +30,7 @@ public class ContributionResponse {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-    public String getUserName() {
-        return userName;
-    }
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+    
     public Long getCheckedById() {
         return checkedById;
     }
@@ -106,15 +101,21 @@ public class ContributionResponse {
     public void setEmail(String email) {
         this.email = email;
     }
-    public ContributionResponse(Long id, Long userId, Long facultyId, String facultyName, String code, String userName,
-            Long checkedById, String checkedByName, Date createdAt, Integer status, Long magazineId, String linkSource,
-            String extension, String email) {
+    public String getStudentName() {
+        return studentName;
+    }
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+    public ContributionResponse(Long id, Long userId, Long facultyId, String facultyName, String code,
+            String studentName, Long checkedById, String checkedByName, Date createdAt, Integer status, Long magazineId,
+            String linkSource, String extension, String email) {
         this.id = id;
         this.userId = userId;
         this.facultyId = facultyId;
         this.facultyName = facultyName;
         this.code = code;
-        this.userName = userName;
+        this.studentName = studentName;
         this.checkedById = checkedById;
         this.checkedByName = checkedByName;
         this.createdAt = createdAt;
@@ -124,6 +125,7 @@ public class ContributionResponse {
         this.extension = extension;
         this.email = email;
     }
+    
     
     
     

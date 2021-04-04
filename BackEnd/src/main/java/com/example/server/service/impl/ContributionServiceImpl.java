@@ -82,7 +82,7 @@ public class ContributionServiceImpl implements ContributionService {
                 contributionRes.setUserId(contribution.getUser().getId());
                 contributionRes.setFacultyId(contribution.getFaculty().getId());
                 contributionRes.setFacultyName(contribution.getFaculty().getName());
-                contributionRes.setUserName(contribution.getUser().getFullName());
+                contributionRes.setStudentName(contribution.getUser().getFullName());
                 contributionRes.setCheckedById(
                         contribution.getCheckedBy() == null ? null : contribution.getCheckedBy().getId());
                 contributionRes.setCheckedByName(
@@ -225,7 +225,7 @@ public class ContributionServiceImpl implements ContributionService {
             contributionRes.setUserId(contribution.getUser().getId());
             contributionRes.setFacultyId(contribution.getFaculty().getId());
             contributionRes.setFacultyName(contribution.getFaculty().getName());
-            contributionRes.setUserName(contribution.getUser().getFullName());
+            contributionRes.setStudentName(contribution.getUser().getFullName());
             contributionRes
                     .setCheckedById(contribution.getCheckedBy() == null ? null : contribution.getCheckedBy().getId());
             contributionRes.setCheckedByName(
