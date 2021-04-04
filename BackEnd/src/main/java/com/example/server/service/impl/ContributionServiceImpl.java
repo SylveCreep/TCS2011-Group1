@@ -140,7 +140,7 @@ public class ContributionServiceImpl implements ContributionService {
             nContribution.setCode("C" + String.format("%04d", queryCheck.GetHighestId("contribution")));
             nContribution.setCreated_at(new Date());
             FileResponse fileResponse = fileService.storeContribution(file, nContribution.getCode());
-            nContribution.setLinkSource(fileResponse.getPath());
+            nContribution.setLinkSource(fileResponse.getPath().substring(fileResponse.getPath().lastIndexOf("/", 0), fileResponse.getPath().length()));
             nContribution.setExtension(fileResponse.getExtension());
 
             // User mmUser = userDao.findUserManagerByFacultyIdAndRoleId(null, (long) 2);
@@ -188,7 +188,7 @@ public class ContributionServiceImpl implements ContributionService {
                 uContribution.setIsApproved(contribution.getStatus());
             }
             FileResponse fileResponse = fileService.storeContribution(file, uContribution.getCode());
-            uContribution.setLinkSource(fileResponse.getPath());
+            uContribution.setLinkSource(fileResponse.getPath().substring(fileResponse.getPath().lastIndexOf("/", 0), fileResponse.getPath().length()));
             uContribution.setExtension(fileResponse.getExtension());
             try {
                 uContribution.setUpdated_at(new Date());
