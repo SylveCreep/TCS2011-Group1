@@ -264,82 +264,26 @@ public class ContributionController {
         }
     }
 
-    // @RequestMapping(value = "/download/user")
-    // public ResponseEntity<?>
-    // downloadContributionsByUserId(@RequestParam(name="userId") Long userId) {
-    // try {
-    // if(userId == null){
-    // return responseUtils.getResponseEntity("NULL", FAILURE,"Missing user id",
-    // HttpStatus.BAD_REQUEST);
-    // }
-    // List<File> files =
-    // fileService.loadContributionPathsByUserIdOrMagazineId(userId, 0);
-    // HttpHeaders header = new HttpHeaders();
-    // header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;
-    // filename="+userId+"_contributions.zip");
-    // ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    // ZipOutputStream zipOut = new ZipOutputStream(baos);
-    // for(File file: files){
-    // FileInputStream fis = new FileInputStream(file);
-    // ZipEntry zipEntry = new ZipEntry(file.getName());
-    // zipOut.putNextEntry(zipEntry);
-    // byte[] bytes = new byte[1024];
-    // int length;
-    // while((length = fis.read(bytes)) >= 0) {
-    // zipOut.write(bytes, 0, length);
-    // }
-    // fis.close();
-    // }
-    // zipOut.close();
-    // baos.close();
-    // return ResponseEntity.ok()
-    // .headers(header)
-    // .contentType(MediaType.parseMediaType("application/zip"))
-    // .body(baos.toByteArray());
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // return responseUtils.getResponseEntity("NULL", FAILURE,"Dowload contributions
-    // of user failed", HttpStatus.BAD_REQUEST);
-    // }
-    // }
+    @PreAuthorize("hasRole('R0002') or hasRole('R0003')")
+    @PostMapping("/updateStatus")
+    public ResponseEntity<?> updateStatusByContributionIdAndStatus(ContributionRequest request){
+        try {
+            if (request.getId() == null || contributionService.getContributionById(request.getId()) == null) {
+                return responseUtils.getResponseEntity("NULL", FAILURE, "Must has contribution id",
+                        HttpStatus.BAD_REQUEST);
+            }
+            Boolean updateResult = contributionService.updateStatusContribution(request);
+            if(updateResult == false){
+                return responseUtils.getResponseEntity("NULL", SUCCESS, "Update fail",
+                        HttpStatus.BAD_REQUEST);
+            }
+            return responseUtils.getResponseEntity("NULL", SUCCESS, "Update success",
+                        HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", FAILURE, "Update fail",
+                        HttpStatus.BAD_REQUEST);
+        }
+    }
 
-    // @RequestMapping(value = "/download/magazine")
-    // public ResponseEntity<?>
-    // downloadContributionsByMagazineId(@RequestParam(name="magazineId") Long
-    // magazineId) {
-    // try {
-    // if(magazineId == null){
-    // return responseUtils.getResponseEntity("NULL", FAILURE,"Missing user id",
-    // HttpStatus.BAD_REQUEST);
-    // }
-    // List<File> files =
-    // fileService.loadContributionPathsByUserIdOrMagazineId(magazineId, 1);
-    // HttpHeaders header = new HttpHeaders();
-    // header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;
-    // filename="+magazineId+"_contributions.zip");
-    // ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    // ZipOutputStream zipOut = new ZipOutputStream(baos);
-    // for(File file: files){
-    // FileInputStream fis = new FileInputStream(file);
-    // ZipEntry zipEntry = new ZipEntry(file.getName());
-    // zipOut.putNextEntry(zipEntry);
-    // byte[] bytes = new byte[1024];
-    // int length;
-    // while((length = fis.read(bytes)) >= 0) {
-    // zipOut.write(bytes, 0, length);
-    // }
-    // fis.close();
-    // }
-    // zipOut.close();
-    // baos.close();
-    // return ResponseEntity.ok()
-    // .headers(header)
-    // .contentType(MediaType.parseMediaType("application/zip"))
-    // .body(baos.toByteArray());
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // return responseUtils.getResponseEntity("NULL", FAILURE,"Dowload contributions
-    // of magazine failed", HttpStatus.BAD_REQUEST);
-    // }
-    // }
+    
 }
