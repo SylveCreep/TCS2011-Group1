@@ -23,5 +23,5 @@ export const DefaultConstants = Object.freeze({
         Processing: 1,
         Publising: 2,
         Closed: 3,
-    }
+    },
 });

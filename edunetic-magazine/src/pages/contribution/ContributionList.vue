@@ -205,6 +205,7 @@ export default {
     document.querySelector("#tab-0").click(); //default click to tab 1
   },
   created() {
+    this.filter.status = 0
     this.checkMagazine();
     this.getContributionList();
     this.getFacultyList();

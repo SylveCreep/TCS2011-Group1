@@ -287,7 +287,8 @@ export default {
           this.errorAlert('show contribution list', 'user');
           this.getUserList();
         } else {
-          router.push("/users/" + user_id + "/update");
+          this.$cookies.set("studentContribution", user_id);
+          router.push("/contributions");
         }
     },
     setStudentList() {
