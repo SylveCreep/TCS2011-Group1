@@ -268,8 +268,12 @@ public class ContributionController {
     @PostMapping("/updateStatus")
     public ResponseEntity<?> updateStatusByContributionIdAndStatus(ContributionRequest request){
         try {
-            if (request.getId() == null || contributionService.getContributionById(request.getId()) == null) {
+            if (request.getId() == null) {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Must has contribution id",
+                        HttpStatus.BAD_REQUEST);
+            }
+            if(contributionService.getContributionById(request.getId()) == null){
+                return responseUtils.getResponseEntity("NULL", FAILURE, "Contribution not existed",
                         HttpStatus.BAD_REQUEST);
             }
             Boolean updateResult = contributionService.updateStatusContribution(request);
