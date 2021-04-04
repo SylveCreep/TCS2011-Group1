@@ -140,7 +140,7 @@ public class ContributionServiceImpl implements ContributionService {
             nContribution.setCode("C" + String.format("%04d", queryCheck.GetHighestId("contribution")));
             nContribution.setCreated_at(new Date());
             FileResponse fileResponse = fileService.storeContribution(file, nContribution.getCode());
-            nContribution.setLinkSource(fileResponse.getPath().substring(fileResponse.getPath().lastIndexOf("/", 0), fileResponse.getPath().length()));
+            nContribution.setLinkSource("contribution_"+nContribution.getCode()+"."+fileResponse.getExtension());
             nContribution.setExtension(fileResponse.getExtension());
 
             // User mmUser = userDao.findUserManagerByFacultyIdAndRoleId(null, (long) 2);
@@ -170,17 +170,10 @@ public class ContributionServiceImpl implements ContributionService {
             if (uContribution == null) {
                 return null;
             }
-            // String email = getEmail();
-            // User user = userDao.findExistedUserByEmail(email);
-            // if(contribution.getUserId() != null){
-            // uContribution.setUser(userDao.findByUserId(contribution.getUserId()));
-            // }
+            uContribution.setUpdated_at(new Date());
             if (contribution.getCheckedBy() != null) {
                 uContribution.setCheckedBy(userDao.findByUserId(contribution.getCheckedBy()));
             }
-            // if(contribution.getFacultyId() != null){
-            // uContribution.setFaculty(facultyDao.findFacultyById(contribution.getFacultyId()));
-            // }
             if (contribution.getMagazineId() != null) {
                 uContribution.setMagazine(magazineDao.findExistedMagazineById(contribution.getMagazineId()));
             }
@@ -206,7 +199,9 @@ public class ContributionServiceImpl implements ContributionService {
     public Boolean updateStatusContribution(ContributionRequest contribution) {
         try {
             Contribution uContribution = contributionDao.findExistedContributionById(contribution.getId());
+            User checkByUser = userDao.findExistedUserByEmail(getEmail());
             uContribution.setIsApproved(contribution.getStatus());
+            uContribution.setCheckedBy(checkByUser);
             try {
                 contributionDao.save(uContribution);
                 return true;

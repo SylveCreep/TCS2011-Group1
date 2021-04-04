@@ -266,7 +266,7 @@ public class ContributionController {
 
     @PreAuthorize("hasRole('R0002') or hasRole('R0003')")
     @PostMapping("/updateStatus")
-    public ResponseEntity<?> updateStatusByContributionIdAndStatus(ContributionRequest request){
+    public ResponseEntity<?> updateStatusByContributionIdAndStatus(@RequestBody ContributionRequest request){
         try {
             if (request.getId() == null) {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Must has contribution id",
