@@ -16,7 +16,7 @@ export const DefaultConstants = Object.freeze({
     ContributionStatuses: {
         Pending: 0,
         Approved: 1,
-        Denied: 2
+        Denied: -1
     },
     MagazineStatuses:{
         Opening: 0,

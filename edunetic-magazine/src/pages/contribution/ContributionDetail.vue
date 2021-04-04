@@ -44,11 +44,11 @@
         </p>
 
         <p v-if="contribution.status == 1">
-          <b>Approved by:</b>{{ contribution.checkedByName }}
+          <b>Approved by:</b> {{ contribution.checkedByName }}
         </p>
 
-        <p v-if="contribution.status == 2">
-          <b>Denied by:</b>{{ contribution.checkedByName }}
+        <p v-if="contribution.status == -1">
+          <b>Denied by: </b> {{ contribution.checkedByName }}
         </p>
       </div>
       <div class="d-block text-right card-footer">

@@ -92,7 +92,7 @@ export default {
   font-weight: bold;
 }
 .comment-children {
-  margin-left: 4.5rem
+  margin-left: 3.5rem
 }
 .comment-item {
   margin-top: 1rem;
