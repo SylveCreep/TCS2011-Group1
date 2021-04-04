@@ -83,7 +83,7 @@
             type="text"
             placeholder="Search"
             aria-label="Search"
-            v-model="filter.studentName"
+            v-model="filter.studentNameg"
             v-on:keyup="getFilter"
           />
         </div>
