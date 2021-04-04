@@ -76,18 +76,18 @@
             v-on:keyup="getFilter"
           />
         </div>
-        <div class="form-group">
+        <div class="form-group" v-if="loginUser.roleId !== 4"> <!-- Role student can not use this filter-->
           <label>Student Name</label>
           <input
             class="form-control"
             type="text"
             placeholder="Search"
             aria-label="Search"
-            v-model="filter.fullName"
+            v-model="filter.studentName"
             v-on:keyup="getFilter"
           />
         </div>
-        <div class="form-group">
+        <div class="form-group" v-if="loginUser.roleId !== 4"> <!-- Role student can not use this filter-->
           <label>Faculty</label>
           <select
             class="form-control select2"
@@ -113,7 +113,7 @@
             type="date"
             placeholder="Search"
             aria-label="Search"
-            v-model="filter.publishedAt"
+            v-model="filter.createdAt"
             v-on:keyup="getFilter"
           />
         </div>
@@ -136,7 +136,7 @@
                 code: {{ contribution.code }}
               </div>
               <div class="card-body">
-                <p><b>StudentName:</b> {{ contribution.userName }}</p>
+                <p><b>Student Name:</b> {{ contribution.studentName }}</p>
                 <p><b>Faculty:</b> {{ contribution.facultyName }}</p>
                 <p><b>Submit Date:</b> {{ contribution.createdAt | formatDate }}</p>
                 <p v-if="status === 1"><b>Approved by:</b> {{ contribution.checkedByName }}</p>
@@ -162,7 +162,7 @@
       <div class="row">
         <div class="col-md-6">
           <strong> Items per page: </strong>
-          <select v-on:change="getLimit($event)">
+          <select class="select-page" v-on:change="getLimit($event)">
             <option value="9">9</option>
             <option value="15" selected>15</option>
             <option value="3">3</option>
@@ -247,6 +247,7 @@ export default {
     getFilter() {
       this.filter.page = DefaultConstants.firstPage;
       this.getContributionList();
+      console.log(this.filter)
     },
     getStatus(status) {
       this.filter.status = status;
@@ -291,5 +292,8 @@ export default {
 }
 .row .card-footer {
   background-color: #f0f3f5;
+}
+.select-page {
+  padding: 2px 5px;
 }
 </style>
