@@ -188,7 +188,7 @@
           <div class="card-footer">
             <div class="col-lg-6">
               <strong> Items per page: </strong>
-              <select v-on:change="getLimit($event)">
+              <select class="select-page" v-on:change="getLimit($event)">
                 <option value="10">10</option>
                 <option value="15" selected>15</option>
                 <option value="1">1</option>
@@ -337,6 +337,9 @@ export default {
 }
 .click :hover {
   color: #3f6ad8;
+}
+.select-page {
+  padding: 2px 5px;
 }
 </style>
 
