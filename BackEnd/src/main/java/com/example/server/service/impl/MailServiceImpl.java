@@ -17,6 +17,8 @@ import com.example.server.util.Mail.MailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static com.example.server.constant.Constant.*;
+
 @Service
 public class MailServiceImpl implements MailService {
 
@@ -66,7 +68,11 @@ public class MailServiceImpl implements MailService {
 
             List<String> ccList = new ArrayList<>();
             String subject = "Reset password for user "+ user.getFullName() + "(Code: " + user.getCode() +")";
-            String html= "<p>Reset password key:"+key+"</p>" +"<p>(Note: Your key will expire 15 minutes since you received this mail</p>";
+            String html= "<p>Reset password link: "
+                        + "<a target=\"_blank\" href=\""+urlLink+key+"\">Click this"
+                        +"</a>"
+                        +"</p>" 
+                        +"<p>(Note: Your key will expire 15 minutes since you received this mail)</p>";
             try {
                 mailUtils.sendAsHtml(host_email, user.getEmail(), ccList, subject, html);
                 return true;

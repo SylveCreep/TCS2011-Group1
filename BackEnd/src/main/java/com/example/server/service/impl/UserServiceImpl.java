@@ -1,6 +1,7 @@
 package com.example.server.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,7 @@ import com.example.server.util.ResponseUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -353,8 +355,27 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public Boolean updatePassword(CreateAccount form, User user) {
         try {
-            user.setPassword(form.getPassword());
+            user.setPassword(bcryptEncoder.encode(form.getPassword()));
+            user.setResetPasswordKey(null);
+            user.setKeyCreatedAt(null);
+            userDao.save(user);
             return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean validateResetPasswordKey(String key) {
+        try {
+            User user = userDao.findExistedUserByPasswordKey(key);
+            Date expireDate = DateUtils.addMinutes(user.getKeyCreatedAt(), minute);
+            Boolean isExpired = new Date().after(expireDate);
+            if(user == null || isExpired){
+                return false;
+            } else {
+                return true;
+            }
         } catch (Exception e) {
             return false;
         }

@@ -36,4 +36,6 @@ public interface UserService {
 
     List<UserResponse> getUserNotIsManager();
 
+    Boolean validateResetPasswordKey(String key);
+
 }
