@@ -14,6 +14,7 @@ import com.example.server.entity.User;
 import com.example.server.service.MailService;
 import com.example.server.util.Mail.MailUtils;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,9 +72,10 @@ public class MailServiceImpl implements MailService {
     @Override
     public Boolean sendResetPasswordMail(User user) {
         try {
-            byte[] array = new byte[7];
-            new Random().nextBytes(array);
-            String key = new String(array, Charset.forName("UTF-8"));
+            // byte[] array = new byte[7];
+            // new Random().nextBytes(array);
+            // String key = new String(array, Charset.forName("UTF-8"));
+            String key = RandomStringUtils.randomGraph(7);
             user.setResetPasswordKey(key);
             user.setKeyCreatedAt(new Date());
             userDao.save(user);
