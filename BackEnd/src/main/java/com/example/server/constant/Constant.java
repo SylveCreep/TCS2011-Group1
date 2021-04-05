@@ -25,7 +25,7 @@ public class Constant {
         public static final int minute = 15;
 
         //Reset password reset link
-        public static final String urlLink = "http://localhost:8081/users/forgotpassword?key=";
+        public static final String urlLink = "http://localhost:8081/users/forgotpassword/";
 
         //Redirect to change password url
         public static final String urlReset = "http://localhost:8080/password/reset/";
