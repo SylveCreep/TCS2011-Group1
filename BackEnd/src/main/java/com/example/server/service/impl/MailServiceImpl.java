@@ -35,16 +35,28 @@ public class MailServiceImpl implements MailService {
     String host_email = rb.getString("SEND_FROM");
 
     @Override
-    public Boolean sendNotifyContributionEmail(Long id) {
+    public Boolean sendNotifyContributionEmail(Long id, int type) {
         try {
             Contribution contribution = contributionDao.findExistedContributionById(id);
             User mcUser = userDao.findUserManagerByFacultyIdAndRoleId(contribution.getUser().getFaculty().getId(), (long) 3);
             User mmUser = userDao.findUserManagerByFacultyIdAndRoleId(null, (long) 2);
             List<String> ccList = new ArrayList<>();
             ccList.add(mmUser.getEmail());
-            String subject = "New commited contribution from student "+
-            contribution.getUser().getFullName() + " (code:" + contribution.getUser().getCode() + ")";
-            String html = "<p>Student " + contribution.getUser().getFullName()+ " has commited following code "+ contribution.getCode()+ " contribution</p>"+"<p>Please follow url link to see contribution: "+ "http://localhost:3000/contributions/"+id+"</p>";
+            String subject = " ";
+            switch (type) {
+                case JUSTCREATED:
+                    subject = "New commited contribution from student "+
+                    contribution.getUser().getFullName() + " (code:" + contribution.getUser().getCode() + ")";
+                    break;
+                case NEEDNOTIFY:
+                    subject = "Commited contribution hasn't received comment since created from student "+
+                    contribution.getUser().getFullName() + " (code:" + contribution.getUser().getCode() + ")";
+                    break;
+                default:
+                    break;
+            }
+            String html = "<p>Student " + contribution.getUser().getFullName()+ " has commited following code "+ contribution.getCode()+ " contribution</p>"+"<p>Please follow url link to see contribution: "+"<a target=\"_blank\" href=\""+NOTIFYURL+id+"\">Click this"
+            +"</a>"+"</p>";
             try {
                 mailUtils.sendAsHtml(host_email, mcUser.getEmail(), ccList, subject, html);
                 return true;

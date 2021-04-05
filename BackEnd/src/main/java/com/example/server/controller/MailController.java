@@ -58,7 +58,7 @@ public class MailController {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Contribution must in pending status",
                         HttpStatus.BAD_REQUEST);
             }
-            Boolean sendStatus = mailService.sendNotifyContributionEmail(id);
+            Boolean sendStatus = mailService.sendNotifyContributionEmail(id, JUSTCREATED);
             if (sendStatus == false) {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Send mail fail", HttpStatus.OK);
             }

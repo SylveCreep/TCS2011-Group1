@@ -39,4 +39,15 @@ public interface ContributionDao extends JpaRepository<Contribution, Long> {
     "AND c.is_deleted = 0 "+ 
     "AND u.is_deleted = 0",nativeQuery = true)
     List<Contribution> getExistedContributionsByUserId(Long id, int type);
+
+    @Query(value = "SELECT c.* FROM contribution c "+ 
+    "WHERE c.is_deleted = 0 "+ 
+    "AND c.is_approved = 0 "+ 
+    "AND c.id NOT IN (SELECT c1.id FROM contribution c1 "+
+    "LEFT JOIN comment cm ON cm.contribution_id = c1.id "+
+    "WHERE cm.is_deleted = 0 "+
+    ") "+ 
+    "AND (CURDATE() BETWEEN DATE_ADD(c.created_at, INTERVAL 10 DAY ) AND DATE_ADD(c.created_at, INTERVAL 14 DAY )) "+ 
+    "AND c.expire_notify = 0 ", nativeQuery = true)
+    List<Contribution> getContributionHasNoComment();
 }

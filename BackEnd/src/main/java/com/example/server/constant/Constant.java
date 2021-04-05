@@ -30,7 +30,11 @@ public class Constant {
         //Redirect to change password url
         public static final String urlReset = "http://localhost:8081/password/reset/";
 
-        //public static final String urlReset = "http://nhattruyen.com/";
+        //Email notify contribution
+        public static final int JUSTCREATED = 0;
+        public static final int NEEDNOTIFY = 1;
+
+        public static final String NOTIFYURL = "http://localhost:3000/contributions/";
 
 
 }
