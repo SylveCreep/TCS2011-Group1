@@ -1,20 +1,27 @@
 package com.example.server.service.impl;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Set;
 
+import com.example.server.config.TokenProvider;
 import com.example.server.constant.Constant;
 import com.example.server.dao.FacultyDao;
 import com.example.server.dao.RoleDao;
 import com.example.server.dao.UserDao;
+import com.example.server.dto.FacebookUserDto;
 import com.example.server.entity.Faculty;
 import com.example.server.entity.Role;
 import com.example.server.entity.User;
 import com.example.server.model.request.CreateAccount;
+import com.example.server.model.request.LoginUser;
 import com.example.server.model.request.PagingRequest;
 import com.example.server.model.request.UserSearchRequest;
 import com.example.server.model.response.UserLastPageResponse;
@@ -27,14 +34,20 @@ import com.example.server.util.ResponseUtils;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -70,6 +83,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    ResourceBundle rb = ResourceBundle.getBundle("other_api");
+    String facebook_graph_api_base = rb.getString("FACEBOOK_GRAPH_API_BASE");
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userDao.findByEmail(email);
@@ -376,6 +395,43 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public FacebookUserDto getFacebookUser(String accessToken) {
+        String path = "/me?fields={fields}&redirect={redirect}&access_token={access_token}";
+        String fields = "email,first_name,last_name,birthday,id,picture.width(720).height(720)";
+        final Map<String, String> variables = new HashMap<>();
+        variables.put("fields", fields);
+        variables.put("redirect", "false");
+        variables.put("access_token", accessToken);
+        return restTemplate
+                .getForObject(facebook_graph_api_base + path, FacebookUserDto.class, variables);
+    }
+
+    @Override
+    public LoginUser getLoginJwtTokenByFacebook(String accessToken) {
+        FacebookUserDto facebookUserDto = getFacebookUser(accessToken);
+        User user = userDao.findExistedUserByEmail(facebookUserDto.getEmail());
+        if(user == null){
+            String password = RandomStringUtils.randomAscii(16);
+            CreateAccount createAccount = new CreateAccount();
+            createAccount.setEmail(facebookUserDto.getEmail());
+            createAccount.setAvatar(facebookUserDto.getUrl());
+            createAccount.setFullName(facebookUserDto.getFirstName() +" "+ facebookUserDto.getLastName());
+            createAccount.setPassword(password);
+            try {
+                createAccount.setDateOfBirth(DateUtils.parseDate(facebookUserDto.getBirthday(), "yyyy/MM/dd"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            createAccount.setAddress("12132132 asas");
+            user = saveGuestRegister(createAccount);
+        }
+        LoginUser loginUser = new LoginUser();
+        loginUser.setId(user.getId());
+        loginUser.setEmail(user.getEmail());
+        return loginUser;
     }
 
 }

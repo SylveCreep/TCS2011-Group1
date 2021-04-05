@@ -2,6 +2,7 @@ package com.example.server.service;
 
 import java.util.List;
 
+import com.example.server.dto.FacebookUserDto;
 import com.example.server.dto.UserDto;
 import com.example.server.entity.User;
 import com.example.server.model.request.*;
@@ -37,5 +38,9 @@ public interface UserService {
     List<UserResponse> getUserNotIsManager();
 
     Boolean validateResetPasswordKey(String key);
+
+    FacebookUserDto getFacebookUser(String accessToken);
+
+    LoginUser getLoginJwtTokenByFacebook(String accessToken);
 
 }

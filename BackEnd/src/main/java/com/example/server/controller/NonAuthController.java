@@ -3,6 +3,7 @@ package com.example.server.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -23,7 +24,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,6 +56,9 @@ public class NonAuthController {
 
     @Autowired
     private ResponseUtils responseUtils;
+
+    @Resource(name = "userService")
+    private UserDetailsService userDetailsService;
 
     private ResponseEntity<?> getResponseEntity(Object data, String code, String mess, HttpStatus status) {
         Map<String, Object> response = new HashMap<>();
@@ -101,6 +108,27 @@ public class NonAuthController {
             return getResponseEntity("NULL","1","Register success", HttpStatus.OK);
         } catch (Exception e) {
             return getResponseEntity("NULL","-1","Register failed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(value = "/facebook/login")
+    public ResponseEntity<?> loginByFacebook(@RequestBody LoginUser loginUser) throws AuthenticationException {
+        try {
+            if(loginUser.getAccessToken() == null){
+                return getResponseEntity("NULL","-1","Login failed", HttpStatus.BAD_REQUEST);
+            }
+            LoginUser user = userService.getLoginJwtTokenByFacebook(loginUser.getAccessToken());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+            final Authentication authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            final String token = jwtTokenUtil.generateToken(authentication);
+            return getResponseEntity(new AuthToken(token, user.getId()),"1","Login success", HttpStatus.OK);
+        } catch (Exception e) {
+            return getResponseEntity("NULL","-1","Login failed", HttpStatus.BAD_REQUEST);
         }
     }
     
