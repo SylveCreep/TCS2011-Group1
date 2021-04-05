@@ -75,7 +75,7 @@ public class MailServiceImpl implements MailService {
             // byte[] array = new byte[7];
             // new Random().nextBytes(array);
             // String key = new String(array, Charset.forName("UTF-8"));
-            String key = RandomStringUtils.randomGraph(7);
+            String key = RandomStringUtils.randomAlphabetic(7);
             user.setResetPasswordKey(key);
             user.setKeyCreatedAt(new Date());
             userDao.save(user);
