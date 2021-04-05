@@ -4,12 +4,12 @@ import java.util.Date;
 
 public class ContributionResponse {
     private Long id;
-    private Long userId;
+    private Long studentId;
     private Long facultyId;
     private String facultyName;
     private String code;
     private String studentName;
-    private Long checkedById;
+    private Long checkedBy;
     private String checkedByName;
     private Date createdAt;
     private Integer status;
@@ -24,18 +24,12 @@ public class ContributionResponse {
     public void setId(Long id) {
         this.id = id;
     }
-    public Long getUserId() {
-        return userId;
-    }
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
     
-    public Long getCheckedById() {
-        return checkedById;
+    public Long getCheckedBy() {
+        return checkedBy;
     }
-    public void setCheckedById(Long checkedById) {
-        this.checkedById = checkedById;
+    public void setCheckedBy(Long checkedBy) {
+        this.checkedBy = checkedBy;
     }
     public String getCheckedByName() {
         return checkedByName;
@@ -107,16 +101,16 @@ public class ContributionResponse {
     public void setStudentName(String studentName) {
         this.studentName = studentName;
     }
-    public ContributionResponse(Long id, Long userId, Long facultyId, String facultyName, String code,
-            String studentName, Long checkedById, String checkedByName, Date createdAt, Integer status, Long magazineId,
+    public ContributionResponse(Long id, Long studentId, Long facultyId, String facultyName, String code,
+            String studentName, Long checkedBy, String checkedByName, Date createdAt, Integer status, Long magazineId,
             String linkSource, String extension, String email) {
         this.id = id;
-        this.userId = userId;
+        this.studentId = studentId;
         this.facultyId = facultyId;
         this.facultyName = facultyName;
         this.code = code;
         this.studentName = studentName;
-        this.checkedById = checkedById;
+        this.checkedBy = checkedBy;
         this.checkedByName = checkedByName;
         this.createdAt = createdAt;
         this.status = status;
@@ -124,6 +118,12 @@ public class ContributionResponse {
         this.linkSource = linkSource;
         this.extension = extension;
         this.email = email;
+    }
+    public Long getStudentId() {
+        return studentId;
+    }
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
     
     

@@ -10,7 +10,6 @@ import com.example.server.constant.Constant;
 import com.example.server.dao.FacultyDao;
 import com.example.server.dao.RoleDao;
 import com.example.server.dao.UserDao;
-import com.example.server.dto.UserDto;
 import com.example.server.entity.Faculty;
 import com.example.server.entity.Role;
 import com.example.server.entity.User;
@@ -18,7 +17,6 @@ import com.example.server.model.request.CreateAccount;
 import com.example.server.model.request.PagingRequest;
 import com.example.server.model.request.UserSearchRequest;
 import com.example.server.model.response.UserLastPageResponse;
-import com.example.server.model.response.UserListResponse;
 import com.example.server.model.response.UserResponse;
 import com.example.server.service.FileService;
 import com.example.server.service.RoleService;
@@ -29,19 +27,15 @@ import com.example.server.util.ResponseUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import static com.example.server.constant.Constant.*;
 import static com.example.server.util.ResponseUtils.*;
@@ -353,6 +347,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             return list;
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    @Override
+    public Boolean updatePassword(CreateAccount form, User user) {
+        try {
+            user.setPassword(form.getPassword());
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 

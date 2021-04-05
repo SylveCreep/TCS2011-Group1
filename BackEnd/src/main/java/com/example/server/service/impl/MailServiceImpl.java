@@ -1,7 +1,10 @@
 package com.example.server.service.impl;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import com.example.server.dao.ContributionDao;
@@ -42,6 +45,30 @@ public class MailServiceImpl implements MailService {
             String html = "<p>Student " + contribution.getUser().getFullName()+ " has commited following code "+ contribution.getCode()+ " contribution</p>"+"<p>Please follow url link to see contribution: "+ "http://localhost:3000/contributions/"+id+"</p>";
             try {
                 mailUtils.sendAsHtml(host_email, mcUser.getEmail(), ccList, subject, html);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean sendResetPasswordMail(User user) {
+        try {
+            byte[] array = new byte[7];
+            new Random().nextBytes(array);
+            String key = new String(array, Charset.forName("UTF-8"));
+            user.setResetPasswordKey(key);
+            user.setKeyCreatedAt(new Date());
+            userDao.save(user);
+
+            List<String> ccList = new ArrayList<>();
+            String subject = "Reset password for user "+ user.getFullName() + "(Code: " + user.getCode() +")";
+            String html= "<p>Reset password key:"+key+"</p>" +"<p>(Note: Your key will expire 15 minutes since you received this mail</p>";
+            try {
+                mailUtils.sendAsHtml(host_email, user.getEmail(), ccList, subject, html);
                 return true;
             } catch (Exception e) {
                 return false;

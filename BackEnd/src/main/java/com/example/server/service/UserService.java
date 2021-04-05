@@ -28,6 +28,8 @@ public interface UserService {
 
     Boolean update(CreateAccount user, MultipartFile file);
 
+    Boolean updatePassword(CreateAccount form, User user);
+
     List<Object> getUserListResponse(PagingRequest pagingRequest);
 
     UserLastPageResponse searchUserByRoleAndFacul(UserSearchRequest userSearchRequest);

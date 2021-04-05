@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.security.auth.message.callback.PrivateKeyCallback.Request;
+import javax.servlet.http.HttpServletRequest;
 
 import com.example.server.constant.Constant;
 import com.example.server.dao.FacultyDao;
@@ -626,5 +627,10 @@ public class ResponseUtils {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(), "");
     }
 }

@@ -62,7 +62,7 @@ public class ContributionServiceImpl implements ContributionService {
             if (contributionRequest.getCreatedAt() != null) {
                 hasDate = 1;
             }
-            Page<Contribution> list = contributionDao.getContributionList(code, studentName,
+            Page<Contribution> list = contributionDao.getContributionList(code, contributionRequest.getStudentId(),studentName,
                     contributionRequest.getFacultyId(), contributionRequest.getMagazineId(),
                     contributionRequest.getCreatedAt(), hasDate, contributionRequest.getStatus(),
                     PageRequest.of(offset, contributionRequest.getLimit(), sort));
@@ -72,11 +72,11 @@ public class ContributionServiceImpl implements ContributionService {
             for (Contribution contribution : list) {
                 ContributionResponse contributionRes = new ContributionResponse();
                 contributionRes.setId(contribution.getId());
-                contributionRes.setUserId(contribution.getUser().getId());
+                contributionRes.setStudentId(contribution.getUser().getId());
                 contributionRes.setFacultyId(contribution.getFaculty().getId());
                 contributionRes.setFacultyName(contribution.getFaculty().getName());
                 contributionRes.setStudentName(contribution.getUser().getFullName());
-                contributionRes.setCheckedById(
+                contributionRes.setCheckedBy(
                         contribution.getCheckedBy() == null ? null : contribution.getCheckedBy().getId());
                 contributionRes.setCheckedByName(
                         contribution.getCheckedBy() == null ? "" : contribution.getCheckedBy().getFullName());
@@ -215,12 +215,12 @@ public class ContributionServiceImpl implements ContributionService {
             }
             ContributionResponse contributionRes = new ContributionResponse();
             contributionRes.setId(contribution.getId());
-            contributionRes.setUserId(contribution.getUser().getId());
+            contributionRes.setStudentId(contribution.getUser().getId());
             contributionRes.setFacultyId(contribution.getFaculty().getId());
             contributionRes.setFacultyName(contribution.getFaculty().getName());
             contributionRes.setStudentName(contribution.getUser().getFullName());
             contributionRes
-                    .setCheckedById(contribution.getCheckedBy() == null ? null : contribution.getCheckedBy().getId());
+                    .setCheckedBy(contribution.getCheckedBy() == null ? null : contribution.getCheckedBy().getId());
             contributionRes.setCheckedByName(
                     contribution.getCheckedBy() == null ? "" : contribution.getCheckedBy().getFullName());
             contributionRes.setCreatedAt(contribution.getCreated_at() == null ? null
