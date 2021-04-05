@@ -11,16 +11,8 @@
           </div>
         </div>
         <div class="page-title-actions">
-          <button
-            type="button"
-            data-toggle="tooltip"
-            title="Example Tooltip"
-            data-placement="bottom"
-            class="btn-shadow mr-3 btn btn-dark"
-          >
-            <i class="fa fa-star"></i>
-          </button>
-          <div class="d-inline-block dropdown" v-if="loginUser.roleId === 4"> <!--Only student can access this route -->
+          <div class="d-inline-block dropdown" v-if="loginUser.roleId === 4">
+            <!--Only student can access this route -->
             <router-link
               to="/contributions/submit"
               class="btn-shadow btn btn-info"
@@ -31,7 +23,22 @@
               Submit
             </router-link>
           </div>
-          <div class="d-inline-block dropdown" v-if="loginUser.roleId === 2 || loginUser.roleId === 3"> <!--Only MM & MC can access this route -->
+          <div class="d-inline-block dropdown" v-if="loginUser.roleId === 2">
+            <!--Only MM can access this route -->
+            <button
+              class="btn-shadow btn btn-info"
+              v-if="this.cookiesModified === true"
+              v-on:click="showAllContributionList"
+              style="margin-right: 10px"
+            >
+              Show all contributions list
+            </button>
+          </div>
+          <div
+            class="d-inline-block dropdown"
+            v-if="loginUser.roleId === 2 || loginUser.roleId === 3"
+          >
+            <!--Only MM & MC can access this route -->
             <button
               class="btn-shadow btn btn-info"
               v-on:click="downloadAllContribution"
@@ -76,7 +83,8 @@
             v-on:keyup="getFilter"
           />
         </div>
-        <div class="form-group" v-if="loginUser.roleId !== 4"> <!-- Role student can not use this filter-->
+        <div class="form-group" v-if="loginUser.roleId !== 4">
+          <!-- Role student can not use this filter-->
           <label>Student Name</label>
           <input
             class="form-control"
@@ -87,7 +95,8 @@
             v-on:keyup="getFilter"
           />
         </div>
-        <div class="form-group" v-if="loginUser.roleId !== 4"> <!-- Role student can not use this filter-->
+        <div class="form-group" v-if="loginUser.roleId !== 4">
+          <!-- Role student can not use this filter-->
           <label>Faculty</label>
           <select
             class="form-control select2"
@@ -128,7 +137,11 @@
         role="tabpanel"
       >
         <div class="row">
-          <div class="col-md-4" v-for="contribution of list_contributions" :key="contribution.id">
+          <div
+            class="col-md-4"
+            v-for="contribution of list_contributions"
+            :key="contribution.id"
+          >
             <div class="main-card mb-3 card">
               <div class="card-header">
                 <i class="header-icon lnr-license icon-gradient bg-plum-plate">
@@ -138,18 +151,24 @@
               <div class="card-body">
                 <p><b>Student Name:</b> {{ contribution.studentName }}</p>
                 <p><b>Faculty:</b> {{ contribution.facultyName }}</p>
-                <p><b>Submit Date:</b> {{ contribution.createdAt | formatDate }}</p>
-                <p v-if="status === 1"><b>Approved by:</b> {{ contribution.checkedByName }}</p>
-                <p v-if="status === 2"><b>Denied by:</b> {{ contribution.checkedByName }}</p>
+                <p>
+                  <b>Submit Date:</b> {{ contribution.createdAt | formatDate }}
+                </p>
+                <p v-if="status === 1">
+                  <b>Approved by:</b> {{ contribution.checkedByName }}
+                </p>
+                <p v-if="status === 2">
+                  <b>Denied by:</b> {{ contribution.checkedByName }}
+                </p>
               </div>
               <div class="d-block text-right card-footer">
                 <a
-                  class="btn-wide btn contribution-detail"
+                  class="btn btn-primary contribution-detail"
                   v-on:click="showDetail(contribution.id)"
                   >Detail</a
                 >
                 <a
-                  class="btn-wide btn contribution-delete"
+                  class="btn btn-danger contribution-delete"
                   v-on:click="deleteContribution(contribution.id)"
                   v-if="loginUser.roleId === 4 && magazine.status === 0"
                   >Delete</a
@@ -198,19 +217,32 @@ export default {
       list_statuses: DefaultConstants.ContributionStatuses,
       list_contributions: [],
       magazine: {},
+      cookiesModified: false,
     };
   },
-
   mounted() {
     document.querySelector("#tab-0").click(); //default click to tab 1
   },
   created() {
-    this.filter.status = 0
+    this.filter.status = 0;
+    this.setStudentContribution();
     this.checkMagazine();
     this.getContributionList();
     this.getFacultyList();
   },
   methods: {
+    getContributionList() {
+      axios
+        .post(UrlConstants.Contribution + "/filter", this.filter)
+        .then((response) => {
+          this.list_contributions = response.data.data;
+          this.list_contributions.currentPage = this.filter.page;
+          this.list_contributions.lastPage = response.data.lastPage;
+        })
+        .catch((error) => {
+          this.errors = error.response.data;
+        });
+    },
     showDetail(contribution_id) {
       axios
         .get(UrlConstants.Contribution + "/" + contribution_id)
@@ -224,17 +256,31 @@ export default {
         });
     },
     async deleteContribution(contribution_id) {
-      await this.confirmAlert('delete', 'contribution');
+      await this.confirmAlert("delete", "contribution");
       if (this.confirmResult) {
         axios
-        .delete(UrlConstants.Contribution + '/' + contribution_id)
-        .then((res) =>{
-          this.successAlert();
-          this.getContributionList();
-        })
-        .catch((error) => {
-          this.errors = error.data;
-        })
+          .delete(UrlConstants.Contribution + "/" + contribution_id)
+          .then((res) => {
+            this.successAlert();
+            this.getContributionList();
+          })
+          .catch((error) => {
+            this.errors = error.data;
+          });
+      }
+    },
+    setStudentContribution() {
+      if (this.$cookies.isKey("studentContribution")) {
+        this.filter.studentId = this.$cookies.get("studentContribution");
+        this.cookiesModified = true;
+      }
+    },
+    showAllContributionList() {
+      if (this.$cookies.isKey("studentContribution")) {
+        this.$cookies.remove("studentContribution");
+        delete this.filter.studentId;
+        this.cookiesModified = false;
+        this.getContributionList();
       }
     },
     getLimit(event) {
@@ -248,7 +294,6 @@ export default {
     getFilter() {
       this.filter.page = DefaultConstants.firstPage;
       this.getContributionList();
-      console.log(this.filter)
     },
     getStatus(status) {
       this.filter.status = status;
@@ -274,18 +319,16 @@ export default {
         .catch((error) => {
           this.errors = error.response;
         });
-    }
+    },
   },
 };
 </script>
 <style scoped>
 .contribution-detail {
-  background-color: green;
   color: white !important;
 }
 .contribution-delete {
-  margin-left: 10px ;
-  background-color: #3f6ad8;
+  margin-left: 10px;
   color: white !important;
 }
 .card-body {

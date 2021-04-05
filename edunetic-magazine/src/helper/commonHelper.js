@@ -41,6 +41,7 @@ export const commonHelper = {
               this.$cookies.remove("jwt");
               this.$cookies.remove("loginUser");
               this.$cookies.remove("id");
+              this.$cookies.remove("studentContribution")
               this.$emit("user-logout", null);
               this.$router.push("/login");
             })
@@ -147,18 +148,6 @@ export const commonHelper = {
           this.list_users = response.data.data;
           this.list_users.currentPage = this.filter.page;
           this.list_users.lastPage = response.data.lastPage;
-        })
-        .catch((error) => {
-          this.errors = error.response.data;
-        });
-    },
-    getContributionList() {
-      axios
-        .post(UrlConstants.Contribution + "/filter", this.filter)
-        .then((response) => {
-          this.list_contributions = response.data.data;
-          this.list_contributions.currentPage = this.filter.page;
-          this.list_contributions.lastPage = response.data.lastPage;
         })
         .catch((error) => {
           this.errors = error.response.data;

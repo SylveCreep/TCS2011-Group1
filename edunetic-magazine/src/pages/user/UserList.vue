@@ -172,6 +172,7 @@
                       >
                         <b>Delete</b>
                       </p>
+                      <!--Only marketing manager can view contribution list of student-->
                       <p v-else
                         class="click"
                         style="display: inline"
@@ -337,7 +338,7 @@ export default {
   cursor: pointer;
 }
 .click :hover {
-  color: #3f6ad8;
+  color: #7399f7;
 }
 .select-page {
   padding: 2px 5px;
