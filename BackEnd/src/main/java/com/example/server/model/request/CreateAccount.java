@@ -34,6 +34,8 @@ public class CreateAccount {
 
     private String avatar;
 
+    private String key;
+
     public String getEmail() {
         return email;
     }
@@ -120,6 +122,14 @@ public class CreateAccount {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
     
 }

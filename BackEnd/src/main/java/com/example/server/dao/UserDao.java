@@ -70,4 +70,7 @@ public interface UserDao extends JpaRepository<User, Long> {
             + "AND u.faculty_id IS NOT NULL ", nativeQuery = true)
     List<User> findMCByRoleId(@Param("roleId") Long roleId);
 
+    @Query(value = "SELECT u.* FROM user u WHERE u.is_deleted = 0 AND u.reset_password_key = :key ", nativeQuery = true)
+    User findExistedUserByPasswordKey(String key);
+
 }

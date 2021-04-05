@@ -47,6 +47,9 @@ public class Contribution extends BaseEntity {
     @Column(name="extension", nullable = false)
     private String extension;
 
+    @Column(name = "expire_notify")
+    private Integer expireNotify = FAILURE;
+
     public User getUser() {
         return user;
     }
@@ -124,8 +127,16 @@ public class Contribution extends BaseEntity {
         this.extension = extension;
     }
 
+    public Integer getExpireNotify() {
+        return expireNotify;
+    }
+
+    public void setExpireNotify(Integer expireNotify) {
+        this.expireNotify = expireNotify;
+    }
+
     public Contribution(User user, User checkedBy, Faculty faculty, Magazine magazine, List<Comment> comments,
-            String code, String linkSource, int isApproved, String extension) {
+            String code, String linkSource, int isApproved, String extension, Integer expireNotify) {
         this.user = user;
         this.checkedBy = checkedBy;
         this.faculty = faculty;
@@ -135,10 +146,12 @@ public class Contribution extends BaseEntity {
         this.linkSource = linkSource;
         this.isApproved = isApproved;
         this.extension = extension;
+        this.expireNotify = expireNotify;
     }
 
     public Contribution(Long id, int is_deleted, Date created_at, Date updated_at, User user, User checkedBy,
-            Faculty faculty, Magazine magazine, List<Comment> comments, String code, String linkSource, int isApproved, String extension) {
+            Faculty faculty, Magazine magazine, List<Comment> comments, String code, String linkSource, int isApproved,
+            String extension, Integer expireNotify) {
         super(id, is_deleted, created_at, updated_at);
         this.user = user;
         this.checkedBy = checkedBy;
@@ -149,7 +162,9 @@ public class Contribution extends BaseEntity {
         this.linkSource = linkSource;
         this.isApproved = isApproved;
         this.extension = extension;
+        this.expireNotify = expireNotify;
     }
+
 
 
 
