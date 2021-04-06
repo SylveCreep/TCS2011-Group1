@@ -91,12 +91,12 @@
             type="text"
             placeholder="Search"
             aria-label="Search"
-            v-model="filter.studentNameg"
+            v-model="filter.studentName"
             v-on:keyup="getFilter"
           />
         </div>
-        <div class="form-group" v-if="loginUser.roleId !== 4">
-          <!-- Role student can not use this filter-->
+        <div class="form-group" v-if="loginUser.roleId === 2">
+          <!-- only MM can use this filter-->
           <label>Faculty</label>
           <select
             class="form-control select2"
