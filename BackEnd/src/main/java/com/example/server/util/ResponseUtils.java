@@ -647,23 +647,11 @@ public class ResponseUtils {
         switch(type){
             case 0:
                if (!valTheme.equals("Valid")){
-                   inputForm.put("name", valTheme);
+                   inputForm.put("theme", valTheme);
                    if (!form.containsKey("result")){
                        form.put("result", -1);
                    }
                }
-               if (!valCode.equals("Valid")){
-                    inputForm.put("name", valCode);
-                    if (!form.containsKey("result")){
-                        form.put("result", -1);
-                    }
-                }
-                if (!valId.equals("Valid")){
-                     inputForm.put("name", valId);
-                     if (!form.containsKey("result")){
-                         form.put("result", -1);
-                     }
-                }
                 /*if (!valOpenAt.equals("Valid")){
                     inputForm.put("name", valOpenAt);
                     if (!form.containsKey("result")){
@@ -671,13 +659,13 @@ public class ResponseUtils {
                     }
                 }*/
                 if (!valCloseAt.equals("Valid")){
-                    inputForm.put("name", valCloseAt);
+                    inputForm.put("close_at", valCloseAt);
                     if (!form.containsKey("result")){
                         form.put("result", -1);
                     }
                 }
                 if (!valPublishedAt.equals("Valid")){
-                    inputForm.put("name", valPublishedAt);
+                    inputForm.put("published_at", valPublishedAt);
                     if (!form.containsKey("result")){
                         form.put("result", -1);
                     }
@@ -688,19 +676,19 @@ public class ResponseUtils {
                break;
             case 1:
                 if (!valTheme.equals("Valid")){
-                    inputForm.put("name", valTheme);
+                    inputForm.put("theme", valTheme);
                     if (!form.containsKey("result")){
                         form.put("result", -1);
                     }
                 }
                 if (!valCode.equals("Valid")){
-                    inputForm.put("name", valCode);
+                    inputForm.put("code", valCode);
                     if (!form.containsKey("result")){
                         form.put("result", -1);
                     }
                 }
                 if (!valId.equals("Valid")){
-                    inputForm.put("name", valId);
+                    inputForm.put("id", valId);
                     if (!form.containsKey("result")){
                       form.put("result", -1);
                     }
@@ -712,13 +700,13 @@ public class ResponseUtils {
                  }
                 }*/
                 if (!valCloseAt.equals("Valid")){
-                    inputForm.put("name", valCloseAt);
+                    inputForm.put("close_at", valCloseAt);
                     if (!form.containsKey("result")){
                         form.put("result", -1);
                     }
                 }
                 if (!valPublishedAt.equals("Valid")){
-                    inputForm.put("name", valPublishedAt);
+                    inputForm.put("published_at", valPublishedAt);
                     if (!form.containsKey("result")){
                         form.put("result", -1);
                     }
@@ -792,7 +780,7 @@ public class ResponseUtils {
         if(closeAt == null){
             return "Invalid";
         } else {
-            return "valid";
+            return "Valid";
         }
     }
 
@@ -800,7 +788,7 @@ public class ResponseUtils {
         if(publishedAt == null){
             return "Invalid";
         } else {
-            return "valid";
+            return "Valid";
         }
     }
 
