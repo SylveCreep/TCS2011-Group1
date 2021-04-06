@@ -4,6 +4,10 @@ import VueCookies from 'vue-cookies'
 //import Login Components
 import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
+
+//import Change Password Components
+import ChangePassword from "@/pages/ChangePassword";
+
 //import User Components
 import UserList from "@/pages/user/UserList";
 import UserCreate from "@/pages/user/UserCreate";
@@ -41,6 +45,17 @@ export const router = new Router({
             name: 'UserProfile',
             path: '/profile',
             component: UserProfile,
+            meta: { 
+               admin: true,
+               student: true,
+               mc: true,
+               mm: true, 
+            }
+        },
+        {
+            name: 'ChangePassword',
+            path: '/changepassword',
+            component: ChangePassword,
             meta: { 
                admin: true,
                student: true,
