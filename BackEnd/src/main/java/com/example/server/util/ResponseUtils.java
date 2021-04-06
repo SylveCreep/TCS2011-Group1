@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.security.auth.message.callback.PrivateKeyCallback.Request;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.example.server.constant.Constant;
 import com.example.server.dao.FacultyDao;
@@ -629,7 +631,6 @@ public class ResponseUtils {
         }
     }
 
-
      //Validate Magazine
      public HashMap<String, Object> validateMagazineRequest(CreateMagazine createMagazine, int type){
         HashMap<String, Object> form = new HashMap<>();
@@ -801,5 +802,10 @@ public class ResponseUtils {
         } else {
             return "valid";
         }
+    }
+
+    public static String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(), "");
     }
 }

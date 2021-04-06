@@ -12,7 +12,7 @@ import javax.mail.internet.*;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MailService {
+public class MailUtils {
     ResourceBundle rb = ResourceBundle.getBundle("email");
     String host_email = rb.getString("SEND_FROM");
     String username = rb.getString("USERNAME");

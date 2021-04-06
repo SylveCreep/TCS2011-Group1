@@ -1,11 +1,13 @@
 package com.example.server.controller;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.example.server.constant.Constant;
+import com.example.server.dao.UserDao;
 import com.example.server.entity.User;
 import com.example.server.model.request.*;
 import com.example.server.model.response.UserLastPageResponse;
@@ -22,6 +24,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,6 +46,9 @@ public class UserController {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private UserDao userDao;
 
     @Value("${jwt.token.prefix}")
     public String TOKEN_PREFIX;
@@ -73,29 +79,6 @@ public class UserController {
                     HttpStatus.BAD_REQUEST);
         }
     }
-
-    // @PreAuthorize("hasRole('ADMIN')")
-    // @GetMapping
-    // public ResponseEntity<?> showUser(@RequestBody PagingRequest pagingRequest){
-    // try {
-    // if(pagingRequest.getLimit() < 0 || pagingRequest.getPage() < 0){
-    // return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Limit must
-    // larger or equal 0 and page must larger than 0", HttpStatus.BAD_REQUEST);
-    // }
-    // List<UserListResponse> users =
-    // userService.getUserListResponse(pagingRequest);
-    // if(users == null){
-    // return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Show
-    // failed", HttpStatus.BAD_REQUEST);
-    // }
-
-    // return responseUtils.getResponseEntity(users, Constant.SUCCESS,"Show
-    // success",users.size(), HttpStatus.OK);
-    // } catch (Exception e) {
-    // return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Show
-    // failed", HttpStatus.BAD_REQUEST);
-    // }
-    // }
 
     @PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003')")
     @PostMapping(value = "/filter")
@@ -163,7 +146,7 @@ public class UserController {
         }
     }
 
-    // @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003')")
     @GetMapping(value = "/{id}", consumes = { "text/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> getUser(@PathVariable(name = "id") Long id) {
         try {
@@ -195,40 +178,66 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/nrm", consumes = { "text/plain", "application/*" }, produces = "application/json")
-    public ResponseEntity<?> getUserNormal() {
+    @GetMapping(value="/forgotpassword")
+    public ResponseEntity<?> redirectToResetPasswordPage(@RequestParam(value = "key") String key) {
         try {
-            List<UserResponse> users = userService.getUserNotIsManager();
-            if (users == null) {
-                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get user fail", HttpStatus.OK);
+            if (key == null || key.isBlank()) {
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Must has key id",
+                        HttpStatus.BAD_REQUEST);
             }
-            return responseUtils.getResponseEntity(users, Constant.SUCCESS, "Get user successfully", HttpStatus.OK);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(URI.create(urlReset+key));
+            return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get user fail", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Cannot redirect", HttpStatus.BAD_REQUEST);
         }
     }
 
-    // @GetMapping(value="/avatar/{id}",consumes = {"text/plain", "application/*"})
-    // @ResponseBody
-    // public ResponseEntity<?> getUserAvatarById(@PathVariable(name="id") Long id)
-    // {
-    // try {
-    // if(id == null){
-    // return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Must has
-    // user id", HttpStatus.BAD_REQUEST);
-    // }
-    // UserResponse user = userService.findById(id);
-    // if(user == null){
-    // return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Cant find
-    // user matched with provided id", HttpStatus.OK);
-    // }
-    // Resource file = fileService.loadAsResource(user.getCode());
-    // return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-    // "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-    // } catch (Exception e) {
-    // return responseUtils.getResponseEntity("NULL", Constant.FAILURE,"Get user
-    // avatar fail", HttpStatus.BAD_REQUEST);
-    // }
-    // }
+    @PostMapping(value="/updatePassword")
+    public ResponseEntity<?> updatePassword(@RequestBody CreateAccount request) {
+        try {
+            if (request.getPassword() == null || request.getPassword().isBlank()) {
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Must has key id",
+                        HttpStatus.BAD_REQUEST);
+            }
+            if(request.getPassword().length() < 8){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Password length must bigger than 8",
+                        HttpStatus.BAD_REQUEST);
+            }
+            User user = userDao.findExistedUserByEmail(request.getEmail());
+            if(user == null){
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "User not existed",
+                        HttpStatus.BAD_REQUEST);
+            }
+            Boolean isValid = userService.validateResetPasswordKey(request.getKey());
+            if (isValid == false) {
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Key invalid", HttpStatus.OK);
+            }
+            Boolean isUpdated = userService.updatePassword(request, user);
+            if (isUpdated == false) {
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update password failed", HttpStatus.OK);
+            }
+            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, "Update password successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update password failed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value="/password/check")
+    public ResponseEntity<?> checkResetPasswordKey(@RequestParam(value = "key") String key) {
+        try {
+            if (key == null || key.isBlank()) {
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Must has key id",
+                        HttpStatus.BAD_REQUEST);
+            }
+            Boolean isValid = userService.validateResetPasswordKey(key);
+            if (isValid == false) {
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Key invalid", HttpStatus.OK);
+            }
+            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, "Key valid", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Key invalid", HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }

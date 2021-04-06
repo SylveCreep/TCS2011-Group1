@@ -12,7 +12,6 @@ import com.example.server.service.ContributionService;
 import com.example.server.service.FileService;
 import com.example.server.util.QueryCheck;
 import com.example.server.util.ResponseUtils;
-import com.example.server.util.Mail.MailService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,9 +43,6 @@ public class ContributionServiceImpl implements ContributionService {
     MagazineDao magazineDao;
 
     @Autowired
-    MailService mailService;
-
-    @Autowired
     private FileService fileService;
 
     @Autowired
@@ -54,9 +50,6 @@ public class ContributionServiceImpl implements ContributionService {
 
     @Autowired
     private ResponseUtils responseUtils;
-
-    ResourceBundle rb = ResourceBundle.getBundle("email");
-    String host_email = rb.getString("SEND_FROM");
 
     @Override
     public ContributionPagingResponse getContributionList(ContributionRequest contributionRequest) {
@@ -69,7 +62,7 @@ public class ContributionServiceImpl implements ContributionService {
             if (contributionRequest.getCreatedAt() != null) {
                 hasDate = 1;
             }
-            Page<Contribution> list = contributionDao.getContributionList(code, studentName,
+            Page<Contribution> list = contributionDao.getContributionList(code, contributionRequest.getStudentId(),studentName,
                     contributionRequest.getFacultyId(), contributionRequest.getMagazineId(),
                     contributionRequest.getCreatedAt(), hasDate, contributionRequest.getStatus(),
                     PageRequest.of(offset, contributionRequest.getLimit(), sort));
@@ -79,11 +72,11 @@ public class ContributionServiceImpl implements ContributionService {
             for (Contribution contribution : list) {
                 ContributionResponse contributionRes = new ContributionResponse();
                 contributionRes.setId(contribution.getId());
-                contributionRes.setUserId(contribution.getUser().getId());
+                contributionRes.setStudentId(contribution.getUser().getId());
                 contributionRes.setFacultyId(contribution.getFaculty().getId());
                 contributionRes.setFacultyName(contribution.getFaculty().getName());
-                contributionRes.setUserName(contribution.getUser().getFullName());
-                contributionRes.setCheckedById(
+                contributionRes.setStudentName(contribution.getUser().getFullName());
+                contributionRes.setCheckedBy(
                         contribution.getCheckedBy() == null ? null : contribution.getCheckedBy().getId());
                 contributionRes.setCheckedByName(
                         contribution.getCheckedBy() == null ? "" : contribution.getCheckedBy().getFullName());
@@ -140,7 +133,7 @@ public class ContributionServiceImpl implements ContributionService {
             nContribution.setCode("C" + String.format("%04d", queryCheck.GetHighestId("contribution")));
             nContribution.setCreated_at(new Date());
             FileResponse fileResponse = fileService.storeContribution(file, nContribution.getCode());
-            nContribution.setLinkSource(fileResponse.getPath());
+            nContribution.setLinkSource("contribution_"+nContribution.getCode()+"."+fileResponse.getExtension());
             nContribution.setExtension(fileResponse.getExtension());
 
             // User mmUser = userDao.findUserManagerByFacultyIdAndRoleId(null, (long) 2);
@@ -170,17 +163,10 @@ public class ContributionServiceImpl implements ContributionService {
             if (uContribution == null) {
                 return null;
             }
-            // String email = getEmail();
-            // User user = userDao.findExistedUserByEmail(email);
-            // if(contribution.getUserId() != null){
-            // uContribution.setUser(userDao.findByUserId(contribution.getUserId()));
-            // }
+            uContribution.setUpdated_at(new Date());
             if (contribution.getCheckedBy() != null) {
                 uContribution.setCheckedBy(userDao.findByUserId(contribution.getCheckedBy()));
             }
-            // if(contribution.getFacultyId() != null){
-            // uContribution.setFaculty(facultyDao.findFacultyById(contribution.getFacultyId()));
-            // }
             if (contribution.getMagazineId() != null) {
                 uContribution.setMagazine(magazineDao.findExistedMagazineById(contribution.getMagazineId()));
             }
@@ -188,7 +174,7 @@ public class ContributionServiceImpl implements ContributionService {
                 uContribution.setIsApproved(contribution.getStatus());
             }
             FileResponse fileResponse = fileService.storeContribution(file, uContribution.getCode());
-            uContribution.setLinkSource(fileResponse.getPath());
+            uContribution.setLinkSource(fileResponse.getPath().substring(fileResponse.getPath().lastIndexOf("/", 0), fileResponse.getPath().length()));
             uContribution.setExtension(fileResponse.getExtension());
             try {
                 uContribution.setUpdated_at(new Date());
@@ -206,7 +192,9 @@ public class ContributionServiceImpl implements ContributionService {
     public Boolean updateStatusContribution(ContributionRequest contribution) {
         try {
             Contribution uContribution = contributionDao.findExistedContributionById(contribution.getId());
+            User checkByUser = userDao.findExistedUserByEmail(getEmail());
             uContribution.setIsApproved(contribution.getStatus());
+            uContribution.setCheckedBy(checkByUser);
             try {
                 contributionDao.save(uContribution);
                 return true;
@@ -227,12 +215,12 @@ public class ContributionServiceImpl implements ContributionService {
             }
             ContributionResponse contributionRes = new ContributionResponse();
             contributionRes.setId(contribution.getId());
-            contributionRes.setUserId(contribution.getUser().getId());
+            contributionRes.setStudentId(contribution.getUser().getId());
             contributionRes.setFacultyId(contribution.getFaculty().getId());
             contributionRes.setFacultyName(contribution.getFaculty().getName());
-            contributionRes.setUserName(contribution.getUser().getFullName());
+            contributionRes.setStudentName(contribution.getUser().getFullName());
             contributionRes
-                    .setCheckedById(contribution.getCheckedBy() == null ? null : contribution.getCheckedBy().getId());
+                    .setCheckedBy(contribution.getCheckedBy() == null ? null : contribution.getCheckedBy().getId());
             contributionRes.setCheckedByName(
                     contribution.getCheckedBy() == null ? "" : contribution.getCheckedBy().getFullName());
             contributionRes.setCreatedAt(contribution.getCreated_at() == null ? null

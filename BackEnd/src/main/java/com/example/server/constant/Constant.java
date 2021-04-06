@@ -21,4 +21,20 @@ public class Constant {
         public static final int PUBLISHING = 2;
         public static final int CLOSED = 3;
 
+        //Reset password expire date
+        public static final int minute = 15;
+
+        //Reset password reset link
+        public static final String urlLink = "http://localhost:8081/users/forgotpassword/";
+
+        //Redirect to change password url
+        public static final String urlReset = "http://localhost:8080/password/reset/";
+
+        //Email notify contribution
+        public static final int JUSTCREATED = 0;
+        public static final int NEEDNOTIFY = 1;
+
+        public static final String NOTIFYURL = "http://localhost:3000/contributions/";
+
+
 }
