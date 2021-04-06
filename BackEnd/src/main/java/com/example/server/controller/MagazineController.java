@@ -1,5 +1,7 @@
 package com.example.server.controller;
 
+import java.util.HashMap;
+
 import javax.validation.Valid;
 
 import com.example.server.constant.Constant;
@@ -39,6 +41,12 @@ public class MagazineController {
     @PostMapping
     public ResponseEntity<?> createMagazine(@Valid @RequestBody CreateMagazine magazine) {
         try {
+            HashMap<String, Object> validateResult = responseUtils.validateMagazineRequest(magazine, 0);
+            Object validateRes = validateResult.get("result");
+            if (Integer.parseInt(validateRes.toString()) == -1) {
+                return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE, "Create magazine failed",
+                        validateResult, HttpStatus.BAD_REQUEST);
+            }
             Magazine createMagazine = magazineService.saveMagazine(magazine);
             if (createMagazine == null) {
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Create magazine failed",
@@ -76,6 +84,12 @@ public class MagazineController {
     @PatchMapping(consumes = { "test/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> updateMagazine(@RequestBody CreateMagazine magazineDto) {
         try {
+            HashMap<String, Object> validateResult = responseUtils.validateMagazineRequest(magazineDto, 1);
+            Object validateRes = validateResult.get("result");
+            if (Integer.parseInt(validateRes.toString()) == -1) {
+                return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE, "Update magazine failed",
+                        validateResult, HttpStatus.BAD_REQUEST);
+            }
             if (magazineDto.getId() == null) {
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Must has magazine id",
                         HttpStatus.BAD_REQUEST);

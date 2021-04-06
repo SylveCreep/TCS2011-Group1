@@ -36,12 +36,45 @@ public interface MagazineDao extends JpaRepository<Magazine, Long> {
     "group by m.id")
     Page<Magazine> getNonDelRole(Pageable pageable);
 
-    @Query(value = "Select * from magazine m where m.is_deleted = 0 " +
+    @Query(value = 
+    "Select * " +
+    "FROM magazine m WHERE m.is_deleted = 0 " +
     "AND ((:theme IS NULL) OR LOWER(m.theme) LIKE CONCAT('%',IFNULL(LOWER(:theme), LOWER(m.theme)), '%')) " +
     "AND ((:code IS NULL) OR LOWER (m.code) LIKE CONCAT('%',IFNULL(LOWER(:code),LOWER(m.code)),'%')) " +
     "AND ((:id IS NULL) OR (m.id = :id))" +
+    "AND  ((:currDate = 0) OR (:currDate BETWEEN m.created_at AND m.close_at)) " +
     "group by r.id", nativeQuery = true)
-    Page<Magazine> searchMagazineByName(@Param("id") Long id, @Param("theme") String theme, @Param("code") String code/*, @Param("openAt") Date openAt, @Param("publishedAt") Date publishedAt, @Param("closeAt") Date closeAt*/, Pageable pageable);
+    Page<Magazine> searchMagazineOpening(@Param("id") Long id, @Param("theme") String theme, @Param("code") String code/*, @Param("openAt") Date openAt, @Param("publishedAt") Date publishedAt, @Param("closeAt") Date closeAt*/, @Param("currDate") Date currDate, Pageable pageable);
+
+    @Query(value = 
+    "Select * " +
+    "FROM magazine m WHERE m.is_deleted = 0 " +
+    "AND ((:theme IS NULL) OR LOWER(m.theme) LIKE CONCAT('%',IFNULL(LOWER(:theme), LOWER(m.theme)), '%')) " +
+    "AND ((:code IS NULL) OR LOWER (m.code) LIKE CONCAT('%',IFNULL(LOWER(:code),LOWER(m.code)),'%')) " +
+    "AND ((:id IS NULL) OR (m.id = :id))" +
+    "AND  ((:currDate = 0) OR (:currDate BETWEEN m.close_at AND m.published_at)) " +
+    "group by r.id", nativeQuery = true)
+    Page<Magazine> searchMagazineProcessing(@Param("id") Long id, @Param("theme") String theme, @Param("code") String code/*, @Param("openAt") Date openAt, @Param("publishedAt") Date publishedAt, @Param("closeAt") Date closeAt*/, @Param("currDate") Date currDate, Pageable pageable);
+
+    @Query(value = 
+    "Select * " +
+    "FROM magazine m WHERE m.is_deleted = 0 " +
+    "AND ((:theme IS NULL) OR LOWER(m.theme) LIKE CONCAT('%',IFNULL(LOWER(:theme), LOWER(m.theme)), '%')) " +
+    "AND ((:code IS NULL) OR LOWER (m.code) LIKE CONCAT('%',IFNULL(LOWER(:code),LOWER(m.code)),'%')) " +
+    "AND ((:id IS NULL) OR (m.id = :id))" +
+    "AND  ((:currDate = 0) OR (:currDate BETWEEN m.published_at AND DATE_ADD(m.published_at, INTERVAL 15 DAY))) " +
+    "group by r.id", nativeQuery = true)
+    Page<Magazine> searchMagazinePublishing(@Param("id") Long id, @Param("theme") String theme, @Param("code") String code/*, @Param("openAt") Date openAt, @Param("publishedAt") Date publishedAt, @Param("closeAt") Date closeAt*/, @Param("currDate") Date currDate, Pageable pageable);
+
+    @Query(value = 
+    "Select * " +
+    "FROM magazine m WHERE m.is_deleted = 0 " +
+    "AND ((:theme IS NULL) OR LOWER(m.theme) LIKE CONCAT('%',IFNULL(LOWER(:theme), LOWER(m.theme)), '%')) " +
+    "AND ((:code IS NULL) OR LOWER (m.code) LIKE CONCAT('%',IFNULL(LOWER(:code),LOWER(m.code)),'%')) " +
+    "AND ((:id IS NULL) OR (m.id = :id))" +
+    "AND  ((:currDate = 0) OR (:currDate > DATE_ADD(m.published_at, INTERVAL 15 DAY))) " +
+    "group by r.id", nativeQuery = true)
+    Page<Magazine> searchMagazineClosing(@Param("id") Long id, @Param("theme") String theme, @Param("code") String code/*, @Param("openAt") Date openAt, @Param("publishedAt") Date publishedAt, @Param("closeAt") Date closeAt*/, @Param("currDate") Date currDate, Pageable pageable);
 
     @Query(value = "Select * FROM magazine m " +
     "Where  ((:mId is null) or (m.id = :mId))", nativeQuery = true)
