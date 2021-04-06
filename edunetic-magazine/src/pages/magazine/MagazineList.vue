@@ -68,6 +68,17 @@
                   />
                 </div>
                 <div class="form-group">
+                  <label>Created Date</label>
+                  <input
+                    class="form-control"
+                    type="date"
+                    placeholder="Search"
+                    aria-label="Search"
+                    v-model="filter.currentDate"
+                    v-on:keyup="getFilter"
+                  />
+                </div>
+                <!-- <div class="form-group">
                   <label>Closed At</label>
                   <input
                     class="form-control"
@@ -77,8 +88,8 @@
                     v-model="filter.closeAt"
                     v-on:keyup="getFilter"
                   />
-                </div>
-                <div class="form-group">
+                </div> -->
+                <!-- <div class="form-group">
                   <label>Published At</label>
                   <input
                     class="form-control"
@@ -88,7 +99,7 @@
                     v-model="filter.publishedAt"
                     v-on:keyup="getFilter"
                   />
-                </div>
+                </div> -->
               </div>
             </div>
             <ul
@@ -122,9 +133,9 @@
                     <th class="sort" v-on:click="getSort('theme')">
                       Theme <i class="fas fa-sort"></i>
                     </th>
-                    <th class="sort" v-on:click="getSort('open_at')">
+                    <!-- <th class="sort" v-on:click="getSort('created_at')">
                       Open At <i class="fas fa-sort"></i>
-                    </th>                    
+                    </th>                     -->
                     <th class="sort" v-on:click="getSort('published_at')">
                       Published At <i class="fas fa-sort"></i>
                     </th>
@@ -134,16 +145,17 @@
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <!-- v-for="(status, index) of list_statuses"
+                <div  v-for="(status, index) of list_statuses"
                   :key="index"
                   class="tab-pane tabs-animation fade"
                   v-bind:id="'tab-content-' + status"
-                  role="tabpanel" -->
+                  role="tabpanel" >
+                <tbody>
+                  <!---->
                   <tr v-for="magazine of list_magazines" :key="magazine.id">
                     <td>{{ magazine.code }}</td>
                     <td>{{ magazine.theme }}</td>
-                    <td>{{ magazine.openAt }}</td>                    
+                    <!-- <td>{{ magazine.created_at }}</td>-->
                     <td>{{ magazine.publishedAt }}</td>
                     <td>{{ magazine.closeAt }}</td>
                     <td>
@@ -170,11 +182,12 @@
                         style="display: inline"
                         v-on:click="showContribution(magazine.id)"
                       >
-                        <b>Contribution's list</b>
+                        <b>Contribution list</b>
                       </p>
                     </td>
                   </tr>
                 </tbody>
+                </div>
               </table>
             </div>
           </div>
@@ -236,14 +249,7 @@ export default {
             this.canModify = true;
           }
         });
-    },
-    async preCheckMagazine(magazine_id) {
-      await this.checkMagazineExisted(magazine_id);
-      if (this.canModify) {
-        await this.checkUserExisted("magazine", magazine_id);
-      }
-      this.filter.magazineid = "";
-    },
+    },    
     async showMagazine(magazine_id) {
       await this.checkMagazineExisted(magazine_id);
       if (!this.canModify) {
@@ -254,11 +260,12 @@ export default {
       }
     },
     async deleteMagazine(magazine_id) {
-      await this.preCheckMagazine(magazine_id);
+      await this.checkMagazineExisted(magazine_id);
       if (!this.canModify) {
         this.errorAlert("delete", "magazine");
         this.getMagazineList();
-      } else {
+      } 
+      else {
         await this.confirmAlert("delete", "magazine");
         if (this.confirmResult) {
           axios
@@ -284,20 +291,20 @@ export default {
         }
       });
     },
+    getFilter() {
+      this.filter.page = DefaultConstants.firstPage;
+      this.getMagazineList();
+    },
+    getSort($column) {
+      this.getcommonSort($column);
+      this.getMagazineList();
+    },
     getLimit(event) {
       this.getcommonLimit(event.target.value);
       this.getMagazineList();
     },
     changePage(e) {
       this.changecommonPage(e);
-      this.getMagazineList();
-    },
-    getFilter() {
-      this.filter.page = DefaultConstants.firstPage;
-      this.getMagazineList();
-    },
-    getStatus(status) {
-      this.filter.status = status;
       this.getMagazineList();
     },
   },
