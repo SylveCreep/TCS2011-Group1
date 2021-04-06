@@ -9,7 +9,7 @@ import com.example.server.constant.Constant;
 
 @Entity
 @Table(name="magazine")
-public class Magazine {
+public class Magazine extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -22,8 +22,8 @@ public class Magazine {
     @Column(name = "theme", nullable = false)
     private String theme;
 
-    @Column(name="open_at", nullable = false)
-    private Date openAt;
+    /*@Column(name="open_at", nullable = false)
+    private Date openAt;*/
 
     @Column(name="published_at", nullable = false)
     private Date publishedAt;
@@ -58,13 +58,13 @@ public class Magazine {
         this.theme = theme;
     }
 
-    public Date getOpen_at() {
+    /*public Date getOpen_at() {
         return openAt;
     }
 
     public void setOpen_at(Date openAt) {
         this.openAt = openAt;
-    }
+    }*/
 
     public Date getPublished_at() {
         return publishedAt;
@@ -97,7 +97,7 @@ public class Magazine {
     public Magazine(Long id, String code, Date openAt, Date publishedAt, Date closeAt, int is_deleted) {
         this.id = id;
         this.code = code;
-        this.openAt = openAt;
+        //this.openAt = openAt;
         this.publishedAt = publishedAt;
         this.closeAt = closeAt;
         this.is_deleted = is_deleted;
@@ -105,7 +105,7 @@ public class Magazine {
 
     public Magazine(String code, Date openAt, Date publishedAt, Date closeAt){
         this.code = code;
-        this.openAt = openAt;
+        //this.openAt = openAt;
         this.publishedAt = publishedAt;
         this.closeAt = closeAt;
     }

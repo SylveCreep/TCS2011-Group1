@@ -19,6 +19,7 @@ import com.example.server.entity.Magazine;
 import com.example.server.entity.Role;
 import com.example.server.entity.User;
 import com.example.server.model.request.CreateAccount;
+import com.example.server.model.request.CreateMagazine;
 import com.example.server.model.request.CreateRole;
 import com.example.server.model.request.FacultyRequest;
 import com.example.server.model.request.PagingRequest;
@@ -441,7 +442,7 @@ public class ResponseUtils {
         //String valUpdateCodeRole = validateCodeRoleUpdateInput(createRole.getCode(), createRole.getId());
         String valNameRole  = validateNameRoleInput(createRole.getName());
         String valCodeRole = validateCodeRoleInput(createRole.getCode());
-        String valId = validateIdInput(createRole.getId());
+        String valId = validateIdRoleInput(createRole.getId());
 
         switch(type){
             case 0:
@@ -521,7 +522,7 @@ public class ResponseUtils {
             }
     }
 
-    public String validateIdInput(Long id){
+    public String validateIdRoleInput(Long id){
         if (id == null){
             return "Must have role id";
         }
@@ -588,7 +589,7 @@ public class ResponseUtils {
     //                     if(magazine.getExpiredAt().compareTo(new Date()) > 0 && magazine.getCreatedAt().compareTo(new Date()) < 0){
     //                         return "Valid";
     //                     } else {
-    //                         return "Cannot create new contribution during expired peroid";
+    //                         return "Cannot create new contribution during expired period";
     //                     }
     //                 case 1:
     //                     if(magazine.getPublishedAt().compareTo(new Date()) > 0 && magazine.getCreatedAt().compareTo(new Date()) < 0){
@@ -625,6 +626,180 @@ public class ResponseUtils {
             return returnDate;
         } catch (Exception e) {
             return null;
+        }
+    }
+
+
+     //Validate Magazine
+     public HashMap<String, Object> validateMagazineRequest(CreateMagazine createMagazine, int type){
+        HashMap<String, Object> form = new HashMap<>();
+        HashMap<String, Object> inputForm = new HashMap<>();
+        form.put("input", inputForm);
+
+        String valTheme  = validateThemeMagazineInput(createMagazine.getTheme());
+        String valCode = validateCodeMagazineInput(createMagazine.getCode());
+        //String valOpenAt = validateOpenAtMagazineInput(createMagazine.getOpen_at());
+        String valCloseAt = validateCloseAtMagazineInput(createMagazine.getClose_at());
+        String valPublishedAt = validatePublishedAtMagazineInput(createMagazine.getPublished_at());
+        String valId = validateIdMagazineInput(createMagazine.getId());
+
+        switch(type){
+            case 0:
+               if (!valTheme.equals("Valid")){
+                   inputForm.put("name", valTheme);
+                   if (!form.containsKey("result")){
+                       form.put("result", -1);
+                   }
+               }
+               if (!valCode.equals("Valid")){
+                    inputForm.put("name", valCode);
+                    if (!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if (!valId.equals("Valid")){
+                     inputForm.put("name", valId);
+                     if (!form.containsKey("result")){
+                         form.put("result", -1);
+                     }
+                }
+                /*if (!valOpenAt.equals("Valid")){
+                    inputForm.put("name", valOpenAt);
+                    if (!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }*/
+                if (!valCloseAt.equals("Valid")){
+                    inputForm.put("name", valCloseAt);
+                    if (!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if (!valPublishedAt.equals("Valid")){
+                    inputForm.put("name", valPublishedAt);
+                    if (!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+               if (!form.containsKey("result")){
+                   form.put("result", 0);
+               }
+               break;
+            case 1:
+                if (!valTheme.equals("Valid")){
+                    inputForm.put("name", valTheme);
+                    if (!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if (!valCode.equals("Valid")){
+                    inputForm.put("name", valCode);
+                    if (!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if (!valId.equals("Valid")){
+                    inputForm.put("name", valId);
+                    if (!form.containsKey("result")){
+                      form.put("result", -1);
+                    }
+                }
+                /*if (!valOpenAt.equals("Valid")){
+                    inputForm.put("name", valOpenAt);
+                 if (!form.containsKey("result")){
+                    form.put("result", -1);
+                 }
+                }*/
+                if (!valCloseAt.equals("Valid")){
+                    inputForm.put("name", valCloseAt);
+                    if (!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if (!valPublishedAt.equals("Valid")){
+                    inputForm.put("name", valPublishedAt);
+                    if (!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if (!form.containsKey("result")){
+                    form.put("result", 0);
+                }
+                break;
+            default:
+               break;
+        }
+
+        return form;
+    }
+
+    public String validateThemeMagazineInput(String theme){
+        if (theme == null){
+            return "Invalid";
+        }
+        if (NameValidation.containSpecialCharacter(theme)){
+            return "Invalid";
+        }
+        Magazine magazine = magazineDao.findByTheme(theme);
+            if (magazine != null){
+                return "Theme of magazine existed";
+            } else {
+                return "Valid";
+            } 
+    }
+
+    public String validateCodeMagazineInput(String code){
+        if (code == null){
+            return "Invalid";
+        }
+        if  (NameValidation.containSpecialCharacter(code)){
+            return "Invalid";
+        }
+        Magazine magazine = magazineDao.findByCode(code);
+            if (magazine != null){
+                return "Code existed";
+            }else {
+                return "Valid";
+            }
+    }
+
+    public String validateIdMagazineInput(Long id){
+        if (id == null){
+            return "Must have magazine id";
+        }
+        Optional<Magazine> magazine = magazineDao.findById(id);
+        if (!magazine.isEmpty()){
+            if (magazine.get().getIs_deleted() != Constant.DELETED){
+                return "Valid";
+            }else{
+                return "Magazine is deleted";
+            }
+        } else{
+            return "Magazine not existed";
+        }
+    }
+
+    /*public String validateOpenAtMagazineInput(Date openAt){
+        if(openAt == null){
+            return "Invalid";
+        } else {
+            return "valid";
+        }
+    }*/
+
+    public String validateCloseAtMagazineInput(Date closeAt){
+        if(closeAt == null){
+            return "Invalid";
+        } else {
+            return "valid";
+        }
+    }
+
+    public String validatePublishedAtMagazineInput(Date publishedAt){
+        if(publishedAt == null){
+            return "Invalid";
+        } else {
+            return "valid";
         }
     }
 }

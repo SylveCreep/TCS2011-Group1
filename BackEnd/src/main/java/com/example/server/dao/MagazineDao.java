@@ -18,7 +18,7 @@ import org.springframework.data.repository.query.Param;
 public interface MagazineDao extends JpaRepository<Magazine, Long> {
     Magazine findByTheme(String theme);
 
-    Magazine findByOpenAt(Date open_at);
+    //Magazine findByOpenAt(Date open_at);
 
     Magazine findByPublishedAt(Date published_at);
 

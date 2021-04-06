@@ -47,10 +47,10 @@ public class MagazineServiceImpl implements MagazineService {
         return list;
     }
 
-    @Override
+    /*@Override
     public Magazine findMagazineByOpen_at(Date open_at){
         return magazineDao.findByOpenAt(open_at);
-    }
+    }*/
 
     @Override
     public Magazine findMagazineByPublished_at(Date published_at){
@@ -84,7 +84,7 @@ public class MagazineServiceImpl implements MagazineService {
         try{
             Magazine nMagazine = magazineDto.getMagazineFromDto();
             nMagazine.setCode("M" + String.format("%04d", queryCheck.GetHighestId("magazine")));
-            nMagazine.setOpen_at(magazineDto.getOpen_at());
+            //nMagazine.setOpen_at(magazineDto.getOpen_at());
             nMagazine.setPublished_at(magazineDto.getPublished_at());
             nMagazine.setClose_at(magazineDto.getClose_at());
             nMagazine.setTheme(magazineDto.getTheme());
@@ -99,7 +99,7 @@ public class MagazineServiceImpl implements MagazineService {
         try{
             Magazine nMagazine = new Magazine();
             nMagazine.setCode("M" + String.format("%04d", queryCheck.GetHighestId("magazine")));
-            nMagazine.setOpen_at(magazineDto.getOpen_at());
+            //nMagazine.setOpen_at(magazineDto.getOpen_at());
             nMagazine.setPublished_at(magazineDto.getPublished_at());
             nMagazine.setClose_at(magazineDto.getClose_at());
             nMagazine.setTheme(magazineDto.getTheme());
@@ -114,7 +114,7 @@ public class MagazineServiceImpl implements MagazineService {
         try {
             Magazine magazine = magazineDao.getOne(magazineDto.getId());
             magazine.setCode(magazineDto.getCode());
-            magazine.setOpen_at(magazineDto.getOpen_at());
+            //magazine.setOpen_at(magazineDto.getOpen_at());
             magazine.setPublished_at(magazineDto.getPublished_at());
             magazine.setClose_at(magazineDto.getClose_at());
             magazineDao.save(magazine);
@@ -151,7 +151,7 @@ public class MagazineServiceImpl implements MagazineService {
                 magazineResponse.setId(magazine.getId());
                 magazineResponse.setTheme(magazine.getTheme() == null ?"":magazine.getTheme());
                 magazineResponse.setCode(magazine.getCode() == null ?"": magazine.getCode());
-                magazineResponse.setOpen_at(magazine.getOpen_at() == null ?null: magazine.getOpen_at());
+                //magazineResponse.setOpen_at(magazine.getOpen_at() == null ?null: magazine.getOpen_at());
                 magazineResponse.setPublished_at(magazine.getPublished_at() == null ?null: magazine.getPublished_at());
                 magazineResponse.setClose_at(magazine.getClose_at() == null ?null: magazine.getClose_at());
                 listResponse.add(magazineResponse);
@@ -178,7 +178,7 @@ public class MagazineServiceImpl implements MagazineService {
                 magazineResponse.setId(magazine.getId());
                 magazineResponse.setTheme(magazine.getTheme() == null ?"":magazine.getTheme());
                 magazineResponse.setCode(magazine.getCode() == null ?"":magazine.getCode() );
-                magazineResponse.setOpen_at(magazine.getOpen_at() == null ?null: magazine.getOpen_at());
+                //magazineResponse.setOpen_at(magazine.getOpen_at() == null ?null: magazine.getOpen_at());
                 magazineResponse.setPublished_at(magazine.getPublished_at() == null ?null: magazine.getPublished_at());
                 magazineResponse.setClose_at(magazine.getClose_at() == null ?null: magazine.getClose_at());
                 listResponse.add(magazineResponse);
