@@ -162,8 +162,7 @@ export const commonHelper = {
           this.list_magazines.lastPage = response.data.lastPage;
         })
         .catch((error) => {
-          this.errors = error.response.data.errors;
-          this.showError(this.errors);
+          this.errors = error.response.data;
         });
     },
   },

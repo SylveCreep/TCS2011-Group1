@@ -133,9 +133,9 @@
                     <th class="sort" v-on:click="getSort('theme')">
                       Theme <i class="fas fa-sort"></i>
                     </th>
-                    <!-- <th class="sort" v-on:click="getSort('created_at')">
+                    <th class="sort" v-on:click="getSort('created_at')">
                       Open At <i class="fas fa-sort"></i>
-                    </th>                     -->
+                    </th>                    
                     <th class="sort" v-on:click="getSort('published_at')">
                       Published At <i class="fas fa-sort"></i>
                     </th>
@@ -145,19 +145,15 @@
                     <th>Action</th>
                   </tr>
                 </thead>
-                <div  v-for="(status, index) of list_statuses"
-                  :key="index"
-                  class="tab-pane tabs-animation fade"
-                  v-bind:id="'tab-content-' + status"
-                  role="tabpanel" >
+                <div>
                 <tbody>
                   <!---->
                   <tr v-for="magazine of list_magazines" :key="magazine.id">
                     <td>{{ magazine.code }}</td>
                     <td>{{ magazine.theme }}</td>
-                    <!-- <td>{{ magazine.created_at }}</td>-->
-                    <td>{{ magazine.publishedAt }}</td>
-                    <td>{{ magazine.closeAt }}</td>
+                    <td>{{ magazine.created_at }}</td>
+                    <td>{{ magazine.published_at }}</td>
+                    <td>{{ magazine.close_at }}</td>
                     <td>
                       <p
                         class="click"
@@ -236,6 +232,7 @@ export default {
     document.querySelector("#tab-0").click(); //default click to tab 0
   },
   created() {
+    this.filter.status = 0;
     this.getMagazineList();
   },
   methods: {
@@ -301,6 +298,10 @@ export default {
     },
     getLimit(event) {
       this.getcommonLimit(event.target.value);
+      this.getMagazineList();
+    },
+    getStatus(status) {
+      this.filter.status = status;
       this.getMagazineList();
     },
     changePage(e) {

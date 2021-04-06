@@ -67,19 +67,19 @@
               <label class="col-sm-2 control-label">Closed At: </label>
               <div class="col-sm-12">
                 <input
-                  id="closedAt"
+                  id="close_at"
                   type="date"
                   class="form-control"
-                  v-model="magazine.closeAt"                  
+                  v-model="magazine.close_at"                  
                 />
               </div>
               <label class="col-sm-2 control-label">Published At: </label>
               <div class="col-sm-12">
                 <input
-                  id="publishedAt"
+                  id="published_at"
                   type="date"
                   class="form-control"
-                  v-model="magazine.publishedAt"                  
+                  v-model="magazine.published_at"                  
                 />
               </div>             
           </div>
