@@ -681,12 +681,12 @@ public class ResponseUtils {
                         form.put("result", -1);
                     }
                 }
-                if (!valCode.equals("Valid")){
+                /*if (!valCode.equals("Valid")){
                     inputForm.put("code", valCode);
                     if (!form.containsKey("result")){
                         form.put("result", -1);
                     }
-                }
+                }*/
                 if (!valId.equals("Valid")){
                     inputForm.put("id", valId);
                     if (!form.containsKey("result")){
