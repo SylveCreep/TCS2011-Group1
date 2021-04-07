@@ -116,19 +116,9 @@ public class CommentServiceImpl implements CommentService {
             Comment nComment = new Comment();
             nComment.setCode("C" + String.format("%04d", queryCheck.GetHighestId("comment")));
             nComment.setContent(comment.getContent());
-            Optional<User> user = userDao.findById(comment.getUserId());
-            if (comment.getParentId() != null) {
-                Comment parentComment = commentDao.findExistedCommentById(comment.getParentId());
-                nComment.setParentComment(parentComment);
-            }
-            Contribution contribution = contributionDao.getOne(comment.getContributionId());
-            if (user.get() == null || user.get().getIs_deleted() == Constant.DELETED) {
-                return null;
-            }
-            if (contribution == null || contribution.getIs_deleted() == Constant.DELETED) {
-                return null;
-            }
-            nComment.setUser(user.get());
+            User user = userDao.findExistedUserById(comment.getUserId());
+            Contribution contribution = contributionDao.findExistedContributionById(comment.getContributionId());
+            nComment.setUser(user);
             nComment.setContribution(contribution);
             return commentDao.save(nComment);
         } catch (Exception e) {

@@ -11,21 +11,21 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "comment")
-public class Comment extends BaseEntity{
+public class Comment extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name="user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="parent_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
     private Comment parentComment;
 
     @ManyToOne
-    @JoinColumn(name="contribution_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "contribution_id", referencedColumnName = "id", nullable = false)
     private Contribution contribution;
 
-    @Column(unique = true, nullable = false,length = 5)
+    @Column(unique = true, nullable = false, length = 5)
     private String code;
 
     @Column(nullable = false)
@@ -70,5 +70,5 @@ public class Comment extends BaseEntity{
     public void setParentComment(Comment parentComment) {
         this.parentComment = parentComment;
     }
-    
+
 }
