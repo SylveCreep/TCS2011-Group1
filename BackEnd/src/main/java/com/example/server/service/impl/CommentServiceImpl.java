@@ -82,8 +82,8 @@ public class CommentServiceImpl implements CommentService {
     public Boolean updateComment(CreateComment commentDto) {
         try {
             Comment comment = commentDao.getOne(commentDto.getId());
-            User user = userDao.findById(commentDto.getUserId()).get();
-            Contribution contribution = contributionDao.getOne(commentDto.getContributionId());
+            User user = userDao.findExistedUserById(commentDto.getUserId());
+            Contribution contribution = contributionDao.findExistedContributionById(commentDto.getContributionId());
             if (user == null) {
                 return false;
             }
@@ -133,6 +133,7 @@ public class CommentServiceImpl implements CommentService {
             Sort sort = responseUtil.getSortObj(commentSearchRequest);
             Page<Comment> list = commentDao.searchCommentByUser(commentSearchRequest.getId(),
                     commentSearchRequest.getUserId(), commentSearchRequest.getCode(),
+                    commentSearchRequest.getContributionId(),
                     PageRequest.of(offset, commentSearchRequest.getLimit(), sort));
 
             int lastPage = Math.round(list.getTotalElements() / commentSearchRequest.getLimit()
@@ -148,6 +149,8 @@ public class CommentServiceImpl implements CommentService {
                         comment.getContribution() == null ? null : comment.getContribution().getId());
                 commentResponse.setUserId(comment.getUser() == null ? null : comment.getUser().getId());
                 commentResponse.setUserName(comment.getUser() == null ? null : comment.getUser().getFullName());
+                commentResponse
+                        .setParentId(comment.getParentComment() == null ? null : comment.getParentComment().getId());
                 listResponse.add(commentResponse);
             }
             object.setLastPage(lastPage);

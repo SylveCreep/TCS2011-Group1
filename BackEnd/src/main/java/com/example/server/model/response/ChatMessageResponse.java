@@ -13,11 +13,10 @@ public class ChatMessageResponse {
     private Long userId;
     private Long contributionId;
     private Integer is_deleted = NOTDELETED;
+    private String avatar;
 
     public enum MessageType {
-        CHAT,
-        JOIN,
-        LEAVE
+        CHAT, JOIN, LEAVE
     }
 
     public String getContent() {
@@ -100,5 +99,12 @@ public class ChatMessageResponse {
         this.is_deleted = is_deleted;
     }
 
-    
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
 }
