@@ -36,5 +36,11 @@ public class Constant {
 
         public static final String NOTIFYURL = "http://localhost:3000/contributions/";
 
+        //Kafka
+        public static final String GROUP_ID = "kafka-sandbox";
+        public static final String KAFKA_BROKER = "localhost:9092";
+        public static final String KAFKA_TOPIC_COMMENT = "kafka-topic-comment";
+        public static final String KAFKA_TOPIC_CHAT = "kafka-topic-chat";
+
 
 }
