@@ -8,51 +8,37 @@ public class CommentResponse {
 
     private String content;
 
-    private User user;
+    private Long userId;
 
-    private Contribution contribution;
+    private String userName;
+
+    private Long contributionId;
 
     private String code;
 
     private Long parentId;
 
-    public Long getId(){
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id){
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getContent(){
+    public String getContent() {
         return content;
     }
 
-    public void setContent(String content){
+    public void setContent(String content) {
         this.content = content;
     }
 
-    public User getUser(){
-        return user;
-    }
-
-    public void setUser(User user){
-        this.user = user;
-    }
-
-    public Contribution getContribution(){
-        return contribution;
-    }
-
-    public void setContribution(Contribution contribution){
-        this.contribution = contribution;
-    }
-
-    public String getCode(){
+    public String getCode() {
         return code;
     }
 
-    public void setCode(String code){
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -62,5 +48,29 @@ public class CommentResponse {
 
     public void setParentId(Long parentId) {
         this.parentId = parentId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Long getContributionId() {
+        return contributionId;
+    }
+
+    public void setContributionId(Long contributionId) {
+        this.contributionId = contributionId;
     }
 }
