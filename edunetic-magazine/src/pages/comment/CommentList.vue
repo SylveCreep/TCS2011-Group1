@@ -76,14 +76,68 @@
 </template>
 
 <script>
+import SockJS from "sockjs-client";
+import Stomp from "webstomp-client";
+import { commonHelper } from "@/helper/commonHelper";
+import { UrlConstants } from "@/constant/UrlConstant";
+import axios from "axios";
 export default {
   name: "CommentList",
+  mixins: [commonHelper],
   data() {
     return {
       newComment: {},
-      commentList: [],
+      list_comments: [],
     };
   },
+  created() {
+    this.connect();
+    this.getCommentList();
+  },
+  methods:{
+    getCommentList() {
+      axios
+        .post(UrlConstants.Comment + "/filter", this.filter)
+        .then((response) => {
+          this.list_comments = response.data.data;
+          this.list_comments.currentPage = this.filter.page;
+        })
+        .catch((error) => {
+          this.errors = error.response.data;
+        });
+    },
+    sendComment() {
+      
+      axios.post(UrlConstants.BaseUrl + "comment/send", )
+    },
+    connect() {
+      this.stompClient = Stomp.over(new SockJS("http://b7b5cf66f9e8.ngrok.io/stomp"));
+      this.stompClient.connect(
+        {
+          Authorization:
+            "Bearer " + this.$cookies.get("jwt")
+        },
+        (frame) => {
+          this.connected = true;
+          console.log(frame);
+          this.stompClient.subscribe("/channel/contribution/1", (tick) => {
+            console.log(tick);
+            this.received_messages.push(JSON.parse(tick.body).content);
+          });
+        },
+        (error) => {
+          console.log(error);
+          this.connected = false;
+        }
+      );
+    },
+    disconnect() {
+      if (this.stompClient) {
+        this.stompClient.disconnect();
+      }
+      this.connected = false;
+    },
+  }
 };
 </script>
 
