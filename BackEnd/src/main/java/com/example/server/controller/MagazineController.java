@@ -109,7 +109,7 @@ public class MagazineController {
 
     @PreAuthorize("hasRole('R0002') or hasRole('R0003') or hasRole('R0004')")
     @PostMapping(value = "/filter")
-    public ResponseEntity<?> showMagazineBySearch(@RequestBody MagazineSearchRequest magazineSearchRequest) {
+    public ResponseEntity<?> showMagazineBySearch(@RequestBody MagazineSearchRequest magazineSearchRequest/*, @PathVariable(name = "status") int status*/) {
         try {
             if (magazineSearchRequest.getLimit() < 0 || magazineSearchRequest.getPage() < 0) {
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,
