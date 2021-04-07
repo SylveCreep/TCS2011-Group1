@@ -78,28 +78,6 @@
                     v-on:keyup="getFilter"
                   />
                 </div>
-                <!-- <div class="form-group">
-                  <label>Closed At</label>
-                  <input
-                    class="form-control"
-                    type="date"
-                    placeholder="Search"
-                    aria-label="Search"
-                    v-model="filter.closeAt"
-                    v-on:keyup="getFilter"
-                  />
-                </div> -->
-                <!-- <div class="form-group">
-                  <label>Published At</label>
-                  <input
-                    class="form-control"
-                    type="date"
-                    placeholder="Search"
-                    aria-label="Search"
-                    v-model="filter.publishedAt"
-                    v-on:keyup="getFilter"
-                  />
-                </div> -->
               </div>
             </div>
             <ul
@@ -116,7 +94,7 @@
                   v-bind:id="'tab-' + status"
                   data-toggle="tab"
                   v-bind:href="'#tab-content-' + status"
-                  v-on:change="getStatus(status)"
+                  v-on:click="getStatus(status)"
                 >
                   <span>{{ index }}</span>
                 </a>
