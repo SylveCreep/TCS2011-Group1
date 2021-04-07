@@ -9,6 +9,8 @@ public class CreateComment {
 
     private Long contributionId;
 
+    private Long parentId;
+
     public Long getId(){
         return id;
     }
@@ -39,5 +41,13 @@ public class CreateComment {
 
     public void setContributionId(Long contributionId){
         this.contributionId = contributionId;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 }

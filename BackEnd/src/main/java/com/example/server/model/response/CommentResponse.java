@@ -14,6 +14,8 @@ public class CommentResponse {
 
     private String code;
 
+    private Long parentId;
+
     public Long getId(){
         return id;
     }
@@ -52,5 +54,13 @@ public class CommentResponse {
 
     public void setCode(String code){
         this.code = code;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 }

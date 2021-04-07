@@ -18,6 +18,10 @@ public class Comment extends BaseEntity{
     private User user;
 
     @ManyToOne
+    @JoinColumn(name="parent_id", referencedColumnName = "id", nullable = false)
+    private Comment parentComment;
+
+    @ManyToOne
     @JoinColumn(name="contribution_id", referencedColumnName = "id", nullable = false)
     private Contribution contribution;
 
@@ -57,6 +61,14 @@ public class Comment extends BaseEntity{
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Comment getParentComment() {
+        return parentComment;
+    }
+
+    public void setParentComment(Comment parentComment) {
+        this.parentComment = parentComment;
     }
     
 }

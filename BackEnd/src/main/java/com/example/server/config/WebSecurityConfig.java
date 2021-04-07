@@ -39,6 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login", "/register","/resources/**","/file/users/**","/file/contributions/**","/mail/forgotpassword/**","/users/forgotpassword/**","/users/password/check/**",
                 "/users/updatePassword","/facebook/login").permitAll()
+                .antMatchers("/stomp/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint).and()

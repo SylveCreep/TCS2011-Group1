@@ -28,4 +28,7 @@ public interface CommentDao extends JpaRepository<Comment, Long>{
     "AND ((:code IS NULL) OR LOWER (c.code) LIKE CONCAT('%',IFNULL(LOWER(:code),LOWER(c.code)),'%')) " +
     "group by r.id", nativeQuery = true)
     Page<Comment> searchCommentByUser(@Param("id") Long id, @Param("userId") Long userId, @Param("code") String code, Pageable pageable);
+
+    @Query(value = "SELECT c.* FROM comment c WHERE c.is_deleted = 0 AND c.id = :id ", nativeQuery = true)
+    Comment findExistedCommentById(Long id);
 }

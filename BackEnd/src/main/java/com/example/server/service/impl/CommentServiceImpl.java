@@ -117,6 +117,10 @@ public class CommentServiceImpl implements CommentService{
             nComment.setCode("C" + String.format("%04d", queryCheck.GetHighestId("comment")));
             nComment.setContent(comment.getContent());
             Optional<User> user = userDao.findById(comment.getUserId());
+            if(comment.getParentId() != null){
+                Comment parentComment = commentDao.findExistedCommentById(comment.getParentId());
+                nComment.setParentComment(parentComment);
+            }
             Contribution contribution = contributionDao.getOne(comment.getContributionId());
             if (user.get() == null || user.get().getIs_deleted() == Constant.DELETED){
                 return null;
@@ -175,6 +179,7 @@ public class CommentServiceImpl implements CommentService{
                 commentResponse.setCode(comment.getCode() == null ?"": comment.getCode());
                 commentResponse.setContribution(comment.getContribution() == null ?null: comment.getContribution());
                 commentResponse.setUser(comment.getUser() == null ?null: comment.getUser());
+                commentResponse.setParentId(comment.getParentComment() == null? null: comment.getParentComment().getId());
                 listResponse.add(commentResponse);
             }
             object.add(listResponse);
