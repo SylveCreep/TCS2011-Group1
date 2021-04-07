@@ -1,6 +1,8 @@
 package com.example.server.controller;
 
+import com.example.server.dao.UserDao;
 import com.example.server.entity.Comment;
+import com.example.server.entity.User;
 import com.example.server.model.request.CreateComment;
 import com.example.server.model.response.ChatMessageResponse;
 import com.example.server.service.CommentService;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.example.server.constant.Constant.*;
+import static com.example.server.util.SessionUtils.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -30,9 +33,16 @@ public class ChatController {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private UserDao userDao;
+
     @PostMapping(value = "/comment/send", consumes = "application/json", produces = "application/json")
     public void sendComment(@RequestBody ChatMessageResponse commentMessage) {
         try {
+            User user = userDao.findExistedUserByEmail(getEmail());
+            commentMessage.setUserId(user.getId());
+            commentMessage.setUsername(user.getFullName());
+
             CreateComment comment = new CreateComment();
             comment.setContent(commentMessage.getContent());
             comment.setContributionId(commentMessage.getContributionId());
@@ -49,6 +59,10 @@ public class ChatController {
     @PostMapping(value = "/comment/update", consumes = "application/json", produces = "application/json")
     public void updateComment(@RequestBody ChatMessageResponse commentMessage) {
         try {
+            User user = userDao.findExistedUserByEmail(getEmail());
+            commentMessage.setUserId(user.getId());
+            commentMessage.setUsername(user.getFullName());
+
             CreateComment comment = new CreateComment();
             comment.setContent(commentMessage.getContent());
             comment.setContributionId(commentMessage.getContributionId());
@@ -64,6 +78,10 @@ public class ChatController {
     @PostMapping(value = "/comment/delete", consumes = "application/json", produces = "application/json")
     public void deleteComment(@RequestBody ChatMessageResponse commentMessage) {
         try {
+            User user = userDao.findExistedUserByEmail(getEmail());
+            commentMessage.setUserId(user.getId());
+            commentMessage.setUsername(user.getFullName());
+
             CreateComment comment = new CreateComment();
             comment.setContent(commentMessage.getContent());
             comment.setContributionId(commentMessage.getContributionId());
