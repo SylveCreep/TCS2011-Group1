@@ -77,6 +77,6 @@ public interface MagazineDao extends JpaRepository<Magazine, Long> {
     Page<Magazine> searchMagazineClosing(@Param("id") Long id, @Param("theme") String theme, @Param("code") String code/*, @Param("openAt") Date openAt, @Param("publishedAt") Date publishedAt, @Param("closeAt") Date closeAt*/, @Param("currDate") Date currDate, Pageable pageable);
 
     @Query(value = "Select * FROM magazine m " +
-    "Where  ((:mId is null) or (m.id = :mId))", nativeQuery = true)
-    Optional<MagazineResponse> findMagazineById(@Param("mId") Long id);
+    "Where  m.id = :mId", nativeQuery = true)
+    Magazine findMagazineById(@Param("mId") Long id);
 }

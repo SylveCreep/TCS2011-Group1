@@ -13,6 +13,7 @@ import static com.example.server.util.ResponseUtils.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import com.example.server.constant.Constant;
 import com.example.server.dao.MagazineDao;
@@ -75,8 +76,14 @@ public class MagazineServiceImpl implements MagazineService {
 
     @Override
     public MagazineResponse findMagazineById(Long id){
-        MagazineResponse magazine = magazineDao.findMagazineById(id).get();
-        return magazine;
+        Magazine magazine = magazineDao.findMagazineById(id);
+        MagazineResponse magazineResponse = new MagazineResponse();
+        magazineResponse.setId(magazine.getId());
+        magazineResponse.setCode(magazine.getCode());
+        magazineResponse.setTheme(magazine.getTheme());
+        magazineResponse.setClose_at(magazine.getClose_at());
+        magazineResponse.setPublished_at(magazine.getPublished_at());
+        return magazineResponse;
     }
 
     @Override
@@ -113,8 +120,9 @@ public class MagazineServiceImpl implements MagazineService {
     public Boolean updateMagazine(CreateMagazine magazineDto){
         try {
             Magazine magazine = magazineDao.getOne(magazineDto.getId());
-            magazine.setCode(magazineDto.getCode());
+            //magazine.setCode(magazineDto.getCode());
             //magazine.setOpen_at(magazineDto.getOpen_at());
+            magazine.setTheme(magazineDto.getTheme());
             magazine.setPublished_at(magazineDto.getPublished_at());
             magazine.setClose_at(magazineDto.getClose_at());
             magazineDao.save(magazine);
