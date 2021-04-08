@@ -20,7 +20,7 @@ public interface ChatMessageDao extends JpaRepository<ChatMessage, Long> {
     @Query(value ="SELECT c.* from chat_message c WHERE c.is_deleted = 0 AND c.content LIKE %:content% AND c.user_id = :userId AND c.to_user = :toUserId ", nativeQuery = true)
     List<ChatMessage> findExistedMessageByContent(@Param("userId")Long userId, @Param("content")String content,@Param("toUserId")Long toUserId);
 
-    @Query(value ="SELECT c.* from chat_message c WHERE c.is_deleted = 0 AND ((c.to_user = :toUserId AND c.user_id = :userId) OR (c.to_user = :userId AND c.user_id = :toUserId))", nativeQuery = true)
+    @Query(value ="SELECT * from chat_message c WHERE c.is_deleted = 0 AND ((c.to_user = :toUserId AND c.user_id = :userId) OR (c.to_user = :userId AND c.user_id = :toUserId ))", nativeQuery = true)
     Page<ChatMessage> loadMessageByUserAndDestination(@Param("userId")Long userId,@Param("toUserId")Long toUserId, Pageable pageable);
     
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import static com.example.server.constant.Constant.*;
 import static com.example.server.util.SessionUtils.*;
@@ -23,6 +24,7 @@ import com.example.server.dao.UserDao;
 import com.example.server.entity.ChatMessage;
 import com.example.server.entity.User;
 
+@Service
 public class ChatMessageServiceImpl implements ChatMessageService {
 
     @Autowired
@@ -35,89 +37,134 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     ResponseUtils responseUtils;
 
     @Override
-    public Boolean create(ChatMessageRequest chatMessageRequest) {
+    public ChatMessageResponse create(ChatMessageRequest chatMessageRequest) {
         User user = userDao.findExistedUserByEmail(getEmail());
         User toUser = userDao.findExistedUserById(chatMessageRequest.getToUser());
         if(toUser == null){
-            return false;
+            return null;
         }
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setUser(user);
         chatMessage.setContent(chatMessageRequest.getContent());
         chatMessage.setToUserId(chatMessageRequest.getToUser());
-        chatMessageDao.save(chatMessage);
-        return true;
+        ChatMessage createdChatMessage = chatMessageDao.save(chatMessage);
+
+        ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
+        chatMessageResponse.setId(createdChatMessage.getId());
+        chatMessageResponse.setUserId(createdChatMessage.getUser().getId());
+        chatMessageResponse.setToUserName(toUser.getEmail());
+        chatMessageResponse.setToUserId(createdChatMessage.getToUserId());
+        chatMessageResponse.setAvatar(createdChatMessage.getUser().getAvatar());
+        chatMessageResponse.setIs_deleted(createdChatMessage.getIs_deleted());
+        chatMessageResponse.setCreatedAt(createdChatMessage.getCreated_at());
+        chatMessageResponse.setUpdateAt(createdChatMessage.getUpdated_at());
+        chatMessageResponse.setContent(createdChatMessage.getContent());
+        return chatMessageResponse;
     }
 
     @Override
-    public Boolean update(ChatMessageRequest chatMessageRequest) {
+    public ChatMessageResponse update(ChatMessageRequest chatMessageRequest) {
         ChatMessage chatMessage = chatMessageDao.findExistedMessageById(chatMessageRequest.getId());
         chatMessage.setContent(chatMessageRequest.getContent());
         chatMessage.setUpdated_at(new Date());
         chatMessageDao.save(chatMessage);
-        return true;
+
+        User toUser = userDao.findExistedUserById(chatMessageRequest.getToUser());
+        ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
+        chatMessageResponse.setId(chatMessage.getId());
+        chatMessageResponse.setUserId(chatMessage.getUser().getId());
+        chatMessageResponse.setToUserName(toUser.getEmail());
+        chatMessageResponse.setToUserId(chatMessage.getToUserId());
+        chatMessageResponse.setAvatar(chatMessage.getUser().getAvatar());
+        chatMessageResponse.setIs_deleted(chatMessage.getIs_deleted());
+        chatMessageResponse.setCreatedAt(chatMessage.getCreated_at());
+        chatMessageResponse.setUpdateAt(chatMessage.getUpdated_at());
+        chatMessageResponse.setContent(chatMessage.getContent());
+        return chatMessageResponse;
     }
 
     @Override
-    public Boolean delete(ChatMessageRequest chatMessageRequest) {
+    public ChatMessageResponse delete(ChatMessageRequest chatMessageRequest) {
         ChatMessage chatMessage = chatMessageDao.findExistedMessageById(chatMessageRequest.getId());
         chatMessage.setIs_deleted(DELETED);
         chatMessageDao.save(chatMessage);
-        return true;
+
+        User toUser = userDao.findExistedUserById(chatMessageRequest.getToUser());
+        ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
+        chatMessageResponse.setId(chatMessage.getId());
+        chatMessageResponse.setUserId(chatMessage.getUser().getId());
+        chatMessageResponse.setToUserName(toUser.getEmail());
+        chatMessageResponse.setToUserId(chatMessage.getToUserId());
+        chatMessageResponse.setAvatar(chatMessage.getUser().getAvatar());
+        chatMessageResponse.setIs_deleted(chatMessage.getIs_deleted());
+        chatMessageResponse.setCreatedAt(chatMessage.getCreated_at());
+        chatMessageResponse.setUpdateAt(chatMessage.getUpdated_at());
+        chatMessageResponse.setContent(chatMessage.getContent());
+        return chatMessageResponse;
     }
 
     @Override
     public List<ChatMessageResponse> searchByContent(ChatMessageRequest chatMessageRequest) {
-        User user = userDao.findExistedUserByEmail(getEmail());
-        User toUser = userDao.findExistedUserById(chatMessageRequest.getToUser());
-        if(toUser == null){
+        try {
+            User user = userDao.findExistedUserByEmail(getEmail());
+            User toUser = userDao.findExistedUserById(chatMessageRequest.getToUser());
+            if(toUser == null){
+                return null;
+            }
+            List<ChatMessage> chatMessageList = chatMessageDao.findExistedMessageByContent(user.getId(), chatMessageRequest.getContent(), toUser.getId());
+            List<ChatMessageResponse> chatMessageResponseList = new ArrayList<>();
+            for(ChatMessage chatMessage: chatMessageList){
+                ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
+                chatMessageResponse.setId(chatMessage.getId());
+                chatMessageResponse.setUserId(chatMessage.getUser().getId());
+                chatMessageResponse.setToUserName(toUser.getEmail());
+                chatMessageResponse.setToUserId(chatMessage.getToUserId());
+                chatMessageResponse.setAvatar(chatMessage.getUser().getAvatar());
+                chatMessageResponse.setIs_deleted(chatMessage.getIs_deleted());
+                chatMessageResponse.setCreatedAt(chatMessage.getCreated_at());
+                chatMessageResponse.setUpdateAt(chatMessage.getUpdated_at());
+                chatMessageResponse.setContent(chatMessage.getContent());
+                chatMessageResponseList.add(chatMessageResponse);
+            }
+            return chatMessageResponseList;
+        } catch (Exception e) {
             return null;
         }
-        List<ChatMessage> chatMessageList = chatMessageDao.findExistedMessageByContent(user.getId(), chatMessageRequest.getContent(), toUser.getId());
-        List<ChatMessageResponse> chatMessageResponseList = new ArrayList<>();
-        for(ChatMessage chatMessage: chatMessageList){
-            ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
-            chatMessageResponse.setId(chatMessage.getId());
-            chatMessageResponse.setUserId(chatMessage.getUser().getId());
-            chatMessageResponse.setToUserId(chatMessage.getToUserId());
-            chatMessageResponse.setAvatar(chatMessage.getUser().getAvatar());
-            chatMessageResponse.setIs_deleted(chatMessage.getIs_deleted());
-            chatMessageResponse.setCreatedAt(chatMessage.getCreated_at());
-            chatMessageResponse.setUpdateAt(chatMessage.getUpdated_at());
-            chatMessageResponse.setContent(chatMessage.getContent());
-            chatMessageResponseList.add(chatMessageResponse);
-        }
-        return chatMessageResponseList;
     }
 
     @Override
     public ChatMessagePagingResponse findAllChatOfUserAndDesto(ChatMessageRequest chatMessageRequest) {
-        User user = userDao.findExistedUserByEmail(getEmail());
-        User toUser = userDao.findExistedUserById(chatMessageRequest.getToUser());
-        if(toUser == null){
+        try {
+            User user = userDao.findExistedUserByEmail(getEmail());
+            User toUser = userDao.findExistedUserById(chatMessageRequest.getToUser());
+            if(toUser == null){
+                return null;
+            }
+            Sort sort = responseUtils.getSortObj(chatMessageRequest);
+            Page<ChatMessage> chatMessagePage = chatMessageDao.loadMessageByUserAndDestination(user.getId(), toUser.getId(), PageRequest.of(chatMessageRequest.getPage(), chatMessageRequest.getLimit(), sort));
+            int lastPage = Math.round(chatMessagePage.getTotalElements() / chatMessageRequest.getLimit()
+                        + ((chatMessagePage.getTotalElements() % chatMessageRequest.getLimit() == 0) ? 0 : 1));
+            ChatMessagePagingResponse chatMessagePagingResponse = new ChatMessagePagingResponse();
+            List<ChatMessageResponse> chatMessageResponseList = new ArrayList<>();
+            for(ChatMessage chatMessage: chatMessagePage){
+                ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
+                chatMessageResponse.setId(chatMessage.getId());
+                chatMessageResponse.setUserId(chatMessage.getUser().getId());
+                chatMessageResponse.setToUserName(toUser.getEmail());
+                chatMessageResponse.setToUserId(chatMessage.getToUserId());
+                chatMessageResponse.setAvatar(chatMessage.getUser().getAvatar());
+                chatMessageResponse.setIs_deleted(chatMessage.getIs_deleted());
+                chatMessageResponse.setCreatedAt(chatMessage.getCreated_at());
+                chatMessageResponse.setUpdateAt(chatMessage.getUpdated_at());
+                chatMessageResponse.setContent(chatMessage.getContent());
+                chatMessageResponseList.add(chatMessageResponse);
+            }
+            chatMessagePagingResponse.setChatMessageResponses(chatMessageResponseList);
+            chatMessagePagingResponse.setLastPage(lastPage);
+            return chatMessagePagingResponse;
+        } catch (Exception e) {
             return null;
         }
-        Sort sort = responseUtils.getSortObj(chatMessageRequest);
-        Page<ChatMessage> chatMessagePage = chatMessageDao.loadMessageByUserAndDestination(user.getId(), toUser.getId(), PageRequest.of(chatMessageRequest.getPage(), chatMessageRequest.getLimit(), sort));
-        int lastPage = Math.round(chatMessagePage.getTotalElements() / chatMessageRequest.getLimit()
-                    + ((chatMessagePage.getTotalElements() % chatMessageRequest.getLimit() == 0) ? 0 : 1));
-        ChatMessagePagingResponse chatMessagePagingResponse = new ChatMessagePagingResponse();
-        List<ChatMessageResponse> chatMessageResponseList = new ArrayList<>();
-        for(ChatMessage chatMessage: chatMessagePage){
-            ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
-            chatMessageResponse.setId(chatMessage.getId());
-            chatMessageResponse.setUserId(chatMessage.getUser().getId());
-            chatMessageResponse.setToUserId(chatMessage.getToUserId());
-            chatMessageResponse.setAvatar(chatMessage.getUser().getAvatar());
-            chatMessageResponse.setIs_deleted(chatMessage.getIs_deleted());
-            chatMessageResponse.setCreatedAt(chatMessage.getCreated_at());
-            chatMessageResponse.setUpdateAt(chatMessage.getUpdated_at());
-            chatMessageResponse.setContent(chatMessage.getContent());
-            chatMessageResponseList.add(chatMessageResponse);
-        }
-        chatMessagePagingResponse.setChatMessageResponses(chatMessageResponseList);
-        chatMessagePagingResponse.setLastPage(lastPage);
-        return chatMessagePagingResponse;
     }
     
 }

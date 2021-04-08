@@ -7,8 +7,8 @@ public class ChatMessageResponse {
     private Long id;
     private Long userId;
     private String userName;
-    private String email;
     private Long toUserId;
+    private String toUserName;
     private String content;
     private String avatar;
     private Integer is_deleted = NOTDELETED;
@@ -71,19 +71,19 @@ public class ChatMessageResponse {
     public void setUpdateAt(Date updateAt) {
         this.updateAt = updateAt;
     }
-    public String getEmail() {
-        return email;
+    public String getToUserName() {
+        return toUserName;
     }
-    public void setEmail(String email) {
-        this.email = email;
+    public void setToUserName(String toUserName) {
+        this.toUserName = toUserName;
     }
-    public ChatMessageResponse(Long id, Long userId, String userName, String email, Long toUserId, String content,
+    public ChatMessageResponse(Long id, Long userId, String userName, Long toUserId, String toUserName, String content,
             String avatar, Integer is_deleted, Date createdAt, Date updateAt) {
         this.id = id;
         this.userId = userId;
         this.userName = userName;
-        this.email = email;
         this.toUserId = toUserId;
+        this.toUserName = toUserName;
         this.content = content;
         this.avatar = avatar;
         this.is_deleted = is_deleted;

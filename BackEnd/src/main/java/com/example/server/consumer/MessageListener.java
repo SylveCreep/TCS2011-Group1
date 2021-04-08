@@ -7,15 +7,23 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Component;
 
 import static com.example.server.constant.Constant.*;
+
+import java.security.Principal;
+
+import com.example.server.dao.UserDao;
 
 @Component
 public class MessageListener {
 
     @Autowired
     SimpMessagingTemplate template;
+
+    @Autowired
+    UserDao userDao;
     
     @KafkaListener(
         topics = KAFKA_TOPIC_COMMENT,
@@ -29,7 +37,8 @@ public class MessageListener {
         topics = KAFKA_TOPIC_CHAT,
        groupId = GROUP_ID
     )
+    @SubscribeMapping ( "/user/queue/chat" )
     public void listenChatMessage(@Payload ChatMessageResponse message) {
-        template.convertAndSendToUser(message.getEmail(), "/queue/chat", message);
+        template.convertAndSendToUser(message.getToUserName(), "/queue/chat", message);
     }
 }
