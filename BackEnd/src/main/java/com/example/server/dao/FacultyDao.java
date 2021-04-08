@@ -19,6 +19,9 @@ public interface FacultyDao extends JpaRepository<Faculty, Long> {
 
     @Query(value = "SELECT f.* FROM faculty f WHERE f.is_deleted = 0 AND f.id = :id ", nativeQuery = true)
     Faculty findExistedFacultyById(Long id);
+
+    @Query(value = "SELECT f.* FROM faculty f WHERE f.is_deleted = 0 AND f.faculty_name = :facultyName ", nativeQuery = true)
+    Faculty findExistedFacultyByName(String facultyName);
     
     @Query("select f from Faculty f "+ 
     "where f.is_deleted = 0 "+ 

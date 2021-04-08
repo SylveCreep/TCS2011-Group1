@@ -12,7 +12,7 @@ import org.springframework.kafka.core.ProducerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.example.server.model.response.ChatMessageResponse;
+import com.example.server.model.response.*;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -24,7 +24,12 @@ import static com.example.server.constant.Constant.*;
 @Configuration
 public class ProducerConfiguration {
     @Bean
-    public ProducerFactory<String, ChatMessageResponse> producerFactory() {
+    public ProducerFactory<String, CommentMessageResponse> producerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfigurations());
+    }
+
+    @Bean
+    public ProducerFactory<String, ChatMessageResponse> producerChatMessageResponseFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigurations());
     }
 
@@ -38,7 +43,12 @@ public class ProducerConfiguration {
     }
 
     @Bean
-    public KafkaTemplate<String, ChatMessageResponse> kafkaTemplate() {
+    public KafkaTemplate<String, CommentMessageResponse> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
+    }
+
+    @Bean
+    public KafkaTemplate<String, ChatMessageResponse> kafkaChatMessageResponseTemplate() {
+        return new KafkaTemplate<>(producerChatMessageResponseFactory());
     }
 }

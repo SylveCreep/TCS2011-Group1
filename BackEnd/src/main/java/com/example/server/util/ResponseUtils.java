@@ -2,8 +2,11 @@ package com.example.server.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,6 +23,7 @@ import com.example.server.entity.Faculty;
 import com.example.server.entity.Magazine;
 import com.example.server.entity.Role;
 import com.example.server.entity.User;
+import com.example.server.model.request.ContributionRequest;
 import com.example.server.model.request.CreateAccount;
 import com.example.server.model.request.CreateMagazine;
 import com.example.server.model.request.CreateRole;
@@ -545,21 +549,106 @@ public class ResponseUtils {
         HashMap<String, Object> form = new HashMap<>();
         HashMap<String, Object> inputForm = new HashMap<>();
         form.put("input", inputForm);
+
+        String valFacultyName = validateFacultyName(facultyRequest.getFacultyName());
+        String valFacultyId = validateFacultyId(facultyRequest.getFacultyId());
+        //0: validate create request
+        //1: validate update request
         switch (type) {
             case 0:
-                
+                if(!valFacultyName.equals("Valid")){
+                    inputForm.put("facultyName", valFacultyName);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
                 break;
             case 1:
+                if(!valFacultyId.equals("Valid")){
+                    inputForm.put("facultyId", valFacultyId);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if(!valFacultyName.equals("Valid")){
+                    inputForm.put("facultyName", valFacultyName);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
                 break;
-        
             default:
                 break;
         }
         return form;
     }
 
-    //Validate contribution
+    public String validateFacultyId(Long facultyId){
+        if(facultyId == null){
+            return "Invalid";
+        }
+        if(facultyDao.findExistedFacultyById(facultyId) == null){
+            return "Cannot find faculty";
+        }
+        return "Valid";
+    }
 
+    public String validateFacultyName(String facultyName){
+        if(facultyName == null || facultyDao.findExistedFacultyByName(facultyName) != null){
+            return "Invalid";
+        }
+        if(!NameValidation.containSpecialCharacter(facultyName)){
+            return "Valid";
+        } else {
+            return "Contain invalid character";
+        }
+    }
+
+    //Validate contribution
+    public HashMap<String, Object> validateContributionRequest(ContributionRequest contributionRequest, MultipartFile file, int type){
+        HashMap<String, Object> form = new HashMap<>();
+        HashMap<String, Object> inputForm = new HashMap<>();
+        form.put("input", inputForm);
+
+        String valFile = validateContributionFile(file);
+        String valMagazine = validateMagazineIdInput(contributionRequest.getMagazineId());
+
+        //0: validate create request
+        //1: validate update request
+        switch (type) {
+            case 0:
+                if(!valFile.equals("Valid")){
+                    inputForm.put("file", valFile);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if(!valMagazine.equals("Valid")){
+                    inputForm.put("magazineId", valMagazine);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                break;
+            case 1:
+                if(!valFile.equals("Valid")){
+                    inputForm.put("file", valFile);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                if(!valMagazine.equals("Valid")){
+                    inputForm.put("magazineId", valMagazine);
+                    if(!form.containsKey("result")){
+                        form.put("result", -1);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        return form;
+    }
 
     public String validateContributionFile(MultipartFile file){
         if(file == null){
@@ -567,45 +656,29 @@ public class ResponseUtils {
         }
         String fileName = file.getOriginalFilename();
         String extension = fileName.substring(fileName.lastIndexOf("."), fileName.length());
-        if(!file.getContentType().startsWith("image/") && !extension.equals("docx") && !extension.equals("xlsx") && !extension.equals("pdf")){
+        String allowedExtentions[] = {"doc", "docx", "xlsx", "pdf", "txt"};
+        List<String> allowExtensionList = new ArrayList<>(Arrays.asList(allowedExtentions)) ;
+        if(!file.getContentType().startsWith("image/") || !allowExtensionList.contains(extension)){
             return file.getContentType();
         }
         return "Valid";
     }
 
-    // public String validateMagazineInput(Long magazineId, int allowNull, int actionType){
-    //     //0: Nullable 
-    //     //1: Non nullable
-    //     switch (allowNull) {
-    //         case 0:
-    //             return "Valid";
-    //         case 1:
-    //             //0: Create action
-    //             //1: Update action
-    //             Magazine magazine = magazineDao.findExistedMagazineById(magazineId);
-    //             if(magazine == null){
-    //                 return "Magazine not existed";
-    //             }
-    //             switch (actionType) {
-    //                 case 0:
-    //                     if(magazine.getExpiredAt().compareTo(new Date()) > 0 && magazine.getCreatedAt().compareTo(new Date()) < 0){
-    //                         return "Valid";
-    //                     } else {
-    //                         return "Cannot create new contribution during expired period";
-    //                     }
-    //                 case 1:
-    //                     if(magazine.getPublishedAt().compareTo(new Date()) > 0 && magazine.getCreatedAt().compareTo(new Date()) < 0){
-    //                         return "Valid";
-    //                     } else {
-    //                         return "Cannot update new contribution after published date";
-    //                     }
-    //                 default:
-    //                     return "Invalid";
-    //             }
-    //         default:
-    //             return "Invalid";
-    //     }
-    // }
+    public String validateMagazineIdInput(Long magazineId){
+        if(magazineId == null){
+            return "Valid";
+        }
+        Magazine magazine = magazineDao.findExistedMagazineById(magazineId);
+        Date currenDate = new Date();
+        if(magazine == null){
+            return "Cannot find magazine";
+        }
+        if(currenDate.after(magazine.getCreated_at()) && currenDate.before(magazine.getPublished_at())){
+            return "Valid";
+        }
+
+        return "Invalid";
+    }
 
     public String validatePublishedDate(Date publishedDate, int allowNull, int actionType){
         //0: Nullable 

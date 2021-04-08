@@ -4,7 +4,7 @@ import com.example.server.dao.UserDao;
 import com.example.server.entity.Comment;
 import com.example.server.entity.User;
 import com.example.server.model.request.CreateComment;
-import com.example.server.model.response.ChatMessageResponse;
+import com.example.server.model.response.CommentMessageResponse;
 import com.example.server.service.CommentService;
 
 import static java.lang.String.format;
@@ -28,7 +28,7 @@ import static com.example.server.util.SessionUtils.*;
 public class ChatController {
 
     @Autowired
-    private KafkaTemplate<String, ChatMessageResponse> kafkaTemplate;
+    private KafkaTemplate<String, CommentMessageResponse> kafkaTemplate;
 
     @Autowired
     private CommentService commentService;
@@ -37,7 +37,7 @@ public class ChatController {
     private UserDao userDao;
 
     @PostMapping(value = "/comment/send", consumes = "application/json", produces = "application/json")
-    public void sendComment(@RequestBody ChatMessageResponse commentMessage) {
+    public void sendComment(@RequestBody CommentMessageResponse commentMessage) {
         try {
             User user = userDao.findExistedUserByEmail(getEmail());
             commentMessage.setUserId(user.getId());
@@ -57,7 +57,7 @@ public class ChatController {
     }
 
     @PostMapping(value = "/comment/update", consumes = "application/json", produces = "application/json")
-    public void updateComment(@RequestBody ChatMessageResponse commentMessage) {
+    public void updateComment(@RequestBody CommentMessageResponse commentMessage) {
         try {
             User user = userDao.findExistedUserByEmail(getEmail());
             commentMessage.setUserId(user.getId());
@@ -76,7 +76,7 @@ public class ChatController {
     }
 
     @PostMapping(value = "/comment/delete", consumes = "application/json", produces = "application/json")
-    public void deleteComment(@RequestBody ChatMessageResponse commentMessage) {
+    public void deleteComment(@RequestBody CommentMessageResponse commentMessage) {
         try {
             User user = userDao.findExistedUserByEmail(getEmail());
             commentMessage.setUserId(user.getId());

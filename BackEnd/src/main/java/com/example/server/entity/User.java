@@ -50,6 +50,9 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "user")
+    private List<ChatMessage> chatMessages;
+
     @Column(name="reset_password_key")
     private String resetPasswordKey;
 

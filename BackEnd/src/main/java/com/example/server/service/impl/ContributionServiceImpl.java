@@ -100,9 +100,8 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     @Override
-    public Boolean deleted(Long id) {
+    public Boolean deleted(Contribution contribution) {
         try {
-            Contribution contribution = contributionDao.findExistedContributionById(id);
             contribution.setIs_deleted(DELETED);
             try {
                 contributionDao.save(contribution);
@@ -121,11 +120,7 @@ public class ContributionServiceImpl implements ContributionService {
             Contribution nContribution = new Contribution();
             String email = getEmail();
             User user = userDao.findExistedUserByEmail(email);
-            // User mcUser =
-            // userDao.findUserManagerByFacultyIdAndRoleId(user.getFaculty().getId(), (long)
-            // 3);
             nContribution.setUser(user);
-            // nContribution.setCheckedBy(mcUser);
             nContribution.setFaculty(user.getFaculty());
             if (contribution.getMagazineId() != null) {
                 nContribution.setMagazine(magazineDao.findExistedMagazineById(contribution.getMagazineId()));
@@ -135,18 +130,8 @@ public class ContributionServiceImpl implements ContributionService {
             FileResponse fileResponse = fileService.storeContribution(file, nContribution.getCode());
             nContribution.setLinkSource("contribution_"+nContribution.getCode()+"."+fileResponse.getExtension());
             nContribution.setExtension(fileResponse.getExtension());
-
-            // User mmUser = userDao.findUserManagerByFacultyIdAndRoleId(null, (long) 2);
-            // List<String> ccList = new ArrayList<>();
-            // ccList.add(mmUser.getEmail());
-            // String subject = "New commited contribution from student "+
-            // user.getFullName() + " (code:" + user.getCode() + ")";
-            // String html = "<p>Student " + user.getFullName()+ " has commited following
-            // code "+ nContribution.getCode()+ " contribution</p>"+"<p>Please follow url
-            // link to see contribution: "+ "http://..." +"</p>";
             try {
                 contributionDao.save(nContribution);
-                // mailService.sendAsHtml(host_email, mcUser.getEmail(), ccList, subject, html);
                 return true;
             } catch (Exception e) {
                 return false;

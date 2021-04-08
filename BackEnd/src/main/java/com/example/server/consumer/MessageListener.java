@@ -1,6 +1,6 @@
 package com.example.server.consumer;
 
-import com.example.server.model.response.ChatMessageResponse;
+import com.example.server.model.response.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -21,7 +21,15 @@ public class MessageListener {
         topics = KAFKA_TOPIC_COMMENT,
        groupId = GROUP_ID
     )
-    public void listenComment(@Payload ChatMessageResponse message) {
-        template.convertAndSend("/channel/contribution/"+message.getContributionId(), message);
+    public void listenComment(@Payload CommentMessageResponse message) {
+        template.convertAndSend("/channel/contribution/"+message.getContributionId().toString(), message);
+    }
+
+    @KafkaListener(
+        topics = KAFKA_TOPIC_CHAT,
+       groupId = GROUP_ID
+    )
+    public void listenChatMessage(@Payload ChatMessageResponse message) {
+        template.convertAndSendToUser(message.getEmail(), "/queue/chat", message);
     }
 }
