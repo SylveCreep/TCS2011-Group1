@@ -3,10 +3,13 @@ package com.example.server.controller;
 import javax.validation.Valid;
 
 import com.example.server.constant.Constant;
+import com.example.server.dao.UserDao;
 import com.example.server.entity.Comment;
+import com.example.server.entity.User;
 import com.example.server.model.request.CommentSearchRequest;
 import com.example.server.model.request.CreateComment;
 import com.example.server.model.response.CommentLastPageResponse;
+import com.example.server.model.response.CommentMessageResponse;
 import com.example.server.model.response.CommentResponse;
 import com.example.server.service.CommentService;
 import com.example.server.util.ResponseUtils;
@@ -14,6 +17,7 @@ import com.example.server.util.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +29,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.example.server.constant.Constant.*;
+import static com.example.server.util.SessionUtils.*;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/comments")
@@ -34,6 +41,12 @@ public class CommentController {
 
     @Autowired
     private ResponseUtils responseUtils;
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private KafkaTemplate<String, CommentMessageResponse> kafkaCommentTemplate;
 
     @PostMapping
     public ResponseEntity<?> createComment(@Valid @RequestBody CreateComment comment) {
@@ -125,6 +138,64 @@ public class CommentController {
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get comment fail",
                     HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(value = "/send", consumes = "application/json", produces = "application/json")
+    public void sendComment(@RequestBody CommentMessageResponse commentMessage) {
+        try {
+            User user = userDao.findExistedUserByEmail(getEmail());
+            commentMessage.setUserId(user.getId());
+            commentMessage.setUsername(user.getFullName());
+
+            CreateComment comment = new CreateComment();
+            comment.setContent(commentMessage.getContent());
+            comment.setContributionId(commentMessage.getContributionId());
+            comment.setParentId(commentMessage.getParentId());
+            comment.setUserId(commentMessage.getUserId());
+            Comment commentEntity = commentService.saveComment(comment);
+            commentMessage.setId(commentEntity.getId());
+            kafkaCommentTemplate.send(KAFKA_TOPIC_COMMENT, commentMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @PostMapping(value = "/update", consumes = "application/json", produces = "application/json")
+    public void updateComment(@RequestBody CommentMessageResponse commentMessage) {
+        try {
+            User user = userDao.findExistedUserByEmail(getEmail());
+            commentMessage.setUserId(user.getId());
+            commentMessage.setUsername(user.getFullName());
+
+            CreateComment comment = new CreateComment();
+            comment.setContent(commentMessage.getContent());
+            comment.setContributionId(commentMessage.getContributionId());
+            comment.setParentId(commentMessage.getParentId());
+            comment.setUserId(commentMessage.getUserId());
+            commentService.updateComment(comment);
+            kafkaCommentTemplate.send(KAFKA_TOPIC_COMMENT, commentMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @PostMapping(value = "/delete", consumes = "application/json", produces = "application/json")
+    public void deleteComment(@RequestBody CommentMessageResponse commentMessage) {
+        try {
+            User user = userDao.findExistedUserByEmail(getEmail());
+            commentMessage.setUserId(user.getId());
+            commentMessage.setUsername(user.getFullName());
+
+            CreateComment comment = new CreateComment();
+            comment.setContent(commentMessage.getContent());
+            comment.setContributionId(commentMessage.getContributionId());
+            comment.setParentId(commentMessage.getParentId());
+            comment.setUserId(commentMessage.getUserId());
+            commentService.deleteComment(commentMessage.getId());
+            kafkaCommentTemplate.send(KAFKA_TOPIC_COMMENT, commentMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

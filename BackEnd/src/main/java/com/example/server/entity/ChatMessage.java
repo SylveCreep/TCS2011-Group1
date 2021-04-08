@@ -10,8 +10,8 @@ public class ChatMessage extends BaseEntity {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name="user_id",nullable = false)
-    private User user;
+    @JoinColumn(name="from_user",nullable = false)
+    private User fromUser;
 
     @Column(name = "to_user")
     private Long toUserId;
@@ -24,14 +24,6 @@ public class ChatMessage extends BaseEntity {
         this.content = content;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public ChatMessage(){
 
     }
@@ -42,5 +34,13 @@ public class ChatMessage extends BaseEntity {
 
     public void setToUserId(Long toUserId) {
         this.toUserId = toUserId;
+    }
+
+    public User getFromUser() {
+        return fromUser;
+    }
+
+    public void setFromUser(User fromUser) {
+        this.fromUser = fromUser;
     }
 }

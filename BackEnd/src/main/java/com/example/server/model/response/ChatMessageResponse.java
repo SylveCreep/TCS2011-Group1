@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class ChatMessageResponse {
     private Long id;
-    private Long userId;
+    private Long fromUserId;
     private String userName;
     private Long toUserId;
     private String toUserName;
@@ -21,12 +21,7 @@ public class ChatMessageResponse {
     public void setId(Long id) {
         this.id = id;
     }
-    public Long getUserId() {
-        return userId;
-    }
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+    
     public String getUserName() {
         return userName;
     }
@@ -77,10 +72,16 @@ public class ChatMessageResponse {
     public void setToUserName(String toUserName) {
         this.toUserName = toUserName;
     }
-    public ChatMessageResponse(Long id, Long userId, String userName, Long toUserId, String toUserName, String content,
-            String avatar, Integer is_deleted, Date createdAt, Date updateAt) {
+    public Long getFromUserId() {
+        return fromUserId;
+    }
+    public void setFromUserId(Long fromUserId) {
+        this.fromUserId = fromUserId;
+    }
+    public ChatMessageResponse(Long id, Long fromUserId, String userName, Long toUserId, String toUserName,
+            String content, String avatar, Integer is_deleted, Date createdAt, Date updateAt) {
         this.id = id;
-        this.userId = userId;
+        this.fromUserId = fromUserId;
         this.userName = userName;
         this.toUserId = toUserId;
         this.toUserName = toUserName;

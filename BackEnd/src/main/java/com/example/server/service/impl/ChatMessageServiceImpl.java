@@ -44,17 +44,17 @@ public class ChatMessageServiceImpl implements ChatMessageService {
             return null;
         }
         ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setUser(user);
+        chatMessage.setFromUser(user);
         chatMessage.setContent(chatMessageRequest.getContent());
         chatMessage.setToUserId(chatMessageRequest.getToUser());
         ChatMessage createdChatMessage = chatMessageDao.save(chatMessage);
 
         ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
         chatMessageResponse.setId(createdChatMessage.getId());
-        chatMessageResponse.setUserId(createdChatMessage.getUser().getId());
+        chatMessageResponse.setFromUserId(createdChatMessage.getFromUser().getId());
         chatMessageResponse.setToUserName(toUser.getEmail());
         chatMessageResponse.setToUserId(createdChatMessage.getToUserId());
-        chatMessageResponse.setAvatar(createdChatMessage.getUser().getAvatar());
+        chatMessageResponse.setAvatar(createdChatMessage.getFromUser().getAvatar());
         chatMessageResponse.setIs_deleted(createdChatMessage.getIs_deleted());
         chatMessageResponse.setCreatedAt(createdChatMessage.getCreated_at());
         chatMessageResponse.setUpdateAt(createdChatMessage.getUpdated_at());
@@ -72,10 +72,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         User toUser = userDao.findExistedUserById(chatMessageRequest.getToUser());
         ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
         chatMessageResponse.setId(chatMessage.getId());
-        chatMessageResponse.setUserId(chatMessage.getUser().getId());
+        chatMessageResponse.setFromUserId(chatMessage.getFromUser().getId());
         chatMessageResponse.setToUserName(toUser.getEmail());
         chatMessageResponse.setToUserId(chatMessage.getToUserId());
-        chatMessageResponse.setAvatar(chatMessage.getUser().getAvatar());
+        chatMessageResponse.setAvatar(chatMessage.getFromUser().getAvatar());
         chatMessageResponse.setIs_deleted(chatMessage.getIs_deleted());
         chatMessageResponse.setCreatedAt(chatMessage.getCreated_at());
         chatMessageResponse.setUpdateAt(chatMessage.getUpdated_at());
@@ -92,10 +92,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         User toUser = userDao.findExistedUserById(chatMessageRequest.getToUser());
         ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
         chatMessageResponse.setId(chatMessage.getId());
-        chatMessageResponse.setUserId(chatMessage.getUser().getId());
+        chatMessageResponse.setFromUserId(chatMessage.getFromUser().getId());
         chatMessageResponse.setToUserName(toUser.getEmail());
         chatMessageResponse.setToUserId(chatMessage.getToUserId());
-        chatMessageResponse.setAvatar(chatMessage.getUser().getAvatar());
+        chatMessageResponse.setAvatar(chatMessage.getFromUser().getAvatar());
         chatMessageResponse.setIs_deleted(chatMessage.getIs_deleted());
         chatMessageResponse.setCreatedAt(chatMessage.getCreated_at());
         chatMessageResponse.setUpdateAt(chatMessage.getUpdated_at());
@@ -116,10 +116,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
             for(ChatMessage chatMessage: chatMessageList){
                 ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
                 chatMessageResponse.setId(chatMessage.getId());
-                chatMessageResponse.setUserId(chatMessage.getUser().getId());
+                chatMessageResponse.setFromUserId(chatMessage.getFromUser().getId());
                 chatMessageResponse.setToUserName(toUser.getEmail());
                 chatMessageResponse.setToUserId(chatMessage.getToUserId());
-                chatMessageResponse.setAvatar(chatMessage.getUser().getAvatar());
+                chatMessageResponse.setAvatar(chatMessage.getFromUser().getAvatar());
                 chatMessageResponse.setIs_deleted(chatMessage.getIs_deleted());
                 chatMessageResponse.setCreatedAt(chatMessage.getCreated_at());
                 chatMessageResponse.setUpdateAt(chatMessage.getUpdated_at());
@@ -149,10 +149,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
             for(ChatMessage chatMessage: chatMessagePage){
                 ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
                 chatMessageResponse.setId(chatMessage.getId());
-                chatMessageResponse.setUserId(chatMessage.getUser().getId());
+                chatMessageResponse.setFromUserId(chatMessage.getFromUser().getId());
                 chatMessageResponse.setToUserName(toUser.getEmail());
                 chatMessageResponse.setToUserId(chatMessage.getToUserId());
-                chatMessageResponse.setAvatar(chatMessage.getUser().getAvatar());
+                chatMessageResponse.setAvatar(chatMessage.getFromUser().getAvatar());
                 chatMessageResponse.setIs_deleted(chatMessage.getIs_deleted());
                 chatMessageResponse.setCreatedAt(chatMessage.getCreated_at());
                 chatMessageResponse.setUpdateAt(chatMessage.getUpdated_at());
