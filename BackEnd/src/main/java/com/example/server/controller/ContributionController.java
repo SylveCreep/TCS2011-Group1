@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import com.example.server.util.ResponseUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -190,25 +191,14 @@ public class ContributionController {
                             HttpStatus.BAD_REQUEST);
                 }
                 HttpHeaders headerContribution = new HttpHeaders();
-                headerContribution.add(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=contribution_" + response.getCode() + "." + "zip");
-
-                File fileContri = fileService.loadContributionPath(response.getCode(), response.getExtension());
-                ByteArrayOutputStream baosContri = new ByteArrayOutputStream();
-                ZipOutputStream zipOutContri = new ZipOutputStream(baosContri);
-                FileInputStream fisContri = new FileInputStream(fileContri);
-                ZipEntry zipEntryContri = new ZipEntry(fileContri.getName());
-                zipOutContri.putNextEntry(zipEntryContri);
-                byte[] bytesContri = new byte[1024];
-                int lengthContri;
-                while ((lengthContri = fisContri.read(bytesContri)) >= 0) {
-                    zipOutContri.write(bytesContri, 0, lengthContri);
-                }
-                zipOutContri.close();
-                fisContri.close();
-                baosContri.close();
-                return ResponseEntity.ok().headers(headerContribution)
-                        .contentType(MediaType.parseMediaType("application/zip")).body(baosContri.toByteArray());
+                headerContribution.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=contribution_"+response.getCode()+"."+response.getExtension());
+    
+                File fileContribution = fileService.loadContributionPath(response.getCode(), response.getExtension());
+                InputStreamResource resource = new InputStreamResource(new FileInputStream(fileContribution));
+                return ResponseEntity.ok()
+                        .headers(headerContribution)
+                        .contentType(MediaType.parseMediaType("application/octet-stream"))
+                        .body(resource);
             case 2:
                 List<File> filesUser = fileService.loadContributionPathsByUserIdOrMagazineId(userId, 0);
                 HttpHeaders headerUser = new HttpHeaders();
