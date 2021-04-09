@@ -75,7 +75,15 @@
                     >
                       User Account
                     </router-link>
-
+                    <div tabindex="-1" class="dropdown-divider"></div>
+                    <router-link
+                      to="/ChangePassword"
+                      type="button"
+                      tabindex="0"
+                      class="dropdown-item"
+                    >
+                      Change Password
+                    </router-link>
                     <div tabindex="-1" class="dropdown-divider"></div>
                     <button
                       type="button"

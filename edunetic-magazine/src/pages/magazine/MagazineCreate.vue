@@ -32,25 +32,25 @@
             <label class="col-sm-2 control-label">Closed At: </label>
             <div class="col-sm-12">
               <input
-                id="closeAt"
+                id="close_at"
                 type="date"
                 class="form-control"
-                v-model="magazine.closeAt"
+                v-model="magazine.close_at"
               />
               <p style="color: red" v-if="list_errors !== null">
-                {{ list_errors.closeAt }}
+                {{ list_errors.close_at }}
               </p>
             </div>     
             <label class="col-sm-2 control-label">Published At: </label>
             <div class="col-sm-12">
               <input
-                id="publishedAt"
+                id="published_at"
                 type="date"
                 class="form-control"
-                v-model="magazine.publishedAt"
+                v-model="magazine.published_at"
               />
               <p style="color: red" v-if="list_errors !== null">
-                {{ list_errors.publishedAt }}
+                {{ list_errors.published_at }}
               </p>
             </div>
             
@@ -85,6 +85,8 @@ export default {
       magazine: {},
       requireAttribute: {
         theme: "Theme",
+        close_at: "Close date",
+        published_at:"Published date"
       },
     };
   },
@@ -103,7 +105,7 @@ export default {
             })
             .catch((error) => {
               this.list_errors = error.response.data.validate.input;
-              this.showError(this.list_errors);
+              this.showError(this.requireAttribute, this.list_errors);
             });
         }
       }

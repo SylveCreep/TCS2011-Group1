@@ -21,7 +21,7 @@ export const DefaultConstants = Object.freeze({
     MagazineStatuses:{
         Opening: 0,
         Processing: 1,
-        Publising: 2,
-        Closed: 3,
+        Publishing: 2,
+        Closed: 3
     },
 });

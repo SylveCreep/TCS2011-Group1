@@ -1,5 +1,5 @@
 <template>
-  <div class="app-main__inner">
+  <div class="app-main__inner" style="background-color: #fff">
     <div class="app-page-title">
       <div class="page-title-wrapper">
         <div class="page-title-heading">
@@ -18,7 +18,7 @@
         code: {{ contribution.code }}
       </div>
       <div class="card-body">
-        <p><b>Student Name:</b> {{ contribution.userName }}</p>
+        <p><b>Student Name:</b> {{ contribution.studentName }}</p>
 
         <p><b>Student Email:</b> {{ contribution.email }}</p>
 
@@ -44,7 +44,7 @@
         </p>
 
         <p v-if="contribution.status == 1">
-          <b>Approved by:</b> {{ contribution.checkedByName }}
+          <b>Approved by:</b>{{ contribution.checkedByName }}
         </p>
 
         <p v-if="contribution.status == -1">

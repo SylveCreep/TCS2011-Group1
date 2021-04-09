@@ -1,9 +1,18 @@
 import Vue from 'vue'
 import Router from "vue-router";
 import VueCookies from 'vue-cookies'
-//import Login Components
-import Login from "@/pages/Login";
+
+//import Authen Components
+import Login from "@/pages/Authen/Login";
+import SendMail from "@/pages/Authen/SendMail";
+import ResetPassword from "@/pages/Authen/ResetPassword";
+
+//import NotFound Components
 import NotFound from "@/pages/NotFound";
+
+//import Change Password Components
+import ChangePassword from "@/pages/ChangePassword";
+
 //import User Components
 import UserList from "@/pages/user/UserList";
 import UserCreate from "@/pages/user/UserCreate";
@@ -29,9 +38,7 @@ import ContributionDetail from "@/pages/contribution/ContributionDetail";
 import MagazineList from "@/pages/magazine/MagazineList";
 import MagazineCreate from "@/pages/magazine/MagazineCreate";
 import MagazineUpdate from "@/pages/magazine/MagazineUpdate";
-import { forEach } from 'jszip';
 
-//middleware
 
 Vue.use(Router);
 export const router = new Router({
@@ -41,6 +48,18 @@ export const router = new Router({
             name: 'UserProfile',
             path: '/profile',
             component: UserProfile,
+            meta: { 
+               authen: true,
+               admin: true,
+               student: true,
+               mc: true,
+               mm: true, 
+            }
+        },
+        {
+            name: 'ChangePassword',
+            path: '/changepassword',
+            component: ChangePassword,
             meta: { 
                admin: true,
                student: true,
@@ -53,18 +72,44 @@ export const router = new Router({
             path: '/',
             component: ContributionList,
             meta: { 
+                authen: true,
                 admin: true,
                 student: true,
                 mc: true,
                 mm: true, 
              }
         },
-        //Login Route
+        //Authen Routes
         {
             name: 'Login',
             path: '/login',
             component: Login,
             meta: { 
+                authen: false,
+                admin: true,
+                student: true,
+                mc: true,
+                mm: true, 
+             }
+        },
+        {
+            name: 'SendMail',
+            path: '/forgot-password',
+            component: SendMail,
+            meta: { 
+                authen: false,
+                admin: true,
+                student: true,
+                mc: true,
+                mm: true, 
+             }
+        },
+        {
+            name: 'ResetPassword',
+            path: '/users/forgotpassword/:id',
+            component: ResetPassword,
+            meta: { 
+                authen: false,
                 admin: true,
                 student: true,
                 mc: true,
@@ -77,6 +122,7 @@ export const router = new Router({
             path: '/users',
             component: UserList,
             meta: { 
+                authen: true,
                 admin: true,
                 student: false,
                 mc: true,
@@ -87,6 +133,7 @@ export const router = new Router({
             path: '/users/create',
             component: UserCreate,
             meta: { 
+                authen: true,
                 admin: true,
                 student: false,
                 mc: false,
@@ -97,6 +144,7 @@ export const router = new Router({
             path: '/users/:id/detail',
             component: UserUpdate,
             meta: { 
+                authen: true,
                 admin: true,
                 student: false,
                 mc: true,
@@ -109,6 +157,7 @@ export const router = new Router({
             path: '/roles',
             component: RoleList,
             meta: { 
+                authen: true,
                 admin: true,
                 student: false,
                 mc: false,
@@ -119,6 +168,7 @@ export const router = new Router({
             path: '/roles/create',
             component: RoleCreate,
             meta: { 
+                authen: true,
                 admin: true,
                 student: false,
                 mc: false,
@@ -129,6 +179,7 @@ export const router = new Router({
             path: '/roles/:id/update',
             component: RoleUpdate,
             meta: { 
+                authen: true,
                 admin: true,
                 student: false,
                 mc: false,
@@ -140,7 +191,8 @@ export const router = new Router({
             name: 'FacultyList',
             path: '/faculties',
             component: FacultyList,
-            meta: { 
+            meta: {
+                authen: true, 
                 admin: false,
                 student: false,
                 mc: false,
@@ -151,6 +203,7 @@ export const router = new Router({
             path: '/faculties/create',
             component: FacultyCreate,
             meta: { 
+                authen: true,
                 admin: false,
                 student: false,
                 mc: false,
@@ -161,6 +214,7 @@ export const router = new Router({
             path: '/faculties/:id/update',
             component: FacultyUpdate,
             meta: { 
+                authen: true,
                 admin: false,
                 student: false,
                 mc: false,
@@ -173,6 +227,7 @@ export const router = new Router({
             path: '/contributions',
             component: ContributionList,
             meta: { 
+                authen: true,
                 admin: false,
                 student: true,
                 mc: true,
@@ -184,6 +239,7 @@ export const router = new Router({
             path: '/contributions/submit',
             component: ContributionSubmit,
             meta: { 
+                authen: true,
                 admin: false,
                 student: true,
                 mc: false,
@@ -195,6 +251,7 @@ export const router = new Router({
             path: '/contributions/:id/detail',
             component: ContributionDetail,
             meta: { 
+                authen: true,
                 admin: false,
                 student: true,
                 mc: true,
@@ -207,6 +264,7 @@ export const router = new Router({
             path: '/magazines',
             component: MagazineList,
             meta: { 
+                authen: true,
                 admin: false,
                 student: true,
                 mc: true,
@@ -218,6 +276,7 @@ export const router = new Router({
             path: '/magazines/create',
             component: MagazineCreate,
             meta: { 
+                authen: true,
                 admin: false,
                 student: false,
                 mc: false,
@@ -229,6 +288,7 @@ export const router = new Router({
             path: '/magazines/:id/update',
             component: MagazineUpdate,
             meta: { 
+                authen: true,
                 admin: false,
                 student: false,
                 mc: false,
@@ -239,6 +299,7 @@ export const router = new Router({
             path: '*',
             component: NotFound,
             meta: { 
+                authen: true,
                 admin: true,
                 student: true,
                 mc: true,
@@ -251,8 +312,13 @@ export const router = new Router({
 //AUTHENTICATION
 //if users haven't logged in yet, cannot access any route except login
 router.beforeEach((to, from, next) => {
-    if (to.name !== 'Login' && !VueCookies.isKey("jwt")) {
-        next("/login")
+    if (!VueCookies.isKey("jwt")) {
+        if (to.meta.authen) {
+            next ("/login")
+        } else {
+            next()
+        }
+        
     } else {
         next()
     }   

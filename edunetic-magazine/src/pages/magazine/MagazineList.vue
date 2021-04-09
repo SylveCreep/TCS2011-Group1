@@ -68,24 +68,13 @@
                   />
                 </div>
                 <div class="form-group">
-                  <label>Closed At</label>
+                  <label>Created Date</label>
                   <input
                     class="form-control"
                     type="date"
                     placeholder="Search"
                     aria-label="Search"
-                    v-model="filter.closeAt"
-                    v-on:keyup="getFilter"
-                  />
-                </div>
-                <div class="form-group">
-                  <label>Published At</label>
-                  <input
-                    class="form-control"
-                    type="date"
-                    placeholder="Search"
-                    aria-label="Search"
-                    v-model="filter.publishedAt"
+                    v-model="filter.currentDate"
                     v-on:keyup="getFilter"
                   />
                 </div>
@@ -105,7 +94,7 @@
                   v-bind:id="'tab-' + status"
                   data-toggle="tab"
                   v-bind:href="'#tab-content-' + status"
-                  v-on:change="getStatus(status)"
+                  v-on:click="getStatus(status)"
                 >
                   <span>{{ index }}</span>
                 </a>
@@ -122,7 +111,7 @@
                     <th class="sort" v-on:click="getSort('theme')">
                       Theme <i class="fas fa-sort"></i>
                     </th>
-                    <th class="sort" v-on:click="getSort('open_at')">
+                    <th class="sort" v-on:click="getSort('created_at')">
                       Open At <i class="fas fa-sort"></i>
                     </th>                    
                     <th class="sort" v-on:click="getSort('published_at')">
@@ -134,18 +123,15 @@
                     <th>Action</th>
                   </tr>
                 </thead>
+                
                 <tbody>
-                  <!-- v-for="(status, index) of list_statuses"
-                  :key="index"
-                  class="tab-pane tabs-animation fade"
-                  v-bind:id="'tab-content-' + status"
-                  role="tabpanel" -->
+                  <!---->
                   <tr v-for="magazine of list_magazines" :key="magazine.id">
                     <td>{{ magazine.code }}</td>
                     <td>{{ magazine.theme }}</td>
-                    <td>{{ magazine.openAt }}</td>                    
-                    <td>{{ magazine.publishedAt }}</td>
-                    <td>{{ magazine.closeAt }}</td>
+                    <td>{{ magazine.created_at | formatDate }}</td>
+                    <td>{{ magazine.published_at | formatDate}}</td>
+                    <td>{{ magazine.close_at | formatDate }}</td>
                     <td>
                       <p
                         class="click"
@@ -170,11 +156,12 @@
                         style="display: inline"
                         v-on:click="showContribution(magazine.id)"
                       >
-                        <b>Contribution's list</b>
+                        <b>Contribution list</b>
                       </p>
                     </td>
                   </tr>
                 </tbody>
+                
               </table>
             </div>
           </div>
@@ -223,6 +210,7 @@ export default {
     document.querySelector("#tab-0").click(); //default click to tab 0
   },
   created() {
+    this.filter.status = 0;
     this.getMagazineList();
   },
   methods: {
@@ -236,14 +224,7 @@ export default {
             this.canModify = true;
           }
         });
-    },
-    async preCheckMagazine(magazine_id) {
-      await this.checkMagazineExisted(magazine_id);
-      if (this.canModify) {
-        await this.checkUserExisted("magazine", magazine_id);
-      }
-      this.filter.magazineid = "";
-    },
+    },    
     async showMagazine(magazine_id) {
       await this.checkMagazineExisted(magazine_id);
       if (!this.canModify) {
@@ -254,11 +235,12 @@ export default {
       }
     },
     async deleteMagazine(magazine_id) {
-      await this.preCheckMagazine(magazine_id);
+      await this.checkMagazineExisted(magazine_id);
       if (!this.canModify) {
         this.errorAlert("delete", "magazine");
         this.getMagazineList();
-      } else {
+      } 
+      else {
         await this.confirmAlert("delete", "magazine");
         if (this.confirmResult) {
           axios
@@ -284,20 +266,24 @@ export default {
         }
       });
     },
-    getLimit(event) {
-      this.getcommonLimit(event.target.value);
-      this.getMagazineList();
-    },
-    changePage(e) {
-      this.changecommonPage(e);
-      this.getMagazineList();
-    },
     getFilter() {
       this.filter.page = DefaultConstants.firstPage;
       this.getMagazineList();
     },
+    getSort($column) {
+      this.getcommonSort($column);
+      this.getMagazineList();
+    },
+    getLimit(event) {
+      this.getcommonLimit(event.target.value);
+      this.getMagazineList();
+    },
     getStatus(status) {
       this.filter.status = status;
+      this.getMagazineList();
+    },
+    changePage(e) {
+      this.changecommonPage(e);
       this.getMagazineList();
     },
   },

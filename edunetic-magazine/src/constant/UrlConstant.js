@@ -1,6 +1,6 @@
-let BaseUrl= "http://localhost:8080";
+let BaseUrl= "https://1bc64784ee4b.ngrok.io";
 export  const UrlConstants = Object.freeze({
-    BaseUrl: "http://localhost:8080",
+    BaseUrl: BaseUrl,
     Login: BaseUrl + "/login",
     Logout: BaseUrl + "/users/logout",
     User: BaseUrl + "/users",
@@ -10,5 +10,5 @@ export  const UrlConstants = Object.freeze({
     Comment:  BaseUrl + "/comments",
     Magazine:  BaseUrl + "/magazines",
     AvatarSource: BaseUrl + "/file/users/",
-    ContributionSource: "http://localhost:8080/file/contributions/",
+    SendMail: BaseUrl + "/mail/forgotpassword?"
 });

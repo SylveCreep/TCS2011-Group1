@@ -43,39 +43,44 @@
     <div class="scrollbar-sidebar">
       <div class="app-sidebar__inner">
         <ul class="vertical-nav-menu">
-          <li class="app-sidebar__heading">Hello {{loginUser.fullName}}</li>
+          <li class="app-sidebar__heading">Hello {{ loginUser.fullName }}</li>
           <li>
             <router-link to="/">
               <i class="metismenu-icon fas fa-th"></i>
               <p>Dashboard</p>
             </router-link>
           </li>
-          <li v-if="loginUser.roleId !== 4"> <!--Only studnet cannot access this route-->
+          <li v-if="loginUser.roleId !== 4">
+            <!--Only studnet cannot access this route-->
             <router-link to="/users">
               <i class="metismenu-icon fas fa-th"></i>
               <p v-on:click="deleteUserKey()">User List</p>
             </router-link>
           </li>
-          <li v-if="loginUser.roleId === 1"> <!--Only admin can access this route--> 
-            <router-link to="/roles" > 
+          <li v-if="loginUser.roleId === 1">
+            <!--Only admin can access this route-->
+            <router-link to="/roles">
               <i class="metismenu-icon fas fa-th"></i>
               <p>Role List</p>
             </router-link>
           </li>
-          <li v-if="loginUser.roleId === 2"> <!--Only MM can access this route-->
+          <li v-if="loginUser.roleId === 2">
+            <!--Only MM can access this route-->
             <router-link to="/faculties">
               <i class="metismenu-icon fas fa-th"></i>
               <p>Faculty List</p>
             </router-link>
           </li>
           <li>
-            <router-link to="/contributions" v-if="loginUser.roleId !== 1"> <!--Only admin cannot access this route-->
+            <router-link to="/contributions" v-if="loginUser.roleId !== 1">
+              <!--Only admin cannot access this route-->
               <i class="metismenu-icon fas fa-th"></i>
-              <p>Contribution List</p>
+              <p v-on:click="deleteUserKey()">Contribution List</p>
             </router-link>
           </li>
           <li>
-           <router-link to="/magazines" v-if="loginUser.roleId !== 1"> <!--Only admin cannot access this route-->
+            <router-link to="/magazines" v-if="loginUser.roleId !== 1">
+              <!--Only admin cannot access this route-->
               <i class="metismenu-icon fas fa-th"></i>
               <p>Magazine List</p>
             </router-link>
@@ -104,13 +109,16 @@ export default {
   },
   data() {
     return {
-      loginUser: {}
-    }
+      loginUser: {},
+    };
   },
   methods: {
     deleteUserKey() {
       if (this.$cookies.isKey("facultyStudent")) {
         this.$cookies.remove("facultyStudent");
+      }
+      if (this.$cookies.isKey("studentContribution")) {
+        this.$cookies.remove("studentContribution");
       }
     },
     getLoginUser() {
@@ -118,7 +126,7 @@ export default {
         .get(UrlConstants.User + "/" + this.$cookies.get("id"))
         .then((res) => {
           this.loginUser = res.data.data;
-          this.$cookies.set("loginUser", res.data.data, "30min")
+          this.$cookies.set("loginUser", res.data.data, "30min");
         });
     },
   },

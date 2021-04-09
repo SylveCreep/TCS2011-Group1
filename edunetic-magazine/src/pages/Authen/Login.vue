@@ -50,7 +50,7 @@ export default {
           let jwt = this.$cookies.set("jwt", r.data.data.token, "30min");
           this.$cookies.set("id", r.data.data.id, "30min");
           this.$emit("user-login", jwt);
-          this.$router.push("/users");
+          this.$router.push("/uxxxx");
         })
         .catch((e) => {
           this.error = "Wrong user or password";

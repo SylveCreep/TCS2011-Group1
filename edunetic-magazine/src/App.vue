@@ -3,6 +3,7 @@
     class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
   >
     <the-navbar v-if="this.token !== null" v-on:user-logout="userLogout"></the-navbar>
+    <chat-box v-if="this.token !== null"></chat-box>
     <div class="app-main">
       <!--Sidebar section -->
       <the-sidebar v-if="this.token !== null" v-on:user-logout="userLogout"></the-sidebar>
@@ -29,6 +30,7 @@ import axios from "axios";
 import TheSidebar from "./components/TheSidebar";
 import TheNavbar from "./components/TheNavbar";
 import TheFooter from "./components/TheFooter";
+import ChatBox from './components/ChatBox.vue';
 
 export default {
   name: "Layout",
@@ -36,6 +38,7 @@ export default {
     TheSidebar,
     TheNavbar,
     TheFooter,
+    ChatBox,
   },
   data() {
     return {
