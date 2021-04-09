@@ -43,4 +43,6 @@ public interface UserService {
 
     LoginUser getLoginJwtTokenByFacebook(String accessToken);
 
+    Boolean changePassword(ChangePasswordRequest request);
+
 }

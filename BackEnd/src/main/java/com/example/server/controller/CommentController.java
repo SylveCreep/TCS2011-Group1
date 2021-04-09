@@ -142,7 +142,7 @@ public class CommentController {
     }
 
     @PostMapping(value = "/send", consumes = "application/json", produces = "application/json")
-    public void sendComment(@RequestBody CommentMessageResponse commentMessage) {
+    public ResponseEntity<?> sendComment(@RequestBody CommentMessageResponse commentMessage) {
         try {
             User user = userDao.findExistedUserByEmail(getEmail());
             commentMessage.setUserId(user.getId());
@@ -156,13 +156,16 @@ public class CommentController {
             Comment commentEntity = commentService.saveComment(comment);
             commentMessage.setId(commentEntity.getId());
             kafkaCommentTemplate.send(KAFKA_TOPIC_COMMENT, commentMessage);
+            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, "Send comment successfully",
+                    HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Send comment fail",
+                    HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping(value = "/update", consumes = "application/json", produces = "application/json")
-    public void updateComment(@RequestBody CommentMessageResponse commentMessage) {
+    public ResponseEntity<?> updateComment(@RequestBody CommentMessageResponse commentMessage) {
         try {
             User user = userDao.findExistedUserByEmail(getEmail());
             commentMessage.setUserId(user.getId());
@@ -175,13 +178,16 @@ public class CommentController {
             comment.setUserId(commentMessage.getUserId());
             commentService.updateComment(comment);
             kafkaCommentTemplate.send(KAFKA_TOPIC_COMMENT, commentMessage);
+            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, "Update comment successfully",
+                    HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update comment fail",
+                    HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping(value = "/delete", consumes = "application/json", produces = "application/json")
-    public void deleteComment(@RequestBody CommentMessageResponse commentMessage) {
+    public ResponseEntity<?> deleteComment(@RequestBody CommentMessageResponse commentMessage) {
         try {
             User user = userDao.findExistedUserByEmail(getEmail());
             commentMessage.setUserId(user.getId());
@@ -194,8 +200,11 @@ public class CommentController {
             comment.setUserId(commentMessage.getUserId());
             commentService.deleteComment(commentMessage.getId());
             kafkaCommentTemplate.send(KAFKA_TOPIC_COMMENT, commentMessage);
+            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, "Delete comment successfully",
+                    HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Delete comment fail",
+                    HttpStatus.BAD_REQUEST);
         }
     }
 }

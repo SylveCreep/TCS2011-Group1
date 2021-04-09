@@ -20,6 +20,7 @@ import com.example.server.dto.FacebookUserDto;
 import com.example.server.entity.Faculty;
 import com.example.server.entity.Role;
 import com.example.server.entity.User;
+import com.example.server.model.request.ChangePasswordRequest;
 import com.example.server.model.request.CreateAccount;
 import com.example.server.model.request.LoginUser;
 import com.example.server.model.request.PagingRequest;
@@ -83,6 +84,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
+
 
     @Autowired
     private RestTemplate restTemplate;
@@ -432,6 +434,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         loginUser.setId(user.getId());
         loginUser.setEmail(user.getEmail());
         return loginUser;
+    }
+
+    @Override
+    public Boolean changePassword(ChangePasswordRequest request) {
+        User user = userDao.findExistedUserByEmail(request.getEmail());
+        if(bcryptEncoder.matches(request.getPassword(), user.getPassword()) == true){
+            user.setPassword(bcryptEncoder.encode(request.getNew_password()));
+            userDao.save(user);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
