@@ -2,6 +2,8 @@ package com.example.server.model.response;
 
 import static com.example.server.constant.Constant.*;
 
+import java.util.Date;
+
 public class CommentMessageResponse {
     private Long id;
     private String content;
@@ -13,6 +15,7 @@ public class CommentMessageResponse {
     private Long contributionId;
     private Integer is_deleted = NOTDELETED;
     private String avatar;
+    private Date createdAt = new Date();
 
     public String getContent() {
         return content;
@@ -92,6 +95,14 @@ public class CommentMessageResponse {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
 }

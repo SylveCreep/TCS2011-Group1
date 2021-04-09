@@ -32,6 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.example.server.constant.Constant.*;
 import static com.example.server.util.SessionUtils.*;
 
+import java.util.Date;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/comments")
@@ -155,6 +157,8 @@ public class CommentController {
             comment.setUserId(commentMessage.getUserId());
             Comment commentEntity = commentService.saveComment(comment);
             commentMessage.setId(commentEntity.getId());
+            commentMessage.setAvatar(user.getAvatar());
+            commentMessage.setCreatedAt(new Date());
             kafkaCommentTemplate.send(KAFKA_TOPIC_COMMENT, commentMessage);
             return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, "Send comment successfully",
                     HttpStatus.OK);
@@ -177,6 +181,8 @@ public class CommentController {
             comment.setParentId(commentMessage.getParentId());
             comment.setUserId(commentMessage.getUserId());
             commentService.updateComment(comment);
+            commentMessage.setAvatar(user.getAvatar());
+            commentMessage.setCreatedAt(new Date());
             kafkaCommentTemplate.send(KAFKA_TOPIC_COMMENT, commentMessage);
             return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, "Update comment successfully",
                     HttpStatus.OK);
@@ -199,6 +205,8 @@ public class CommentController {
             comment.setParentId(commentMessage.getParentId());
             comment.setUserId(commentMessage.getUserId());
             commentService.deleteComment(commentMessage.getId());
+            commentMessage.setAvatar(user.getAvatar());
+            commentMessage.setCreatedAt(new Date());
             kafkaCommentTemplate.send(KAFKA_TOPIC_COMMENT, commentMessage);
             return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, "Delete comment successfully",
                     HttpStatus.OK);
