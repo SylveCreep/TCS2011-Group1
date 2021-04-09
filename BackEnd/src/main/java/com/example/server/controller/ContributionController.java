@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import com.example.server.util.ResponseUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,12 +20,15 @@ import static com.example.server.constant.Constant.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.example.server.dao.ContributionDao;
+import com.example.server.entity.Contribution;
 import com.example.server.model.request.ContributionRequest;
 import com.example.server.model.response.ContributionPagingResponse;
 import com.example.server.model.response.ContributionResponse;
@@ -44,6 +48,9 @@ public class ContributionController {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private ContributionDao contributionDao;
 
     @PreAuthorize("hasRole('R0002') or hasRole('R0003') or hasRole('R0004')")
     @PostMapping(value = "/filter")
@@ -70,13 +77,12 @@ public class ContributionController {
     public ResponseEntity<?> createContribution(ContributionRequest request, @RequestPart("file") MultipartFile file,
             HttpServletRequest httpServletRequest) {
         try {
-            // HashMap<String, Object> validateResult =
-            // responseUtils.validateCreateAccountRequest(user, file, 0);
-            // Object validateRes = validateResult.get("result");
-            // if(Integer.parseInt(validateRes.toString()) == -1){
-            // return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE,"Create
-            // user failed",validateResult, HttpStatus.BAD_REQUEST);
-            // }
+            HashMap<String, Object> validateResult = responseUtils.validateContributionRequest(request, file, 0);
+            Object validateRes = validateResult.get("result");
+            if (Integer.parseInt(validateRes.toString()) == -1) {
+                return responseUtils.getActionResponseEntity("NULL", FAILURE, "Create contribution failed",
+                        validateResult, HttpStatus.BAD_REQUEST);
+            }
             if (file == null) {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Create contribution failed, missing file",
                         HttpStatus.BAD_REQUEST);
@@ -98,13 +104,6 @@ public class ContributionController {
     public ResponseEntity<?> update(ContributionRequest request, @RequestParam("file") MultipartFile file,
             HttpServletRequest httpServletRequest) {
         try {
-            // HashMap<String, Object> validateResult =
-            // responseUtils.validateCreateAccountRequest(userDto, file, 1);
-            // Object validateRes = validateResult.get("result");
-            // if(Integer.parseInt(validateRes.toString()) == -1){
-            // return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE,"Update
-            // user failed",validateResult, HttpStatus.BAD_REQUEST);
-            // }
             if (request.getId() == null) {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Must has contribution id",
                         HttpStatus.BAD_REQUEST);
@@ -148,11 +147,16 @@ public class ContributionController {
     @DeleteMapping(value = "/{id}", consumes = { "text/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
         try {
-            if (id == null) {
+            if(id == null) {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Must has contribution id",
                         HttpStatus.BAD_REQUEST);
             }
-            Boolean is_deleted = contributionService.deleted(id);
+            Contribution contribution = contributionDao.findExistedContributionById(id);
+            if(contribution == null){
+                return responseUtils.getResponseEntity("NULL", FAILURE, "Contribution not existed",
+                        HttpStatus.BAD_REQUEST);
+            }
+            Boolean is_deleted = contributionService.deleted(contribution);
             if (is_deleted == false) {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Delete contribution fail", HttpStatus.OK);
             }
@@ -190,25 +194,14 @@ public class ContributionController {
                             HttpStatus.BAD_REQUEST);
                 }
                 HttpHeaders headerContribution = new HttpHeaders();
-                headerContribution.add(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=contribution_" + response.getCode() + "." + "zip");
-
-                File fileContri = fileService.loadContributionPath(response.getCode(), response.getExtension());
-                ByteArrayOutputStream baosContri = new ByteArrayOutputStream();
-                ZipOutputStream zipOutContri = new ZipOutputStream(baosContri);
-                FileInputStream fisContri = new FileInputStream(fileContri);
-                ZipEntry zipEntryContri = new ZipEntry(fileContri.getName());
-                zipOutContri.putNextEntry(zipEntryContri);
-                byte[] bytesContri = new byte[1024];
-                int lengthContri;
-                while ((lengthContri = fisContri.read(bytesContri)) >= 0) {
-                    zipOutContri.write(bytesContri, 0, lengthContri);
-                }
-                zipOutContri.close();
-                fisContri.close();
-                baosContri.close();
-                return ResponseEntity.ok().headers(headerContribution)
-                        .contentType(MediaType.parseMediaType("application/zip")).body(baosContri.toByteArray());
+                headerContribution.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=contribution_"+response.getCode()+"."+response.getExtension());
+    
+                File fileContribution = fileService.loadContributionPath(response.getCode(), response.getExtension());
+                InputStreamResource resource = new InputStreamResource(new FileInputStream(fileContribution));
+                return ResponseEntity.ok()
+                        .headers(headerContribution)
+                        .contentType(MediaType.parseMediaType("application/octet-stream"))
+                        .body(resource);
             case 2:
                 List<File> filesUser = fileService.loadContributionPathsByUserIdOrMagazineId(userId, 0);
                 HttpHeaders headerUser = new HttpHeaders();

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.example.server.model.response.ChatMessageResponse;
+import com.example.server.model.response.CommentMessageResponse;
 
 import static com.example.server.constant.Constant.*;
 
@@ -25,14 +26,26 @@ import static com.example.server.constant.Constant.*;
 @Configuration
 public class ListenerConfig {
     @Bean
-    ConcurrentKafkaListenerContainerFactory<String, ChatMessageResponse> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ChatMessageResponse> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    ConcurrentKafkaListenerContainerFactory<String, CommentMessageResponse> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, CommentMessageResponse> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 
     @Bean
-    public ConsumerFactory<String, ChatMessageResponse> consumerFactory() {
+    public ConsumerFactory<String, CommentMessageResponse> consumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfigurations(), new StringDeserializer(), new JsonDeserializer<>(CommentMessageResponse.class));
+    }
+
+    @Bean
+    ConcurrentKafkaListenerContainerFactory<String, ChatMessageResponse> kafkaListenerContainerChatMessageFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, ChatMessageResponse> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerChatMessageFactory());
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, ChatMessageResponse> consumerChatMessageFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfigurations(), new StringDeserializer(), new JsonDeserializer<>(ChatMessageResponse.class));
     }
 

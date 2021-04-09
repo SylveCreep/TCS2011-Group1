@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.example.server.constant.Constant.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.example.server.dao.FacultyDao;
@@ -70,12 +71,15 @@ public class FacultyController {
 
     @PreAuthorize("hasRole('R0002')")
     @PatchMapping(consumes = { "text/plain", "application/*" }, produces = "application/json")
-    public ResponseEntity<?> update(@RequestBody FacultyRequest faculty) {
+    public ResponseEntity<?> update(@RequestBody FacultyRequest facultyRequest) {
         try {
-            if (faculty.getFacultyId() == null) {
-                return responseUtils.getResponseEntity("NULL", FAILURE, "Must has faculty id", HttpStatus.BAD_REQUEST);
+            HashMap<String, Object> validateResult = responseUtils.validateFacultyRequest(facultyRequest, 1);
+            Object validateRes = validateResult.get("result");
+            if (Integer.parseInt(validateRes.toString()) == -1) {
+                return responseUtils.getActionResponseEntity("NULL", FAILURE, "Create faculty failed",
+                        validateResult, HttpStatus.BAD_REQUEST);
             }
-            Boolean facult = facultyService.update(faculty);
+            Boolean facult = facultyService.update(facultyRequest);
             if (facult == null) {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Update faculty fail", HttpStatus.BAD_REQUEST);
             }
@@ -89,9 +93,11 @@ public class FacultyController {
     @PostMapping
     public ResponseEntity<?> createFaculty(@RequestBody FacultyRequest facultyRequest) {
         try {
-            if (facultyRequest.getFacultyName().isBlank()) {
-                return responseUtils.getResponseEntity("NULL", FAILURE, "Create faculty failed",
-                        HttpStatus.BAD_REQUEST);
+            HashMap<String, Object> validateResult = responseUtils.validateFacultyRequest(facultyRequest, 0);
+            Object validateRes = validateResult.get("result");
+            if (Integer.parseInt(validateRes.toString()) == -1) {
+                return responseUtils.getActionResponseEntity("NULL", FAILURE, "Create faculty failed",
+                        validateResult, HttpStatus.BAD_REQUEST);
             }
             Boolean isSuccess = facultyService.create(facultyRequest);
             if (isSuccess == false) {
@@ -124,7 +130,7 @@ public class FacultyController {
     @PreAuthorize("hasRole('R0002')")
     @GetMapping(value = "/getFacultyHasNoMc", consumes = { "text/plain",
             "application/*" }, produces = "application/json")
-    public ResponseEntity<?> getFacultyById() {
+    public ResponseEntity<?> getFacultyHasNoMc() {
         try {
             List<FacultyResponse> facultyResponse = facultyService.getFacultyHasNoMc();
             if (facultyResponse == null) {

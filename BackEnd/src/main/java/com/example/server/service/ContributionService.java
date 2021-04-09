@@ -12,7 +12,7 @@ public interface ContributionService {
 
     ContributionResponse getContributionById(Long id);
 
-    Boolean deleted(Long id);
+    Boolean deleted(Contribution contribution);
 
     Boolean createContribution(ContributionRequest contribution, MultipartFile file);
 

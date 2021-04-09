@@ -6,20 +6,30 @@ import java.util.Date;
 
 public class ChatMessageResponse {
     private Long id;
+    private Long fromUserId;
+    private String userName;
+    private Long toUserId;
+    private String toUserName;
     private String content;
-    private String fileLink;
-    private String iconLink;
-    private String username;
-    private MessageType messageType;
-    private Long parentId;
-    private Long userId;
-    private Long contributionId;
-    private Integer is_deleted = NOTDELETED;
     private String avatar;
-    private Date date;
+    private Integer is_deleted = NOTDELETED;
+    private Date createdAt;
+    private Date updateAt;
 
-    public enum MessageType {
-        CHAT, JOIN, LEAVE
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getContent() {
@@ -30,68 +40,12 @@ public class ChatMessageResponse {
         this.content = content;
     }
 
-    public String getFileLink() {
-        return fileLink;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setFileLink(String fileLink) {
-        this.fileLink = fileLink;
-    }
-
-    public String getIconLink() {
-        return iconLink;
-    }
-
-    public void setIconLink(String iconLink) {
-        this.iconLink = iconLink;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public MessageType getMessageType() {
-        return messageType;
-    }
-
-    public void setMessageType(MessageType messageType) {
-        this.messageType = messageType;
-    }
-
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getContributionId() {
-        return contributionId;
-    }
-
-    public void setContributionId(Long contributionId) {
-        this.contributionId = contributionId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public Integer getIs_deleted() {
@@ -102,20 +56,61 @@ public class ChatMessageResponse {
         this.is_deleted = is_deleted;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setAvatar(String avatar) {
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Long getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(Long toUserId) {
+        this.toUserId = toUserId;
+    }
+
+    public ChatMessageResponse() {
+    }
+
+    public Date getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(Date updateAt) {
+        this.updateAt = updateAt;
+    }
+
+    public String getToUserName() {
+        return toUserName;
+    }
+
+    public void setToUserName(String toUserName) {
+        this.toUserName = toUserName;
+    }
+
+    public Long getFromUserId() {
+        return fromUserId;
+    }
+
+    public void setFromUserId(Long fromUserId) {
+        this.fromUserId = fromUserId;
+    }
+
+    public ChatMessageResponse(Long id, Long fromUserId, String userName, Long toUserId, String toUserName,
+            String content, String avatar, Integer is_deleted, Date createdAt, Date updateAt) {
+        this.id = id;
+        this.fromUserId = fromUserId;
+        this.userName = userName;
+        this.toUserId = toUserId;
+        this.toUserName = toUserName;
+        this.content = content;
         this.avatar = avatar;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
+        this.is_deleted = is_deleted;
+        this.createdAt = createdAt;
+        this.updateAt = updateAt;
     }
 
 }

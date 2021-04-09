@@ -82,11 +82,7 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public Boolean update(FacultyRequest facultyRequest) {
         try {
-            Optional<Faculty> faclOptional = facultyDao.findById(facultyRequest.getFacultyId());
-            Faculty facl = faclOptional.get();
-            if (facl.getIs_deleted() == 1) {
-                return false;
-            }
+            Faculty facl = facultyDao.findExistedFacultyById(facultyRequest.getFacultyId());
             facl.setName(facultyRequest.getFacultyName());
             facultyDao.save(facl);
             return true;
