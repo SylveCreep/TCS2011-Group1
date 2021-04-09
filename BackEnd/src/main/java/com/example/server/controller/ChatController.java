@@ -9,6 +9,8 @@ import com.example.server.service.CommentService;
 
 import static java.lang.String.format;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -50,6 +52,8 @@ public class ChatController {
             comment.setUserId(commentMessage.getUserId());
             Comment commentEntity = commentService.saveComment(comment);
             commentMessage.setId(commentEntity.getId());
+            commentMessage.setAvatar(user.getAvatar());
+            commentMessage.setDate(new Date());
             kafkaTemplate.send(KAFKA_TOPIC_COMMENT, commentMessage);
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,6 +73,8 @@ public class ChatController {
             comment.setParentId(commentMessage.getParentId());
             comment.setUserId(commentMessage.getUserId());
             commentService.updateComment(comment);
+            commentMessage.setAvatar(user.getAvatar());
+            commentMessage.setDate(new Date());
             kafkaTemplate.send(KAFKA_TOPIC_COMMENT, commentMessage);
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,6 +94,8 @@ public class ChatController {
             comment.setParentId(commentMessage.getParentId());
             comment.setUserId(commentMessage.getUserId());
             commentService.deleteComment(commentMessage.getId());
+            commentMessage.setAvatar(user.getAvatar());
+            commentMessage.setDate(new Date());
             kafkaTemplate.send(KAFKA_TOPIC_COMMENT, commentMessage);
         } catch (Exception e) {
             e.printStackTrace();

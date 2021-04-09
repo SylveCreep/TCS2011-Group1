@@ -1,5 +1,7 @@
 package com.example.server.model.response;
 
+import java.util.Date;
+
 import com.example.server.entity.Contribution;
 import com.example.server.entity.User;
 
@@ -17,6 +19,10 @@ public class CommentResponse {
     private String code;
 
     private Long parentId;
+
+    private Date createdDate;
+
+    private String avatar;
 
     public Long getId() {
         return id;
@@ -72,5 +78,21 @@ public class CommentResponse {
 
     public void setContributionId(Long contributionId) {
         this.contributionId = contributionId;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

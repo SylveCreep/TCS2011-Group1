@@ -151,6 +151,8 @@ public class CommentServiceImpl implements CommentService {
                 commentResponse.setUserName(comment.getUser() == null ? null : comment.getUser().getFullName());
                 commentResponse
                         .setParentId(comment.getParentComment() == null ? null : comment.getParentComment().getId());
+                commentResponse.setAvatar(comment.getUser() == null ? null : comment.getUser().getAvatar());
+                commentResponse.setCreatedDate(comment.getCreated_at());
                 listResponse.add(commentResponse);
             }
             object.setLastPage(lastPage);
@@ -183,6 +185,8 @@ public class CommentServiceImpl implements CommentService {
                 commentResponse
                         .setParentId(comment.getParentComment() == null ? null : comment.getParentComment().getId());
                 commentResponse.setUserName(comment.getUser() == null ? null : comment.getUser().getFullName());
+                commentResponse.setAvatar(comment.getUser() == null ? null : comment.getUser().getAvatar());
+                commentResponse.setCreatedDate(comment.getCreated_at());
                 listResponse.add(commentResponse);
             }
             object.add(listResponse);

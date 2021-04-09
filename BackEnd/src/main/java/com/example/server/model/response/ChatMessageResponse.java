@@ -2,6 +2,8 @@ package com.example.server.model.response;
 
 import static com.example.server.constant.Constant.*;
 
+import java.util.Date;
+
 public class ChatMessageResponse {
     private Long id;
     private String content;
@@ -14,6 +16,7 @@ public class ChatMessageResponse {
     private Long contributionId;
     private Integer is_deleted = NOTDELETED;
     private String avatar;
+    private Date date;
 
     public enum MessageType {
         CHAT, JOIN, LEAVE
@@ -105,6 +108,14 @@ public class ChatMessageResponse {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
 }
