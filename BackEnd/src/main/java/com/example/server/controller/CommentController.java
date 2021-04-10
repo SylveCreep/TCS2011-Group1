@@ -176,10 +176,11 @@ public class CommentController {
             commentMessage.setUsername(user.getFullName());
 
             CreateComment comment = new CreateComment();
+            comment.setId(commentMessage.getId());
             comment.setContent(commentMessage.getContent());
             comment.setContributionId(commentMessage.getContributionId());
             comment.setParentId(commentMessage.getParentId());
-            comment.setUserId(commentMessage.getUserId());
+            comment.setUserId(user.getId());
             commentService.updateComment(comment);
             commentMessage.setAvatar(user.getAvatar());
             commentMessage.setCreatedAt(new Date());

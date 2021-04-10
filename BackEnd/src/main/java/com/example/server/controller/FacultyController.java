@@ -33,7 +33,7 @@ public class FacultyController {
     @Autowired
     private ResponseUtils responseUtils;
 
-    @PreAuthorize("hasRole('R0002') or hasRole('R0003') or hasRole('R0004')")
+    @PreAuthorize("hasRole('R0002') or hasRole('R0003') or hasRole('R0004') or hasRole('R0001')")
     @PostMapping(value = "/filter")
     public ResponseEntity<?> showFacultyBySearch(@RequestBody FacultyRequest facultyRequest) {
         try {
