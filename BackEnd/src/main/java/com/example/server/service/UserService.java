@@ -10,6 +10,7 @@ import com.example.server.model.response.TotalCountResponse;
 import com.example.server.model.response.UserLastPageResponse;
 import com.example.server.model.response.UserListResponse;
 import com.example.server.model.response.UserResponse;
+import com.example.server.model.response.UserWithMostContributionResponse;
 
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,5 +47,7 @@ public interface UserService {
     Boolean changePassword(ChangePasswordRequest request);
 
     TotalCountResponse getTotalCountResponse();
+
+    List<UserWithMostContributionResponse> getUserWithMostContribution();
 
 }

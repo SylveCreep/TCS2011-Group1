@@ -30,6 +30,7 @@ import com.example.server.model.request.UserSearchRequest;
 import com.example.server.model.response.TotalCountResponse;
 import com.example.server.model.response.UserLastPageResponse;
 import com.example.server.model.response.UserResponse;
+import com.example.server.model.response.UserWithMostContributionResponse;
 import com.example.server.service.FileService;
 import com.example.server.service.RoleService;
 import com.example.server.service.UserService;
@@ -494,6 +495,40 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public List<UserWithMostContributionResponse> getUserWithMostContribution() {
+        int limit = 5;
+        List<Object> userWithMostContributionList = userDao.getTopUserWithMostContributions(limit);
+        List<UserWithMostContributionResponse> userWithMostContributionResponseList = new ArrayList<>();
+        for (Object object : userWithMostContributionList) {
+            UserWithMostContributionResponse userWithMostContributionResponse = new UserWithMostContributionResponse();
+            Object[] user = (Object[]) object;
+            if (((Object[]) user)[0] != null) {
+                userWithMostContributionResponse.setCode((String) ((Object[]) user)[0]);
+            }
+            if (((Object[]) user)[1] != null) {
+                userWithMostContributionResponse.setStudentId(Long.parseLong(((Object[]) user)[1].toString()));
+            }
+            if (((Object[]) user)[2] != null) {
+                userWithMostContributionResponse.setStudentName((String) ((Object[]) user)[2]);
+            }
+            if (((Object[]) user)[3] != null) {
+                userWithMostContributionResponse.setAvatar((String) ((Object[]) user)[3]);
+            }
+            if (((Object[]) user)[4] != null) {
+                userWithMostContributionResponse.setFacultyName((String) ((Object[]) user)[4]);
+            }
+            if (((Object[]) user)[5] != null) {
+                userWithMostContributionResponse.setFacultyId(Long.parseLong(((Object[]) user)[5].toString()));
+            }
+            if (((Object[]) user)[6] != null) {
+                userWithMostContributionResponse.setTotalContribution(Long.parseLong(((Object[]) user)[6].toString()));
+            }
+            userWithMostContributionResponseList.add(userWithMostContributionResponse);
+        }
+        return userWithMostContributionResponseList;
     }
 
 }
