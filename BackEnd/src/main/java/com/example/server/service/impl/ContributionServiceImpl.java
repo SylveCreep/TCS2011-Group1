@@ -115,7 +115,7 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     @Override
-    public Boolean createContribution(ContributionRequest contribution, MultipartFile file) {
+    public ContributionResponse createContribution(ContributionRequest contribution, MultipartFile file) {
         try {
             Contribution nContribution = new Contribution();
             String email = getEmail();
@@ -131,13 +131,32 @@ public class ContributionServiceImpl implements ContributionService {
             nContribution.setLinkSource("contribution_" + nContribution.getCode() + "." + fileResponse.getExtension());
             nContribution.setExtension(fileResponse.getExtension());
             try {
-                contributionDao.save(nContribution);
-                return true;
+                Contribution contributionResult = contributionDao.save(nContribution);
+                ContributionResponse contributionRes = new ContributionResponse();
+                contributionRes.setId(contribution.getId());
+                contributionRes.setStudentId(contributionResult.getUser().getId());
+                contributionRes.setFacultyId(contributionResult.getFaculty().getId());
+                contributionRes.setFacultyName(contributionResult.getFaculty().getName());
+                contributionRes.setStudentName(contributionResult.getUser().getFullName());
+                contributionRes
+                        .setCheckedBy(contributionResult.getCheckedBy() == null ? null : contributionResult.getCheckedBy().getId());
+                contributionRes.setCheckedByName(
+                        contribution.getCheckedBy() == null ? "" : contributionResult.getCheckedBy().getFullName());
+                contributionRes.setCreatedAt(contributionResult.getCreated_at() == null ? null
+                        : convertDateToFormat(contributionResult.getCreated_at().toString()));
+                contributionRes.setStatus(contributionResult.getIsApproved());
+                contributionRes
+                        .setMagazineId(contributionResult.getMagazine() == null ? null : contributionResult.getMagazine().getId());
+                contributionRes.setLinkSource(contributionResult.getLinkSource());
+                contributionRes.setCode(contributionResult.getCode());
+                contributionRes.setExtension(contributionResult.getExtension());
+                contributionRes.setEmail(contributionResult.getUser().getEmail());
+                return contributionRes;
             } catch (Exception e) {
-                return false;
+                return null;
             }
         } catch (Exception e) {
-            return false;
+            return null;
         }
     }
 

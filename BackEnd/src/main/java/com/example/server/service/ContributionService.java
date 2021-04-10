@@ -14,7 +14,7 @@ public interface ContributionService {
 
     Boolean deleted(Contribution contribution);
 
-    Boolean createContribution(ContributionRequest contribution, MultipartFile file);
+    ContributionResponse createContribution(ContributionRequest contribution, MultipartFile file);
 
     Boolean updateContribution(ContributionRequest contribution, MultipartFile file, int withFile);
 
