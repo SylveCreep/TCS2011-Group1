@@ -1,4 +1,4 @@
-let BaseUrl= "https://1bc64784ee4b.ngrok.io";
+let BaseUrl= "https://010c3874a791.ngrok.io";
 export  const UrlConstants = Object.freeze({
     BaseUrl: BaseUrl,
     Login: BaseUrl + "/login",

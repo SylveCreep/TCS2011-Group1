@@ -1,7 +1,7 @@
 <template>
   <div class="app-main__inner" style="background-color: #fff">
     <div class="row">
-      <p class="comment-total">Comments (3):</p>
+      <p class="comment-total">Comments ({{totalComment}}):</p>
     </div>
     <div class="comment-list">
       <div
@@ -22,7 +22,7 @@
           <div class="comment-detail col-10">
             <div class="comment-user-name">
               {{ comment.userName }}
-              <span class="comment-time">Few second ago</span>
+              <span class="comment-time">{{calculateDate(comment.createdDate)}}</span>
             </div>
             <div class="comment-text d-flex p-2">
               <span>
@@ -83,7 +83,7 @@
               <div class="comment-detail col-10">
                 <div class="comment-user-name">
                   {{ ch.userName }}
-                  <span class="comment-time">Few second ago</span>
+                  <span class="comment-time">{{calculateDate(ch.createdDate)}}</span>
                 </div>
                 <div class="comment-text d-flex p-2">
                   <span>
@@ -209,7 +209,7 @@ import Stomp from "webstomp-client";
 import { commonHelper } from "@/helper/commonHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
 import axios from "axios";
-
+import moment from 'moment';
 export default {
   name: "CommentList",
   mixins: [commonHelper],
@@ -219,11 +219,11 @@ export default {
       comment: {},
       parent_comments: [],
       children_comments: [],
-      editParentShow: false
+      editParentShow: false,
+      totalComment: 0
     };
   },
   created() {
-
     this.linkSource = UrlConstants.AvatarSource;
     this.connect();
     this.getCommentList();
@@ -236,17 +236,48 @@ export default {
       axios
         .post(UrlConstants.Comment + "/filter", this.filter)
         .then((response) => {
-          let comment_lists = response.data.data;
+          let comment_lists = response.data.data.list;
           this.parent_comments = comment_lists.filter(
             (e) => e.parentId === null
           );
           this.children_comments = comment_lists.filter(
             (e) => e.parentId !== null
           );
+          this.totalComment = response.data.data.totalElements
         })
         .catch((error) => {
           this.errors = error.response.data;
         });
+    },
+    calculateDate(time) {
+      let commentTime = moment(time)
+      let now = moment(new Date());
+      let different= moment.duration(now.diff(commentTime))._data
+
+      //less than 1 minutes
+      if (different.minutes == 0 && different.hours == 0 && different.days == 0) {
+        commentTime= "few seconds ago"
+      } 
+
+      //less than 1 hour
+      else if (different.minutes > 0 && different.hours == 0 && different.days == 0) {
+        commentTime = different.minutes +" minutes ago"
+      } 
+
+      //less than 1 day
+      else if (different.hours > 0 && different.days == 0) {
+        commentTime = different.hours + " hours ago"
+
+      //less than 10 days
+      } 
+      else if (0 < different.days <= 7) {
+          commentTime = different.days + " days ago";
+      }
+      //more than 10 days
+      else {
+          commentTime = moment(time).format('MM/DD/YYYY')
+      }       
+      return commentTime;
     },
     addComment() {
       let data = {
@@ -254,6 +285,7 @@ export default {
         content:  document.querySelector("#comment-input-box").value,
       };
       axios.post(UrlConstants.Comment + "/send", data);
+      document.querySelector("#comment-input-box").value = ""
       this.getCommentList()
     },
     showEditCommentById(commentId,parentId, content) {
