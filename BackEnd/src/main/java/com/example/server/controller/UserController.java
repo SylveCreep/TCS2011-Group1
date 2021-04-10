@@ -13,6 +13,7 @@ import com.example.server.model.request.*;
 import com.example.server.model.response.TotalCountResponse;
 import com.example.server.model.response.UserLastPageResponse;
 import com.example.server.model.response.UserResponse;
+import com.example.server.model.response.UserWithMostContributionResponse;
 import com.example.server.service.BanService;
 import com.example.server.service.FileService;
 import com.example.server.service.UserService;
@@ -282,6 +283,19 @@ public class UserController {
                     "Get total values successfully", HttpStatus.OK);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get total values failed",
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/getTopStudent")
+    public ResponseEntity<?> getTopStudent() {
+        try {
+            List<UserWithMostContributionResponse> userWithMostContributionResponseList = userService
+                    .getUserWithMostContribution();
+            return responseUtils.getResponseEntity(userWithMostContributionResponseList, Constant.SUCCESS,
+                    "Get top student successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get top student failed",
                     HttpStatus.BAD_REQUEST);
         }
     }
