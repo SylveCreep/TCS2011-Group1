@@ -218,7 +218,7 @@ public class Seeding implements CommandLineRunner {
                 magazine.setCode("M" + String.format("%04d", queryCheck.GetHighestId("magazine")));
                 magazine.setTheme(facultyDao.getNonDelFaculty().get(idFaculty).getName() + ": " + idMagazineInc);
                 magazine.setFinished_at(getDateIncrease(10));
-                magazine.setPublished_at(getDateIncrease(10));
+                magazine.setPublished_at(getDateIncrease(20));
 
             magazineDao.save(magazine);
             return true;
