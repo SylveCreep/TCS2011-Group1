@@ -64,17 +64,15 @@ public class CommentServiceImpl implements CommentService {
     public CommentResponse findCommentById(Long id) {
         Comment comment = commentDao.findExistedCommentById(id);
         CommentResponse commentResponse = new CommentResponse();
-                commentResponse.setId(comment.getId());
-                commentResponse.setContent(comment.getContent() == null ? "" : comment.getContent());
-                commentResponse.setCode(comment.getCode() == null ? "" : comment.getCode());
-                commentResponse.setContributionId(
-                        comment.getContribution() == null ? null : comment.getContribution().getId());
-                commentResponse.setUserId(comment.getUser() == null ? null : comment.getUser().getId());
-                commentResponse.setUserName(comment.getUser() == null ? null : comment.getUser().getFullName());
-                commentResponse
-                        .setParentId(comment.getParentComment() == null ? null : comment.getParentComment().getId());
-                commentResponse.setAvatar(comment.getUser() == null ? null : comment.getUser().getAvatar());
-                commentResponse.setCreatedDate(comment.getCreated_at());
+        commentResponse.setId(comment.getId());
+        commentResponse.setContent(comment.getContent() == null ? "" : comment.getContent());
+        commentResponse.setCode(comment.getCode() == null ? "" : comment.getCode());
+        commentResponse.setContributionId(comment.getContribution() == null ? null : comment.getContribution().getId());
+        commentResponse.setUserId(comment.getUser() == null ? null : comment.getUser().getId());
+        commentResponse.setUserName(comment.getUser() == null ? null : comment.getUser().getFullName());
+        commentResponse.setParentId(comment.getParentComment() == null ? null : comment.getParentComment().getId());
+        commentResponse.setAvatar(comment.getUser() == null ? null : comment.getUser().getAvatar());
+        commentResponse.setCreatedDate(comment.getCreated_at());
         return commentResponse;
     }
 
@@ -124,9 +122,9 @@ public class CommentServiceImpl implements CommentService {
             nComment.setCode("C" + String.format("%04d", queryCheck.GetHighestId("comment")));
             nComment.setContent(comment.getContent());
             User user = userDao.findExistedUserById(comment.getUserId());
-            if(comment.getParentId() != null){
+            if (comment.getParentId() != null) {
                 Comment parentUser = commentDao.findExistedCommentById(comment.getParentId());
-                if(parentUser == null){
+                if (parentUser == null) {
                     return null;
                 }
                 nComment.setParentComment(parentUser);
@@ -169,6 +167,7 @@ public class CommentServiceImpl implements CommentService {
                 commentResponse.setCreatedDate(comment.getCreated_at());
                 listResponse.add(commentResponse);
             }
+            object.setTotalElements(list.getTotalElements());
             object.setLastPage(lastPage);
             object.setList(listResponse);
             return object;

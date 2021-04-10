@@ -4,30 +4,40 @@ import java.util.List;
 
 public class CommentLastPageResponse {
     private int lastPage;
+    private Long totalElements;
     private List<CommentResponse> list;
 
-    public int getLastPage(){
+    public int getLastPage() {
         return lastPage;
     }
 
-    public void setLastPage(int lastPage){
+    public void setLastPage(int lastPage) {
         this.lastPage = lastPage;
     }
 
-    public List<CommentResponse> getList(){
+    public List<CommentResponse> getList() {
         return list;
-    } 
+    }
 
     public void setList(List<CommentResponse> list) {
         this.list = list;
     }
 
-    public CommentLastPageResponse(){
-
+    public Long getTotalElements() {
+        return totalElements;
     }
 
-    public CommentLastPageResponse(int lastPage, List<CommentResponse> list){
+    public void setTotalElements(Long totalElements) {
+        this.totalElements = totalElements;
+    }
+
+    public CommentLastPageResponse(int lastPage, Long totalElements, List<CommentResponse> list) {
         this.lastPage = lastPage;
+        this.totalElements = totalElements;
         this.list = list;
     }
+
+    public CommentLastPageResponse() {
+    }
+
 }

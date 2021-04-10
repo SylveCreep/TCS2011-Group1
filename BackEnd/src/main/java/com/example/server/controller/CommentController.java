@@ -114,10 +114,9 @@ public class CommentController {
             }
             CommentLastPageResponse comment = commentService.searchCommentByUser(commentSearchRequest);
             if (comment == null) {
-                return responseUtils.getResponseEntity(comment, Constant.SUCCESS, "Don't have comment", HttpStatus.OK);
+                return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, "Don't have comment", HttpStatus.OK);
             }
-            return responseUtils.getResponseEntity(comment.getList(), Constant.SUCCESS, "Show comment success",
-                    comment.getLastPage(), HttpStatus.OK);
+            return responseUtils.getResponseEntity(comment, Constant.SUCCESS, "Show comment success", HttpStatus.OK);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Show comment failed",
                     HttpStatus.BAD_REQUEST);
@@ -181,7 +180,11 @@ public class CommentController {
             comment.setContributionId(commentMessage.getContributionId());
             comment.setParentId(commentMessage.getParentId());
             comment.setUserId(user.getId());
-            commentService.updateComment(comment);
+            Boolean isUpdated = commentService.updateComment(comment);
+            if (isUpdated == false) {
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update comment fail",
+                        HttpStatus.BAD_REQUEST);
+            }
             commentMessage.setAvatar(user.getAvatar());
             commentMessage.setCreatedAt(new Date());
             kafkaCommentTemplate.send(KAFKA_TOPIC_COMMENT, commentMessage);
@@ -205,7 +208,11 @@ public class CommentController {
             comment.setContributionId(commentMessage.getContributionId());
             comment.setParentId(commentMessage.getParentId());
             comment.setUserId(commentMessage.getUserId());
-            commentService.deleteComment(commentMessage.getId());
+            Boolean isDeleted = commentService.deleteComment(commentMessage.getId());
+            if (isDeleted == false) {
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update comment fail",
+                        HttpStatus.BAD_REQUEST);
+            }
             commentMessage.setAvatar(user.getAvatar());
             commentMessage.setCreatedAt(new Date());
             kafkaCommentTemplate.send(KAFKA_TOPIC_COMMENT, commentMessage);

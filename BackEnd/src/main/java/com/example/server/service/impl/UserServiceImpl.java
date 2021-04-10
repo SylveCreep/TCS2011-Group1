@@ -13,7 +13,9 @@ import java.util.Set;
 
 import com.example.server.config.TokenProvider;
 import com.example.server.constant.Constant;
+import com.example.server.dao.ContributionDao;
 import com.example.server.dao.FacultyDao;
+import com.example.server.dao.MagazineDao;
 import com.example.server.dao.RoleDao;
 import com.example.server.dao.UserDao;
 import com.example.server.dto.FacebookUserDto;
@@ -25,6 +27,7 @@ import com.example.server.model.request.CreateAccount;
 import com.example.server.model.request.LoginUser;
 import com.example.server.model.request.PagingRequest;
 import com.example.server.model.request.UserSearchRequest;
+import com.example.server.model.response.TotalCountResponse;
 import com.example.server.model.response.UserLastPageResponse;
 import com.example.server.model.response.UserResponse;
 import com.example.server.service.FileService;
@@ -55,6 +58,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static com.example.server.constant.Constant.*;
 import static com.example.server.util.ResponseUtils.*;
+import static com.example.server.util.SessionUtils.*;
 
 @Service(value = "userService")
 public class UserServiceImpl implements UserDetailsService, UserService {
@@ -76,6 +80,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Autowired
     private FacultyDao facultyDao;
 
+    @Autowired
+    private MagazineDao magazineDao;
+
+    @Autowired
+    private ContributionDao contributionDao;
+
     @Autowired(required = true)
     private ModelMapper modelMapper;
 
@@ -84,7 +94,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
-
 
     @Autowired
     private RestTemplate restTemplate;
@@ -389,7 +398,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             User user = userDao.findExistedUserByPasswordKey(key);
             Date expireDate = DateUtils.addMinutes(user.getKeyCreatedAt(), minute);
             Boolean isExpired = new Date().after(expireDate);
-            if(user == null || isExpired){
+            if (user == null || isExpired) {
                 return false;
             } else {
                 return true;
@@ -407,20 +416,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         variables.put("fields", fields);
         variables.put("redirect", "false");
         variables.put("access_token", accessToken);
-        return restTemplate
-                .getForObject(facebook_graph_api_base + path, FacebookUserDto.class, variables);
+        return restTemplate.getForObject(facebook_graph_api_base + path, FacebookUserDto.class, variables);
     }
 
     @Override
     public LoginUser getLoginJwtTokenByFacebook(String accessToken) {
         FacebookUserDto facebookUserDto = getFacebookUser(accessToken);
         User user = userDao.findExistedUserByEmail(facebookUserDto.getEmail());
-        if(user == null){
+        if (user == null) {
             String password = RandomStringUtils.randomAscii(16);
             CreateAccount createAccount = new CreateAccount();
             createAccount.setEmail(facebookUserDto.getEmail());
             createAccount.setAvatar(facebookUserDto.getUrl());
-            createAccount.setFullName(facebookUserDto.getFirstName() +" "+ facebookUserDto.getLastName());
+            createAccount.setFullName(facebookUserDto.getFirstName() + " " + facebookUserDto.getLastName());
             createAccount.setPassword(password);
             try {
                 createAccount.setDateOfBirth(DateUtils.parseDate(facebookUserDto.getBirthday(), "yyyy/MM/dd"));
@@ -439,12 +447,52 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public Boolean changePassword(ChangePasswordRequest request) {
         User user = userDao.findExistedUserByEmail(request.getEmail());
-        if(bcryptEncoder.matches(request.getPassword(), user.getPassword()) == true){
+        if (bcryptEncoder.matches(request.getPassword(), user.getPassword()) == true) {
             user.setPassword(bcryptEncoder.encode(request.getNew_password()));
             userDao.save(user);
             return true;
         } else {
             return false;
+        }
+    }
+
+    @Override
+    public TotalCountResponse getTotalCountResponse() {
+        try {
+            User user = userDao.findExistedUserByEmail(getEmail());
+            String role = getAuthority(user).toString();
+            Long totalContributions;
+            Long totalMagazines;
+            Long totalStudents;
+            switch (role) {
+            case "[ROLE_R0002]":
+                totalStudents = userDao.countExistedStudent();
+                totalMagazines = magazineDao.countMagazine();
+                totalContributions = contributionDao.countContributionByUserId(null);
+                break;
+            case "[ROLE_R0003]":
+                totalStudents = userDao.countExistedStudent();
+                totalMagazines = magazineDao.countMagazine();
+                totalContributions = contributionDao.countContributionByUserId(null);
+                break;
+            case "[ROLE_R0004]":
+                totalStudents = null;
+                totalMagazines = magazineDao.countMagazine();
+                totalContributions = contributionDao.countContributionByUserId(user.getId());
+                break;
+            default:
+                totalContributions = null;
+                totalMagazines = null;
+                totalStudents = null;
+                break;
+            }
+            TotalCountResponse totalCountResponse = new TotalCountResponse();
+            totalCountResponse.setTotalContributions(totalContributions);
+            totalCountResponse.setTotalMagazines(totalMagazines);
+            totalCountResponse.setTotalStudents(totalStudents);
+            return totalCountResponse;
+        } catch (Exception e) {
+            return null;
         }
     }
 

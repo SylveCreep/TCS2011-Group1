@@ -5,20 +5,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class SessionUtils {
     public static UserDetails getPrincipal() {
-        if (SecurityContextHolder.getContext() != null &&
-                SecurityContextHolder.getContext().getAuthentication() != null) {
+        if (SecurityContextHolder.getContext() != null
+                && SecurityContextHolder.getContext().getAuthentication() != null) {
             return (UserDetails) (SecurityContextHolder.getContext()).getAuthentication().getPrincipal();
         }
         return null;
     }
 
-    public static String getEmail(){
+    public static String getEmail() {
         UserDetails user = getPrincipal();
-        if(user != null){
+        if (user != null) {
             return user.getUsername();
         }
         return null;
     }
+
 }
-
-

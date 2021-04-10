@@ -10,6 +10,7 @@ import com.example.server.constant.Constant;
 import com.example.server.dao.UserDao;
 import com.example.server.entity.User;
 import com.example.server.model.request.*;
+import com.example.server.model.response.TotalCountResponse;
 import com.example.server.model.response.UserLastPageResponse;
 import com.example.server.model.response.UserResponse;
 import com.example.server.service.BanService;
@@ -23,6 +24,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -148,7 +150,7 @@ public class UserController {
         }
     }
 
-    //@PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003')")
+    // @PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003')")
     @GetMapping(value = "/{id}", consumes = { "text/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> getUser(@PathVariable(name = "id") Long id) {
         try {
@@ -180,8 +182,9 @@ public class UserController {
         }
     }
 
-    @GetMapping(value="/forgotpassword/{key}")
-    public ResponseEntity<?> redirectToResetPasswordPage(@PathVariable(name = "key") String key, HttpServletRequest request) {
+    @GetMapping(value = "/forgotpassword/{key}")
+    public ResponseEntity<?> redirectToResetPasswordPage(@PathVariable(name = "key") String key,
+            HttpServletRequest request) {
         try {
             if (key == null || key.isBlank()) {
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Must has key id",
@@ -189,26 +192,26 @@ public class UserController {
             }
             HttpHeaders headers = new HttpHeaders();
             String url = getSiteURL(request);
-            headers.setLocation(URI.create(url+key));
+            headers.setLocation(URI.create(url + key));
             return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Cannot redirect", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PostMapping(value="/updatePassword")
+    @PostMapping(value = "/updatePassword")
     public ResponseEntity<?> updatePassword(@RequestBody CreateAccount request) {
         try {
             if (request.getPassword() == null || request.getPassword().isBlank()) {
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Must has key id",
                         HttpStatus.BAD_REQUEST);
             }
-            if(request.getPassword().length() < 8){
+            if (request.getPassword().length() < 8) {
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Password length must bigger than 8",
                         HttpStatus.BAD_REQUEST);
             }
             User user = userDao.findExistedUserByEmail(request.getEmail());
-            if(user == null){
+            if (user == null) {
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "User not existed",
                         HttpStatus.BAD_REQUEST);
             }
@@ -218,15 +221,18 @@ public class UserController {
             }
             Boolean isUpdated = userService.updatePassword(request, user);
             if (isUpdated == false) {
-                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update password failed", HttpStatus.OK);
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update password failed",
+                        HttpStatus.OK);
             }
-            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, "Update password successfully", HttpStatus.OK);
+            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, "Update password successfully",
+                    HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update password failed", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update password failed",
+                    HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping(value="/password/check")
+    @GetMapping(value = "/password/check")
     public ResponseEntity<?> checkResetPasswordKey(@RequestParam(value = "key") String key) {
         try {
             if (key == null || key.isBlank()) {
@@ -243,24 +249,40 @@ public class UserController {
         }
     }
 
-    @PostMapping(value="/changepassword")
+    @PostMapping(value = "/changepassword")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
         try {
-            if (request.getNew_password() == null || request.getNew_password().isBlank() || request.getNew_password().length() < 8 ) {
+            if (request.getNew_password() == null || request.getNew_password().isBlank()
+                    || request.getNew_password().length() < 8) {
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "New password invalid",
                         HttpStatus.BAD_REQUEST);
             }
-            if(!getEmail().equals(request.getEmail())){
+            if (!getEmail().equals(request.getEmail())) {
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Email invalid",
                         HttpStatus.BAD_REQUEST);
             }
             Boolean isChanged = userService.changePassword(request);
             if (isChanged == false) {
-                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Old password not match", HttpStatus.OK);
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Old password not match",
+                        HttpStatus.OK);
             }
-            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, "Change password successfully", HttpStatus.OK);
+            return responseUtils.getResponseEntity("NULL", Constant.SUCCESS, "Change password successfully",
+                    HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Old password not match", HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Old password not match",
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/totalvalues")
+    public ResponseEntity<?> getTotalValuesOfReport() {
+        try {
+            TotalCountResponse totalCountResponse = userService.getTotalCountResponse();
+            return responseUtils.getResponseEntity(totalCountResponse, Constant.SUCCESS,
+                    "Get total values successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get total values failed",
+                    HttpStatus.BAD_REQUEST);
         }
     }
 
