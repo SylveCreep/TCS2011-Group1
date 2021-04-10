@@ -204,8 +204,8 @@ public class Seeding implements CommandLineRunner {
        }
    }
 
-   public Date getDateIncrease(int DateIncrease){
-       Date curr = new Date();
+   public Date getDateIncrease(Date curr, int DateIncrease){
+       //Date curr = new Date();
        Calendar calendar = Calendar.getInstance();
        calendar.setTime(curr);
        calendar.add(Calendar.DATE, DateIncrease);
@@ -214,11 +214,13 @@ public class Seeding implements CommandLineRunner {
 
    public Boolean createMagazine(Faker faker, int idFaculty, int idMagazineInc){
        try{
+            Date currDate = faker.date().between(getDateIncrease(new Date(), -90), getDateIncrease(new Date(), 90));
             Magazine magazine = new Magazine();
                 magazine.setCode("M" + String.format("%04d", queryCheck.GetHighestId("magazine")));
                 magazine.setTheme(facultyDao.getNonDelFaculty().get(idFaculty).getName() + ": " + idMagazineInc);
-                magazine.setFinished_at(getDateIncrease(10));
-                magazine.setPublished_at(getDateIncrease(20));
+                magazine.setCreated_at(currDate);
+                magazine.setFinished_at(getDateIncrease(currDate, 10));
+                magazine.setPublished_at(getDateIncrease(currDate, 20));
 
             magazineDao.save(magazine);
             return true;
