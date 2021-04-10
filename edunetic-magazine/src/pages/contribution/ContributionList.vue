@@ -231,7 +231,6 @@ export default {
     this.getFacultyList();
   },  
   destroyed() {
-    this.$cookies.remove("magazineContribution")
     this.$cookies.remove("studentContribution")
   },
   methods: {
