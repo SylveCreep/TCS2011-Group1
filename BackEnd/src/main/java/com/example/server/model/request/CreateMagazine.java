@@ -15,6 +15,8 @@ public class CreateMagazine {
 
     private String theme;
 
+    private Date created_at;
+
     private Date finished_at;
 
     private Date published_at;
@@ -43,6 +45,14 @@ public class CreateMagazine {
 
     public void setTheme(String theme){
         this.theme = theme;
+    }
+
+    public Date getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
     }
 
     public Date getFinished_at() {

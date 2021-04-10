@@ -1,5 +1,7 @@
 package com.example.server.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.validation.Valid;
@@ -46,6 +48,10 @@ public class MagazineController {
             if (Integer.parseInt(validateRes.toString()) == -1) {
                 return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE, "Create magazine failed",
                         validateResult, HttpStatus.BAD_REQUEST);
+            }
+            if (magazine.getCreated_at() == null){
+                Date farDate = new SimpleDateFormat("yyyy-MM-dd").parse("2500-12-31");
+                magazine.setClose_at(farDate);
             }
             Magazine createMagazine = magazineService.saveMagazine(magazine);
             if (createMagazine == null) {

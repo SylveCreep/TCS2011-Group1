@@ -221,7 +221,8 @@ public class Seeding implements CommandLineRunner {
                 magazine.setCreated_at(currDate);
                 magazine.setFinished_at(getDateIncrease(currDate, 10));
                 magazine.setPublished_at(getDateIncrease(currDate, 20));
-
+                Date farDate = new SimpleDateFormat("yyyy-MM-dd").parse("2500-12-31");
+                magazine.setClose_at(farDate);
             magazineDao.save(magazine);
             return true;
        } catch(Exception e){

@@ -13,6 +13,7 @@ import java.util.Optional;
 import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.Null;
 
 import com.example.server.constant.Constant;
 import com.example.server.dao.FacultyDao;
@@ -722,12 +723,12 @@ public class ResponseUtils {
         HashMap<String, Object> inputForm = new HashMap<>();
         form.put("input", inputForm);
 
-        String valTheme = validateThemeMagazineInput(createMagazine.getTheme());
+        String valTheme = validateThemeMagazineInput(createMagazine, type);
         String valCode = validateCodeMagazineInput(createMagazine.getCode());
-        String valFinishedAt = validateFinishedAtMagazineInput(createMagazine.getFinished_at());
-        String valCloseAt = validateCloseAtMagazineInput(createMagazine.getClose_at());
-        String valPublishedAt = validatePublishedAtMagazineInput(createMagazine.getPublished_at());
+        String valFinishedAt = validateDateMagazineInput(createMagazine.getFinished_at());
+        String valPublishedAt = validateDateMagazineInput(createMagazine.getPublished_at());
         String valId = validateIdMagazineInput(createMagazine.getId());
+        String valDateEvent = validateDateIncMagazineInput(createMagazine.getCreated_at(), createMagazine.getFinished_at(), createMagazine.getPublished_at(), createMagazine.getClose_at(), type, createMagazine.getId());
 
         switch (type) {
         case 0:
@@ -743,12 +744,14 @@ public class ResponseUtils {
                     form.put("result", -1);
                 }
             }
-            /*
-             * if (!valCloseAt.equals("Valid")){ inputForm.put("close_at", valCloseAt); if
-             * (!form.containsKey("result")){ form.put("result", -1); } }
-             */
             if (!valPublishedAt.equals("Valid")) {
                 inputForm.put("published_at", valPublishedAt);
+                if (!form.containsKey("result")) {
+                    form.put("result", -1);
+                }
+            }
+            if (!valDateEvent.equals("Valid")){
+                inputForm.put("Date Event", valDateEvent);
                 if (!form.containsKey("result")) {
                     form.put("result", -1);
                 }
@@ -780,12 +783,14 @@ public class ResponseUtils {
                     form.put("result", -1);
                 }
             }
-            /*
-             * if (!valCloseAt.equals("Valid")){ inputForm.put("close_at", valCloseAt); if
-             * (!form.containsKey("result")){ form.put("result", -1); } }
-             */
             if (!valPublishedAt.equals("Valid")) {
                 inputForm.put("published_at", valPublishedAt);
+                if (!form.containsKey("result")) {
+                    form.put("result", -1);
+                }
+            }
+            if (!valDateEvent.equals("Valid")){
+                inputForm.put("Date Event", valDateEvent);
                 if (!form.containsKey("result")) {
                     form.put("result", -1);
                 }
@@ -801,18 +806,38 @@ public class ResponseUtils {
         return form;
     }
 
-    public String validateThemeMagazineInput(String theme) {
-        if (theme == null) {
+    public String validateThemeMagazineInput(CreateMagazine magazineDto, int type) {
+        if (magazineDto.getTheme() == null) {
             return "Invalid";
         }
-        if (NameValidation.containSpecialCharacter(theme)) {
-            return "Invalid";
+        if (NameValidation.containSpecialCharacter(magazineDto.getTheme())) {
+            return "Contain Special Character";
         }
-        Magazine magazine = magazineDao.findByTheme(theme);
-        if (magazine != null) {
-            return "Theme of magazine existed";
-        } else {
-            return "Valid";
+        Magazine magazine = magazineDao.findByTheme(magazineDto.getTheme());
+        Boolean isOne;
+        if (magazine != null && magazine.getId() == magazineDto.getId())
+            isOne = true;
+        else   
+            isOne = false;
+        switch (type){
+            case 0:
+                if (magazine != null) {
+                    return "Theme of magazine existed";
+                } else {
+                    return "Valid";
+                }
+            case 1:
+                if (magazine != null){
+                    if (isOne == true)
+                        return "Valid";
+                    else 
+                        return "Theme of magazine existed";
+                }
+                else{
+                    return "Valid";
+                }
+            default:
+                return "Invalid";
         }
     }
 
@@ -847,28 +872,61 @@ public class ResponseUtils {
         }
     }
 
-    public String validateFinishedAtMagazineInput(Date finished_at) {
-        if (finished_at == null) {
+    public String validateDateMagazineInput(Date Date) {
+        if (Date == null) {
             return "Invalid";
         } else {
             return "Valid";
         }
     }
 
-    public String validateCloseAtMagazineInput(Date closeAt) {
-        if (closeAt == null) {
-            return "Invalid";
-        } else {
-            return "Valid";
+    public String validateDateIncMagazineInput(Date createdAt, Date finishedAt, Date publishedAt, Date closeAt, int status, Long id) {
+        Date create_at;
+        switch (status){
+            case 0:
+                if (createdAt == null){
+                    create_at = new Date();
+                }else{
+                    create_at = createdAt;
+                }
+                if (create_at.before(finishedAt)){
+                    if(finishedAt.before(publishedAt)){
+                        if (closeAt != null) {
+                            if (publishedAt.before(closeAt))
+                                return "Valid";
+                            else
+                                return "published_at is after close_at";
+                        } else
+                            return "Valid";
+                    }
+                    else
+                        return "finished_at is after published_at";
+                } else
+                    return "created_at is after finished_at";
+            case 1:
+                if (createdAt == null){
+                    create_at = magazineDao.getOne(id).getCreated_at();
+                }else{
+                    create_at = createdAt;
+                }
+                if (create_at.before(finishedAt)){
+                    if(finishedAt.before(publishedAt)){
+                        if (closeAt != null) {
+                            if (publishedAt.before(closeAt))
+                                return "Valid";
+                            else
+                                return "published_at is after close_at";
+                        } else
+                            return "Valid";
+                    }
+                    else
+                        return "finished_at is after published_at";
+                } else
+                    return "created_at is after finished_at";
+            default:
+                return "Invalid";
         }
-    }
-
-    public String validatePublishedAtMagazineInput(Date publishedAt) {
-        if (publishedAt == null) {
-            return "Invalid";
-        } else {
-            return "Valid";
-        }
+        
     }
 
     public static String getSiteURL(HttpServletRequest request) {
