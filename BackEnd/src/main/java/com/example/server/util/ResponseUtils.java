@@ -732,7 +732,7 @@ public class ResponseUtils {
                 }
             }
             if (!valFinishedAt.equals("Valid")) {
-                inputForm.put("name", valFinishedAt);
+                inputForm.put("finished_at", valFinishedAt);
                 if (!form.containsKey("result")) {
                     form.put("result", -1);
                 }
@@ -769,7 +769,7 @@ public class ResponseUtils {
                 }
             }
             if (!valFinishedAt.equals("Valid")) {
-                inputForm.put("name", valFinishedAt);
+                inputForm.put("finished_at", valFinishedAt);
                 if (!form.containsKey("result")) {
                     form.put("result", -1);
                 }
@@ -845,7 +845,7 @@ public class ResponseUtils {
         if (finished_at == null) {
             return "Invalid";
         } else {
-            return "valid";
+            return "Valid";
         }
     }
 
