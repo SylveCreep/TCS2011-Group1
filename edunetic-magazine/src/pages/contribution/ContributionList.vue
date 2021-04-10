@@ -27,7 +27,7 @@
             <!--Only MM can access this route -->
             <button
               class="btn-shadow btn btn-info"
-              v-if="this.cookiesModified"
+              v-if="cookiesModified"
               v-on:click="showAllContributionList"
               style="margin-right: 10px"
             >
@@ -229,6 +229,10 @@ export default {
     this.checkMagazine();
     this.getContributionList();
     this.getFacultyList();
+  },  
+  destroyed() {
+    this.$cookies.remove("magazineContribution")
+    this.$cookies.remove("studentContribution")
   },
   methods: {
     showDetail(contribution_id) {
@@ -288,9 +292,9 @@ export default {
       this.getContributionList();
     },
     checkMagazine() {
-      if (this.$cookies.isKey("magazine")) {
-        this.magazine = this.$cookies.get("magazine");
-        this.filter.magazineId = this.magazine.id;
+      if (this.$cookies.isKey("magazineContribution")) {
+        this.magazine = this.$cookies.get("magazineContribution");
+        this.filter.magazineId = this.$cookies.get("magazineContribution");
       }
     },
     downloadAllContribution() {

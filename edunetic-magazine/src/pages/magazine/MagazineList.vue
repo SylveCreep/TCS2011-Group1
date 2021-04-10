@@ -116,7 +116,7 @@
                   v-bind:id="'tab-' + status"
                   data-toggle="tab"
                   v-bind:href="'#tab-content-' + status"
-                  v-on:change="getStatus(status)"
+                  v-on:click="getStatus(status)"
                 >
                   <span>{{ index }}</span>
                 </a>
@@ -135,44 +135,52 @@
                     </th>
                     <th class="sort" v-on:click="getSort('created_at')">
                       Open At <i class="fas fa-sort"></i>
-                    </th>                    
+                    </th>
+                    <th class="sort" v-on:click="getSort('close_at')">
+                      Finished At <i class="fas fa-sort"></i>
+                    </th>
                     <th class="sort" v-on:click="getSort('published_at')">
                       Published At <i class="fas fa-sort"></i>
                     </th>
-                    <th class="sort" v-on:click="getSort('close_at')">
-                      Closed At <i class="fas fa-sort"></i>
+                    <th class="sort" v-if="status === 3" v-on:click="getSort('published_at')">
+                      Closed At<i class="fas fa-sort"></i>
                     </th>
                     <th>Action</th>
                   </tr>
                 </thead>
-                <div>
                 <tbody>
                   <!---->
                   <tr v-for="magazine of list_magazines" :key="magazine.id">
                     <td>{{ magazine.code }}</td>
                     <td>{{ magazine.theme }}</td>
-                    <td>{{ magazine.created_at }}</td>
-                    <td>{{ magazine.published_at }}</td>
-                    <td>{{ magazine.close_at }}</td>
+                    <td>{{ magazine.created_at | formatDate }}</td>
+                    <td>{{ magazine.finished_at | formatDate }}</td>
+                    <td>{{ magazine.published_at | formatDate }}</td>
                     <td>
                       <p
                         class="click"
                         style="display: inline"
                         v-on:click="showMagazine(magazine.id)"
-                        v-if="loginUser.roleId === 2"
+                        v-if="loginUser.roleId === 2 && status === 0"
                       >
-                        <b>Update</b>
+                        <b>Update | </b>
                         <!--Only MarketingCoordinator can access this route -->
-                        |
                       </p>
-                      <p
+                      <!-- <p
                         class="click"
                         style="display: inline"
                         v-on:click="deleteMagazine(magazine.id)"
+                        v-if="loginUser.roleId === 2 && status === 0"
                       >
-                        <b>Delete</b>
+                        <b>Delete | </b>
+                      </p> -->
+                      <p
+                        class="click"
+                        style="display: inline"
+                        v-if="loginUser.roleId === 2 && status === 2"
+                      >
+                        <b>Close | </b>
                       </p>
-                      |
                       <p
                         class="click"
                         style="display: inline"
@@ -183,7 +191,6 @@
                     </td>
                   </tr>
                 </tbody>
-                </div>
               </table>
             </div>
           </div>
@@ -226,6 +233,7 @@ export default {
     return {
       list_statuses: DefaultConstants.MagazineStatuses,
       list_magazines: [],
+      status: 0,
     };
   },
   mounted() {
@@ -246,7 +254,7 @@ export default {
             this.canModify = true;
           }
         });
-    },    
+    },
     async showMagazine(magazine_id) {
       await this.checkMagazineExisted(magazine_id);
       if (!this.canModify) {
@@ -256,27 +264,26 @@ export default {
         router.push("/magazines/" + magazine_id + "/update");
       }
     },
-    async deleteMagazine(magazine_id) {
-      await this.checkMagazineExisted(magazine_id);
-      if (!this.canModify) {
-        this.errorAlert("delete", "magazine");
-        this.getMagazineList();
-      } 
-      else {
-        await this.confirmAlert("delete", "magazine");
-        if (this.confirmResult) {
-          axios
-            .delete(UrlConstants.Magazine + "/" + magazine_id)
-            .then((res) => {
-              this.successAlert(); //this function is called from commonHelper.js file
-              this.getMagazineList();
-            })
-            .catch((error) => {
-              this.errors = error.data;
-            });
-        }
-      }
-    },
+    // async deleteMagazine(magazine_id) {
+    //   await this.checkMagazineExisted(magazine_id);
+    //   if (!this.canModify) {
+    //     this.errorAlert("delete", "magazine");
+    //     this.getMagazineList();
+    //   } else {
+    //     await this.confirmAlert("delete", "magazine");
+    //     if (this.confirmResult) {
+    //       axios
+    //         .delete(UrlConstants.Magazine + "/" + magazine_id)
+    //         .then((res) => {
+    //           this.successAlert(); //this function is called from commonHelper.js file
+    //           this.getMagazineList();
+    //         })
+    //         .catch((error) => {
+    //           this.errors = error.data;
+    //         });
+    //     }
+    //   }
+    // },
     showContribution(magazine_id) {
       axios.get(UrlConstants.Magazine + "/" + magazine_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
@@ -302,6 +309,7 @@ export default {
     },
     getStatus(status) {
       this.filter.status = status;
+      this.status = status;
       this.getMagazineList();
     },
     changePage(e) {

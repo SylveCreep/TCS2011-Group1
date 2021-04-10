@@ -72,13 +72,6 @@
             </router-link>
           </li>
           <li>
-            <router-link to="/contributions" v-if="loginUser.roleId !== 1">
-              <!--Only admin cannot access this route-->
-              <i class="metismenu-icon fas fa-th"></i>
-              <p v-on:click="deleteUserKey()">Contribution List</p>
-            </router-link>
-          </li>
-          <li>
             <router-link to="/magazines" v-if="loginUser.roleId !== 1">
               <!--Only admin cannot access this route-->
               <i class="metismenu-icon fas fa-th"></i>
@@ -113,14 +106,6 @@ export default {
     };
   },
   methods: {
-    deleteUserKey() {
-      if (this.$cookies.isKey("facultyStudent")) {
-        this.$cookies.remove("facultyStudent");
-      }
-      if (this.$cookies.isKey("studentContribution")) {
-        this.$cookies.remove("studentContribution");
-      }
-    },
     getLoginUser() {
       axios
         .get(UrlConstants.User + "/" + this.$cookies.get("id"))

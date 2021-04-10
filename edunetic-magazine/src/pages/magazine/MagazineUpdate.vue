@@ -17,43 +17,6 @@
         <h5 class="card-title">Update Form</h5>
         <form v-on:submit.prevent="updateMagazine()">
           <div class="position-relative form-group">
-            <label class="col-sm-2 control-label">Student's name: </label>
-            <div class="col-sm-12">
-              <input
-                id="fullName"
-                type="text"
-                class="form-control"
-                v-model="user.fullName"
-                readonly
-              />
-              <p style="color: red" v-if="list_errors !== null">
-                {{ list_errors.fullName }}
-              </p>
-            </div>
-            <label class="col-sm-2 control-label">Faculty: </label>
-            <div class="col-sm-12">
-              <input
-                id="facultyName"
-                type="text"
-                class="form-control"
-                v-model="user.facultyName"   
-                readonly            
-              />
-              <!-- <select
-                id="facultyName"
-                type="text"
-                class="form-control select2"
-                v-model="user.facultyName"                                
-              >
-                <option
-                      v-for="faculty in list_faculties"
-                      :key="faculty.id"
-                      v-bind:value="faculty.facultyId"
-                    >
-                      {{ faculty.facultyName }}
-                </option>
-              </select>-->
-            </div>
             <label class="col-sm-2 control-label">Code: </label>
               <div class="col-sm-12">
                 <input
@@ -64,6 +27,18 @@
                   readonly
                 />
               </div>
+            <label class="col-sm-2 control-label">Theme: </label>
+            <div class="col-sm-12">
+              <input
+                id="theme"
+                type="text"
+                class="form-control"
+                v-model="magazine.theme"
+              />
+              <p style="color: red" v-if="list_errors !== null">
+                {{ list_errors.theme }}
+              </p>
+            </div>
               <label class="col-sm-2 control-label">Closed At: </label>
               <div class="col-sm-12">
                 <input
@@ -101,6 +76,7 @@ import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { validateHelper } from "@/helper/validateHelper";
 import { commonHelper } from "@/helper/commonHelper";
+import moment from 'moment';
 
 export default {
   name: "MagazineUpdate",
@@ -115,8 +91,6 @@ export default {
   },
   created() {
     this.getMagazine();
-    this.getStudent();
-    // this.getFacultyList();
   },
   methods: {
     getMagazine() {
@@ -158,6 +132,9 @@ export default {
         }
       }
     },
+    formatDate(time) {
+      moment(time).format('YYYY-MM-DD')
+    }
   },
 };
 </script>
