@@ -48,10 +48,10 @@ public class MagazineServiceImpl implements MagazineService {
         return list;
     }
 
-    /*@Override
-    public Magazine findMagazineByOpen_at(Date open_at){
-        return magazineDao.findByOpenAt(open_at);
-    }*/
+    @Override
+    public Magazine findMagazineByFinishedAt(Date finishedAt){
+        return magazineDao.findByFinishedAt(finishedAt);
+    }
 
     @Override
     public Magazine findMagazineByPublished_at(Date published_at){
@@ -81,8 +81,9 @@ public class MagazineServiceImpl implements MagazineService {
         magazineResponse.setId(magazine.getId());
         magazineResponse.setCode(magazine.getCode());
         magazineResponse.setTheme(magazine.getTheme());
-        magazineResponse.setClose_at(magazine.getClose_at());
+        magazineResponse.setFinished_at(magazine.getFinished_at());
         magazineResponse.setPublished_at(magazine.getPublished_at());
+        magazineResponse.setClose_at(magazine.getClose_at());
         return magazineResponse;
     }
 
@@ -91,7 +92,7 @@ public class MagazineServiceImpl implements MagazineService {
         try{
             Magazine nMagazine = magazineDto.getMagazineFromDto();
             nMagazine.setCode("M" + String.format("%04d", queryCheck.GetHighestId("magazine")));
-            //nMagazine.setOpen_at(magazineDto.getOpen_at());
+            nMagazine.setFinished_at(magazineDto.getFinished_at());
             nMagazine.setPublished_at(magazineDto.getPublished_at());
             nMagazine.setClose_at(magazineDto.getClose_at());
             nMagazine.setTheme(magazineDto.getTheme());
@@ -106,7 +107,7 @@ public class MagazineServiceImpl implements MagazineService {
         try{
             Magazine nMagazine = new Magazine();
             nMagazine.setCode("M" + String.format("%04d", queryCheck.GetHighestId("magazine")));
-            //nMagazine.setOpen_at(magazineDto.getOpen_at());
+            nMagazine.setFinished_at(magazineDto.getFinished_at());
             nMagazine.setPublished_at(magazineDto.getPublished_at());
             nMagazine.setClose_at(magazineDto.getClose_at());
             nMagazine.setTheme(magazineDto.getTheme());
@@ -120,8 +121,7 @@ public class MagazineServiceImpl implements MagazineService {
     public Boolean updateMagazine(CreateMagazine magazineDto){
         try {
             Magazine magazine = magazineDao.getOne(magazineDto.getId());
-            //magazine.setCode(magazineDto.getCode());
-            //magazine.setOpen_at(magazineDto.getOpen_at());
+            magazine.setFinished_at(magazineDto.getFinished_at());
             magazine.setTheme(magazineDto.getTheme());
             magazine.setPublished_at(magazineDto.getPublished_at());
             magazine.setClose_at(magazineDto.getClose_at());
@@ -177,7 +177,8 @@ public class MagazineServiceImpl implements MagazineService {
                 magazineResponse.setId(magazine.getId());
                 magazineResponse.setTheme(magazine.getTheme() == null ?"":magazine.getTheme());
                 magazineResponse.setCode(magazine.getCode() == null ?"": magazine.getCode());
-                //magazineResponse.setOpen_at(magazine.getOpen_at() == null ?null: magazine.getOpen_at());
+                magazineResponse.setCreated_at(magazine.getCreated_at() == null ?null:magazine.getCreated_at());
+                magazineResponse.setFinished_at(magazine.getFinished_at() == null ?null: magazine.getFinished_at());
                 magazineResponse.setPublished_at(magazine.getPublished_at() == null ?null: magazine.getPublished_at());
                 magazineResponse.setClose_at(magazine.getClose_at() == null ?null: magazine.getClose_at());
                 listResponse.add(magazineResponse);
@@ -204,7 +205,8 @@ public class MagazineServiceImpl implements MagazineService {
                 magazineResponse.setId(magazine.getId());
                 magazineResponse.setTheme(magazine.getTheme() == null ?"":magazine.getTheme());
                 magazineResponse.setCode(magazine.getCode() == null ?"":magazine.getCode() );
-                //magazineResponse.setOpen_at(magazine.getOpen_at() == null ?null: magazine.getOpen_at());
+                magazineResponse.setCreated_at(magazine.getCreated_at() == null ?null:magazine.getCreated_at());
+                magazineResponse.setFinished_at(magazine.getFinished_at() == null ?null: magazine.getFinished_at());
                 magazineResponse.setPublished_at(magazine.getPublished_at() == null ?null: magazine.getPublished_at());
                 magazineResponse.setClose_at(magazine.getClose_at() == null ?null: magazine.getClose_at());
                 listResponse.add(magazineResponse);

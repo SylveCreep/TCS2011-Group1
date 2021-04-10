@@ -718,7 +718,7 @@ public class ResponseUtils {
 
         String valTheme = validateThemeMagazineInput(createMagazine.getTheme());
         String valCode = validateCodeMagazineInput(createMagazine.getCode());
-        // String valOpenAt = validateOpenAtMagazineInput(createMagazine.getOpen_at());
+        String valFinishedAt = validateFinishedAtMagazineInput(createMagazine.getFinished_at());
         String valCloseAt = validateCloseAtMagazineInput(createMagazine.getClose_at());
         String valPublishedAt = validatePublishedAtMagazineInput(createMagazine.getPublished_at());
         String valId = validateIdMagazineInput(createMagazine.getId());
@@ -731,16 +731,16 @@ public class ResponseUtils {
                     form.put("result", -1);
                 }
             }
-            /*
-             * if (!valOpenAt.equals("Valid")){ inputForm.put("name", valOpenAt); if
-             * (!form.containsKey("result")){ form.put("result", -1); } }
-             */
-            if (!valCloseAt.equals("Valid")) {
-                inputForm.put("close_at", valCloseAt);
+            if (!valFinishedAt.equals("Valid")) {
+                inputForm.put("name", valFinishedAt);
                 if (!form.containsKey("result")) {
                     form.put("result", -1);
                 }
             }
+            /*
+             * if (!valCloseAt.equals("Valid")){ inputForm.put("close_at", valCloseAt); if
+             * (!form.containsKey("result")){ form.put("result", -1); } }
+             */
             if (!valPublishedAt.equals("Valid")) {
                 inputForm.put("published_at", valPublishedAt);
                 if (!form.containsKey("result")) {
@@ -768,16 +768,16 @@ public class ResponseUtils {
                     form.put("result", -1);
                 }
             }
-            /*
-             * if (!valOpenAt.equals("Valid")){ inputForm.put("name", valOpenAt); if
-             * (!form.containsKey("result")){ form.put("result", -1); } }
-             */
-            if (!valCloseAt.equals("Valid")) {
-                inputForm.put("close_at", valCloseAt);
+            if (!valFinishedAt.equals("Valid")) {
+                inputForm.put("name", valFinishedAt);
                 if (!form.containsKey("result")) {
                     form.put("result", -1);
                 }
             }
+            /*
+             * if (!valCloseAt.equals("Valid")){ inputForm.put("close_at", valCloseAt); if
+             * (!form.containsKey("result")){ form.put("result", -1); } }
+             */
             if (!valPublishedAt.equals("Valid")) {
                 inputForm.put("published_at", valPublishedAt);
                 if (!form.containsKey("result")) {
@@ -841,10 +841,13 @@ public class ResponseUtils {
         }
     }
 
-    /*
-     * public String validateOpenAtMagazineInput(Date openAt){ if(openAt == null){
-     * return "Invalid"; } else { return "valid"; } }
-     */
+    public String validateFinishedAtMagazineInput(Date finished_at) {
+        if (finished_at == null) {
+            return "Invalid";
+        } else {
+            return "valid";
+        }
+    }
 
     public String validateCloseAtMagazineInput(Date closeAt) {
         if (closeAt == null) {

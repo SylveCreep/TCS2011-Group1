@@ -1,6 +1,8 @@
 package com.example.server.util;
 
 import java.lang.StackWalker.Option;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -11,11 +13,14 @@ import static com.example.server.constant.Constant.*;
 import com.example.server.entity.User;
 import com.example.server.entity.Role;
 import com.example.server.entity.Faculty;
+import com.example.server.entity.Magazine;
 import com.example.server.dao.RoleDao;
 import com.example.server.dao.UserDao;
 import com.example.server.constant.Constant;
 import com.example.server.dao.FacultyDao;
+import com.example.server.dao.MagazineDao;
 import com.github.javafaker.Faker;
+import com.rabbitmq.client.Return;
 import com.example.server.util.QueryCheck;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +42,9 @@ public class Seeding implements CommandLineRunner {
     private FacultyDao facultyDao;
 
     @Autowired
+    private MagazineDao magazineDao;
+
+    @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
 
     @Autowired
@@ -52,6 +60,7 @@ public class Seeding implements CommandLineRunner {
             seedingUserMC();
             seedingFaculty();
             seedingUserStudent();
+            seedingMagazine();
             System.out.println();
             System.out.println("Success seeding");
         } catch (Exception e) {
@@ -73,6 +82,7 @@ public class Seeding implements CommandLineRunner {
                  nUser.setIs_deleted(Constant.NOTDELETED);
                  nUser.setCreated_at(new Date());
                  nUser.setGender(Constant.MALE);
+                 nUser.setAvatar("avatar-l400.jpg");
                  String phoneString = faker.phoneNumber().cellPhone();
                  Long phoneNumer = Long.parseLong(phoneString.replaceAll("[\\D+]", "").trim());
                  nUser.setPhoneNumber(phoneNumer);
@@ -191,6 +201,47 @@ public class Seeding implements CommandLineRunner {
                if(createFaculty(faker, Long.valueOf(MCList.get(random.nextInt(MCList.size())))) == true);
                     countSeedingFaculty++;
            }
+       }
+   }
+
+   public Date getDateIncrease(int DateIncrease){
+       Date curr = new Date();
+       Calendar calendar = Calendar.getInstance();
+       calendar.setTime(curr);
+       calendar.add(Calendar.DATE, DateIncrease);
+        return calendar.getTime();
+   }
+
+   public Boolean createMagazine(Faker faker, int idFaculty, int idMagazineInc){
+       try{
+            Magazine magazine = new Magazine();
+                magazine.setCode("M" + String.format("%04d", queryCheck.GetHighestId("magazine")));
+                magazine.setTheme(facultyDao.getNonDelFaculty().get(idFaculty).getName() + ": " + idMagazineInc);
+                magazine.setFinished_at(getDateIncrease(10));
+                magazine.setPublished_at(getDateIncrease(10));
+
+            magazineDao.save(magazine);
+            return true;
+       } catch(Exception e){
+           return false;
+       }
+   }
+
+   public void seedingMagazine(){
+       if (queryCheck.CheckItemInTable("magazine") == 0){
+            Faker faker = new Faker();
+            int sizeFaculty = queryCheck.CheckItemInTable("faculty");
+            for (int i = 0; i < sizeFaculty; i++){
+                int y = 1;
+                int yDeny = 0;
+                while (y < 6 || yDeny == 10){
+                    if (createMagazine(faker, i, y))
+                        y++;
+                    else{
+                        yDeny++;
+                    }
+                }
+            }
        }
    }
 }

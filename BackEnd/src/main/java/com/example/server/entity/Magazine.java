@@ -22,13 +22,13 @@ public class Magazine extends BaseEntity {
     @Column(name = "theme", nullable = false)
     private String theme;
 
-    /*@Column(name="open_at", nullable = false)
-    private Date openAt;*/
+    @Column(name="finished_at", nullable = false)
+    private Date finishedAt;
 
     @Column(name="published_at", nullable = false)
     private Date publishedAt;
 
-    @Column(name="close_at", nullable = false)
+    @Column(name="close_at", nullable = true)
     private Date closeAt;
 
     @Column(nullable = false)
@@ -58,13 +58,13 @@ public class Magazine extends BaseEntity {
         this.theme = theme;
     }
 
-    /*public Date getOpen_at() {
-        return openAt;
+    public Date getFinished_at() {
+        return finishedAt;
     }
 
-    public void setOpen_at(Date openAt) {
-        this.openAt = openAt;
-    }*/
+    public void setFinished_at(Date finishedAt) {
+        this.finishedAt = finishedAt;
+    }
 
     public Date getPublished_at() {
         return publishedAt;
@@ -94,18 +94,18 @@ public class Magazine extends BaseEntity {
         
     }
 
-    public Magazine(Long id, String code, Date openAt, Date publishedAt, Date closeAt, int is_deleted) {
+    public Magazine(Long id, String code, Date finishedAt, Date publishedAt, Date closeAt, int is_deleted) {
         this.id = id;
         this.code = code;
-        //this.openAt = openAt;
+        this.finishedAt = finishedAt;
         this.publishedAt = publishedAt;
         this.closeAt = closeAt;
         this.is_deleted = is_deleted;
     }
 
-    public Magazine(String code, Date openAt, Date publishedAt, Date closeAt){
+    public Magazine(String code, Date finishedAt, Date publishedAt, Date closeAt){
         this.code = code;
-        //this.openAt = openAt;
+        this.finishedAt = finishedAt;
         this.publishedAt = publishedAt;
         this.closeAt = closeAt;
     }

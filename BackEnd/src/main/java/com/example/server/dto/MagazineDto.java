@@ -21,7 +21,7 @@ public class MagazineDto {
 
     private String theme;
 
-    //private Date open_at;
+    private Date finished_at;
 
     private Date published_at;
 
@@ -51,13 +51,13 @@ public class MagazineDto {
         this.theme = theme;
     }
 
-    /*public Date getOpen_at() {
-        return open_at;
+    public Date getFinished_at() {
+        return finished_at;
     }
 
-    public void setOpen_at(Date open_at) {
-        this.open_at = open_at;
-    }*/
+    public void setFinished_at(Date finished_at) {
+        this.finished_at = finished_at;
+    }
 
     public Date getPublished_at() {
         return published_at;
@@ -77,7 +77,7 @@ public class MagazineDto {
 
     public Magazine getMagazineFromDto(){
         Magazine magazine = new Magazine();
-        //magazine.setOpen_at(open_at);;
+        magazine.setFinished_at(finished_at);;
         magazine.setPublished_at(published_at);;
         magazine.setClose_at(close_at);
         magazine.setTheme(theme);
