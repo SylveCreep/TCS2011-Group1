@@ -585,6 +585,9 @@ public class ResponseUtils {
         default:
             break;
         }
+        if (!form.containsKey("result")) {
+            form.put("result", 0);
+        }
         return form;
     }
 
@@ -652,6 +655,9 @@ public class ResponseUtils {
             break;
         default:
             break;
+        }
+        if (!form.containsKey("result")) {
+            form.put("result", 0);
         }
         return form;
     }

@@ -62,8 +62,8 @@ public class ContributionServiceImpl implements ContributionService {
             if (contributionRequest.getCreatedAt() != null) {
                 hasDate = 1;
             }
-            Page<Contribution> list = contributionDao.getContributionList(code, contributionRequest.getStudentId(),studentName,
-                    contributionRequest.getFacultyId(), contributionRequest.getMagazineId(),
+            Page<Contribution> list = contributionDao.getContributionList(code, contributionRequest.getStudentId(),
+                    studentName, contributionRequest.getFacultyId(), contributionRequest.getMagazineId(),
                     contributionRequest.getCreatedAt(), hasDate, contributionRequest.getStatus(),
                     PageRequest.of(offset, contributionRequest.getLimit(), sort));
             int lastPage = Math.round(list.getTotalElements() / contributionRequest.getLimit()
@@ -76,8 +76,8 @@ public class ContributionServiceImpl implements ContributionService {
                 contributionRes.setFacultyId(contribution.getFaculty().getId());
                 contributionRes.setFacultyName(contribution.getFaculty().getName());
                 contributionRes.setStudentName(contribution.getUser().getFullName());
-                contributionRes.setCheckedBy(
-                        contribution.getCheckedBy() == null ? null : contribution.getCheckedBy().getId());
+                contributionRes
+                        .setCheckedBy(contribution.getCheckedBy() == null ? null : contribution.getCheckedBy().getId());
                 contributionRes.setCheckedByName(
                         contribution.getCheckedBy() == null ? "" : contribution.getCheckedBy().getFullName());
                 contributionRes.setCreatedAt(contribution.getCreated_at() == null ? null
@@ -128,7 +128,7 @@ public class ContributionServiceImpl implements ContributionService {
             nContribution.setCode("C" + String.format("%04d", queryCheck.GetHighestId("contribution")));
             nContribution.setCreated_at(new Date());
             FileResponse fileResponse = fileService.storeContribution(file, nContribution.getCode());
-            nContribution.setLinkSource("contribution_"+nContribution.getCode()+"."+fileResponse.getExtension());
+            nContribution.setLinkSource("contribution_" + nContribution.getCode() + "." + fileResponse.getExtension());
             nContribution.setExtension(fileResponse.getExtension());
             try {
                 contributionDao.save(nContribution);
@@ -159,7 +159,8 @@ public class ContributionServiceImpl implements ContributionService {
                 uContribution.setIsApproved(contribution.getStatus());
             }
             FileResponse fileResponse = fileService.storeContribution(file, uContribution.getCode());
-            uContribution.setLinkSource(fileResponse.getPath().substring(fileResponse.getPath().lastIndexOf("/", 0), fileResponse.getPath().length()));
+            uContribution.setLinkSource(fileResponse.getPath().substring(fileResponse.getPath().lastIndexOf("/", 0),
+                    fileResponse.getPath().length()));
             uContribution.setExtension(fileResponse.getExtension());
             try {
                 uContribution.setUpdated_at(new Date());
