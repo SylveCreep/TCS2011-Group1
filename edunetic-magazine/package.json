@@ -11,10 +11,10 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "chart.js": "^3.0.2",
-    "core-js": "^3.6.5",
+    "core-js": "^3.10.1",
     "file-saver": "^2.0.5",
     "jszip": "^3.6.0",
-    "sweetalert2": "^10.15.5",
+    "sweetalert2": "^10.16.0",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.1",
     "vue-cookies": "^1.7.4",
@@ -22,7 +22,8 @@
     "vue-router": "^3.4.9",
     "vue-sweetalert2": "^4.2.0",
     "vuex": "^3.6.2",
-    "vuex-persistedstate": "^4.0.0-beta.3"
+    "vuex-persistedstate": "^4.0.0-beta.3",
+    "webstomp-client": "^1.2.6"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.5.12",
