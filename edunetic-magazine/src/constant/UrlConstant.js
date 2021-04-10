@@ -1,6 +1,6 @@
 let BaseUrl= "http://localhost:8080";
 export  const UrlConstants = Object.freeze({
-    BaseUrl: "http://localhost:8080",
+    BaseUrl: BaseUrl,
     Login: BaseUrl + "/login",
     Logout: BaseUrl + "/users/logout",
     User: BaseUrl + "/users",

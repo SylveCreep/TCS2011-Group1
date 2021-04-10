@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from "vue-router";
 import VueCookies from 'vue-cookies'
+import Demo from '@/pages/demo'
 
 //import Authen Components
 import Login from "@/pages/Authen/Login";
@@ -11,7 +12,10 @@ import ResetPassword from "@/pages/Authen/ResetPassword";
 import NotFound from "@/pages/NotFound";
 
 //import Change Password Components
-import ChangePassword from "@/pages/ChangePassword";
+import ChangePassword from "@/pages/user/UserChangePassword/ChangePassword";
+
+//import Dash Board Components
+import DashBoard from "@/pages/DashBoard";
 
 //import User Components
 import UserList from "@/pages/user/UserList";
@@ -45,146 +49,159 @@ export const router = new Router({
     mode: 'history',
     routes: [
         {
+            name: 'Demo',
+            path: '/dashboard',
+            component: Demo,
+            meta: {
+                authen: true,
+                admin: true,
+                student: true,
+                mc: true,
+                mm: true,
+            }
+        },
+        {
             name: 'UserProfile',
             path: '/profile',
             component: UserProfile,
-            meta: { 
-               authen: true,
-               admin: true,
-               student: true,
-               mc: true,
-               mm: true, 
+            meta: {
+                authen: true,
+                admin: true,
+                student: true,
+                mc: true,
+                mm: true,
             }
         },
         {
             name: 'ChangePassword',
-            path: '/changepassword',
+            path: '/users/changepassword',
             component: ChangePassword,
-            meta: { 
-               admin: true,
-               student: true,
-               mc: true,
-               mm: true, 
+            meta: {
+                authen: true,
+                admin: true,
+                student: true,
+                mc: true,
+                mm: true,
             }
         },
         {
             name: 'Dashboard',
             path: '/',
-            component: ContributionList,
-            meta: { 
+            component: DashBoard,
+            meta: {
                 authen: true,
                 admin: true,
                 student: true,
                 mc: true,
-                mm: true, 
-             }
+                mm: true,
+            }
         },
         //Authen Routes
         {
             name: 'Login',
             path: '/login',
             component: Login,
-            meta: { 
+            meta: {
                 authen: false,
                 admin: true,
                 student: true,
                 mc: true,
-                mm: true, 
-             }
+                mm: true,
+            }
         },
         {
             name: 'SendMail',
             path: '/forgot-password',
             component: SendMail,
-            meta: { 
+            meta: {
                 authen: false,
                 admin: true,
                 student: true,
                 mc: true,
-                mm: true, 
-             }
+                mm: true,
+            }
         },
         {
             name: 'ResetPassword',
             path: '/users/forgotpassword/:id',
             component: ResetPassword,
-            meta: { 
+            meta: {
                 authen: false,
                 admin: true,
                 student: true,
                 mc: true,
-                mm: true, 
-             }
+                mm: true,
+            }
         },
         //User Routes
         {
             name: 'UserList',
             path: '/users',
             component: UserList,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: true,
                 student: false,
                 mc: true,
-                mm: true, 
-             }
+                mm: true,
+            }
         }, {
             name: 'UserCreate',
             path: '/users/create',
             component: UserCreate,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: true,
                 student: false,
                 mc: false,
-                mm: false, 
-             }
+                mm: false,
+            }
         }, {
             name: 'UserUpdate',
             path: '/users/:id/detail',
             component: UserUpdate,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: true,
                 student: false,
                 mc: true,
-                mm: true, 
-             }
+                mm: true,
+            }
         },
         //Role Routes
         {
             name: 'RoleList',
             path: '/roles',
             component: RoleList,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: true,
                 student: false,
                 mc: false,
-                mm: false, 
-             }
+                mm: false,
+            }
         }, {
             name: 'RoleCreate',
             path: '/roles/create',
             component: RoleCreate,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: true,
                 student: false,
                 mc: false,
-                mm: false, 
-             }
+                mm: false,
+            }
         }, {
             name: 'RoleUpdate',
             path: '/roles/:id/update',
             component: RoleUpdate,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: true,
                 student: false,
                 mc: false,
-                mm: false, 
-             }
+                mm: false,
+            }
         },
         //Faculty Routes
         {
@@ -192,33 +209,33 @@ export const router = new Router({
             path: '/faculties',
             component: FacultyList,
             meta: {
-                authen: true, 
+                authen: true,
                 admin: false,
                 student: false,
                 mc: false,
-                mm: true, 
+                mm: true,
             }
         }, {
             name: 'FacultyCreate',
             path: '/faculties/create',
             component: FacultyCreate,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: false,
                 student: false,
                 mc: false,
-                mm: true, 
+                mm: true,
             }
         }, {
             name: 'FacultyUpdate',
             path: '/faculties/:id/update',
             component: FacultyUpdate,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: false,
                 student: false,
                 mc: false,
-                mm: true, 
+                mm: true,
             }
         },
         //Contribution Routes
@@ -226,36 +243,36 @@ export const router = new Router({
             name: 'ContributionList',
             path: '/contributions',
             component: ContributionList,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: false,
                 student: true,
                 mc: true,
-                mm: true, 
+                mm: true,
             }
         },
         {
             name: 'ContributionSubmit',
             path: '/contributions/submit',
             component: ContributionSubmit,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: false,
                 student: true,
                 mc: false,
-                mm: false, 
+                mm: false,
             }
         },
         {
             name: 'ContributionDetail',
             path: '/contributions/:id/detail',
             component: ContributionDetail,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: false,
                 student: true,
                 mc: true,
-                mm: true, 
+                mm: true,
             }
         },
         //Magazine Routes
@@ -263,47 +280,47 @@ export const router = new Router({
             name: 'MagazineList',
             path: '/magazines',
             component: MagazineList,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: false,
                 student: true,
                 mc: true,
-                mm: true, 
+                mm: true,
             }
         },
         {
             name: 'MagazineCreate',
             path: '/magazines/create',
             component: MagazineCreate,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: false,
                 student: false,
                 mc: false,
-                mm: true, 
+                mm: true,
             }
         },
         {
             name: 'MagazineUpdate',
             path: '/magazines/:id/update',
             component: MagazineUpdate,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: false,
                 student: false,
                 mc: false,
-                mm: true, 
+                mm: true,
             }
         }, {
             name: 'NotFound',
             path: '*',
             component: NotFound,
-            meta: { 
+            meta: {
                 authen: true,
                 admin: true,
                 student: true,
                 mc: true,
-                mm: true, 
+                mm: true,
             }
         }
     ]
@@ -314,14 +331,14 @@ export const router = new Router({
 router.beforeEach((to, from, next) => {
     if (!VueCookies.isKey("jwt")) {
         if (to.meta.authen) {
-            next ("/login")
+            next("/login")
         } else {
             next()
         }
-        
+
     } else {
         next()
-    }   
+    }
 })
 //if users have already logged in, cannot access login route
 router.beforeEach((to, from, next) => {

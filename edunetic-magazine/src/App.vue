@@ -11,7 +11,7 @@
       
       <div class="app-main__outer">
         <!--Main section -->
-        <router-view v-on:user-login="userLogin"></router-view>
+        <router-view v-on:user-login="userLogin" v-on:user-logout="userLogout"></router-view>
         <!--End main section -->
 
         <!--Footer section -->

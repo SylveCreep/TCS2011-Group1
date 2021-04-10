@@ -53,7 +53,8 @@
                     aria-expanded="false"
                     class="p-0 btn"
                   >
-                    <img id="avatar-nav"
+                    <img
+                      id="avatar-nav"
                       v-if="avatarUrl"
                       :src="avatarUrl"
                       width="42"
@@ -77,7 +78,7 @@
                     </router-link>
                     <div tabindex="-1" class="dropdown-divider"></div>
                     <router-link
-                      to="/ChangePassword"
+                      to="/users/changepassword"
                       type="button"
                       tabindex="0"
                       class="dropdown-item"
@@ -117,11 +118,11 @@
 </template>
 
 <script>
+import router from "@/router";
 import { commonHelper } from "@/helper/commonHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
 import axios from "axios";
 export default {
-  
   name: "TheNavbar",
   mixins: [commonHelper],
   data() {
@@ -130,9 +131,8 @@ export default {
       avatarUrl: null,
     };
   },
-  created () {
+  created() {
     this.getLoginUser();
-    
   },
   methods: {
     getLoginUser() {
@@ -140,10 +140,10 @@ export default {
         .get(UrlConstants.User + "/" + this.$cookies.get("id"))
         .then((res) => {
           this.loginUser = res.data.data;
-          this.avatarUrl = UrlConstants.AvatarSource + this.loginUser.avatar
+          this.avatarUrl = UrlConstants.AvatarSource + this.loginUser.avatar;
         });
     },
-  }
+  },
 };
 </script>
 

@@ -27,7 +27,7 @@
             <!--Only MM can access this route -->
             <button
               class="btn-shadow btn btn-info"
-              v-if="this.cookiesModified === true"
+              v-if="this.cookiesModified"
               v-on:click="showAllContributionList"
               style="margin-right: 10px"
             >
@@ -231,18 +231,6 @@ export default {
     this.getFacultyList();
   },
   methods: {
-    getContributionList() {
-      axios
-        .post(UrlConstants.Contribution + "/filter", this.filter)
-        .then((response) => {
-          this.list_contributions = response.data.data;
-          this.list_contributions.currentPage = this.filter.page;
-          this.list_contributions.lastPage = response.data.lastPage;
-        })
-        .catch((error) => {
-          this.errors = error.response.data;
-        });
-    },
     showDetail(contribution_id) {
       axios
         .get(UrlConstants.Contribution + "/" + contribution_id)

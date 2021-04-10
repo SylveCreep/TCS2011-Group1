@@ -1,9 +1,10 @@
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from 'vue';
+import App from './App.vue';
 import axios from "axios";
 import router from "@/router";
-import VueCookies from 'vue-cookies'
+import VueCookies from 'vue-cookies';
 import moment from 'moment';
+
 // import VueSweetalert2 from 'vue-sweetalert2';
 
 import 'bootstrap/dist/css/bootstrap.min.css'

@@ -45,7 +45,7 @@
         <ul class="vertical-nav-menu">
           <li class="app-sidebar__heading">Hello {{ loginUser.fullName }}</li>
           <li>
-            <router-link to="/">
+            <router-link to="/dashboard">
               <i class="metismenu-icon fas fa-th"></i>
               <p>Dashboard</p>
             </router-link>

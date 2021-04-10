@@ -165,5 +165,18 @@ export const commonHelper = {
           this.errors = error.response.data;
         });
     },
+    getContributionList() {
+      axios
+        .post(UrlConstants.Contribution + "/filter", this.filter)
+        .then((response) => {
+          this.list_contributions = response.data.data;
+          this.list_contributions.currentPage = this.filter.page;
+          this.list_contributions.lastPage = response.data.lastPage;
+        })
+        .catch((error) => {
+          this.errors = error.response.data;
+        });
+    },
+
   },
 }
