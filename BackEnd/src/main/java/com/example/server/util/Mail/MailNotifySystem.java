@@ -28,7 +28,7 @@ public class MailNotifySystem{
         try {
             List<Contribution> notifyContributions = contributionDao.getContributionHasNoComment();
             for(Contribution contribution : notifyContributions){
-                Boolean isSuccess = mailService.sendNotifyContributionEmail(contribution.getId(), NEEDNOTIFY);
+                Boolean isSuccess = mailService.sendNotifyContributionEmail(contribution.getId(), NEEDNOTIFY, CLIENTURL);
                 if(isSuccess == true){
                     contribution.setExpireNotify(SUCCESS);
                     contributionDao.save(contribution);

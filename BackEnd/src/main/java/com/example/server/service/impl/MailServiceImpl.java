@@ -36,7 +36,7 @@ public class MailServiceImpl implements MailService {
     String host_email = rb.getString("SEND_FROM");
 
     @Override
-    public Boolean sendNotifyContributionEmail(Long id, int type) {
+    public Boolean sendNotifyContributionEmail(Long id, int type, String url) {
         try {
             Contribution contribution = contributionDao.findExistedContributionById(id);
             User mcUser = userDao.findUserManagerByFacultyIdAndRoleId(contribution.getUser().getFaculty().getId(), (long) 3);
@@ -56,7 +56,7 @@ public class MailServiceImpl implements MailService {
                 default:
                     break;
             }
-            String html = "<p>Student " + contribution.getUser().getFullName()+ " has commited following code "+ contribution.getCode()+ " contribution</p>"+"<p>Please follow url link to see contribution: "+"<a target=\"_blank\" href=\""+NOTIFYURL+id+"\">Click this"
+            String html = "<p>Student " + contribution.getUser().getFullName()+ " has submited/resubmited following code "+ contribution.getCode()+ " contribution</p>"+"<p>Please follow url link to see contribution: "+"<a target=\"_blank\" href=\""+url+"/public/contributions/"+id+"/detail"+"\">Click this"
             +"</a>"+"</p>";
             try {
                 mailUtils.sendAsHtml(host_email, mcUser.getEmail(), ccList, subject, html);
