@@ -45,7 +45,7 @@
         <ul class="vertical-nav-menu">
           <li class="app-sidebar__heading">Hello {{ loginUser.fullName }}</li>
           <li>
-            <router-link to="/">
+            <router-link to="/dashboard">
               <i class="metismenu-icon fas fa-th"></i>
               <p>Dashboard</p>
             </router-link>
@@ -69,13 +69,6 @@
             <router-link to="/faculties">
               <i class="metismenu-icon fas fa-th"></i>
               <p>Faculty List</p>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/contributions" v-if="loginUser.roleId !== 1">
-              <!--Only admin cannot access this route-->
-              <i class="metismenu-icon fas fa-th"></i>
-              <p v-on:click="deleteUserKey()">Contribution List</p>
             </router-link>
           </li>
           <li>
@@ -113,14 +106,6 @@ export default {
     };
   },
   methods: {
-    deleteUserKey() {
-      if (this.$cookies.isKey("facultyStudent")) {
-        this.$cookies.remove("facultyStudent");
-      }
-      if (this.$cookies.isKey("studentContribution")) {
-        this.$cookies.remove("studentContribution");
-      }
-    },
     getLoginUser() {
       axios
         .get(UrlConstants.User + "/" + this.$cookies.get("id"))

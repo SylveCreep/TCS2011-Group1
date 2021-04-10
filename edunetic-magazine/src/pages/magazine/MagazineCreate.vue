@@ -121,4 +121,7 @@ export default {
 .app-page-title {
   margin: -30px 0 0 -30px;
 }
+.btn {
+  margin-left: 10px;
+}
 </style>

@@ -97,7 +97,7 @@ export default {
       this.requiredValidate(this.requireAttribute, this.contribution);
       if (this.validate) {
         let formData = new FormData();
-        formData.append("magazineId", 1);
+        formData.append("magazineId", this.$cookies.get("magazineContribution"));
         formData.append("file", this.contribution.file);
         await this.confirmAlert("create", "user");
         if (this.confirmResult) {
