@@ -170,7 +170,7 @@
                 <a
                   class="btn btn-danger contribution-delete"
                   v-on:click="deleteContribution(contribution.id)"
-                  v-if="loginUser.roleId === 4 && magazine.status === 0"
+                  v-if="loginUser.roleId === 4 && magazine.magazineStatus === 0 && status === 0"
                   >Delete</a
                 >
               </div>
@@ -225,14 +225,11 @@ export default {
   },
   created() {
     this.filter.status = 0;
+    this.checkLoginRoleFilter();
     this.setStudentContribution();
     this.checkMagazine();
     this.getContributionList();
     this.getFacultyList();
-  },  
-  destroyed() {
-    this.$cookies.remove("magazineContribution")
-    this.$cookies.remove("studentContribution")
   },
   methods: {
     showDetail(contribution_id) {
@@ -275,6 +272,14 @@ export default {
         this.getContributionList();
       }
     },
+      checkLoginRoleFilter() {
+      if (this.loginUser.roleId === DefaultConstants.Role.MarketingCoordinator) {
+        this.filter.facultyId = this.loginUser.facultyId;
+      }
+      if (this.loginUser.roleId === DefaultConstants.Role.Student) {
+        this.filter.studentId = this.loginUser.id;
+      }
+    },
     getLimit(event) {
       this.getcommonLimit(event.target.value);
       this.getContributionList();
@@ -294,7 +299,7 @@ export default {
     checkMagazine() {
       if (this.$cookies.isKey("magazineContribution")) {
         this.magazine = this.$cookies.get("magazineContribution");
-        this.filter.magazineId = this.$cookies.get("magazineContribution");
+        this.filter.magazineId = this.magazine.magazineId;
       }
     },
     downloadAllContribution() {

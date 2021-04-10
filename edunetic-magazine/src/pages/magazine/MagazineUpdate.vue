@@ -39,7 +39,7 @@
                 {{ list_errors.theme }}
               </p>
             </div>
-              <label class="col-sm-2 control-label">Closed At: </label>
+              <label class="col-sm-2 control-label">Finished At: </label>
               <div class="col-sm-12">
                 <input
                   id="close_at"

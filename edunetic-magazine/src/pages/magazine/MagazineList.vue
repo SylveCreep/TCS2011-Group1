@@ -160,7 +160,7 @@
                       <p
                         class="click"
                         style="display: inline"
-                        v-on:click="showMagazine(magazine.id)"
+                        v-on:click="showMagazine(magazine.id, magazine.studentId)"
                         v-if="loginUser.roleId === 2 && status === 0"
                       >
                         <b>Update | </b>
@@ -290,7 +290,11 @@ export default {
           alert("This magazine is null");
           this.getMagazineList();
         } else {
-          this.$cookies.set("magazineContribution", magazine_id);
+          let magazine = {
+            magazineId: magazine_id,
+            magazineStatus: this.status
+          }
+          this.$cookies.set("magazineContribution", magazine);
           this.$router.push("/contributions");
         }
       });

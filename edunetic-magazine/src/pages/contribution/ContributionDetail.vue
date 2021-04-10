@@ -18,7 +18,7 @@
         code: {{ contribution.code }}
       </div>
       <div class="card-body">
-        <p><b>Student Name:</b> {{ contribution.userName }}</p>
+        <p><b>Student Name:</b> {{ contribution.studentName }}</p>
 
         <p><b>Student Email:</b> {{ contribution.email }}</p>
 

@@ -240,7 +240,6 @@ export default {
     this.getUserList();
     this.getRoleList();
     this.getFacultyList();
-    
   },
   methods: {
     async checkUserExisted(user_id) {
