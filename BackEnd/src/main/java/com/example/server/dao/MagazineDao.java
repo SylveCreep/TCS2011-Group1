@@ -18,7 +18,7 @@ import org.springframework.data.repository.query.Param;
 public interface MagazineDao extends JpaRepository<Magazine, Long> {
     Magazine findByTheme(String theme);
 
-    //Magazine findByOpenAt(Date open_at);
+    Magazine findByFinishedAt(Date finishedAt);
 
     Magazine findByPublishedAt(Date published_at);
 
@@ -42,7 +42,7 @@ public interface MagazineDao extends JpaRepository<Magazine, Long> {
     "AND ((:theme IS NULL) OR LOWER(m.theme) LIKE CONCAT('%',IFNULL(LOWER(:theme), LOWER(m.theme)), '%')) " +
     "AND ((:code IS NULL) OR LOWER (m.code) LIKE CONCAT('%',IFNULL(LOWER(:code),LOWER(m.code)),'%')) " +
     "AND ((:id IS NULL) OR (m.id = :id))" +
-    "AND  ((:currDate = 0) OR (:currDate BETWEEN m.created_at AND m.close_at)) " +
+    "AND  ((:currDate = 0) OR (:currDate BETWEEN m.created_at AND m.finished_at)) " +
     "group by m.id", nativeQuery = true)
     Page<Magazine> searchMagazineOpening(@Param("id") Long id, @Param("theme") String theme, @Param("code") String code/*, @Param("openAt") Date openAt, @Param("publishedAt") Date publishedAt, @Param("closeAt") Date closeAt*/, @Param("currDate") Date currDate, Pageable pageable);
 
@@ -52,7 +52,7 @@ public interface MagazineDao extends JpaRepository<Magazine, Long> {
     "AND ((:theme IS NULL) OR LOWER(m.theme) LIKE CONCAT('%',IFNULL(LOWER(:theme), LOWER(m.theme)), '%')) " +
     "AND ((:code IS NULL) OR LOWER (m.code) LIKE CONCAT('%',IFNULL(LOWER(:code),LOWER(m.code)),'%')) " +
     "AND ((:id IS NULL) OR (m.id = :id))" +
-    "AND  ((:currDate = 0) OR (:currDate BETWEEN m.close_at AND m.published_at)) " +
+    "AND  ((:currDate = 0) OR (:currDate BETWEEN m.finished_at AND m.published_at)) " +
     "group by m.id", nativeQuery = true)
     Page<Magazine> searchMagazineProcessing(@Param("id") Long id, @Param("theme") String theme, @Param("code") String code/*, @Param("openAt") Date openAt, @Param("publishedAt") Date publishedAt, @Param("closeAt") Date closeAt*/, @Param("currDate") Date currDate, Pageable pageable);
 
@@ -62,7 +62,7 @@ public interface MagazineDao extends JpaRepository<Magazine, Long> {
     "AND ((:theme IS NULL) OR LOWER(m.theme) LIKE CONCAT('%',IFNULL(LOWER(:theme), LOWER(m.theme)), '%')) " +
     "AND ((:code IS NULL) OR LOWER (m.code) LIKE CONCAT('%',IFNULL(LOWER(:code),LOWER(m.code)),'%')) " +
     "AND ((:id IS NULL) OR (m.id = :id))" +
-    "AND  ((:currDate = 0) OR (:currDate BETWEEN m.published_at AND DATE_ADD(m.published_at, INTERVAL 15 DAY))) " +
+    "AND  ((:currDate = 0) OR (:currDate BETWEEN m.published_at AND m.close_at)) " +
     "group by m.id", nativeQuery = true)
     Page<Magazine> searchMagazinePublishing(@Param("id") Long id, @Param("theme") String theme, @Param("code") String code/*, @Param("openAt") Date openAt, @Param("publishedAt") Date publishedAt, @Param("closeAt") Date closeAt*/, @Param("currDate") Date currDate, Pageable pageable);
 
@@ -72,7 +72,7 @@ public interface MagazineDao extends JpaRepository<Magazine, Long> {
     "AND ((:theme IS NULL) OR LOWER(m.theme) LIKE CONCAT('%',IFNULL(LOWER(:theme), LOWER(m.theme)), '%')) " +
     "AND ((:code IS NULL) OR LOWER (m.code) LIKE CONCAT('%',IFNULL(LOWER(:code),LOWER(m.code)),'%')) " +
     "AND ((:id IS NULL) OR (m.id = :id))" +
-    "AND  ((:currDate = 0) OR (:currDate > DATE_ADD(m.published_at, INTERVAL 15 DAY))) " +
+    "AND  ((:currDate = 0) OR (:currDate > m.close_at)) " +
     "group by m.id", nativeQuery = true)
     Page<Magazine> searchMagazineClosing(@Param("id") Long id, @Param("theme") String theme, @Param("code") String code/*, @Param("openAt") Date openAt, @Param("publishedAt") Date publishedAt, @Param("closeAt") Date closeAt*/, @Param("currDate") Date currDate, Pageable pageable);
 

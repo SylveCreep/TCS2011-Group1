@@ -6,7 +6,8 @@ public class MagazineResponse {
     private Long id;
     private String code;
     private String theme;
-    //private Date openAt;
+    private Date created_at;
+    private Date finished_at;
     private Date publishedAt;
     private Date closeAt;
     
@@ -34,13 +35,21 @@ public class MagazineResponse {
         this.theme = theme;
     }
 
-    /*public Date getOpen_at() {
-        return openAt;
+    public Date getCreated_at() {
+        return created_at;
     }
 
-    public void setOpen_at(Date openAt) {
-        this.openAt = openAt;
-    }*/
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
+    }
+
+    public Date getFinished_at() {
+        return finished_at;
+    }
+
+    public void setFinished_at(Date finished_at) {
+        this.finished_at = finished_at;
+    }
 
     public Date getPublished_at() {
         return publishedAt;
