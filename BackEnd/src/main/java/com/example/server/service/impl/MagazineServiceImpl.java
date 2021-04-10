@@ -167,8 +167,7 @@ public class MagazineServiceImpl implements MagazineService {
                     list = null;
                     break;
             }
-            //Page<Magazine> list = magazineDao.searchMagazineByName(magazineSearchRequest.getId(), magazineSearchRequest.getTheme(), magazineSearchRequest.getCode() /*, magazineSearchRequest.getOpen_at(), magazineSearchRequest.getPublished_at(), magazineSearchRequest.getClose_at()*/, magazineSearchRequest.getCurrentDate(), magazineSearchRequest.getStatus(), PageRequest.of(offset, magazineSearchRequest.getLimit(), sort));
-
+            
             int lastPage = Math.round(list.getTotalElements() / magazineSearchRequest.getLimit()  + ((list.getTotalElements() % magazineSearchRequest.getLimit() == 0) ? 0 : 1)); 
             MagazineLastPageResponse object = new MagazineLastPageResponse();
             List<MagazineResponse> listResponse = new ArrayList<>();
