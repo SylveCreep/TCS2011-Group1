@@ -29,16 +29,16 @@
                 {{ list_errors.theme }}
               </p>
             </div>       
-            <label class="col-sm-2 control-label">Closed At: </label>
+            <label class="col-sm-2 control-label">Finish At: </label>
             <div class="col-sm-12">
               <input
-                id="close_at"
+                id="finished_at"
                 type="date"
                 class="form-control"
-                v-model="magazine.close_at"
+                v-model="magazine.finished_at"
               />
               <p style="color: red" v-if="list_errors !== null">
-                {{ list_errors.close_at }}
+                {{ list_errors.finished_at }}
               </p>
             </div>     
             <label class="col-sm-2 control-label">Published At: </label>
@@ -85,14 +85,15 @@ export default {
       magazine: {},
       requireAttribute: {
         theme: "Theme",
-        close_at: "Close date",
+        finished_at: "Finished date",
         published_at:"Published date"
       },
     };
   },
   methods: {
     async createMagazine() {
-      this.requiredValidate(this.requireAttribute, this.magazine); //this function is called from helperMixin.js file
+      console.log(this.magazine)
+      this.magazineValidate(this.requireAttribute, this.magazine); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {  
         await this.confirmAlert("create", "magazine");

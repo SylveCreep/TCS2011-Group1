@@ -123,7 +123,7 @@
                     <th class="sort" v-if="status === 3" v-on:click="getSort('published_at')">
                       Closed At<i class="fas fa-sort"></i>
                     </th>
-                    <th>Action</th>
+                    <th v-if="status !== 3">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -134,7 +134,8 @@
                     <td>{{ magazine.created_at | formatDate }}</td>
                     <td>{{ magazine.finished_at | formatDate }}</td>
                     <td>{{ magazine.published_at | formatDate }}</td>
-                    <td>
+                    <td v-if="status === 3">{{ magazine.close_at | formatDate }}</td>
+                    <td v-if="status !== 3">
                       <p
                         class="click"
                         style="display: inline"
@@ -312,7 +313,7 @@ export default {
   cursor: pointer;
 }
 .click :hover {
-  color: #d10024;
+  color: #3f6ad8;
 }
 .select-page {
   padding: 2px 5px;

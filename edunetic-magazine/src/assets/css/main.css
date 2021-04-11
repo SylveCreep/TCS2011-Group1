@@ -10,6 +10,29 @@
     height: 100vh;
 
   }
+  .btn {
+    margin-left: 20px
+  }
+  .btn-success {
+    color: #fff;
+    background-color: #3ac47d;
+    border-color: #3ac47d;
+  }
+  .btn-primary {
+    color: #fff;
+    background-color: #3f6ad8;
+    border-color: #3f6ad8;
+}
+.btn-danger {
+  color: #fff;
+  background-color: #d92550;
+  border-color: #d92550;
+}
+.btn-secondary {
+  color: #fff;
+  background-color: #545b62;
+  border-color: #4e555b;
+}
   .main_div{
     width: 365px;
     background: #fff;

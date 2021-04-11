@@ -1,5 +1,5 @@
 <template>
-  <div class="app-main__inner" style="background-color: #fff">
+  <div class="app-main__inner" style="background-color: #fff" v-if="displayCheck">
     <div class="app-page-title">
       <div class="page-title-wrapper">
         <div class="page-title-heading">
@@ -69,8 +69,10 @@
           </div>
         </form>
       </div>
+    
     </div>
   </div>
+  <not-found v-else></not-found>
 </template>
 <script>
 import axios from "axios";
@@ -78,11 +80,14 @@ import { UrlConstants } from "@/constant/UrlConstant";
 import { validateHelper } from "@/helper/validateHelper";
 import { commonHelper } from "@/helper/commonHelper";
 import TermCondition from "../../components/TermCondition.vue";
+import NotFound from '../NotFound.vue';
+ "./user/UserUpdate"; 
 export default {
   name: "ContributionSubmit",
   mixins: [commonHelper, validateHelper],
   components: {
     TermCondition,
+    NotFound,
   },
   data() {
     return {
@@ -90,7 +95,11 @@ export default {
       requireAttribute: {
         file: "Contribution file",
       },
+      displayCheck: false
     };
+  },
+  created() {
+    this.checkDisplay();
   },
   methods: {
     async submitContribution() {
@@ -108,6 +117,7 @@ export default {
               },
             })
             .then((r) => {
+              // axios.get(UrlConstants.MailSubmit + r.data.data.id)
               this.successAlert(); //This function are called from commonHelper.js file
               this.$router.push("/contributions");
             })
@@ -122,6 +132,12 @@ export default {
       const tfile = this.$refs.file.files[0];
       this.contribution.file = tfile;
     },
+    checkDisplay() {
+      let magazineStatus = this.$cookies.get("magazineContribution").magazineStatus;
+      if ( magazineStatus <= 1) {
+        this.displayCheck = true
+      }
+    }
   },
   props: {},
 };

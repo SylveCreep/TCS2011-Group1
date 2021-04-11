@@ -49,18 +49,6 @@ export const router = new Router({
     mode: 'history',
     routes: [
         {
-            name: 'Demo',
-            path: '/dashboard',
-            component: Demo,
-            meta: {
-                authen: true,
-                admin: true,
-                student: true,
-                mc: true,
-                mm: true,
-            }
-        },
-        {
             name: 'UserProfile',
             path: '/profile',
             component: UserProfile,
@@ -85,8 +73,20 @@ export const router = new Router({
             }
         },
         {
-            name: 'Dashboard',
+            name: 'HomePage',
             path: '/',
+            component: DashBoard,
+            meta: {
+                authen: true,
+                admin: true,
+                student: true,
+                mc: true,
+                mm: true,
+            }
+        },
+        {
+            name: 'Dashboard',
+            path: '/dashboard',
             component: DashBoard,
             meta: {
                 authen: true,

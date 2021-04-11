@@ -1,7 +1,7 @@
 <template>
   <div class="app-main__inner" style="background-color: #fff">
     <div class="row">
-      <p class="comment-total">Comments ({{totalComment}}):</p>
+      <p class="comment-total">Comments ({{ totalComment }}):</p>
     </div>
     <div class="comment-list">
       <div
@@ -22,7 +22,9 @@
           <div class="comment-detail col-10">
             <div class="comment-user-name">
               {{ comment.userName }}
-              <span class="comment-time">{{calculateDate(comment.createdDate)}}</span>
+              <span class="comment-time">{{
+                calculateDate(comment.createdDate)
+              }}</span>
             </div>
             <div class="comment-text d-flex p-2">
               <span>
@@ -83,7 +85,9 @@
               <div class="comment-detail col-10">
                 <div class="comment-user-name">
                   {{ ch.userName }}
-                  <span class="comment-time">{{calculateDate(ch.createdDate)}}</span>
+                  <span class="comment-time">{{
+                    calculateDate(ch.createdDate)
+                  }}</span>
                 </div>
                 <div class="comment-text d-flex p-2">
                   <span>
@@ -144,14 +148,14 @@
                 <button
                   class="btn btn-reply"
                   v-on:click="replyCommentParent(comment.id)"
-                  v-bind:id="'btn-reply-'+comment.id"
+                  v-bind:id="'btn-reply-' + comment.id"
                 >
                   Reply
                 </button>
                 <button
                   class="btn btn-edit"
                   v-on:click="editCommentById(comment.id)"
-                  v-bind:id="'btn-edit-'+comment.id"
+                  v-bind:id="'btn-edit-' + comment.id"
                 >
                   Edit
                 </button>
@@ -160,7 +164,6 @@
           </div>
         </div>
         <!--End of reply comment part-->
-
       </div>
       <!--End of parent comment-->
 
@@ -187,13 +190,26 @@
                 name="commentComment"
                 class="comment-text d-flex p-2 col-9"
                 placeholder="Comment.............."
+                v-on:keyup="CommentByEnter"
+                required
               />
-              <button class="btn btn-reply" v-on:click="addComment" v-if="!editParentShow">
+              <button
+                class="btn btn-reply"
+                v-on:click="addComment"
+                v-if="!editParentShow"
+              >
                 Comment
               </button>
-              <button class="btn btn-reply" v-on:click="editParentCommentById" v-else>
+              <button
+                class="btn btn-reply"
+                v-on:click="editParentCommentById"
+                v-else
+              >
                 Edit
               </button>
+              <p class="comment-alert is-hide" style="color: red">
+                Comment cannot be blank
+              </p>
             </div>
           </div>
         </div>
@@ -209,7 +225,7 @@ import Stomp from "webstomp-client";
 import { commonHelper } from "@/helper/commonHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
 import axios from "axios";
-import moment from 'moment';
+import moment from "moment";
 export default {
   name: "CommentList",
   mixins: [commonHelper],
@@ -220,7 +236,7 @@ export default {
       parent_comments: [],
       children_comments: [],
       editParentShow: false,
-      totalComment: 0
+      totalComment: 0,
     };
   },
   created() {
@@ -233,6 +249,7 @@ export default {
   },
   methods: {
     getCommentList() {
+      this.filter.contributionId = this.$route.params.id;
       axios
         .post(UrlConstants.Comment + "/filter", this.filter)
         .then((response) => {
@@ -243,82 +260,108 @@ export default {
           this.children_comments = comment_lists.filter(
             (e) => e.parentId !== null
           );
-          this.totalComment = response.data.data.totalElements
+          this.totalComment = response.data.data.totalElements;
         })
         .catch((error) => {
           this.errors = error.response.data;
         });
     },
     calculateDate(time) {
-      let commentTime = moment(time)
+      let commentTime = moment(time);
       let now = moment(new Date());
-      let different= moment.duration(now.diff(commentTime))._data
+      let different = moment.duration(now.diff(commentTime))._data;
 
       //less than 1 minutes
-      if (different.minutes == 0 && different.hours == 0 && different.days == 0) {
-        commentTime= "few seconds ago"
-      } 
+      if (
+        different.minutes == 0 &&
+        different.hours == 0 &&
+        different.days == 0
+      ) {
+        commentTime = "few seconds ago";
+      }
 
       //less than 1 hour
-      else if (different.minutes > 0 && different.hours == 0 && different.days == 0) {
-        commentTime = different.minutes +" minutes ago"
-      } 
+      else if (
+        different.minutes > 0 &&
+        different.hours == 0 &&
+        different.days == 0
+      ) {
+        commentTime = different.minutes + " minutes ago";
+      }
 
       //less than 1 day
       else if (different.hours > 0 && different.days == 0) {
-        commentTime = different.hours + " hours ago"
+        commentTime = different.hours + " hours ago";
 
-      //less than 10 days
-      } 
-      else if (0 < different.days <= 7) {
-          commentTime = different.days + " days ago";
+        //less than 10 days
+      } else if (0 < different.days <= 7) {
+        commentTime = different.days + " days ago";
       }
       //more than 10 days
       else {
-          commentTime = moment(time).format('MM/DD/YYYY')
-      }       
+        commentTime = moment(time).format("MM/DD/YYYY");
+      }
       return commentTime;
     },
     addComment() {
-      let data = {
-        contributionId: this.$route.params.id,
-        content:  document.querySelector("#comment-input-box").value,
-      };
-      axios.post(UrlConstants.Comment + "/send", data);
-      document.querySelector("#comment-input-box").value = ""
-      this.getCommentList()
+      let commentValue = document.querySelector("#comment-input-box").value;
+      if (commentValue !== "") {
+        let data = {
+          contributionId: this.$route.params.id,
+          content: commentValue,
+        };
+        axios.post(UrlConstants.Comment + "/send", data);
+        document.querySelector("#comment-input-box").value = "";
+        this.getCommentList();
+      } else {
+        let classLists = document.querySelector(".comment-alert").classList;
+        classLists.remove("is-hide");
+        classLists.add("is-display");
+      }
     },
-    showEditCommentById(commentId,parentId, content) {
+    showEditCommentById(commentId, parentId, content) {
       //assigned value to reply input to update
       document.querySelector("#input-comment-" + parentId).value = content;
-      document.querySelector("#input-comment-" + parentId).setAttribute('editId', commentId)
+      document
+        .querySelector("#input-comment-" + parentId)
+        .setAttribute("editId", commentId);
 
       //change reply button to edit button
-      document.querySelector("#btn-reply-" + parentId).style.cssText= "display: none";
-      document.querySelector("#btn-edit-" + parentId).style.cssText = "display: block";
+      document.querySelector("#btn-reply-" + parentId).style.cssText =
+        "display: none";
+      document.querySelector("#btn-edit-" + parentId).style.cssText =
+        "display: block";
     },
     showEditParentCommentById(commentId, content) {
       document.querySelector("#comment-input-box").value = content;
-      document.querySelector("#comment-input-box").setAttribute('editId', commentId)
-      this.editParentShow = true 
+      document
+        .querySelector("#comment-input-box")
+        .setAttribute("editId", commentId);
+      this.editParentShow = true;
     },
     async editCommentById(commentId) {
       await this.confirmAlert("edit", "comment");
       if (this.confirmResult) {
         let data = {
-          id: document.querySelector("#input-comment-" + commentId).getAttribute('editId'),
+          id: document
+            .querySelector("#input-comment-" + commentId)
+            .getAttribute("editId"),
           content: document.querySelector("#input-comment-" + commentId).value,
         };
         axios.post(UrlConstants.Comment + "/update", data).then((r) => {
           this.successAlert();
           this.getCommentList();
-          //reset reply input 
-          document.querySelector("#input-comment-" + commentId).setAttribute('editId', "");
+          //reset reply input
+          document
+            .querySelector("#input-comment-" + commentId)
+            .setAttribute("editId", "");
           document.querySelector("#input-comment-" + commentId).value = "";
           //change edit button to reply button
-          document.querySelector("#btn-reply-" + commentId).style.cssText= "display: none";
-          document.querySelector("#btn-edit-" + commentId).style.cssText = "display: block";
-          this.editParentShow= false
+          document.querySelector("#btn-reply-" + commentId).style.cssText =
+            "display: none";
+          document.querySelector("#btn-edit-" + commentId).style.cssText =
+            "display: block";
+          this.editParentShow = false;
         });
       }
     },
@@ -326,17 +369,21 @@ export default {
       await this.confirmAlert("edit", "comment");
       if (this.confirmResult) {
         let data = {
-          id: document.querySelector("#comment-input-box").getAttribute('editId'),
+          id: document
+            .querySelector("#comment-input-box")
+            .getAttribute("editId"),
           content: document.querySelector("#comment-input-box").value,
         };
         axios.post(UrlConstants.Comment + "/update", data).then((r) => {
           this.successAlert();
           this.getCommentList();
-          //reset reply input 
-          document.querySelector("#comment-input-box").setAttribute('editId', "");
+          //reset reply input
+          document
+            .querySelector("#comment-input-box")
+            .setAttribute("editId", "");
           document.querySelector("#comment-input-box").value = "";
           //change edit button to reply button
-          this.editParentShow= false
+          this.editParentShow = false;
         });
       }
     },
@@ -353,7 +400,8 @@ export default {
       }
     },
     showReplyCommentInput(commentId) {
-      let classLists = document.querySelector("#reply-comment-" + commentId).classList;
+      let classLists = document.querySelector("#reply-comment-" + commentId)
+        .classList;
       classLists.remove("is-hide");
       classLists.add("is-display");
     },
@@ -373,6 +421,14 @@ export default {
       };
       axios.post(UrlConstants.Comment + "/send", data);
       this.showReplyComments(parentId);
+    },
+    CommentByEnter(e) {
+      // Number 13 is the "Enter" key on the keyboard
+      if (e.keyCode === 13) {
+        console.log(document.querySelector("#comment-input-box").value);
+        // Trigger the button element with a click
+        this.addComment();
+      }
     },
     connect() {
       this.stompClient = Stomp.over(
@@ -433,7 +489,7 @@ export default {
 .comment-item {
   margin-top: 1rem;
 }
-.comment-action{
+.comment-action {
   margin-left: 2.5rem;
 }
 .comment-user-name {
