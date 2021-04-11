@@ -275,29 +275,4 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/totalvalues")
-    public ResponseEntity<?> getTotalValuesOfReport() {
-        try {
-            TotalCountResponse totalCountResponse = userService.getTotalCountResponse();
-            return responseUtils.getResponseEntity(totalCountResponse, Constant.SUCCESS,
-                    "Get total values successfully", HttpStatus.OK);
-        } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get total values failed",
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping(value = "/getTopStudent")
-    public ResponseEntity<?> getTopStudent() {
-        try {
-            List<UserWithMostContributionResponse> userWithMostContributionResponseList = userService
-                    .getUserWithMostContribution();
-            return responseUtils.getResponseEntity(userWithMostContributionResponseList, Constant.SUCCESS,
-                    "Get top student successfully", HttpStatus.OK);
-        } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get top student failed",
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
-
 }

@@ -498,9 +498,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public List<UserWithMostContributionResponse> getUserWithMostContribution() {
+    public List<UserWithMostContributionResponse> getUserWithMostContribution(Long magazineId) {
         int limit = 5;
-        List<Object> userWithMostContributionList = userDao.getTopUserWithMostContributions(limit);
+        List<Object> userWithMostContributionList = userDao.getTopUserWithMostContributions(magazineId, limit);
         List<UserWithMostContributionResponse> userWithMostContributionResponseList = new ArrayList<>();
         for (Object object : userWithMostContributionList) {
             UserWithMostContributionResponse userWithMostContributionResponse = new UserWithMostContributionResponse();

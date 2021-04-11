@@ -48,6 +48,6 @@ public interface UserService {
 
     TotalCountResponse getTotalCountResponse();
 
-    List<UserWithMostContributionResponse> getUserWithMostContribution();
+    List<UserWithMostContributionResponse> getUserWithMostContribution(Long magazineId);
 
 }
