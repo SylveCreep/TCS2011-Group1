@@ -178,8 +178,7 @@ public class ContributionServiceImpl implements ContributionService {
                 uContribution.setIsApproved(contribution.getStatus());
             }
             FileResponse fileResponse = fileService.storeContribution(file, uContribution.getCode());
-            uContribution.setLinkSource(fileResponse.getPath().substring(fileResponse.getPath().lastIndexOf("/", 0),
-                    fileResponse.getPath().length()));
+            uContribution.setLinkSource("contribution_" + uContribution.getCode() + "." + fileResponse.getExtension());
             uContribution.setExtension(fileResponse.getExtension());
             try {
                 uContribution.setUpdated_at(new Date());
