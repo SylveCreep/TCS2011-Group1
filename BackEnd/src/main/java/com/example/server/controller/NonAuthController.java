@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import static com.example.server.constant.Constant.*;
+import static com.example.server.util.ResponseUtils.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -69,7 +70,7 @@ public class NonAuthController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<?> generateToken(@RequestBody LoginUser loginUser) throws AuthenticationException {
+    public ResponseEntity<?> generateToken(@RequestBody LoginUser loginUser, HttpServletRequest request) throws AuthenticationException {
         try {
             User user = userService.findOne(loginUser.getEmail());
             if(user.getIs_deleted() == 1){
@@ -87,6 +88,7 @@ public class NonAuthController {
             }
             SecurityContextHolder.getContext().setAuthentication(authentication);
             final String token = jwtTokenUtil.generateToken(authentication);
+            CLIENTURL = getSiteURL(request);
             return getResponseEntity(new AuthToken(token, userLogin.getId()),"1","Login success", HttpStatus.OK);
         } catch (Exception e) {
             return getResponseEntity("NULL","-1","Login failed", HttpStatus.BAD_REQUEST);

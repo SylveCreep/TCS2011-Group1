@@ -87,12 +87,12 @@ public class ContributionController {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Create contribution failed, missing file",
                         HttpStatus.BAD_REQUEST);
             }
-            Boolean isCreated = contributionService.createContribution(request, file);
-            if (isCreated == false) {
+            ContributionResponse contributionResponse = contributionService.createContribution(request, file);
+            if (contributionResponse == null) {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Create contribution failed",
                         HttpStatus.BAD_REQUEST);
             }
-            return responseUtils.getResponseEntity("NULL", SUCCESS, "Create contribution success", HttpStatus.OK);
+            return responseUtils.getResponseEntity(contributionResponse, SUCCESS, "Create contribution success", HttpStatus.OK);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", FAILURE, "Create contribution failed",
                     HttpStatus.BAD_REQUEST);

@@ -34,7 +34,7 @@ public class Constant {
         public static final int JUSTCREATED = 0;
         public static final int NEEDNOTIFY = 1;
 
-        public static final String NOTIFYURL = "http://localhost:3000/contributions/";
+        public static String CLIENTURL = "http://localhost:8081";
 
         //Kafka
         public static final String GROUP_ID = "kafka-sandbox";
