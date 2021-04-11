@@ -42,7 +42,7 @@ public class MailController {
     @Autowired
     private UserDao userDao;
     
-    @PreAuthorize("hasRole('R0002') or hasRole('R0003') ")
+    @PreAuthorize("hasRole('R0002') or hasRole('R0003') or hasRole('R0004')  ")
     @GetMapping(value = "/contribution", consumes = { "text/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> notifyContributionAfterCreated(HttpServletRequest request,@RequestParam(value = "id") Long id) {
         try {

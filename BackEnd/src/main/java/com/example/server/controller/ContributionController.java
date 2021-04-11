@@ -282,5 +282,15 @@ public class ContributionController {
         }
     }
 
-    
+    @GetMapping("/getContributionsByMagazineId")
+    public ResponseEntity<?> countContributionsByMagazineId(@Nullable @RequestParam("magazineId")Long magazineId){
+        try {
+            Long contribution = contributionService.countContributionByMagazineId(magazineId);
+            return responseUtils.getResponseEntity(contribution, SUCCESS, "Get contribution success",
+                        HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", FAILURE, "Get contribution fail",
+                        HttpStatus.BAD_REQUEST);
+        }
+    }
 }

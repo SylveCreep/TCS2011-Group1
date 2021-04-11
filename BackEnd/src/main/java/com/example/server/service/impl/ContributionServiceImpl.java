@@ -133,7 +133,7 @@ public class ContributionServiceImpl implements ContributionService {
             try {
                 Contribution contributionResult = contributionDao.save(nContribution);
                 ContributionResponse contributionRes = new ContributionResponse();
-                contributionRes.setId(contribution.getId());
+                contributionRes.setId(contributionResult.getId());
                 contributionRes.setStudentId(contributionResult.getUser().getId());
                 contributionRes.setFacultyId(contributionResult.getFaculty().getId());
                 contributionRes.setFacultyName(contributionResult.getFaculty().getName());
@@ -240,6 +240,11 @@ public class ContributionServiceImpl implements ContributionService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public Long countContributionByMagazineId(Long magazineId) {
+        return contributionDao.countContributionByMagazineId(magazineId);
     }
 
 }

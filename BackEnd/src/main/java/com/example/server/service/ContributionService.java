@@ -19,4 +19,6 @@ public interface ContributionService {
     Boolean updateContribution(ContributionRequest contribution, MultipartFile file, int withFile);
 
     Boolean updateStatusContribution(ContributionRequest contribution);
+
+    Long countContributionByMagazineId(Long magazineId);
 }
