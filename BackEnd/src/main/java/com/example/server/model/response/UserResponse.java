@@ -16,6 +16,7 @@ public class UserResponse {
     private Integer gender;
     private String dateOfBirth;
     private String avatar;
+    private Integer isOnline;
 
     public UserResponse(){
 
@@ -123,6 +124,14 @@ public class UserResponse {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Integer getIsOnline() {
+        return isOnline;
+    }
+
+    public void setIsOnline(Integer isOnline) {
+        this.isOnline = isOnline;
     }
 
 }

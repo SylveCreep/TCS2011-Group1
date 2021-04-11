@@ -21,6 +21,10 @@ public class Constant {
         public static final int PUBLISHING = 2;
         public static final int CLOSED = 3;
 
+        //Online
+        public static final int ONLINE = 1;
+        public static final int OFFLINE = 0;
+
         //Reset password expire date
         public static final int minute = 15;
 

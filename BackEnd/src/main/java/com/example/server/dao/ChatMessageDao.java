@@ -22,5 +22,10 @@ public interface ChatMessageDao extends JpaRepository<ChatMessage, Long> {
 
     @Query(value ="SELECT * from chat_message c WHERE c.is_deleted = 0 AND ((c.to_user = :toUserId AND c.from_user = :userId) OR (c.to_user = :userId AND c.from_user = :toUserId ))", nativeQuery = true)
     Page<ChatMessage> loadMessageByUserAndDestination(@Param("userId")Long userId,@Param("toUserId")Long toUserId, Pageable pageable);
+
+    // @Query(value="SELECT u.id as userId, u.full_name as username, u.background_avatar as avatar, c.content as content, c.from_user as fromUser FROM user u "+ 
+    // "INNER JOIN chat_message c ON c.to_user = u.id "+ 
+    // "WHERE u.id = :toUserId ", nativeQuery = true)
+    // List<Object> loadChatList(@Param("toUserId")Long toUserId);
     
 }

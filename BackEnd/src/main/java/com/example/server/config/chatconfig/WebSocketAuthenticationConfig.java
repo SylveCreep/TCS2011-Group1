@@ -1,6 +1,7 @@
 package com.example.server.config.chatconfig;
 
 import com.example.server.config.TokenProvider;
+import com.example.server.service.UserService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import static com.example.server.constant.Constant.*;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -42,6 +44,9 @@ public class WebSocketAuthenticationConfig implements WebSocketMessageBrokerConf
     
     @Resource(name = "userService")
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private UserService userService;
 
 
     @Override
@@ -65,11 +70,12 @@ public class WebSocketAuthenticationConfig implements WebSocketMessageBrokerConf
                         if (Objects.isNull(principal)){
                             return null;
                         }
+                        userService.updateOnlineStatus(ONLINE, accessor.getSessionId());
                         accessor.setUser(principal);
                     }
                 } else if (StompCommand.DISCONNECT.equals(accessor.getCommand())) {
                     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+                    userService.updateOnlineStatus(OFFLINE, accessor.getSessionId());
                     if (Objects.nonNull(authentication))
                         logger.info("Disconnected Auth : " + authentication.getName());
                     else

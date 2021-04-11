@@ -16,6 +16,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static com.example.server.constant.Constant.*;
+
 @Entity
 @Table(name="user")
 public class User extends BaseEntity {
@@ -70,6 +72,12 @@ public class User extends BaseEntity {
 
     @Column(name="gender")
     private Integer gender;
+
+    @Column(name = "is_online")
+    private Integer isOnline = OFFLINE;
+
+    @Column(name = "current_session")
+    private String currentSession;
 
     public String getEmail() {
         return email;
@@ -195,9 +203,34 @@ public class User extends BaseEntity {
         this.gender = gender;
     }
 
+    public List<ChatMessage> getChatMessages() {
+        return chatMessages;
+    }
+
+    public void setChatMessages(List<ChatMessage> chatMessages) {
+        this.chatMessages = chatMessages;
+    }
+
+    public Integer getIsOnline() {
+        return isOnline;
+    }
+
+    public void setIsOnline(Integer isOnline) {
+        this.isOnline = isOnline;
+    }
+
+    public String getCurrentSession() {
+        return currentSession;
+    }
+
+    public void setCurrentSession(String currentSession) {
+        this.currentSession = currentSession;
+    }
+
     public User(String email, String code, String password, Role role, Faculty faculty, String fullName, String address,
-            List<Contribution> contributions, List<Comment> comments, String resetPasswordKey, Date keyCreatedAt,
-            Date dateOfBirth, Long phoneNumber, String avatar, Integer gender) {
+            List<Contribution> contributions, List<Comment> comments, List<ChatMessage> chatMessages,
+            String resetPasswordKey, Date keyCreatedAt, Date dateOfBirth, Long phoneNumber, String avatar,
+            Integer gender, Integer isOnline, String currentSession) {
         this.email = email;
         this.code = code;
         this.password = password;
@@ -207,18 +240,22 @@ public class User extends BaseEntity {
         this.address = address;
         this.contributions = contributions;
         this.comments = comments;
+        this.chatMessages = chatMessages;
         this.resetPasswordKey = resetPasswordKey;
         this.keyCreatedAt = keyCreatedAt;
         this.dateOfBirth = dateOfBirth;
         this.phoneNumber = phoneNumber;
         this.avatar = avatar;
         this.gender = gender;
+        this.isOnline = isOnline;
+        this.currentSession = currentSession;
     }
 
     public User(Long id, int is_deleted, Date created_at, Date updated_at, String email, String code, String password,
             Role role, Faculty faculty, String fullName, String address, List<Contribution> contributions,
-            List<Comment> comments, String resetPasswordKey, Date keyCreatedAt, Date dateOfBirth, Long phoneNumber,
-            String avatar, Integer gender) {
+            List<Comment> comments, List<ChatMessage> chatMessages, String resetPasswordKey, Date keyCreatedAt,
+            Date dateOfBirth, Long phoneNumber, String avatar, Integer gender, Integer isOnline,
+            String currentSession) {
         super(id, is_deleted, created_at, updated_at);
         this.email = email;
         this.code = code;
@@ -229,13 +266,17 @@ public class User extends BaseEntity {
         this.address = address;
         this.contributions = contributions;
         this.comments = comments;
+        this.chatMessages = chatMessages;
         this.resetPasswordKey = resetPasswordKey;
         this.keyCreatedAt = keyCreatedAt;
         this.dateOfBirth = dateOfBirth;
         this.phoneNumber = phoneNumber;
         this.avatar = avatar;
         this.gender = gender;
+        this.isOnline = isOnline;
+        this.currentSession = currentSession;
     }
+
 
     
 

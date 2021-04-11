@@ -50,4 +50,6 @@ public interface UserService {
 
     List<UserWithMostContributionResponse> getUserWithMostContribution(Long magazineId);
 
+    Boolean updateOnlineStatus(int status, String sessionId);
+
 }
