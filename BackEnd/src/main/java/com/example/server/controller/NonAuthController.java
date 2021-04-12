@@ -51,7 +51,7 @@ public class NonAuthController {
 
     @Autowired
     private TokenProvider jwtTokenUtil;
-    
+
     @Autowired
     private UserService userService;
 
@@ -63,78 +63,91 @@ public class NonAuthController {
 
     private ResponseEntity<?> getResponseEntity(Object data, String code, String mess, HttpStatus status) {
         Map<String, Object> response = new HashMap<>();
-        response.put("data",data);
-        response.put("code",code);
-        response.put("messenger",mess);
+        response.put("data", data);
+        response.put("code", code);
+        response.put("messenger", mess);
         return new ResponseEntity<>(response, status);
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<?> generateToken(@RequestBody LoginUser loginUser, HttpServletRequest request) throws AuthenticationException {
+    public ResponseEntity<?> generateToken(@RequestBody LoginUser loginUser, HttpServletRequest request)
+            throws AuthenticationException {
         try {
             User user = userService.findOne(loginUser.getEmail());
-            if(user.getIs_deleted() == 1){
-                return getResponseEntity("NULL","-1","Account is deleted, login failed", HttpStatus.BAD_REQUEST);
+            if (user.getIs_deleted() == 1) {
+                return getResponseEntity("NULL", "-1", "Account is deleted, login failed", HttpStatus.BAD_REQUEST);
             }
             final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginUser.getEmail(),
-                        loginUser.getPassword()
-                )
-            );
+                    new UsernamePasswordAuthenticationToken(loginUser.getEmail(), loginUser.getPassword()));
             User userLogin = userService.findOne(loginUser.getEmail());
-            if(userLogin == null){
-                return getResponseEntity("NULL","-1","Login failed", HttpStatus.BAD_REQUEST);
+            if (userLogin == null) {
+                return getResponseEntity("NULL", "-1", "Login failed", HttpStatus.BAD_REQUEST);
             }
             SecurityContextHolder.getContext().setAuthentication(authentication);
             final String token = jwtTokenUtil.generateToken(authentication);
             CLIENTURL = getSiteURL(request);
-            return getResponseEntity(new AuthToken(token, userLogin.getId()),"1","Login success", HttpStatus.OK);
+            return getResponseEntity(new AuthToken(token, userLogin.getId()), "1", "Login success", HttpStatus.OK);
         } catch (Exception e) {
-            return getResponseEntity("NULL","-1","Login failed", HttpStatus.BAD_REQUEST);
+            return getResponseEntity("NULL", "-1", "Login failed", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PostMapping(value ="/register",  consumes = {"text/plain", "application/*"}, produces = "application/json")
-    public ResponseEntity<?> saveUser(@RequestBody CreateAccount user, @RequestParam("file") MultipartFile file, HttpServletRequest httpServletRequest){
+    @PostMapping(value = "/register", consumes = { "text/plain", "application/*" }, produces = "application/json")
+    public ResponseEntity<?> saveUser(@RequestBody CreateAccount user, @RequestParam("file") MultipartFile file,
+            HttpServletRequest httpServletRequest) {
         try {
             HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(user, file, 0);
             Object validateRes = validateResult.get("result");
-            if(Integer.parseInt(validateRes.toString()) == -1){
-                return responseUtils.getActionResponseEntity("NULL", FAILURE,"Create user failed",validateResult, HttpStatus.BAD_REQUEST);
+            if (Integer.parseInt(validateRes.toString()) == -1) {
+                return responseUtils.getActionResponseEntity("NULL", FAILURE, "Create user failed", validateResult,
+                        HttpStatus.BAD_REQUEST);
             }
             User regisUser = userService.saveGuestRegister(user);
-            if(regisUser == null){
-                return getResponseEntity("NULL","1","Register failed", HttpStatus.BAD_REQUEST);
+            if (regisUser == null) {
+                return getResponseEntity("NULL", "1", "Register failed", HttpStatus.BAD_REQUEST);
             }
-            return getResponseEntity("NULL","1","Register success", HttpStatus.OK);
+            return getResponseEntity("NULL", "1", "Register success", HttpStatus.OK);
         } catch (Exception e) {
-            return getResponseEntity("NULL","-1","Register failed", HttpStatus.BAD_REQUEST);
+            return getResponseEntity("NULL", "-1", "Register failed", HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping(value = "/facebook/login")
     public ResponseEntity<?> loginByFacebook(@RequestBody LoginUser loginUser) throws AuthenticationException {
         try {
-            if(loginUser.getAccessToken() == null){
-                return getResponseEntity("NULL","-1","Login failed", HttpStatus.BAD_REQUEST);
+            if (loginUser.getAccessToken() == null) {
+                return getResponseEntity("NULL", "-1", "Login failed", HttpStatus.BAD_REQUEST);
             }
             LoginUser user = userService.getLoginJwtTokenByFacebook(loginUser.getAccessToken());
             UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-            final Authentication authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
+            final Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+                    userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             final String token = jwtTokenUtil.generateToken(authentication);
-            return getResponseEntity(new AuthToken(token, user.getId()),"1","Login success", HttpStatus.OK);
+            return getResponseEntity(new AuthToken(token, user.getId()), "1", "Login success", HttpStatus.OK);
         } catch (Exception e) {
-            return getResponseEntity("NULL","-1","Login failed", HttpStatus.BAD_REQUEST);
+            return getResponseEntity("NULL", "-1", "Login failed", HttpStatus.BAD_REQUEST);
         }
     }
-    
 
+    @PostMapping(value = "/google/login")
+    public ResponseEntity<?> loginByGoogle(@RequestBody LoginUser loginUser) throws AuthenticationException {
+        try {
+            if (loginUser.getAccessToken() == null) {
+                return getResponseEntity("NULL", "-1", "Login failed", HttpStatus.BAD_REQUEST);
+            }
+            // String accessToken =
+            // userService.getLoginJwtTokenByGoogle(loginUser.getAccessToken());
+            LoginUser user = userService.getGoogleUser(loginUser.getAccessToken());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+            final Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+                    userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            final String token = jwtTokenUtil.generateToken(authentication);
+            return getResponseEntity(new AuthToken(token, user.getId()), "1", "Login success", HttpStatus.OK);
+        } catch (Exception e) {
+            return getResponseEntity("NULL", "-1", "Login failed", HttpStatus.BAD_REQUEST);
+        }
+    }
 
-    
 }

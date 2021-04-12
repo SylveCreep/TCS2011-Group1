@@ -19,6 +19,7 @@ import com.example.server.dao.MagazineDao;
 import com.example.server.dao.RoleDao;
 import com.example.server.dao.UserDao;
 import com.example.server.dto.FacebookUserDto;
+import com.example.server.dto.GoogleUserDto;
 import com.example.server.entity.Faculty;
 import com.example.server.entity.Role;
 import com.example.server.entity.User;
@@ -36,6 +37,8 @@ import com.example.server.service.RoleService;
 import com.example.server.service.UserService;
 import com.example.server.util.QueryCheck;
 import com.example.server.util.ResponseUtils;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -43,8 +46,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.http.client.fluent.Form;
+import org.apache.http.client.fluent.Request;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -95,6 +101,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
+
+    @Autowired
+    private Environment env;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -557,6 +566,58 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             return true;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    @Override
+    public LoginUser getGoogleUser(String accessToken) {
+        try {
+            String link = env.getProperty("google.link.get.user_info") + accessToken;
+            String response = Request.Get(link).execute().returnContent().asString();
+            ObjectMapper mapper = new ObjectMapper();
+            GoogleUserDto googleUserDto = mapper.readValue(response, GoogleUserDto.class);
+            if (!googleUserDto.getEmail().contains("@fpt")) {
+                return null;
+            }
+            User user = userDao.findExistedUserByEmail(googleUserDto.getEmail());
+            if (user == null) {
+                String password = RandomStringUtils.randomAscii(16);
+                CreateAccount createAccount = new CreateAccount();
+                createAccount.setEmail(googleUserDto.getEmail());
+                createAccount.setAvatar(googleUserDto.getPicture());
+                createAccount.setFullName(googleUserDto.getName());
+                createAccount.setPassword(password);
+                try {
+                    createAccount.setDateOfBirth(DateUtils.parseDate("2000/01/01", "yyyy/MM/dd"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                createAccount.setAddress("12132132 asas");
+                user = saveGuestRegister(createAccount);
+            }
+            LoginUser loginUser = new LoginUser();
+            loginUser.setId(user.getId());
+            loginUser.setEmail(user.getEmail());
+            return loginUser;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public String getLoginJwtTokenByGoogle(String code) {
+        try {
+            String link = env.getProperty("google.link.get.token");
+            String response = Request.Post(link)
+                    .bodyForm(Form.form().add("client_id", env.getProperty("google.app.id"))
+                            .add("client_secret", env.getProperty("google.app.secret")).add("redirect_uri", "false")
+                            .add("code", code).add("grant_type", "authorization_code").build())
+                    .execute().returnContent().asString();
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(response).get("access_token");
+            return node.textValue();
+        } catch (Exception e) {
+            return null;
         }
     }
 

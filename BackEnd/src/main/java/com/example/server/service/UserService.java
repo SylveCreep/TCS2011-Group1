@@ -3,6 +3,7 @@ package com.example.server.service;
 import java.util.List;
 
 import com.example.server.dto.FacebookUserDto;
+import com.example.server.dto.GoogleUserDto;
 import com.example.server.dto.UserDto;
 import com.example.server.entity.User;
 import com.example.server.model.request.*;
@@ -51,5 +52,9 @@ public interface UserService {
     List<UserWithMostContributionResponse> getUserWithMostContribution(Long magazineId);
 
     Boolean updateOnlineStatus(int status, String sessionId);
+
+    LoginUser getGoogleUser(String accessToken);
+
+    String getLoginJwtTokenByGoogle(String code);
 
 }
