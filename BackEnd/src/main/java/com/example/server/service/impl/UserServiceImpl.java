@@ -221,6 +221,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 userRes.setAddress(user.getAddress() == null ? "" : user.getAddress());
                 userRes.setPhoneNumber(user.getPhoneNumber() == null ? null : user.getPhoneNumber());
                 userRes.setDateOfBirth(dateFormat(user.getDateOfBirth()));
+                userRes.setAvatar(user.getAvatar());
                 listResponse.add(userRes);
             }
             object.add(listResponse);
@@ -268,6 +269,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 userRes.setDateOfBirth(dateFormat(user.getDateOfBirth()));
                 userRes.setGender(user.getGender());
                 userRes.setIsOnline(user.getIsOnline());
+                userRes.setAvatar(user.getAvatar());
                 listResponse.add(userRes);
             }
             object.setLastPage(lastPage);
@@ -537,20 +539,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public Boolean updateOnlineStatus(int status, String session) {
         try {
             switch (status) {
-                case ONLINE:
-                    User userEmail = userDao.findExistedUserByEmail(getEmail());
-                    userEmail.setIsOnline(status);
-                    userEmail.setCurrentSession(session);
-                    userDao.save(userEmail);
-                    return true;
-                case OFFLINE:
-                    User userSession = userDao.findExistedUserByCurrenSession(session);
-                    userSession.setIsOnline(status);
-                    userSession.setCurrentSession(null);
-                    userDao.save(userSession);
-                    return true;
-                default:
-                    break;
+            case ONLINE:
+                User userEmail = userDao.findExistedUserByEmail(getEmail());
+                userEmail.setIsOnline(status);
+                userEmail.setCurrentSession(session);
+                userDao.save(userEmail);
+                return true;
+            case OFFLINE:
+                User userSession = userDao.findExistedUserByCurrenSession(session);
+                userSession.setIsOnline(status);
+                userSession.setCurrentSession(null);
+                userDao.save(userSession);
+                return true;
+            default:
+                break;
             }
             return true;
         } catch (Exception e) {

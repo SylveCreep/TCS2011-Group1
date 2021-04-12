@@ -24,5 +24,5 @@ public interface ContributionService {
 
     Long countContributionByMagazineId(Long magazineId);
 
-    List<ContributionResponse> getContributionListHasNoComment();
+    List<ContributionResponse> getContributionListHasNoComment(Long magazineId, int type);
 }

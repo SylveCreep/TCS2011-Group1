@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import static com.example.server.constant.Constant.*;
 
 @Component
-public class MailNotifySystem{
+public class MailNotifySystem {
 
     @Autowired
     ContributionDao contributionDao;
@@ -26,10 +26,11 @@ public class MailNotifySystem{
     @Scheduled(fixedRate = 1000 * 60 * 5)
     public void sendNotifyEmailTask() {
         try {
-            List<Contribution> notifyContributions = contributionDao.getContributionHasNoComment();
-            for(Contribution contribution : notifyContributions){
-                Boolean isSuccess = mailService.sendNotifyContributionEmail(contribution.getId(), NEEDNOTIFY, CLIENTURL);
-                if(isSuccess == true){
+            List<Contribution> notifyContributions = contributionDao.getContributionHasNoComment((long) 0, 1);
+            for (Contribution contribution : notifyContributions) {
+                Boolean isSuccess = mailService.sendNotifyContributionEmail(contribution.getId(), NEEDNOTIFY,
+                        CLIENTURL);
+                if (isSuccess == true) {
                     contribution.setExpireNotify(SUCCESS);
                     contributionDao.save(contribution);
                 }
@@ -37,7 +38,7 @@ public class MailNotifySystem{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
-    
+
 }

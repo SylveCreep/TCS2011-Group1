@@ -248,8 +248,8 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     @Override
-    public List<ContributionResponse> getContributionListHasNoComment() {
-        List<Contribution> contributionList = contributionDao.getContributionHasNoComment();
+    public List<ContributionResponse> getContributionListHasNoComment(Long magazineId, int type) {
+        List<Contribution> contributionList = contributionDao.getContributionHasNoComment(magazineId, type);
         List<ContributionResponse> contributionResponseList = new ArrayList<>();
         for (Contribution contribution : contributionList) {
             ContributionResponse contributionRes = new ContributionResponse();

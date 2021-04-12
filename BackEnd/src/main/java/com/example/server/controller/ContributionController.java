@@ -290,9 +290,10 @@ public class ContributionController {
     }
 
     @GetMapping("/getContributionsHasNoComment")
-    public ResponseEntity<?> getContributionsHasNoComment() {
+    public ResponseEntity<?> getContributionsHasNoComment(@RequestParam("magazineId") Long magazineId) {
         try {
-            List<ContributionResponse> contributionResponses = contributionService.getContributionListHasNoComment();
+            List<ContributionResponse> contributionResponses = contributionService
+                    .getContributionListHasNoComment(magazineId, 0);
             return responseUtils.getResponseEntity(contributionResponses, SUCCESS, "Get contribution success",
                     HttpStatus.OK);
         } catch (Exception e) {

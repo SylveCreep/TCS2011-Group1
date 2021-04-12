@@ -85,7 +85,7 @@ public class UserController {
         }
     }
 
-    @PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003')")
+    @PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003') or hasRole('R0004')")
     @PostMapping(value = "/filter")
     public ResponseEntity<?> showUserBySearch(@RequestBody UserSearchRequest userSearchRequest) {
         try {

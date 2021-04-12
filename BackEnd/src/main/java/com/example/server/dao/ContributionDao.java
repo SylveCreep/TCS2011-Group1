@@ -41,9 +41,10 @@ public interface ContributionDao extends JpaRepository<Contribution, Long> {
         @Query(value = "SELECT c.* FROM contribution c " + "WHERE c.is_deleted = 0 " + "AND c.is_approved = 0 "
                         + "AND c.id NOT IN (SELECT c1.id FROM contribution c1 "
                         + "LEFT JOIN comment cm ON cm.contribution_id = c1.id " + "WHERE cm.is_deleted = 0 " + ") "
-                        + "AND (CURDATE() BETWEEN DATE_ADD(c.created_at, INTERVAL 10 DAY ) AND DATE_ADD(c.created_at, INTERVAL 14 DAY )) "
-                        + "AND c.expire_notify = 0 ", nativeQuery = true)
-        List<Contribution> getContributionHasNoComment();
+                        + "AND (:type = 0 OR (CURDATE() BETWEEN DATE_ADD(c.created_at, INTERVAL 10 DAY ) AND DATE_ADD(c.created_at, INTERVAL 14 DAY ))) "
+                        + "AND c.expire_notify = 0 "
+                        + "AND (:magazineId = 0 OR c.magazine_id = :magazineId) ", nativeQuery = true)
+        List<Contribution> getContributionHasNoComment(@Param("magazineId") Long magazineId, @Param("type") int type);
 
         @Query(value = "SELECT COUNT(c.id) FROM contribution c " + "WHERE c.is_deleted = 0 "
                         + "AND (:userId IS NULL OR c.user_id = :userId ) ", nativeQuery = true)
