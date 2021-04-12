@@ -31,13 +31,16 @@
                   <img
                     v-bind:src="linkSource + user.avatar"
                     class="rounded-circle"
+                    id="small-circle"
                     alt=""
                     width="42"
                   />
+                  <i class="fas fa-circle small-online-status" v-if="user.isOnline"></i>
+                  <i class="fas fa-circle small-offline-status" v-else></i>
                 </div>
                 <div class="col-10 chat-detail">
                   <p class="chat-name">{{user.fullName}}</p>
-                  <p class="last-chat">Hello Simon</p>
+                  <!--<p class="last-chat">Hello Simon</p>-->
                 </div>
               </div>
             </div>
@@ -137,7 +140,7 @@ export default {
     };
   },
   created() {
-    this.linkSoure = UrlConstants.AvatarSource
+    this.linkSource = UrlConstants.AvatarSource
     this.connect();
     this.getContactList();
   },
@@ -199,6 +202,7 @@ export default {
           this.connected = true;
           this.stompClient.subscribe("/user/queue/chat", (tick) => {
             this.getMessageList(this.toUserId);
+            this.getContactList();
           });
         },
         (error) => {
@@ -277,9 +281,18 @@ h3 {
 p {
   margin-bottom: 0;
 }
-.online-status {
+.small-online-status {
+   z-index: 2;
+  position: relative;
   font-size: 15px;
+  margin-left: 30px;
   color: green;
+}
+.small-offline-status {
+   z-index: 2;
+  position: relative;
+  font-size: 15px;
+  margin-left: 30px;
 }
 .fa-circle {
   font-size: 10px;
@@ -307,6 +320,11 @@ p {
   border-radius: 20px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
+#small-circle {
+   z-index: 1;
+    position: relative;
+    margin-bottom:-20px
+}
 .message-right {
   display: block;
   float: right;
@@ -317,6 +335,9 @@ p {
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   margin-right: 1px;
+}
+.online-status {
+  margin-top: -30px
 }
 .message-input {
   height: 70px;
