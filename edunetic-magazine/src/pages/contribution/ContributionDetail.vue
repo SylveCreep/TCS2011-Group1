@@ -33,7 +33,7 @@
           }}</span>
         </p>
         <!--condition to resubmit: loginUser is student AND contribution status is denied AND magazine is opening or processing-->
-        
+
         <!--Only student can edit their contribution-->
         <p v-if="contribution.status == 0">
           <b>Pending:</b> Waiting for reviewing
@@ -48,13 +48,7 @@
         </p>
       </div>
       <div class="card-body" style="margin-top: -50px">
-          <p
-          v-if="
-            loginUser.roleId === 4 &&
-            contribution.status !== 1 &&
-            magazineStatus <= 1
-          "
-        >
+        <div v-if="loginUser.roleId === 4 && contribution.status !== 1 && magazineStatus <= 1">
           <b>Resubmit: </b>
           <input
             name="file"
@@ -65,13 +59,14 @@
             multiple
             v-on:change="onFileChange"
           />
-          <br>
-          (You can resubmit another contribution before this magazine will be
-          updated)
-        </p>
-        <p style="color: red" v-if="list_errors !== null">
-          {{ list_errors.file }}
-        </p>
+          <p style="color: red" v-if="list_errors !== null">
+            {{ list_errors.file }}
+          </p>
+          <p>
+            (You can resubmit another contribution before this magazine will be
+            published)
+          </p>
+        </div>
       </div>
       <div class="d-block text-right card-footer">
         <p
@@ -149,7 +144,7 @@ export default {
           this.errors = error.response;
         });
     },
-     onFileChange() {
+    onFileChange() {
       const tfile = this.$refs.file.files[0];
       this.contribution.file = tfile;
     },
@@ -198,6 +193,7 @@ export default {
           formData.append("file", this.$refs.file.files[0]);
           formData.append("status", 0);
           axios.patch(UrlConstants.Contribution, formData).then((r) => {
+            axios.get(UrlConstants.MailSubmit + contribution_id) //send mail to MC
             this.successAlert();
             this.routes.push("/contributions");
           });

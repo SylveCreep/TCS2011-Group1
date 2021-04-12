@@ -148,7 +148,7 @@
             v-for="contribution of list_contributions"
             :key="contribution.id"
           >
-            <div class="main-card mb-3 card">
+            <div class="main-card mb-3 card" style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
               <div class="card-header">
                 <i class="header-icon lnr-license icon-gradient bg-plum-plate">
                 </i>

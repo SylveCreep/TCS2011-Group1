@@ -26,172 +26,18 @@
           </div>
           <div class="col-12">
             <div class="list-chat">
-              <div class="chat-item row" v-on:click="getMessageList(126)">
+              <div class="chat-item row" v-for="(user,index) of list_users" :key="user.id" :id="'chat-item-' +(index+1)" v-on:click="getTargetContact(user)">
                 <div class="col-2 chat-avatar">
                   <img
-                    src="assets/images/avatars/1.jpg"
+                    v-bind:src="linkSource + user.avatar"
                     class="rounded-circle"
                     alt=""
                     width="42"
                   />
                 </div>
                 <div class="col-10 chat-detail">
-                  <p class="chat-name">Simon</p>
+                  <p class="chat-name">{{user.fullName}}</p>
                   <p class="last-chat">Hello Simon</p>
-                </div>
-              </div>
-              <div class="chat-item row">
-                <div class="col-2 chat-avatar">
-                  <img
-                    src="assets/images/avatars/1.jpg"
-                    class="rounded-circle"
-                    alt=""
-                    width="42"
-                  />
-                </div>
-                <div class="col-10 chat-detail">
-                  <p class="chat-name">Simon</p>
-                  <p class="last-chat">Hello Simon</p>
-                </div>
-              </div>
-              <div class="chat-item row">
-                <div class="col-2 chat-avatar">
-                  <img
-                    src="assets/images/avatars/1.jpg"
-                    class="rounded-circle"
-                    alt=""
-                    width="42"
-                  />
-                </div>
-                <div class="col-10 chat-detail">
-                  <p class="chat-name">Simon</p>
-                  <p class="last-chat">Hello Simon</p>
-                </div>
-              </div>
-              <div class="chat-item row">
-                <div class="col-2 chat-avatar">
-                  <img
-                    src="assets/images/avatars/1.jpg"
-                    class="rounded-circle"
-                    alt=""
-                    width="42"
-                  />
-                </div>
-                <div class="col-10 chat-detail">
-                  <p class="chat-name">Simon</p>
-                  <p class="last-chat">Hello Simon</p>
-                </div>
-              </div>
-              <div class="chat-item row">
-                <div class="col-2 chat-avatar">
-                  <img
-                    src="assets/images/avatars/1.jpg"
-                    class="rounded-circle"
-                    alt=""
-                    width="42"
-                  />
-                </div>
-                <div class="col-10 chat-detail">
-                  <p class="chat-name">Simon</p>
-                  <p class="last-chat">Hello Simon handsomeeeeeeeeeeeeeeee</p>
-                </div>
-              </div>
-              <div class="chat-item row">
-                <div class="col-2 chat-avatar">
-                  <img
-                    src="assets/images/avatars/1.jpg"
-                    class="rounded-circle"
-                    alt=""
-                    width="42"
-                  />
-                </div>
-                <div class="col-10 chat-detail">
-                  <p class="chat-name">Simon</p>
-                  <p class="last-chat">Hello Simon handsomeeeeeeeeeeeeeeee</p>
-                </div>
-              </div>
-              <div class="chat-item row">
-                <div class="col-2 chat-avatar">
-                  <img
-                    src="assets/images/avatars/1.jpg"
-                    class="rounded-circle"
-                    alt=""
-                    width="42"
-                  />
-                </div>
-                <div class="col-10 chat-detail">
-                  <p class="chat-name">Simon</p>
-                  <p class="last-chat">Hello Simon handsomeeeeeeeeeeeeeeee</p>
-                </div>
-              </div>
-              <div class="chat-item row">
-                <div class="col-2 chat-avatar">
-                  <img
-                    src="assets/images/avatars/1.jpg"
-                    class="rounded-circle"
-                    alt=""
-                    width="42"
-                  />
-                </div>
-                <div class="col-10 chat-detail">
-                  <p class="chat-name">Simon</p>
-                  <p class="last-chat">Hello Simon handsomeeeeeeeeeeeeeeee</p>
-                </div>
-              </div>
-              <div class="chat-item row">
-                <div class="col-2 chat-avatar">
-                  <img
-                    src="assets/images/avatars/1.jpg"
-                    class="rounded-circle"
-                    alt=""
-                    width="42"
-                  />
-                </div>
-                <div class="col-10 chat-detail">
-                  <p class="chat-name">Simon</p>
-                  <p class="last-chat">Hello Simon handsomeeeeeeeeeeeeeeee</p>
-                </div>
-              </div>
-              <div class="chat-item row">
-                <div class="col-2 chat-avatar">
-                  <img
-                    src="assets/images/avatars/1.jpg"
-                    class="rounded-circle"
-                    alt=""
-                    width="42"
-                  />
-                </div>
-                <div class="col-10 chat-detail">
-                  <p class="chat-name">Simon</p>
-                  <p class="last-chat">Hello Simon handsomeeeeeeeeeeeeeeee</p>
-                </div>
-              </div>
-              <div class="chat-item row">
-                <div class="col-2 chat-avatar">
-                  <img
-                    src="assets/images/avatars/1.jpg"
-                    class="rounded-circle"
-                    alt=""
-                    width="42"
-                  />
-                </div>
-                <div class="col-10 chat-detail">
-                  <p class="chat-name">Simon</p>
-                  <p class="last-chat">Hello Simon handsomeeeeeeeeeeeeeeee</p>
-                </div>
-              </div>
-              <div class="chat-item row">
-                <div class="col-2 chat-avatar">
-                  <img
-                    src="assets/images/avatars/1.jpg"
-                    class="rounded-circle"
-                    alt=""
-                    width="42"
-                  />
-                </div>
-                <div class="col-10 chat-detail">
-                  <p class="chat-name">Simon</p>
-                  <p class="last-chat">Hello Simon handsomeeeeeeeeeeeeeeee</p>
                 </div>
               </div>
             </div>
@@ -209,7 +55,7 @@
             />
           </div>
           <div class="col-10 px-3 chat-detail">
-            <h3 class="chat-name">Simon</h3>
+            <h3 class="chat-name">{{targetUser.fullName}}</h3>
             <p class="online-status" v-if="this.connected">
               <span class="fas fa-circle"></span> Online
             </p>
@@ -225,12 +71,18 @@
               v-for="message of list_messages"
               :key="message.id"
             >
-              <div class="message-item message-left" v-if="message.toUserId === loginUser.id">
+              <div
+                class="message-item message-left"
+                v-if="message.toUserId === loginUser.id"
+              >
                 <p class="d-inline-flex p-2">
                   {{ message.content }}
                 </p>
               </div>
-              <div class="message-item message-right" v-if="message.fromUserId === loginUser.id">
+              <div
+                class="message-item message-right"
+                v-if="message.fromUserId === loginUser.id"
+              >
                 <p class="d-inline-flex p-2">
                   {{ message.content }}
                 </p>
@@ -268,6 +120,7 @@ import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
 import { commonHelper } from "@/helper/commonHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
+import { DefaultConstants } from "@/constant/DefaultConstant";
 export default {
   name: "ChatBox",
   mixins: [commonHelper],
@@ -279,13 +132,17 @@ export default {
       list_messages: [],
       toUserId: null,
       connected: false,
-      loginUser: {}
+      linkSource: null,
+      targetUser: {}
     };
   },
   created() {
-    this.filter.limit = 100
-    this.loginUser = this.$cookies.get("loginUser");
+    this.linkSoure = UrlConstants.AvatarSource
     this.connect();
+    this.getContactList();
+  },
+  destroyed() {
+    this.disconnect();
   },
   methods: {
     showChatBox() {
@@ -293,8 +150,42 @@ export default {
         this.showChat = false;
       } else {
         this.showChat = true;
+        document.querySelector('#chat-item-1').classList.remove('is-hide');
       }
     },
+    getTargetContact(user) {
+      this.targetUser = user
+      this.getMessageList(user.id)
+    },
+    getMessageList(userId) {
+      this.filter.limit = 100;
+      this.toUserId = userId;
+      this.filter.toUser = userId;
+      axios.post(UrlConstants.Chat + "/get", this.filter).then((r) => {
+        this.list_messages = r.data.data.chatMessageResponses;
+      });
+    },
+    sendMessage() {
+      if (this.message.content !== "") {
+        (this.message.toUser = this.toUserId),
+          axios.post(UrlConstants.Chat + "/send", this.message).then((r) => {
+            this.getMessageList(this.toUserId);
+            this.message.content = "";
+          });
+      }
+    },
+    getContactList() {
+       this.filter.limit = 15;
+       this.filter.facultyId = this.loginUser.facultyId;
+      if (this.loginUser.roleId === DefaultConstants.Role.MarketingCoordinator) {
+        this.filter.roleId = DefaultConstants.Role.Student;
+      }
+      if (this.loginUser.roleId === DefaultConstants.Role.Student) {
+        this.filter.roleId = DefaultConstants.Role.MarketingCoordinator;
+      }
+       this.getUserList();
+    },
+    searchStudent() {},
     connect() {
       this.stompClient = Stomp.over(
         new SockJS(UrlConstants.BaseUrl + "/stomp")
@@ -321,29 +212,17 @@ export default {
       }
       this.connected = false;
     },
-    getMessageList(userId) {
-      this.toUserId = 126;
-      this.filter.toUser = 126;
-      axios.post(UrlConstants.Chat + "/get", this.filter).then((r) => {
-        this.list_messages = r.data.data.chatMessageResponses;
-      });
-    },
-    sendMessage() {
-      if (this.message.content !== "") {
-        (this.message.toUser = this.toUserId),
-          axios.post(UrlConstants.Chat + "/send", this.message)
-          .then((r) => {
-            this.getMessageList(this.toUserId)
-            this.message.content = ""
-          });
-      }
-    },
-    searchStudent() {},
   },
 };
 </script>
 
 <style scoped>
+.is-hide {
+  display: none;
+}
+.is-display {
+  display: inline !important;
+}
 #general-chat {
   width: 300px !important;
   border-radius: 20px 0 0 20px;

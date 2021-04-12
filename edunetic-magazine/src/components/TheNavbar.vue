@@ -1,7 +1,7 @@
 <template>
   <div class="app-header header-shadow">
     <div class="app-header__logo">
-      <h6>Edunetic Magazine</h6>
+      <img src="assets/images/logo-inverse.png" alt="" width="120px">
       <div class="header__pane ml-auto">
         <div>
           <button
