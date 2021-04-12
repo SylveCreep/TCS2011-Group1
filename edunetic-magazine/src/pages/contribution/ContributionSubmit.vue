@@ -104,6 +104,7 @@ export default {
   methods: {
     async submitContribution() {
       this.requiredValidate(this.requireAttribute, this.contribution);
+      this.showError(this.requireAttribute, this.list_errors);
       if (this.validate) {
         let formData = new FormData();
         formData.append("magazineId", this.$cookies.get("magazineContribution").magazineId);
@@ -117,7 +118,7 @@ export default {
               },
             })
             .then((r) => {
-              // axios.get(UrlConstants.MailSubmit + r.data.data.id)
+              axios.get(UrlConstants.MailSubmit + r.data.data.id) //send mail to MC
               this.successAlert(); //This function are called from commonHelper.js file
               this.$router.push("/contributions");
             })
@@ -137,7 +138,7 @@ export default {
       if ( magazineStatus <= 1) {
         this.displayCheck = true
       }
-    }
+    },
   },
   props: {},
 };
