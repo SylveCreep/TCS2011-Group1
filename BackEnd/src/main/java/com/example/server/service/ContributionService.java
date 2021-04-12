@@ -4,6 +4,8 @@ import com.example.server.model.response.*;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 import com.example.server.entity.Contribution;
 import com.example.server.model.request.*;
 
@@ -21,4 +23,6 @@ public interface ContributionService {
     Boolean updateStatusContribution(ContributionRequest contribution);
 
     Long countContributionByMagazineId(Long magazineId);
+
+    List<ContributionResponse> getContributionListHasNoComment();
 }

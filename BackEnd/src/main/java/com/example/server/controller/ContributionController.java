@@ -92,7 +92,8 @@ public class ContributionController {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Create contribution failed",
                         HttpStatus.BAD_REQUEST);
             }
-            return responseUtils.getResponseEntity(contributionResponse, SUCCESS, "Create contribution success", HttpStatus.OK);
+            return responseUtils.getResponseEntity(contributionResponse, SUCCESS, "Create contribution success",
+                    HttpStatus.OK);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", FAILURE, "Create contribution failed",
                     HttpStatus.BAD_REQUEST);
@@ -147,12 +148,12 @@ public class ContributionController {
     @DeleteMapping(value = "/{id}", consumes = { "text/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
         try {
-            if(id == null) {
+            if (id == null) {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Must has contribution id",
                         HttpStatus.BAD_REQUEST);
             }
             Contribution contribution = contributionDao.findExistedContributionById(id);
-            if(contribution == null){
+            if (contribution == null) {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Contribution not existed",
                         HttpStatus.BAD_REQUEST);
             }
@@ -194,14 +195,13 @@ public class ContributionController {
                             HttpStatus.BAD_REQUEST);
                 }
                 HttpHeaders headerContribution = new HttpHeaders();
-                headerContribution.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=contribution_"+response.getCode()+"."+response.getExtension());
-    
+                headerContribution.add(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=contribution_" + response.getCode() + "." + response.getExtension());
+
                 File fileContribution = fileService.loadContributionPath(response.getCode(), response.getExtension());
                 InputStreamResource resource = new InputStreamResource(new FileInputStream(fileContribution));
-                return ResponseEntity.ok()
-                        .headers(headerContribution)
-                        .contentType(MediaType.parseMediaType("application/octet-stream"))
-                        .body(resource);
+                return ResponseEntity.ok().headers(headerContribution)
+                        .contentType(MediaType.parseMediaType("application/octet-stream")).body(resource);
             case 2:
                 List<File> filesUser = fileService.loadContributionPathsByUserIdOrMagazineId(userId, 0);
                 HttpHeaders headerUser = new HttpHeaders();
@@ -259,38 +259,44 @@ public class ContributionController {
 
     @PreAuthorize("hasRole('R0002') or hasRole('R0003')")
     @PostMapping("/updateStatus")
-    public ResponseEntity<?> updateStatusByContributionIdAndStatus(@RequestBody ContributionRequest request){
+    public ResponseEntity<?> updateStatusByContributionIdAndStatus(@RequestBody ContributionRequest request) {
         try {
             if (request.getId() == null) {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Must has contribution id",
                         HttpStatus.BAD_REQUEST);
             }
-            if(contributionService.getContributionById(request.getId()) == null){
+            if (contributionService.getContributionById(request.getId()) == null) {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Contribution not existed",
                         HttpStatus.BAD_REQUEST);
             }
             Boolean updateResult = contributionService.updateStatusContribution(request);
-            if(updateResult == false){
-                return responseUtils.getResponseEntity("NULL", SUCCESS, "Update fail",
-                        HttpStatus.BAD_REQUEST);
+            if (updateResult == false) {
+                return responseUtils.getResponseEntity("NULL", SUCCESS, "Update fail", HttpStatus.BAD_REQUEST);
             }
-            return responseUtils.getResponseEntity("NULL", SUCCESS, "Update success",
-                        HttpStatus.OK);
+            return responseUtils.getResponseEntity("NULL", SUCCESS, "Update success", HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", FAILURE, "Update fail",
-                        HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", FAILURE, "Update fail", HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/getContributionsByMagazineId")
-    public ResponseEntity<?> countContributionsByMagazineId(@Nullable @RequestParam("magazineId")Long magazineId){
+    public ResponseEntity<?> countContributionsByMagazineId(@Nullable @RequestParam("magazineId") Long magazineId) {
         try {
             Long contribution = contributionService.countContributionByMagazineId(magazineId);
-            return responseUtils.getResponseEntity(contribution, SUCCESS, "Get contribution success",
-                        HttpStatus.OK);
+            return responseUtils.getResponseEntity(contribution, SUCCESS, "Get contribution success", HttpStatus.OK);
         } catch (Exception e) {
-            return responseUtils.getResponseEntity("NULL", FAILURE, "Get contribution fail",
-                        HttpStatus.BAD_REQUEST);
+            return responseUtils.getResponseEntity("NULL", FAILURE, "Get contribution fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/getContributionsHasNoComment")
+    public ResponseEntity<?> getContributionsHasNoComment() {
+        try {
+            List<ContributionResponse> contributionResponses = contributionService.getContributionListHasNoComment();
+            return responseUtils.getResponseEntity(contributionResponses, SUCCESS, "Get contribution success",
+                    HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", FAILURE, "Get contribution fail", HttpStatus.BAD_REQUEST);
         }
     }
 }

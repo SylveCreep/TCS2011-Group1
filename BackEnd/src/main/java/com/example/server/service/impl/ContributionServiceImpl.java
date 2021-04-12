@@ -138,15 +138,15 @@ public class ContributionServiceImpl implements ContributionService {
                 contributionRes.setFacultyId(contributionResult.getFaculty().getId());
                 contributionRes.setFacultyName(contributionResult.getFaculty().getName());
                 contributionRes.setStudentName(contributionResult.getUser().getFullName());
-                contributionRes
-                        .setCheckedBy(contributionResult.getCheckedBy() == null ? null : contributionResult.getCheckedBy().getId());
+                contributionRes.setCheckedBy(
+                        contributionResult.getCheckedBy() == null ? null : contributionResult.getCheckedBy().getId());
                 contributionRes.setCheckedByName(
                         contribution.getCheckedBy() == null ? "" : contributionResult.getCheckedBy().getFullName());
                 contributionRes.setCreatedAt(contributionResult.getCreated_at() == null ? null
                         : convertDateToFormat(contributionResult.getCreated_at().toString()));
                 contributionRes.setStatus(contributionResult.getIsApproved());
-                contributionRes
-                        .setMagazineId(contributionResult.getMagazine() == null ? null : contributionResult.getMagazine().getId());
+                contributionRes.setMagazineId(
+                        contributionResult.getMagazine() == null ? null : contributionResult.getMagazine().getId());
                 contributionRes.setLinkSource(contributionResult.getLinkSource());
                 contributionRes.setCode(contributionResult.getCode());
                 contributionRes.setExtension(contributionResult.getExtension());
@@ -245,6 +245,35 @@ public class ContributionServiceImpl implements ContributionService {
     @Override
     public Long countContributionByMagazineId(Long magazineId) {
         return contributionDao.countContributionByMagazineId(magazineId);
+    }
+
+    @Override
+    public List<ContributionResponse> getContributionListHasNoComment() {
+        List<Contribution> contributionList = contributionDao.getContributionHasNoComment();
+        List<ContributionResponse> contributionResponseList = new ArrayList<>();
+        for (Contribution contribution : contributionList) {
+            ContributionResponse contributionRes = new ContributionResponse();
+            contributionRes.setId(contribution.getId());
+            contributionRes.setStudentId(contribution.getUser().getId());
+            contributionRes.setFacultyId(contribution.getFaculty().getId());
+            contributionRes.setFacultyName(contribution.getFaculty().getName());
+            contributionRes.setStudentName(contribution.getUser().getFullName());
+            contributionRes
+                    .setCheckedBy(contribution.getCheckedBy() == null ? null : contribution.getCheckedBy().getId());
+            contributionRes.setCheckedByName(
+                    contribution.getCheckedBy() == null ? "" : contribution.getCheckedBy().getFullName());
+            contributionRes.setCreatedAt(contribution.getCreated_at() == null ? null
+                    : convertDateToFormat(contribution.getCreated_at().toString()));
+            contributionRes.setStatus(contribution.getIsApproved());
+            contributionRes
+                    .setMagazineId(contribution.getMagazine() == null ? null : contribution.getMagazine().getId());
+            contributionRes.setLinkSource(contribution.getLinkSource());
+            contributionRes.setCode(contribution.getCode());
+            contributionRes.setExtension(contribution.getExtension());
+            contributionRes.setEmail(contribution.getUser().getEmail());
+            contributionResponseList.add(contributionRes);
+        }
+        return contributionResponseList;
     }
 
 }

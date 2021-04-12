@@ -49,8 +49,8 @@ public interface ContributionDao extends JpaRepository<Contribution, Long> {
                         + "AND (:userId IS NULL OR c.user_id = :userId ) ", nativeQuery = true)
         Long countContributionByUserId(@Param("userId") Long userId);
 
-        @Query(value= "SELECT COUNT(c.id) FROM contribution c "+ 
-        "WHERE c.is_deleted = 0 "+ 
-        "AND (:magazineId IS NULL OR c.magazine_id = :magazineId ) ", nativeQuery = true)
-        Long countContributionByMagazineId(@Param("magazineId")Long magazineId);
+        @Query(value = "SELECT COUNT(c.id) FROM contribution c " + "WHERE c.is_deleted = 0 "
+                        + "AND (:magazineId IS NULL OR c.magazine_id = :magazineId ) ", nativeQuery = true)
+        Long countContributionByMagazineId(@Param("magazineId") Long magazineId);
+
 }
