@@ -27,6 +27,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -124,6 +125,15 @@ public class ChatController {
             return responseUtils.getResponseEntity(chatMessageList, SUCCESS, "Get message successfully", HttpStatus.OK);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", FAILURE, "Get message failed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/isTyping")
+    public ResponseEntity<?> checkIsTyping() {
+        try {
+            return responseUtils.getResponseEntity(true, SUCCESS, "Is typing", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity(false, FAILURE, "Not typing", HttpStatus.BAD_REQUEST);
         }
     }
 
