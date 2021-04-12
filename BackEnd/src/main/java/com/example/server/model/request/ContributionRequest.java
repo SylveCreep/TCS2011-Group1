@@ -14,6 +14,8 @@ public class ContributionRequest extends PagingRequest {
     private Long magazineId;
     private Long checkedBy;
 
+    private Integer type;
+
     private Long userId;
     private String linkSource;
 
@@ -133,9 +135,17 @@ public class ContributionRequest extends PagingRequest {
         this.createdAt = createdAt;
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     public ContributionRequest(Long id, String code, String studentName, Integer status, Long facultyId, Long studentId,
-            Long magazineId, Long checkedBy, Long userId, String linkSource, Date publishedAt, Date createdAt,
-            Integer withFile) {
+            Long magazineId, Long checkedBy, Integer type, Long userId, String linkSource, Date publishedAt,
+            Date createdAt, Integer withFile) {
         this.id = id;
         this.code = code;
         this.studentName = studentName;
@@ -144,6 +154,7 @@ public class ContributionRequest extends PagingRequest {
         this.studentId = studentId;
         this.magazineId = magazineId;
         this.checkedBy = checkedBy;
+        this.type = type;
         this.userId = userId;
         this.linkSource = linkSource;
         this.publishedAt = publishedAt;
@@ -153,7 +164,7 @@ public class ContributionRequest extends PagingRequest {
 
     public ContributionRequest(int limit, int page, String sort, String column, Long id, String code,
             String studentName, Integer status, Long facultyId, Long studentId, Long magazineId, Long checkedBy,
-            Long userId, String linkSource, Date publishedAt, Date createdAt, Integer withFile) {
+            Integer type, Long userId, String linkSource, Date publishedAt, Date createdAt, Integer withFile) {
         super(limit, page, sort, column);
         this.id = id;
         this.code = code;
@@ -163,6 +174,7 @@ public class ContributionRequest extends PagingRequest {
         this.studentId = studentId;
         this.magazineId = magazineId;
         this.checkedBy = checkedBy;
+        this.type = type;
         this.userId = userId;
         this.linkSource = linkSource;
         this.publishedAt = publishedAt;

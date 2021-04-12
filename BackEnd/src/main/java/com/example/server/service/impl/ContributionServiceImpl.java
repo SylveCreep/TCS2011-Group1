@@ -248,8 +248,15 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     @Override
-    public List<ContributionResponse> getContributionListHasNoComment(Long magazineId, int type) {
-        List<Contribution> contributionList = contributionDao.getContributionHasNoComment(magazineId, type);
+    public ContributionPagingResponse getContributionListHasNoComment(ContributionRequest contributionRequest) {
+        Sort sort = responseUtils.getSortObj(contributionRequest);
+        int offset = contributionRequest.getPage() - 1;
+        Page<Contribution> contributionList = contributionDao.getContributionHasNoCommentPaging(
+                contributionRequest.getMagazineId(), contributionRequest.getType(),
+                PageRequest.of(offset, contributionRequest.getLimit(), sort));
+        int lastPage = Math.round(contributionList.getTotalElements() / contributionRequest.getLimit()
+                + ((contributionList.getTotalElements() % contributionRequest.getLimit() == 0) ? 0 : 1));
+        ContributionPagingResponse contributionPagingResponse = new ContributionPagingResponse();
         List<ContributionResponse> contributionResponseList = new ArrayList<>();
         for (Contribution contribution : contributionList) {
             ContributionResponse contributionRes = new ContributionResponse();
@@ -273,7 +280,9 @@ public class ContributionServiceImpl implements ContributionService {
             contributionRes.setEmail(contribution.getUser().getEmail());
             contributionResponseList.add(contributionRes);
         }
-        return contributionResponseList;
+        contributionPagingResponse.setLastPage(lastPage);
+        contributionPagingResponse.setList(contributionResponseList);
+        return contributionPagingResponse;
     }
 
 }
