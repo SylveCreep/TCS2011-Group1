@@ -18,15 +18,15 @@
         <form v-on:submit.prevent="updateMagazine()">
           <div class="position-relative form-group">
             <label class="col-sm-2 control-label">Code: </label>
-              <div class="col-sm-12">
-                <input
-                  id="code"
-                  type="text"
-                  class="form-control"
-                  v-model="magazine.code"
-                  readonly
-                />
-              </div>
+            <div class="col-sm-12">
+              <input
+                id="code"
+                type="text"
+                class="form-control"
+                v-model="magazine.code"
+                readonly
+              />
+            </div>
             <label class="col-sm-2 control-label">Theme: </label>
             <div class="col-sm-12">
               <input
@@ -39,32 +39,30 @@
                 {{ list_errors.theme }}
               </p>
             </div>
-              <label class="col-sm-2 control-label">Finished At: </label>
-              <div class="col-sm-12">
-                <input
-                  id="close_at"
-                  type="date"
-                  class="form-control"
-                  v-model="magazine.close_at"                  
-                />
-              </div>
-              <label class="col-sm-2 control-label">Published At: </label>
-              <div class="col-sm-12">
-                <input
-                  id="published_at"
-                  type="date"
-                  class="form-control"
-                  v-model="magazine.published_at"                  
-                />
-              </div>             
+            <label class="col-sm-2 control-label">Finished At: </label>
+            <div class="col-sm-12">
+              <input
+                id="close_at"
+                type="date"
+                class="form-control"
+                v-model="magazine.published_at"
+              />
+            </div>
+            <label class="col-sm-2 control-label">Published At: </label>
+            <div class="col-sm-12">
+              <input
+                id="published_at"
+                type="date"
+                class="form-control"
+                v-model="magazine.published_at"
+              />
+            </div>
           </div>
           <div class="col-sm-offset-2 col-sm-12 text-center">
             <router-link to="/magazines" tag="button" class="btn btn-primary">
               Back
             </router-link>
-            <button type="submit" class="btn btn-success">
-              Update
-            </button>
+            <button type="submit" class="btn btn-success">Update</button>
           </div>
         </form>
       </div>
@@ -76,7 +74,7 @@ import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { validateHelper } from "@/helper/validateHelper";
 import { commonHelper } from "@/helper/commonHelper";
-import moment from 'moment';
+import moment from "moment";
 
 export default {
   name: "MagazineUpdate",
@@ -84,8 +82,10 @@ export default {
   data() {
     return {
       magazine: {},
-      user:{},
       requireAttribute: {
+        theme: "Theme",
+        finished_at: "Finished date",
+        published_at: "Published date",
       },
     };
   },
@@ -103,18 +103,8 @@ export default {
           this.errors = error.response;
         });
     },
-    getStudent() {
-      axios
-        .get(UrlConstants.User + "/" + this.$route.params.id)
-        .then((r) => {
-          this.user = r.data.data;
-        })
-        .catch((error) => {
-          this.errors = error.response;
-        });
-    },
     async updateMagazine() {
-      this.requiredValidate(this.requireAttribute, this.magazine); //this function is called from helperMixin.js file
+      this.magazineValidate(this.requireAttribute, this.magazine); //this function is called from helperMixin.js file
       this.showError(this.requireAttribute, this.list_errors); //this function is called from helperMixin.js file
       if (this.validate) {
         await this.confirmAlert("update", "magazine");
@@ -133,8 +123,8 @@ export default {
       }
     },
     formatDate(time) {
-      moment(time).format('YYYY-MM-DD')
-    }
+      moment(time).format("YYYY-MM-DD");
+    },
   },
 };
 </script>

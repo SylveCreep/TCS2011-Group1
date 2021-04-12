@@ -10,5 +10,7 @@ export  const UrlConstants = Object.freeze({
     Comment:  BaseUrl + "/comments",
     Magazine:  BaseUrl + "/magazines",
     AvatarSource: BaseUrl + "/file/users/",
-    SendMail: BaseUrl + "/mail/forgotpassword?"
+    SendMail: BaseUrl + "/mail/forgotpassword?",
+    MailSubmit: BaseUrl + "/mail/contribution?",
+    Chat: BaseUrl+"/chat"
 });

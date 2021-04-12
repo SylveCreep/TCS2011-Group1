@@ -32,12 +32,8 @@
             contribution.linkSource
           }}</span>
         </p>
-        <input
-          type="file"
-          v-bind:value="contribution.file"
-          multiple
-          v-if="loginUser.roleId === 4"
-        />
+        <!--condition to resubmit: loginUser is student AND contribution status is denied AND magazine is opening or processing-->
+        
         <!--Only student can edit their contribution-->
         <p v-if="contribution.status == 0">
           <b>Pending:</b> Waiting for reviewing
@@ -49,6 +45,32 @@
 
         <p v-if="contribution.status == -1">
           <b>Denied by: </b> {{ contribution.checkedByName }}
+        </p>
+      </div>
+      <div class="card-body" style="margin-top: -50px">
+          <p
+          v-if="
+            loginUser.roleId === 4 &&
+            contribution.status !== 1 &&
+            magazineStatus <= 1
+          "
+        >
+          <b>Resubmit: </b>
+          <input
+            name="file"
+            id="file"
+            type="file"
+            ref="file"
+            class="form-control-file"
+            multiple
+            v-on:change="onFileChange"
+          />
+          <br>
+          (You can resubmit another contribution before this magazine will be
+          updated)
+        </p>
+        <p style="color: red" v-if="list_errors !== null">
+          {{ list_errors.file }}
         </p>
       </div>
       <div class="d-block text-right card-footer">
@@ -65,6 +87,18 @@
           v-on:click="updateContributionStatus(contribution.id, 1, 'approve')"
         >
           Approve
+        </p>
+        <!--condition to resubmit: loginUser is student AND contribution status is denied or pending AND magazine is opening or processing-->
+        <p
+          v-if="
+            loginUser.roleId === 4 &&
+            contribution.status !== 1 &&
+            magazineStatus <= 1
+          "
+          class="btn btn-success"
+          v-on:click="resubmitContribution(contribution.id)"
+        >
+          Resubmit
         </p>
         <router-link to="/contributions" class="btn back-btn">
           Back
@@ -92,9 +126,16 @@ export default {
   data() {
     return {
       contribution: {},
+      magazineStatus: null,
+      requireAttribute: {
+        file: "Resubmit file",
+      },
     };
   },
   created() {
+    this.magazineStatus = this.$cookies.get(
+      "magazineContribution"
+    ).magazineStatus;
     this.getContribution();
   },
   methods: {
@@ -107,6 +148,10 @@ export default {
         .catch((error) => {
           this.errors = error.response;
         });
+    },
+     onFileChange() {
+      const tfile = this.$refs.file.files[0];
+      this.contribution.file = tfile;
     },
     downloadContribution() {
       axios
@@ -124,18 +169,39 @@ export default {
         });
     },
     async updateContributionStatus(contribution_id, statusId, statusName) {
-      await this.confirmAlert(statusName, "this contribution");
-      if (this.confirmResult) {
+      if (this.validate) {
         let contributionUpdate = {
           id: contribution_id,
           status: statusId,
         };
-        axios
-          .post(UrlConstants.Contribution + "/updateStatus", contributionUpdate)
-          .then((r) => {
+        await this.confirmAlert(statusName, "this contribution");
+        if (this.confirmResult) {
+          axios
+            .post(
+              UrlConstants.Contribution + "/updateStatus",
+              contributionUpdate
+            )
+            .then((r) => {
+              this.successAlert();
+              this.getContribution();
+            });
+        }
+      }
+    },
+    async resubmitContribution(contribution_id) {
+      this.requiredValidate(this.requireAttribute, this.contribution);
+      if (this.validate) {
+        await this.confirmAlert("resubmit", "this contribution");
+        if (this.confirmResult) {
+          let formData = new FormData();
+          formData.append("id", contribution_id);
+          formData.append("file", this.$refs.file.files[0]);
+          formData.append("status", 0);
+          axios.patch(UrlConstants.Contribution, formData).then((r) => {
             this.successAlert();
-            this.getContribution();
+            this.routes.push("/contributions");
           });
+        }
       }
     },
   },
@@ -167,6 +233,6 @@ export default {
 .back-btn {
   margin-bottom: 1rem;
   background-color: #3f6ad8;
-  color:white
+  color: white;
 }
 </style>

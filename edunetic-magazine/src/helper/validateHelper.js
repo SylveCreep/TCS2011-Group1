@@ -1,6 +1,7 @@
 import axios from "axios";
 import { UrlConstants } from "@/constant/UrlConstant";
 import { DefaultConstants } from "@/constant/DefaultConstant";
+import moment from 'moment';
 export const validateHelper = {
   data() {
     return {
@@ -52,9 +53,9 @@ export const validateHelper = {
         }
       }
     },
-    requiredValidate(atributes, objectType) {
+    requiredValidate(attributes, objectType) {
       this.list_errors = {};
-      for (let [key, value] of Object.entries(atributes)) {
+      for (let [key, value] of Object.entries(attributes)) {
         if (
           !Object.prototype.hasOwnProperty.call(objectType, key) ||
           objectType[key] === "" ||
@@ -67,9 +68,9 @@ export const validateHelper = {
         }
       }
     },
-    userChangePasswordValidate(atributes, objectType) {
+    userChangePasswordValidate(attributes, objectType) {
       //validate required attribute
-      this.requiredValidate(atributes, objectType);
+      this.requiredValidate(attributes, objectType);
 
       //validate new_password length
       if (objectType.new_password) {
@@ -87,11 +88,11 @@ export const validateHelper = {
         this.validate = false;
       }
     },
-    userValidate(atributes, objectType) {
+    userValidate(attributes, objectType) {
       //validate required attribute
-      this.requiredValidate(atributes, objectType);
+      this.requiredValidate(attributes, objectType);
 
-      //validate email store special characters
+      //validate email contain special characters
       if (objectType.email) {
         this.checkEMail(objectType.email);
       }
@@ -146,7 +147,7 @@ export const validateHelper = {
       let self = this;
       // clear timeout variable
       clearTimeout(this.timeCheck);
-      this.timeCheck = setTimeout(function() {
+      this.timeCheck = setTimeout(function () {
         if (
           self.user.password !== "" &&
           self.user.confirm_password !== ""
@@ -167,9 +168,43 @@ export const validateHelper = {
         }
       }, 1000);
     },
+    magazineValidate(attributes, objectType) {
+      //validate required attribute
+      this.requiredValidate(attributes, objectType);
+
+
+      //validate finished date must be later than days after created date least 14
+      if (objectType.finished_at) {
+        let finishDate = this.calculateDate(objectType.finished_at)
+        if (finishDate < 14) {
+          this.list_errors.finished_at = "Finish date must be later than today at least 14 days";
+          this.validate = false;
+        } else {
+          this.validate = true;
+        }
+      }
+
+      //validate publish date must be later than days finish created date least 14
+      if (objectType.published_at) {
+        let publishDate = this.calculateDate(objectType.published_at)
+        console.log(publishDate)
+        if (publishDate < 14) {
+          this.list_errors.published_at = "Publish date must be later than finish date at least 14 days";
+          this.validate = false;
+        } else {
+          this.validate = true;
+        }
+      }
+    },
+    calculateDate(date) {
+      let inputDate = moment(date)
+      let now = moment(new Date());
+      let different = moment.duration(inputDate.diff(now))._data
+      return different.days;
+    }
   },
 
-  //USER HELPER FUNCTION
+  //COMMON HELPER FUNCTIONS
   getRoleList() {
     axios
       .post(UrlConstants.Role + "/filter", this.filter)

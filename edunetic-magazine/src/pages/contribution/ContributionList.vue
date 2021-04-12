@@ -11,7 +11,10 @@
           </div>
         </div>
         <div class="page-title-actions">
-          <div class="d-inline-block dropdown" v-if="loginUser.roleId === 4">
+          <div
+            class="d-inline-block dropdown"
+            v-if="loginUser.roleId === 4 && magazine.magazineStatus === 0"
+          >
             <!--Only student can access this route -->
             <router-link
               to="/contributions/submit"
@@ -23,8 +26,11 @@
               Submit
             </router-link>
           </div>
-          <div class="d-inline-block dropdown" v-if="loginUser.roleId === 2">
-            <!--Only MM can access this route -->
+          <div
+            class="d-inline-block dropdown"
+            v-if="loginUser.roleId === 2 || loginUser.roleId === 3"
+          >
+            <!--Only MM and MC can access this route -->
             <button
               class="btn-shadow btn btn-info"
               v-if="cookiesModified"
@@ -51,7 +57,7 @@
     </div>
     <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
       <li
-        class="nav-item "
+        class="nav-item"
         v-for="(status, index) of list_statuses"
         :key="index"
       >
@@ -67,7 +73,7 @@
         </a>
       </li>
     </ul>
-    <div class="card-title" style="padding:20px 20px 0;">
+    <div class="card-title" style="padding: 20px 20px 0">
       <div class="row">
         <h4><b>Filter</b></h4>
       </div>
@@ -136,7 +142,7 @@
         v-bind:id="'tab-content-' + status"
         role="tabpanel"
       >
-        <div class="row">
+        <div class="row" v-if="list_contributions.length !== 0">
           <div
             class="col-md-4"
             v-for="contribution of list_contributions"
@@ -168,17 +174,25 @@
                   >Detail</a
                 >
                 <a
-                  class="btn btn-danger contribution-delete"
+                  class="btn btn-secondary contribution-delete"
                   v-on:click="deleteContribution(contribution.id)"
-                  v-if="loginUser.roleId === 4 && magazine.magazineStatus === 0 && status === 0"
+                  v-if="
+                    loginUser.roleId === 4 &&
+                    magazine.magazineStatus === 0 &&
+                    status === 0
+                  "
                   >Delete</a
                 >
               </div>
             </div>
           </div>
         </div>
+        <div class="row" v-else>
+          <h2 style="margin-left: 10px">No item to be display</h2>
+          <img src="assets/images/no-results.png" alt="" />
+        </div>
       </div>
-      <div class="row">
+      <div class="row" v-if="list_contributions.length !== 0">
         <div class="col-md-6">
           <strong> Items per page: </strong>
           <select class="select-page" v-on:change="getLimit($event)">
@@ -218,13 +232,14 @@ export default {
       list_contributions: [],
       magazine: {},
       cookiesModified: false,
+      status: 0,
     };
   },
   mounted() {
     document.querySelector("#tab-0").click(); //default click to tab 1
   },
   created() {
-    this.filter.status = 0;
+    this.filter.status = this.status;
     this.checkLoginRoleFilter();
     this.setStudentContribution();
     this.checkMagazine();
@@ -275,8 +290,10 @@ export default {
         this.getContributionList();
       }
     },
-      checkLoginRoleFilter() {
-      if (this.loginUser.roleId === DefaultConstants.Role.MarketingCoordinator) {
+    checkLoginRoleFilter() {
+      if (
+        this.loginUser.roleId === DefaultConstants.Role.MarketingCoordinator
+      ) {
         this.filter.facultyId = this.loginUser.facultyId;
       }
       if (this.loginUser.roleId === DefaultConstants.Role.Student) {
@@ -297,6 +314,7 @@ export default {
     },
     getStatus(status) {
       this.filter.status = status;
+      this.status = status;
       this.getContributionList();
     },
     checkMagazine() {
@@ -306,13 +324,18 @@ export default {
       }
     },
     downloadAllContribution() {
-      axios
-        .get(
+      let downloadURL =
+        UrlConstants.Contribution +
+        "/download?magazineId=" +
+        this.$cookies.get("magazineContribution").magazineId;
+      if (this.cookiesModified) {
+        downloadURL =
           UrlConstants.Contribution +
-            "/download?magazineId=" +
-            this.magazine.id,
-          { responseType: "blob" }
-        )
+          "/download?userId=" +
+          this.$cookies.get("studentContribution");
+      }
+      axios
+        .get(downloadURL, { responseType: "blob" })
         .then((r) => {
           FileSaver.saveAs(r.data, "contribution.zip");
         })

@@ -2,17 +2,25 @@
   <div
     class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
   >
-    <the-navbar v-if="this.token !== null" v-on:user-logout="userLogout"></the-navbar>
+    <the-navbar
+      v-if="this.token !== null"
+      v-on:user-logout="userLogout"
+    ></the-navbar>
     <chat-box v-if="this.token !== null"></chat-box>
     <div class="app-main">
       <!--Sidebar section -->
-      <the-sidebar v-if="this.token !== null" v-on:user-logout="userLogout"></the-sidebar>
+      <the-sidebar
+        v-if="this.token !== null"
+        v-on:user-logout="userLogout"
+      ></the-sidebar>
       <!--End sidebar section -->
 
-      
       <div class="app-main__outer">
         <!--Main section -->
-        <router-view v-on:user-login="userLogin" v-on:user-logout="userLogout"></router-view>
+        <router-view
+          v-on:user-login="userLogin"
+          v-on:user-logout="userLogout"
+        ></router-view>
         <!--End main section -->
 
         <!--Footer section -->
@@ -30,8 +38,7 @@ import axios from "axios";
 import TheSidebar from "./components/TheSidebar";
 import TheNavbar from "./components/TheNavbar";
 import TheFooter from "./components/TheFooter";
-import ChatBox from './components/ChatBox.vue';
-
+import ChatBox from "./components/ChatBox.vue";
 export default {
   name: "Layout",
   components: {
@@ -66,7 +73,6 @@ export default {
       this.token = e;
       axios.defaults.headers.common["Authorization"] = null;
     },
-    
   },
 };
 </script>
