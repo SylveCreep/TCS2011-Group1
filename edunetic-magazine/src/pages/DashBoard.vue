@@ -259,12 +259,6 @@
           <div class="card-header">
             Top 5 students most contribution
             <div class="btn-actions-pane-right">
-              <!-- <label
-                class="label click"
-                style="margin-right: 20px;"
-                v-on:click="getTopStudentAll"
-                >Total Magazine</label
-              > -->
               <label class="select_label">Magazine List</label>
               <select
                 class="select_form_control"
@@ -320,6 +314,8 @@
                 class="select_form_control"
                 id="category_id"
                 name="category"
+                v-model="filter.id"
+                v-on:change="getFilter"
               >
                 <option selected>All</option>
                 <option
@@ -340,7 +336,6 @@
               <thead>
                 <tr>
                   <th class="text">Code</th>
-                  <th class="text">Co-codinator</th>
                   <th class="text">Faculty</th>
                   <th class="text">Student's Name</th>
                 </tr>
@@ -351,7 +346,6 @@
                   :key="contribution.id"
                 >
                   <td>{{ contribution.code }}</td>
-                  <td>{{ contribution.totalContribution }}</td>
                   <td>{{ contribution.facultyName }}</td>
                   <td>{{ contribution.studentName }}</td>
                 </tr>
@@ -381,6 +375,9 @@ export default {
       list_topStudents: {},
       list_contributions: {},
       list_magazines: [],
+      filter: {
+        status: 0,
+      },
     };
   },
   created() {
@@ -434,10 +431,10 @@ export default {
           this.errors = error.response.data;
         });
     },
-    getContributionHasNoComment() {
-      let url = "/getContributionsHasNoComment";
+    getContributionHasNoComment(magazine_id) {
+      let url = "/getContributionsHasNoComment?magazineId=";
       axios
-        .get(UrlConstants.Contribution + url)
+        .get(UrlConstants.Contribution + url + magazine_id)
         .then((r) => {
           this.list_topStudents = r.data.data;
         })
