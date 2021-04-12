@@ -93,12 +93,12 @@
           <div class="widget-content-wrapper text-white">
             <div class="widget-content-left">
               <div class="widget-heading">
-                <h3>The number of Contributions:</h3>
+                <h5>The number of Contributions:</h5>
               </div>
             </div>
             <div class="widget-content-right">
               <div class="widget-numbers_component text-white">
-                <h3>{{ totalValue.totalContributions }}</h3>
+                <h5>{{ totalValue.totalContributions }}</h5>
               </div>
             </div>
           </div>
@@ -108,11 +108,11 @@
         <div class="card mb-3 widget-content bg-arielle-smile">
           <div class="widget-content-wrapper text-white">
             <div class="widget-content-left">
-              <div class="widget-heading"><h3>The number of students:</h3></div>
+              <div class="widget-heading"><h5>The number of Students:</h5></div>
             </div>
             <div class="widget-content-right">
               <div class="widget-numbers_component text-white">
-                <h3>{{ totalValue.totalStudents }}</h3>
+                <h5>{{ totalValue.totalStudents }}</h5>
               </div>
             </div>
           </div>
@@ -123,12 +123,12 @@
           <div class="widget-content-wrapper text-white">
             <div class="widget-content-left">
               <div class="widget-heading">
-                <h3>The number of magazines:</h3>
+                <h5>The number of magazines:</h5>
               </div>
             </div>
             <div class="widget-content-right">
               <div class="widget-numbers_component text-white">
-                <h3>{{ totalValue.totalMagazines }}</h3>
+                <h5>{{ totalValue.totalMagazines }}</h5>
               </div>
             </div>
           </div>
@@ -259,13 +259,13 @@
           <div class="card-header">
             Top 5 students most contribution
             <div class="btn-actions-pane-right">
-              <label
+              <!-- <label
                 class="label click"
                 style="margin-right: 20px;"
                 v-on:click="getTopStudentAll"
                 >Total Magazine</label
-              >
-              <label class="select_label">Magazine</label>
+              > -->
+              <label class="select_label">Magazine List</label>
               <select
                 class="select_form_control"
                 id="magazine_id"
@@ -273,6 +273,7 @@
                 v-model="filter.id"
                 v-on:change="getFilter"
               >
+                <option value="0" selected>All</option>
                 <option
                   v-for="magazine in list_magazines"
                   :key="magazine.id"
@@ -297,14 +298,11 @@
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  v-for="topStudentAll of list_topStudentAlls"
-                  :key="topStudentAll.id"
-                >
-                  <td>{{ topStudentAll.code }}</td>
-                  <td>{{ topStudentAll.studentName }}</td>
-                  <td>{{ topStudentAll.facultyName }}</td>
-                  <td>{{ topStudentAll.totalContribution }}</td>
+                <tr v-for="topStudent of list_topStudents" :key="topStudent.id">
+                  <td>{{ topStudent.code }}</td>
+                  <td>{{ topStudent.studentName }}</td>
+                  <td>{{ topStudent.facultyName }}</td>
+                  <td>{{ topStudent.totalContribution }}</td>
                 </tr>
               </tbody>
             </table>
@@ -317,7 +315,7 @@
           <div class="card-header">
             Contributions have no comment on each magazine
             <div class="btn-actions-pane-right">
-              <label class="select_label">Magazine</label>
+              <label class="select_label">Magazine List</label>
               <select
                 class="select_form_control"
                 id="category_id"
@@ -380,23 +378,11 @@ export default {
     return {
       list_users: [],
       totalValue: {},
-      list_topStudentAlls: {},
+      list_topStudents: {},
       list_contributions: {},
       list_magazines: [],
-      filerDashboard: {
-        column: DefaultConstants.Column, //default column = 'id'
-        sort: DefaultConstants.Sort, //default sort = 'asc'
-        limit: DefaultConstants.Limit, //default limit = 15
-        page: DefaultConstants.Page, //default page = 15
-        status: 0,
-      },
     };
   },
-  // computed: {
-  //   mmUserList() {
-  //     return this.list_users.filter(user => user.roleId !== 1)
-  //   },
-  // },
   created() {
     //These functions are called from commonHelper.js file
     // this.getUserList();
@@ -404,12 +390,12 @@ export default {
     // this.getFacultyList();
     this.getTotalValue();
     this.getMagazineListDashboard();
-    this.getTopStudentAll();
+    // this.getTopStudent();
   },
   methods: {
     getMagazineListDashboard() {
       axios
-        .post(UrlConstants.Magazine + "/filter", this.filerDashboard)
+        .post(UrlConstants.Magazine + "/filter", this.filter)
         .then((response) => {
           this.list_magazines = response.data.data;
         })
@@ -427,11 +413,11 @@ export default {
           this.errors = error.response.data;
         });
     },
-    getTopStudentAll() {
+    getTopStudent() {
       axios
         .get(UrlConstants.BaseUrl + "/" + "getTopStudent")
         .then((response) => {
-          this.list_topStudentAlls = response.data.data;
+          this.list_topStudents = response.data.data;
         })
         .catch((error) => {
           this.errors = error.response.data;
@@ -442,7 +428,18 @@ export default {
       axios
         .get(UrlConstants.Contribution + url + magazine_id)
         .then((r) => {
-          this.list_topStudentAlls = r.data.data;
+          this.list_topStudents = r.data.data;
+        })
+        .catch((error) => {
+          this.errors = error.response.data;
+        });
+    },
+    getContributionHasNoComment() {
+      let url = "/getContributionsHasNoComment";
+      axios
+        .get(UrlConstants.Contribution + url)
+        .then((r) => {
+          this.list_topStudents = r.data.data;
         })
         .catch((error) => {
           this.errors = error.response.data;
@@ -451,6 +448,9 @@ export default {
     getFilter() {
       let magazine_id = this.filter.id;
       this.getTopStudentByMagazine(magazine_id);
+      if (magazine_id == 0) {
+        this.getTopStudent();
+      }
     },
   },
 };
