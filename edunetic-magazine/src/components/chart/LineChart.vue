@@ -73,6 +73,9 @@ export default {
             backgroundColor: "transparent",
             data: this.chartData,
           },
+          {
+            responsive: true,
+          },
         ],
       },
       this.options

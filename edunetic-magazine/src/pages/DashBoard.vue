@@ -10,81 +10,6 @@
             Analytics Dashboard
           </div>
         </div>
-        <div class="page-title-actions">
-          <button
-            type="button"
-            data-toggle="tooltip"
-            title=""
-            data-placement="bottom"
-            class="btn-shadow mr-3 btn btn-dark"
-            data-original-title="Example Tooltip"
-          >
-            <i class="fa fa-star"></i>
-          </button>
-          <div class="d-inline-block dropdown">
-            <button
-              type="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-              class="btn-shadow dropdown-toggle btn btn-info"
-            >
-              <span class="btn-icon-wrapper pr-2 opacity-7">
-                <i class="fa fa-business-time fa-w-20"></i>
-              </span>
-              Buttons
-            </button>
-            <div
-              tabindex="-1"
-              role="menu"
-              aria-hidden="true"
-              class="dropdown-menu dropdown-menu-right"
-            >
-              <ul class="nav flex-column">
-                <li class="nav-item">
-                  <a href="javascript:void(0);" class="nav-link">
-                    <i class="nav-link-icon lnr-inbox"></i>
-                    <span>
-                      Inbox
-                    </span>
-                    <div class="ml-auto badge badge-pill badge-secondary">
-                      86
-                    </div>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="javascript:void(0);" class="nav-link">
-                    <i class="nav-link-icon lnr-book"></i>
-                    <span>
-                      Book
-                    </span>
-                    <div class="ml-auto badge badge-pill badge-danger">5</div>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="javascript:void(0);" class="nav-link">
-                    <i class="nav-link-icon lnr-picture"></i>
-                    <span>
-                      Picture
-                    </span>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a
-                    disabled=""
-                    href="javascript:void(0);"
-                    class="nav-link disabled"
-                  >
-                    <i class="nav-link-icon lnr-file-empty"></i>
-                    <span>
-                      File Disabled
-                    </span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
     <div class="row">
@@ -93,7 +18,7 @@
           <div class="widget-content-wrapper text-white">
             <div class="widget-content-left">
               <div class="widget-heading">
-                <h5>The number of Contributions:</h5>
+                <h5><b>The number of Contributions:</b></h5>
               </div>
             </div>
             <div class="widget-content-right">
@@ -108,7 +33,7 @@
         <div class="card mb-3 widget-content bg-arielle-smile">
           <div class="widget-content-wrapper text-white">
             <div class="widget-content-left">
-              <div class="widget-heading"><h5>The number of Students:</h5></div>
+              <div class="widget-heading"><h5><b>The number of Students:</b></h5></div>
             </div>
             <div class="widget-content-right">
               <div class="widget-numbers_component text-white">
@@ -123,7 +48,7 @@
           <div class="widget-content-wrapper text-white">
             <div class="widget-content-left">
               <div class="widget-heading">
-                <h5>The number of magazines:</h5>
+                <h5><b>The number of magazines:</b></h5>
               </div>
             </div>
             <div class="widget-content-right">
@@ -312,16 +237,15 @@
               <label class="select_label">Magazine List</label>
               <select
                 class="select_form_control"
-                id="category_id"
+                id="magazine_id"
                 name="category"
-                v-model="filter.id"
-                v-on:change="getFilter"
+                v-model="filterContribution.id"
+                v-on:change="getFilterContribution"
               >
-                <option selected>All</option>
                 <option
                   v-for="magazine in list_magazines"
                   :key="magazine.id"
-                  v-bind:value="magazine.magazineId"
+                  v-bind:value="magazine.id"
                 >
                   {{ magazine.theme }}
                 </option>
@@ -375,19 +299,24 @@ export default {
       list_topStudents: {},
       list_contributions: {},
       list_magazines: [],
+      filterContribution: {
+        column: DefaultConstants.Column, //default column = 'id'
+        sort: DefaultConstants.Sort, //default sort = 'asc'
+        limit: DefaultConstants.Limit, //default limit = 15
+        page: DefaultConstants.Page, //default page = 15
+      },
       filter: {
-        status: 0,
+        status: DefaultConstants.MagazineStatuses.Opening,
       },
     };
   },
   created() {
-    //These functions are called from commonHelper.js file
-    // this.getUserList();
-    // this.getRoleList();
-    // this.getFacultyList();
+    this.filterContribution.magazineId = 1; // selected the magazine have ID = 1
+    // this.filter.magazineId = 1; // selected the magazine have ID = 1
     this.getTotalValue();
     this.getMagazineListDashboard();
-    // this.getTopStudent();
+    this.getContributionHasNoComment();
+    this.getTopStudentByMagazine(0); // selected the top 5 student has most contribution of the univercity
   },
   methods: {
     getMagazineListDashboard() {
@@ -410,33 +339,34 @@ export default {
           this.errors = error.response.data;
         });
     },
-    getTopStudent() {
-      axios
-        .get(UrlConstants.BaseUrl + "/" + "getTopStudent")
-        .then((response) => {
-          this.list_topStudents = response.data.data;
-        })
-        .catch((error) => {
-          this.errors = error.response.data;
-        });
-    },
     getTopStudentByMagazine(magazine_id) {
-      let url = "/getContributionsByMagazineId?magazineId=";
-      axios
-        .get(UrlConstants.Contribution + url + magazine_id)
-        .then((r) => {
-          this.list_topStudents = r.data.data;
-        })
-        .catch((error) => {
-          this.errors = error.response.data;
-        });
+      if (magazine_id == 0) {
+        axios
+          .get(UrlConstants.BaseUrl + "/" + "getTopStudent")
+          .then((response) => {
+            this.list_topStudents = response.data.data;
+          })
+          .catch((error) => {
+            this.errors = error.response.data;
+          });
+      } else {
+        let url = "/getTopStudent/?magazineId=";
+        axios
+          .get(UrlConstants.BaseUrl + url + magazine_id)
+          .then((response) => {
+            this.list_topStudents = response.data.data;
+          })
+          .catch((error) => {
+            this.errors = error.response.data;
+          });
+      }
     },
-    getContributionHasNoComment(magazine_id) {
-      let url = "/getContributionsHasNoComment?magazineId=";
+    getContributionHasNoComment() {
+      let url = "/getContributionsHasNoComment";
       axios
-        .get(UrlConstants.Contribution + url + magazine_id)
-        .then((r) => {
-          this.list_topStudents = r.data.data;
+        .post(UrlConstants.Contribution + url, this.filterContribution)
+        .then((response) => {
+          this.list_contributions = response.data.data.list;
         })
         .catch((error) => {
           this.errors = error.response.data;
@@ -445,9 +375,10 @@ export default {
     getFilter() {
       let magazine_id = this.filter.id;
       this.getTopStudentByMagazine(magazine_id);
-      if (magazine_id == 0) {
-        this.getTopStudent();
-      }
+    },
+    getFilterContribution() {
+      this.filterContribution.magazineId = this.filterContribution.id;
+      this.getContributionHasNoComment();
     },
   },
 };
@@ -455,7 +386,7 @@ export default {
 
 <style>
 .widget-numbers_component {
-  margin-left: 5px;
+  margin-left: 10px;
 }
 .click {
   cursor: pointer;
@@ -466,8 +397,9 @@ export default {
 h3 {
   font-weight: bold;
 }
-#category_id {
-  padding: 2px;
+#magazine_id {
+  padding: 5px;
+  margin-left: 10px;
 }
 .click {
   cursor: pointer;

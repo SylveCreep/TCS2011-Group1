@@ -9,8 +9,8 @@
         <div class="Chart__content">
           <line-chart
             v-if="loaded"
-            :chartData="user.contribution"
-            :chartLabels="user.weeks"
+            :chart-data="user.contribution"
+            :chart-labels="user.weeks"
           ></line-chart>
         </div>
         <p class="text-center" style="color: red" v-if="showError">
