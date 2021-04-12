@@ -420,24 +420,33 @@ export default {
     getTotalValue() {
       axios
         .get(UrlConstants.BaseUrl + "/" + "totalvalues")
-        .then((r) => {
-          this.totalValue = r.data.data;
+        .then((response) => {
+          this.totalValue = response.data.data;
         })
-        .catch();
+        .catch((error) => {
+          this.errors = error.response.data;
+        });
     },
     getTopStudentAll() {
       axios
         .get(UrlConstants.BaseUrl + "/" + "getTopStudent")
-        .then((r) => {
-          this.list_topStudentAlls = r.data.data;
+        .then((response) => {
+          this.list_topStudentAlls = response.data.data;
         })
-        .catch();
+        .catch((error) => {
+          this.errors = error.response.data;
+        });
     },
     getTopStudentByMagazine(magazine_id) {
       let url = "/getContributionsByMagazineId?magazineId=";
-      axios.get(UrlConstants.Contribution + url + magazine_id).then((r) => {
-        this.list_topStudentAlls = r.data.data;
-      }).catch;
+      axios
+        .get(UrlConstants.Contribution + url + magazine_id)
+        .then((r) => {
+          this.list_topStudentAlls = r.data.data;
+        })
+        .catch((error) => {
+          this.errors = error.response.data;
+        });
     },
     getFilter() {
       let magazine_id = this.filter.id;
