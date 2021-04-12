@@ -96,6 +96,18 @@ export const router = new Router({
                 mm: true,
             }
         },
+        {
+            name: 'Demo',
+            path: '/dashboard/demo',
+            component: Demo,
+            meta: {
+                authen: true,
+                admin: true,
+                student: true,
+                mc: true,
+                mm: true,
+            }
+        },
         //Authen Routes
         {
             name: 'Login',
