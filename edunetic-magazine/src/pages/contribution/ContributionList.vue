@@ -231,6 +231,9 @@ export default {
     this.getContributionList();
     this.getFacultyList();
   },
+  destroyed() {
+    this.$cookies.remove("studentContribution");
+  },
   methods: {
     showDetail(contribution_id) {
       axios

@@ -200,7 +200,7 @@ export default {
   name: "UserUpdate",
   mixins: [commonHelper, validateHelper],
   props: {
-    loginUserId: Number,
+    loginUserId: String,
   },
   data() {
     return {

@@ -92,11 +92,13 @@
         <div class="card mb-3 widget-content bg-midnight-bloom">
           <div class="widget-content-wrapper text-white">
             <div class="widget-content-left">
-              <div class="widget-heading">The number of Contributions</div>
+              <div class="widget-heading">
+                <h3>The number of Contributions:</h3>
+              </div>
             </div>
             <div class="widget-content-right">
               <div class="widget-numbers_component text-white">
-                <span>{{ 100 }}</span>
+                <h3>{{ totalValue.totalContributions }}</h3>
               </div>
             </div>
           </div>
@@ -106,11 +108,11 @@
         <div class="card mb-3 widget-content bg-arielle-smile">
           <div class="widget-content-wrapper text-white">
             <div class="widget-content-left">
-              <div class="widget-heading">The number of students</div>
+              <div class="widget-heading"><h3>The number of students:</h3></div>
             </div>
             <div class="widget-content-right">
               <div class="widget-numbers_component text-white">
-                <span>{{ 200 }}</span>
+                <h3>{{ totalValue.totalStudents }}</h3>
               </div>
             </div>
           </div>
@@ -120,11 +122,13 @@
         <div class="card mb-3 widget-content bg-grow-early">
           <div class="widget-content-wrapper text-white">
             <div class="widget-content-left">
-              <div class="widget-heading">The number of magazines</div>
+              <div class="widget-heading">
+                <h3>The number of magazines:</h3>
+              </div>
             </div>
             <div class="widget-content-right">
               <div class="widget-numbers_component text-white">
-                <span>{{ 300 }}</span>
+                <h3>{{ totalValue.totalMagazines }}</h3>
               </div>
             </div>
           </div>
@@ -255,21 +259,26 @@
           <div class="card-header">
             Top 5 students most contribution
             <div class="btn-actions-pane-right">
+              <label
+                class="label click"
+                style="margin-right: 20px;"
+                v-on:click="getTopStudentAll"
+                >Total Magazine</label
+              >
               <label class="select_label">Magazine</label>
               <select
                 class="select_form_control"
-                id="category_id"
-                name="category"
-                v-model="filter.magazineId"
+                id="magazine_id"
+                name="magazine"
+                v-model="filter.id"
                 v-on:change="getFilter"
               >
-                <option value="" selected>All</option>
                 <option
                   v-for="magazine in list_magazines"
                   :key="magazine.id"
-                  v-bind:value="magazine.magazineId"
+                  v-bind:value="magazine.id"
                 >
-                  {{ magazine.magazineName }}
+                  {{ magazine.theme }}
                 </option>
                 <!-- select option-->
               </select>
@@ -285,24 +294,68 @@
                   <th class="text">Student's Name</th>
                   <th class="text">Faculty</th>
                   <th class="text">Total Contribution</th>
-                  <th class="text">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="user of list_users" :key="user.id">
-                  <td>{{ user.code }}</td>
-                  <td>{{ user.fullName }}</td>
-                  <td>{{ user.facultyName }}</td>
-                  <td>{{ user.totalContribution }}</td>
-                  <td>
-                    <p
-                      class="click"
-                      style="display: inline"
-                      v-on:click="showUserContribution(user.id)"
-                    >
-                      <b>Detail</b>
-                    </p>
-                  </td>
+                <tr
+                  v-for="topStudentAll of list_topStudentAlls"
+                  :key="topStudentAll.id"
+                >
+                  <td>{{ topStudentAll.code }}</td>
+                  <td>{{ topStudentAll.studentName }}</td>
+                  <td>{{ topStudentAll.facultyName }}</td>
+                  <td>{{ topStudentAll.totalContribution }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div
+          v-if="loginUser.roleId === 2 || loginUser.roleId === 3"
+          class="main-card mb-3 card"
+        >
+          <div class="card-header">
+            Contributions have no comment on each magazine
+            <div class="btn-actions-pane-right">
+              <label class="select_label">Magazine</label>
+              <select
+                class="select_form_control"
+                id="category_id"
+                name="category"
+              >
+                <option selected>All</option>
+                <option
+                  v-for="magazine in list_magazines"
+                  :key="magazine.id"
+                  v-bind:value="magazine.magazineId"
+                >
+                  {{ magazine.theme }}
+                </option>
+                <!-- select option-->
+              </select>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table
+              class="align-middle mb-0 table table-borderless table-striped table-hover"
+            >
+              <thead>
+                <tr>
+                  <th class="text">Code</th>
+                  <th class="text">Co-codinator</th>
+                  <th class="text">Faculty</th>
+                  <th class="text">Student's Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="contribution of list_contributions"
+                  :key="contribution.id"
+                >
+                  <td>{{ contribution.code }}</td>
+                  <td>{{ contribution.totalContribution }}</td>
+                  <td>{{ contribution.facultyName }}</td>
+                  <td>{{ contribution.studentName }}</td>
                 </tr>
               </tbody>
             </table>
@@ -317,7 +370,6 @@
 import axios from "axios";
 import { commonHelper } from "@/helper/commonHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
-import { ResultConstants } from "@/constant/ResultConstant";
 import router from "@/router";
 import { DefaultConstants } from "@/constant/DefaultConstant";
 
@@ -327,102 +379,70 @@ export default {
   data() {
     return {
       list_users: [],
+      totalValue: {},
+      list_topStudentAlls: {},
+      list_contributions: {},
+      list_magazines: [],
+      filerDashboard: {
+        column: DefaultConstants.Column, //default column = 'id'
+        sort: DefaultConstants.Sort, //default sort = 'asc'
+        limit: DefaultConstants.Limit, //default limit = 15
+        page: DefaultConstants.Page, //default page = 15
+        status: 0,
+      },
     };
   },
-  computed: {
-    mmUserList() {
-      return this.list_users.filter(user => user.roleId !== 1)
-    },
-  },
+  // computed: {
+  //   mmUserList() {
+  //     return this.list_users.filter(user => user.roleId !== 1)
+  //   },
+  // },
   created() {
-    this.setStudentList();
-    this.checkLoginRoleFilter();
     //These functions are called from commonHelper.js file
-    this.getUserList();
-    this.getRoleList();
-    this.getFacultyList();
+    // this.getUserList();
+    // this.getRoleList();
+    // this.getFacultyList();
+    this.getTotalValue();
+    this.getMagazineListDashboard();
+    this.getTopStudentAll();
   },
   methods: {
-    async checkUserExisted(user_id) {
-      await axios.get(UrlConstants.User + "/" + user_id).then((response) => {
-        if (response.data.code === ResultConstants.Failure) {
-          this.canModify = false;
-        } else {
-          this.canModify = true;
-        }
-      });
+    getMagazineListDashboard() {
+      axios
+        .post(UrlConstants.Magazine + "/filter", this.filerDashboard)
+        .then((response) => {
+          this.list_magazines = response.data.data;
+        })
+        .catch((error) => {
+          this.errors = error.response.data;
+        });
     },
-    async showUser(user_id) {
-      await this.checkUserExisted(user_id)
-        if (!this.canModify) {
-          this.errorAlert('update', 'user');
-          this.getUserList();
-        } else {
-          router.push("/users/" + user_id + "/detail");
-        }
+    getTotalValue() {
+      axios
+        .get(UrlConstants.BaseUrl + "/" + "totalvalues")
+        .then((r) => {
+          this.totalValue = r.data.data;
+        })
+        .catch();
     },
-    async deleteUser(user_id) {
-      await this.checkUserExisted(user_id)
-        if (!this.canModify) {
-          this.errorAlert('delete', 'user');
-          this.getUserList();
-        }
-        else {
-          await this.confirmAlert('delete', 'user');
-          if (this.confirmResult) {
-            axios
-              .delete(UrlConstants.User + "/" + user_id)
-              .then((res) => {
-                  this.successAlert();
-                  this.getUserList();
-              })
-              .catch((error) => {
-                this.errors = error.data;
-              });
-          }
-        }
+    getTopStudentAll() {
+      axios
+        .get(UrlConstants.BaseUrl + "/" + "getTopStudent")
+        .then((r) => {
+          this.list_topStudentAlls = r.data.data;
+        })
+        .catch();
     },
-    async showUserContribution(user_id) {
-      await this.checkUserExisted(user_id)
-        if (!this.canModify) {
-          this.errorAlert('show contribution list', 'user');
-          this.getUserList();
-        } else {
-          this.$cookies.set("studentContribution", user_id);
-          router.push("/contributions");
-        }
-    },
-    setStudentList() {
-      if (this.$cookies.isKey("facultyStudent")) {
-        this.filter.facultyId = this.$cookies.get("facultyStudent");
-      }
+    getTopStudentByMagazine(magazine_id) {
+      let url = "/getContributionsByMagazineId?magazineId=";
+      axios.get(UrlConstants.Contribution + url + magazine_id).then((r) => {
+        this.list_topStudentAlls = r.data.data;
+      }).catch;
     },
     getFilter() {
-      this.filter.page = DefaultConstants.firstPage;
-      this.getUserList();
+      let magazine_id = this.filter.id;
+      this.getTopStudentByMagazine(magazine_id);
     },
-    checkLoginRoleFilter() {
-      if (this.loginUser.roleId === DefaultConstants.Role.MarketingCoordinator) {
-        this.filter.facultyId = this.loginUser.facultyId;
-        this.filter.roleId = DefaultConstants.Role.Student
-      }
-      if (this.loginUser.roleId === DefaultConstants.Role.MarketingManager) {
-        this.filter.roleId = DefaultConstants.Role.Student
-      }
-    },
-    getSort($column) {
-      this.getcommonSort($column);
-      this.getUserList();
-    },
-    getLimit(event) {
-      this.getcommonLimit(event.target.value);
-      this.getUserList();
-    },
-    changePage(e) {
-      this.changecommonPage(e);
-      this.getUserList();
-    },
-
   },
 };
 </script>
@@ -436,5 +456,17 @@ export default {
 }
 .click :hover {
   color: #7399f7;
+}
+h3 {
+  font-weight: bold;
+}
+#category_id {
+  padding: 2px;
+}
+.click {
+  cursor: pointer;
+}
+.click :hover {
+  color: #7399f7 !important;
 }
 </style>

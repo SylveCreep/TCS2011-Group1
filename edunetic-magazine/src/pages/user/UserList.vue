@@ -14,7 +14,8 @@
           </div>
         </div>
         <div class="page-title-actions">
-          <div class="d-inline-block dropdown" v-if="loginUser.roleId === 1"> <!-- Only admin can create user -->
+          <div class="d-inline-block dropdown" v-if="loginUser.roleId === 1">
+            <!-- Only admin can create user -->
             <router-link to="/users/create" class="btn-shadow btn btn-info">
               <span class="btn-icon-wrapper pr-2 opacity-7">
                 <i class="fa fa-business-time fa-w-20"></i>
@@ -71,7 +72,8 @@
                     <option value="0" selected>Female</option>
                   </select>
                 </div>
-                <div class="form-group" v-if="loginUser.roleId !== 3"> <!-- coordinatio cannot filter by faculty-->
+                <div class="form-group" v-if="loginUser.roleId !== 3">
+                  <!-- coordinatio cannot filter by faculty-->
                   <label>Faculty</label>
                   <select
                     class="form-control select2"
@@ -90,7 +92,8 @@
                     </option>
                   </select>
                 </div>
-                <div class="form-group"  v-if="loginUser.roleId === 1"><!-- Only Admin can filter by role-->
+                <div class="form-group" v-if="loginUser.roleId === 1">
+                  <!-- Only Admin can filter by role-->
                   <label>Role</label>
                   <select
                     class="form-control select2"
@@ -154,7 +157,6 @@
                     <td>{{ user.email }}</td>
                     <td>
                       <p
-                        
                         class="click"
                         style="display: inline"
                         v-on:click="showUser(user.id)"
@@ -173,7 +175,8 @@
                         <b>Delete</b>
                       </p>
                       <!--Only marketing manager can view contribution list of student-->
-                      <p v-else
+                      <p
+                        v-else
                         class="click"
                         style="display: inline"
                         v-on:click="showUserContribution(user.id)"
@@ -230,9 +233,13 @@ export default {
   },
   computed: {
     mmUserList() {
-      return this.list_users.filter(user => user.roleId !== 1)
+      return this.list_users.filter((user) => user.roleId !== 1);
     },
   },
+  destroyed() {
+    this.$cookies.remove("facultyStudent");
+  },
+
   created() {
     this.setStudentList();
     this.checkLoginRoleFilter();
@@ -252,44 +259,43 @@ export default {
       });
     },
     async showUser(user_id) {
-      await this.checkUserExisted(user_id)
-        if (!this.canModify) {
-          this.errorAlert('update', 'user');
-          this.getUserList();
-        } else {
-          router.push("/users/" + user_id + "/detail");
-        }
+      await this.checkUserExisted(user_id);
+      if (!this.canModify) {
+        this.errorAlert("update", "user");
+        this.getUserList();
+      } else {
+        router.push("/users/" + user_id + "/detail");
+      }
     },
     async deleteUser(user_id) {
-      await this.checkUserExisted(user_id)
-        if (!this.canModify) {
-          this.errorAlert('delete', 'user');
-          this.getUserList();
+      await this.checkUserExisted(user_id);
+      if (!this.canModify) {
+        this.errorAlert("delete", "user");
+        this.getUserList();
+      } else {
+        await this.confirmAlert("delete", "user");
+        if (this.confirmResult) {
+          axios
+            .delete(UrlConstants.User + "/" + user_id)
+            .then((res) => {
+              this.successAlert();
+              this.getUserList();
+            })
+            .catch((error) => {
+              this.errors = error.data;
+            });
         }
-        else {
-          await this.confirmAlert('delete', 'user');
-          if (this.confirmResult) {
-            axios
-              .delete(UrlConstants.User + "/" + user_id)
-              .then((res) => {
-                  this.successAlert();
-                  this.getUserList();
-              })
-              .catch((error) => {
-                this.errors = error.data;
-              });
-          }
-        }
+      }
     },
     async showUserContribution(user_id) {
-      await this.checkUserExisted(user_id)
-        if (!this.canModify) {
-          this.errorAlert('show contribution list', 'user');
-          this.getUserList();
-        } else {
-          this.$cookies.set("studentContribution", user_id);
-          router.push("/contributions");
-        }
+      await this.checkUserExisted(user_id);
+      if (!this.canModify) {
+        this.errorAlert("show contribution list", "user");
+        this.getUserList();
+      } else {
+        this.$cookies.set("studentContribution", user_id);
+        router.push("/contributions");
+      }
     },
     setStudentList() {
       if (this.$cookies.isKey("facultyStudent")) {
@@ -301,12 +307,14 @@ export default {
       this.getUserList();
     },
     checkLoginRoleFilter() {
-      if (this.loginUser.roleId === DefaultConstants.Role.MarketingCoordinator) {
+      if (
+        this.loginUser.roleId === DefaultConstants.Role.MarketingCoordinator
+      ) {
         this.filter.facultyId = this.loginUser.facultyId;
-        this.filter.roleId = DefaultConstants.Role.Student
+        this.filter.roleId = DefaultConstants.Role.Student;
       }
       if (this.loginUser.roleId === DefaultConstants.Role.MarketingManager) {
-        this.filter.roleId = DefaultConstants.Role.Student
+        this.filter.roleId = DefaultConstants.Role.Student;
       }
     },
     getSort($column) {
@@ -321,7 +329,6 @@ export default {
       this.changecommonPage(e);
       this.getUserList();
     },
-
   },
 };
 </script>
@@ -343,4 +350,3 @@ export default {
   padding: 2px 5px;
 }
 </style>
-
