@@ -81,7 +81,6 @@ export const commonHelper = {
         });
     },
     getFacultyList() {
-
       axios
         .post(UrlConstants.Faculty + "/filter", this.filter)
         .then((response) => {

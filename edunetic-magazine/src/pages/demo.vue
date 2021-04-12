@@ -9,8 +9,8 @@
         <div class="Chart__content">
           <line-chart
             v-if="loaded"
-            :chart-data="user.contribution"
-            :chart-labels="user.weeks"
+            :chartData="user.contribution"
+            :chartLabels="user.weeks"
           ></line-chart>
         </div>
         <p class="text-center" style="color: red" v-if="showError">
@@ -25,7 +25,6 @@ import axios from "axios";
 import LineChart from "@/components/chart/LineChart";
 import { commonHelper } from "@/helper/commonHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
-import { ResultConstants } from "@/constant/ResultConstant";
 import router from "@/router";
 import { DefaultConstants } from "@/constant/DefaultConstant";
 
@@ -96,9 +95,10 @@ export default {
       axios
         .get("https://6072f548e4e0160017ddf160.mockapi.io/users/line/1")
         .then((response) => {
+          console.log(response.data)
           this.user = response.data;
           this.loaded = true;
-          // console.log(this.user.weeks);
+          console.log(this.user.weeks);
         })
         .catch((error) => {
           this.errorMessage = error.response.data.error;
