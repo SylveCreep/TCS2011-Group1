@@ -23,6 +23,7 @@
                 id="theme"
                 type="text"
                 class="form-control"
+                placeholder="Theme name"
                 v-model="magazine.theme"
               />
               <p style="color: red" v-if="list_errors !== null">

@@ -9,11 +9,13 @@
         <div class="Chart__content">
           <line-chart
             v-if="loaded"
-            :chart-data="chartData"
-            :chart-labels="chartOption"
+            :chart-data="user.contribution"
+            :chart-labels="user.weeks"
           ></line-chart>
         </div>
-        <p class="text-center" style="color: red" v-if="showError"> {{ errorMessage }}</p>
+        <p class="text-center" style="color: red" v-if="showError">
+          {{ errorMessage }}
+        </p>
       </div>
     </div>
   </div>
@@ -43,11 +45,12 @@ export default {
       //   labels: [],
       //   showError: false,
       //   errorMessage: "Please enter a package name",
-      user: [],
+      user: {
+        contribution:[],
+        weeks:[],
+      },
       loaded: false,
-      chartData: null,
-      chartOption: null,
-      showError: false,
+      showError: [],
       errorMessage: "Chart are not exist",
     };
   },
@@ -75,24 +78,36 @@ export default {
     //     });
     // },
     importChart() {
-      if (this.loginUser === 4) {
-        axios
-          .get(UrlConstants.User + "/" + this.$route.params.id, this.user)
-          .then((response) => {
-            console.log(response.data);
-            this.user.chartData = this.response.data.data;
-            this.user.chartOption = this.response.data.data;
-            this.loaded = true;
-          })
-          .catch((error) => {
-            this.errorMessage = error.response.data.error;
-            this.showError = true;
-          });
-      }
+      //   if (this.loginUser === 4) {
+      //     axios
+      //       .get(UrlConstants.User + "/" + this.$route.params.id, this.user)
+      //       .then((response) => {
+      //         console.log(response.data);
+      //         this.user.chartData = this.response.data.data;
+      //         this.user.chartOption = this.response.data.data;
+      //         this.loaded = true;
+      //       })
+      //       .catch((error) => {
+      //         this.errorMessage = error.response.data.error;
+      //         this.showError = true;
+      //       });
+      //   }
+      // },
+      axios
+        .get("https://6072f548e4e0160017ddf160.mockapi.io/users/line/1")
+        .then((response) => {
+          this.user = response.data;
+          this.loaded = true;
+          // console.log(this.user.weeks);
+        })
+        .catch((error) => {
+          this.errorMessage = error.response.data.error;
+          this.showError = true;
+        });
     },
     getUser() {
-      this.user.id = this.loginUser.id
-    }
+      this.user.id = this.loginUser.id;
+    },
   },
 };
 </script>

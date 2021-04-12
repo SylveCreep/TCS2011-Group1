@@ -114,6 +114,11 @@ export default {
           this.$cookies.set("loginUser", res.data.data, "30min");
         });
     },
+    deleteUserKey() {
+      if (this.$cookies.isKey("facultyStudent")) {
+        this.$$cookies.remove("facultyStudent")
+      }
+    }
   },
 };
 </script>

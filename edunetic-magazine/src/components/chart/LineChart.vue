@@ -1,61 +1,65 @@
 <script>
-  import { Line } from 'vue-chartjs'
-
-  export default {
-    extends: Line,
-    props: {
-      chartData: {
-        type: Object,
-        required: false,
-        default: null
-      },
-      chartLabels: {
-        type: Object,
-        required: true,
-        default: null
-      }
+import { Line } from "vue-chartjs";
+export default {
+  extends: Line,
+  props: {
+    chartData: {
+      type: Array,
+      required: false,
     },
-    data () {
-      return {
-        options: {
-          scales: {
-            yAxes: [{
+    chartLabels: {
+      type: Array,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      options: {
+        scales: {
+          yAxes: [
+            {
               ticks: {
-                beginAtZero: true
+                beginAtZero: true,
               },
               gridLines: {
-                display: true
-              }
-            }],
-            xAxes: [ {
+                display: true,
+              },
+            },
+          ],
+          xAxes: [
+            {
               gridLines: {
-                display: false
-              }
-            }]
-          },
-          legend: {
-            display: false
-          },
-          responsive: true,
-          maintainAspectRatio: false
-        }
-      }
-    },
-    mounted () {
-      this.renderChart({
+                display: false,
+              },
+            },
+          ],
+        },
+        legend: {
+          display: true,
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    };
+  },
+  mounted() {
+    this.renderChart(
+      {
         labels: this.chartLabels,
         datasets: [
           {
-            label: 'downloads',
-            borderColor: '#249EBF',
-            pointBackgroundColor: 'white',
+            label: "contributions",
+            borderColor: "#249EBF",
+            pointBackgroundColor: "white",
             borderWidth: 1,
-            pointBorderColor: '#249EBF',
-            backgroundColor: 'transparent',
-            data: this.chartData
-          }
-        ]
-      }, this.options)
-    }
-  }
+            pointBorderColor: "#249EBF",
+            backgroundColor: "transparent",
+            data: this.chartData,
+          },
+        ],
+      },
+      this.options
+    );
+  },
+};
 </script>
