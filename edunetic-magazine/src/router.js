@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from "vue-router";
 import VueCookies from 'vue-cookies'
 import Demo from '@/pages/demo'
+import GChart from '@/pages/Gchart'
 
 //import Authen Components
 import Login from "@/pages/Authen/Login";
@@ -88,6 +89,18 @@ export const router = new Router({
             name: 'Dashboard',
             path: '/dashboard',
             component: DashBoard,
+            meta: {
+                authen: true,
+                admin: true,
+                student: true,
+                mc: true,
+                mm: true,
+            }
+        },
+        {
+            name: 'GChart',
+            path: '/dashboard/demo/gchart',
+            component: GChart,
             meta: {
                 authen: true,
                 admin: true,
