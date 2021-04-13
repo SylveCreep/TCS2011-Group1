@@ -18,5 +18,8 @@ public interface FacultyService {
 
     List<FacultyResponse> getFacultyHasNoMc();
 
+    List<StudentsByFacultyResponse> getCountStudentsByFaculty();
+
+    List<ContributionByFaculty> getCountContributionsByFaculty();
 
 }

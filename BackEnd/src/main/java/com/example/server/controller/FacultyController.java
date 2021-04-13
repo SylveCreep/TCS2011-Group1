@@ -76,8 +76,8 @@ public class FacultyController {
             HashMap<String, Object> validateResult = responseUtils.validateFacultyRequest(facultyRequest, 1);
             Object validateRes = validateResult.get("result");
             if (Integer.parseInt(validateRes.toString()) == -1) {
-                return responseUtils.getActionResponseEntity("NULL", FAILURE, "Create faculty failed",
-                        validateResult, HttpStatus.BAD_REQUEST);
+                return responseUtils.getActionResponseEntity("NULL", FAILURE, "Create faculty failed", validateResult,
+                        HttpStatus.BAD_REQUEST);
             }
             Boolean facult = facultyService.update(facultyRequest);
             if (facult == null) {
@@ -96,8 +96,8 @@ public class FacultyController {
             HashMap<String, Object> validateResult = responseUtils.validateFacultyRequest(facultyRequest, 0);
             Object validateRes = validateResult.get("result");
             if (Integer.parseInt(validateRes.toString()) == -1) {
-                return responseUtils.getActionResponseEntity("NULL", FAILURE, "Create faculty failed",
-                        validateResult, HttpStatus.BAD_REQUEST);
+                return responseUtils.getActionResponseEntity("NULL", FAILURE, "Create faculty failed", validateResult,
+                        HttpStatus.BAD_REQUEST);
             }
             Boolean isSuccess = facultyService.create(facultyRequest);
             if (isSuccess == false) {
@@ -137,6 +137,37 @@ public class FacultyController {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Get faculty fail", HttpStatus.BAD_REQUEST);
             }
             return responseUtils.getResponseEntity(facultyResponse, SUCCESS, "Get faculty successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", FAILURE, "Get faculty fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/getStudentCountByFaculty", consumes = { "text/plain",
+            "application/*" }, produces = "application/json")
+    public ResponseEntity<?> getStudentCountByFaculty() {
+        try {
+            List<StudentsByFacultyResponse> studentsByFacultyResponse = facultyService.getCountStudentsByFaculty();
+            if (studentsByFacultyResponse == null) {
+                return responseUtils.getResponseEntity("NULL", FAILURE, "Get faculty fail", HttpStatus.BAD_REQUEST);
+            }
+            return responseUtils.getResponseEntity(studentsByFacultyResponse, SUCCESS, "Get faculty successfully",
+                    HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", FAILURE, "Get faculty fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/getContributionCountByFaculty", consumes = { "text/plain",
+            "application/*" }, produces = "application/json")
+    public ResponseEntity<?> getContributionCountByFaculty() {
+        try {
+            List<ContributionByFaculty> contributionsByFacultyResponse = facultyService
+                    .getCountContributionsByFaculty();
+            if (contributionsByFacultyResponse == null) {
+                return responseUtils.getResponseEntity("NULL", FAILURE, "Get faculty fail", HttpStatus.BAD_REQUEST);
+            }
+            return responseUtils.getResponseEntity(contributionsByFacultyResponse, SUCCESS, "Get faculty successfully",
+                    HttpStatus.OK);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", FAILURE, "Get faculty fail", HttpStatus.BAD_REQUEST);
         }

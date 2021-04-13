@@ -160,4 +160,49 @@ public class FacultyServiceImpl implements FacultyService {
         }
     }
 
+    @Override
+    public List<StudentsByFacultyResponse> getCountStudentsByFaculty() {
+        try {
+            List<Object> list = facultyDao.countStudentsByFaculty();
+            List<StudentsByFacultyResponse> studentsByFacultyResponses = new ArrayList<>();
+            for (Object object : list) {
+                StudentsByFacultyResponse studentsByFacultyResponse = new StudentsByFacultyResponse();
+                Object[] obj = (Object[]) object;
+                if (((Object[]) obj)[0] != null) {
+                    studentsByFacultyResponse.setTotalStudents(Integer.parseInt(((Object[]) obj)[0].toString()));
+                }
+                if (((Object[]) obj)[1] != null) {
+                    studentsByFacultyResponse.setFacultyName(((Object[]) obj)[1].toString());
+                }
+                studentsByFacultyResponses.add(studentsByFacultyResponse);
+            }
+            return studentsByFacultyResponses;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<ContributionByFaculty> getCountContributionsByFaculty() {
+        try {
+            List<Object> list = facultyDao.countContributionsByFaculty();
+            List<ContributionByFaculty> contributionsByFacultyResponses = new ArrayList<>();
+            for (Object object : list) {
+                ContributionByFaculty contributionsByFacultyResponse = new ContributionByFaculty();
+                Object[] obj = (Object[]) object;
+                if (((Object[]) obj)[0] != null) {
+                    contributionsByFacultyResponse
+                            .setTotalContributions(Integer.parseInt(((Object[]) obj)[0].toString()));
+                }
+                if (((Object[]) obj)[1] != null) {
+                    contributionsByFacultyResponse.setFacultyName(((Object[]) obj)[1].toString());
+                }
+                contributionsByFacultyResponses.add(contributionsByFacultyResponse);
+            }
+            return contributionsByFacultyResponses;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }
