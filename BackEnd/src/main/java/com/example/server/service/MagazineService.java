@@ -8,6 +8,7 @@ import com.example.server.entity.Magazine;
 import com.example.server.model.request.CreateMagazine;
 import com.example.server.model.request.MagazineSearchRequest;
 import com.example.server.model.request.PagingRequest;
+import com.example.server.model.response.ContributionByMagazineResponse;
 import com.example.server.model.response.MagazineLastPageResponse;
 import com.example.server.model.response.MagazineResponse;
 
@@ -40,4 +41,6 @@ public interface MagazineService {
     MagazineLastPageResponse searchMagazineByTheme(MagazineSearchRequest magazineSearchRequest);
 
     List<Object> getMagazineListResponse(PagingRequest pagingRequest);
+
+    List<ContributionByMagazineResponse> getCountContributionByMagazine();
 }

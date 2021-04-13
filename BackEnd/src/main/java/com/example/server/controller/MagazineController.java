@@ -3,6 +3,7 @@ package com.example.server.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -10,6 +11,7 @@ import com.example.server.constant.Constant;
 import com.example.server.entity.Magazine;
 import com.example.server.model.request.CreateMagazine;
 import com.example.server.model.request.MagazineSearchRequest;
+import com.example.server.model.response.ContributionByMagazineResponse;
 import com.example.server.model.response.MagazineLastPageResponse;
 import com.example.server.model.response.MagazineResponse;
 import com.example.server.service.MagazineService;
@@ -49,7 +51,7 @@ public class MagazineController {
                 return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE, "Create magazine failed",
                         validateResult, HttpStatus.BAD_REQUEST);
             }
-            if (magazine.getCreated_at() == null){
+            if (magazine.getCreated_at() == null) {
                 Date farDate = new SimpleDateFormat("yyyy-MM-dd").parse("2500-12-31");
                 magazine.setClose_at(farDate);
             }
@@ -142,7 +144,8 @@ public class MagazineController {
 
     @PreAuthorize("hasRole('R0002') or hasRole('R0003') or hasRole('R0004')")
     @PostMapping(value = "/filter")
-    public ResponseEntity<?> showMagazineBySearch(@RequestBody MagazineSearchRequest magazineSearchRequest/*, @PathVariable(name = "status") int status*/) {
+    public ResponseEntity<?> showMagazineBySearch(
+            @RequestBody MagazineSearchRequest magazineSearchRequest/* , @PathVariable(name = "status") int status */) {
         try {
             if (magazineSearchRequest.getLimit() < 0 || magazineSearchRequest.getPage() < 0) {
                 return responseUtils.getResponseEntity("NULL", Constant.FAILURE,
@@ -177,6 +180,24 @@ public class MagazineController {
                     HttpStatus.OK);
         } catch (Exception e) {
             return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get magazine fail",
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/getContributionCountByMagazine", consumes = { "text/plain",
+            "application/*" }, produces = "application/json")
+    public ResponseEntity<?> getContributionCountByFaculty() {
+        try {
+            List<ContributionByMagazineResponse> contributionsByMagazineResponse = magazineService
+                    .getCountContributionByMagazine();
+            if (contributionsByMagazineResponse == null) {
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get contribution count fail",
+                        HttpStatus.BAD_REQUEST);
+            }
+            return responseUtils.getResponseEntity(contributionsByMagazineResponse, Constant.SUCCESS,
+                    "Get contribution count successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Get contribution count fail",
                     HttpStatus.BAD_REQUEST);
         }
     }
