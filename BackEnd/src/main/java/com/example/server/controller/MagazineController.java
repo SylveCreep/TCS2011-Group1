@@ -113,6 +113,33 @@ public class MagazineController {
         }
     }
 
+    @PreAuthorize("hasRole('R0002')")
+    @PatchMapping(value = "/closeAt", consumes = { "test/plain", "application/*" }, produces = "application/json")
+    public ResponseEntity<?> updateMagazineCloseAt(@RequestBody CreateMagazine magazineDto) {
+        try {
+            HashMap<String, Object> validateResult = responseUtils.validateMagazineRequest(magazineDto, 2);
+            Object validateRes = validateResult.get("result");
+            if (Integer.parseInt(validateRes.toString()) == -1) {
+                return responseUtils.getActionResponseEntity("NULL", Constant.FAILURE, "Update magazine failed",
+                        validateResult, HttpStatus.BAD_REQUEST);
+            }
+            if (magazineDto.getId() == null) {
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Must has magazine id",
+                        HttpStatus.BAD_REQUEST);
+            }
+            Boolean magazine = magazineService.updateMagazineCloseAt(magazineDto);
+            if (magazine == false) {
+                return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update magazine fail",
+                        HttpStatus.BAD_REQUEST);
+            }
+            return responseUtils.getResponseEntity(magazine, Constant.SUCCESS, "Update magazine successfully",
+                    HttpStatus.OK);
+        } catch (Exception e) {
+            return responseUtils.getResponseEntity("NULL", Constant.FAILURE, "Update magazine fail",
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PreAuthorize("hasRole('R0002') or hasRole('R0003') or hasRole('R0004')")
     @PostMapping(value = "/filter")
     public ResponseEntity<?> showMagazineBySearch(@RequestBody MagazineSearchRequest magazineSearchRequest/*, @PathVariable(name = "status") int status*/) {

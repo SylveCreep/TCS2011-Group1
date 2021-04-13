@@ -799,6 +799,17 @@ public class ResponseUtils {
                 form.put("result", 0);
             }
             break;
+        case 2:
+             if (!valId.equals("Valid")) {
+                inputForm.put("id", valId);
+                if (!form.containsKey("result")) {
+                    form.put("result", -1);
+                }
+            }
+            if (!form.containsKey("result")) {
+                form.put("result", 0);
+            }
+            break;
         default:
             break;
         }
@@ -810,9 +821,9 @@ public class ResponseUtils {
         if (magazineDto.getTheme() == null) {
             return "Invalid";
         }
-        if (NameValidation.containSpecialCharacter(magazineDto.getTheme())) {
+        /*if (NameValidation.containSpecialCharacter(magazineDto.getTheme())) {
             return "Contain Special Character";
-        }
+        }*/
         Magazine magazine = magazineDao.findByTheme(magazineDto.getTheme());
         Boolean isOne;
         if (magazine != null && magazine.getId() == magazineDto.getId())

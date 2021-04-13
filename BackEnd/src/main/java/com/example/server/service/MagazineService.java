@@ -33,6 +33,8 @@ public interface MagazineService {
 
     Boolean updateMagazine(CreateMagazine magazineDto);
 
+    Boolean updateMagazineCloseAt(CreateMagazine magazineDto);
+
     Boolean deleteMagazine(Long id);
 
     MagazineLastPageResponse searchMagazineByTheme(MagazineSearchRequest magazineSearchRequest);

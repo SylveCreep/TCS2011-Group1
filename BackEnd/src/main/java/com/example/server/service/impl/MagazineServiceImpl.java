@@ -133,6 +133,18 @@ public class MagazineServiceImpl implements MagazineService {
     }
 
     @Override
+    public Boolean updateMagazineCloseAt(CreateMagazine magazineDto){
+        try {
+            Magazine magazine = magazineDao.getOne(magazineDto.getId());
+            magazine.setClose_at(magazineDto.getClose_at());
+            magazineDao.save(magazine);
+            return true;
+        }catch (Exception exception){
+            return false;
+        }
+    }
+
+    @Override
     public Boolean deleteMagazine(Long id){
         try{
             Magazine magazine = magazineDao.getOne(id);

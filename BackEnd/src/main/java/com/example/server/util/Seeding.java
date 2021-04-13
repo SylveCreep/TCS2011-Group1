@@ -83,13 +83,10 @@ public class Seeding implements CommandLineRunner {
                  nUser.setCreated_at(new Date());
                  nUser.setGender(Constant.MALE);
                  nUser.setAvatar("avatar-l400.jpg");
+                 nUser.setFaculty(facultyDao.getOne(Long.valueOf(1 + (int)(Math.random() * (queryCheck.GetHighestId("faculty") - 1)))));
                  String phoneString = faker.phoneNumber().cellPhone();
-                 Long phoneNumer = Long.parseLong(phoneString.replaceAll("[\\D+]", "").trim());
-                 nUser.setPhoneNumber(phoneNumer);
-                 /*if(role.getId() == 1 || role.getId() == 2 || role.getId() == 5)
-                    nUser.setFaculty(null);
-                 else
-                    nUser.setFaculty(facultyDao.getOne(Long.valueOf(random.nextInt(5))));*/
+                 Long phoneNumber = Long.parseLong(phoneString.replaceAll("[\\D+]", "").trim());
+                 nUser.setPhoneNumber(phoneNumber);
                  userDao.save(nUser);
     }
 
