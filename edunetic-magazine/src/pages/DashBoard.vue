@@ -67,7 +67,7 @@
             <div class="card-header-title">
               <i class="header-icon lnr-apartment icon-gradient bg-love-kiss">
               </i>
-              Sales Report
+              Total students of each faculty
             </div>
           </div>
           <div class="card-body">
@@ -101,21 +101,11 @@
                           ></div>
                         </div>
                       </div>
-                      <canvas
-                        id="canvas"
-                        width="418"
-                        height="209"
-                        class="chartjs-render-monitor"
-                        style="display: block; width: 418px; height: 209px;"
-                      ></canvas>
+                     <pie-chart></pie-chart>
+                     <!--Pie Chart for MM & MC -->
                     </div>
                   </div>
                 </div>
-                <h6
-                  class="text-muted text-uppercase font-size-md opacity-5 font-weight-normal"
-                >
-                  Top Authors
-                </h6>
               </div>
             </div>
           </div>
@@ -123,53 +113,97 @@
       </div>
       <div class="col-md-12 col-lg-6">
         <div class="mb-3 card">
-          <div class="card-header-tab card-header">
+          <div class="card-header-tab card-header-tab-animation card-header">
             <div class="card-header-title">
-              <i class="header-icon lnr-rocket icon-gradient bg-tempting-azure">
+              <i class="header-icon lnr-apartment icon-gradient bg-love-kiss">
               </i>
-              Bandwidth Reports
+              Total contributions of each faculty
             </div>
           </div>
-          <div class="tab-content">
-            <div class="tab-pane fade active show" id="tab-eg-55">
-              <div class="widget-chart p-3">
-                <div style="height: 350px">
-                  <div
-                    class="chartjs-size-monitor"
-                    style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"
-                  >
+          <div class="card-body">
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="tabs-eg-77">
+                <div
+                  class="card mb-3 widget-chart widget-chart2 text-left w-100"
+                >
+                  <div class="widget-chat-wrapper-outer">
                     <div
-                      class="chartjs-size-monitor-expand"
-                      style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
+                      class="widget-chart-wrapper widget-chart-wrapper-lg opacity-10 m-0"
                     >
                       <div
-                        style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"
-                      ></div>
-                    </div>
-                    <div
-                      class="chartjs-size-monitor-shrink"
-                      style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
-                    >
-                      <div
-                        style="position:absolute;width:200%;height:200%;left:0; top:0"
-                      ></div>
+                        class="chartjs-size-monitor"
+                        style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"
+                      >
+                        <div
+                          class="chartjs-size-monitor-expand"
+                          style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
+                        >
+                          <div
+                            style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"
+                          ></div>
+                        </div>
+                        <div
+                          class="chartjs-size-monitor-shrink"
+                          style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
+                        >
+                          <div
+                            style="position:absolute;width:200%;height:200%;left:0; top:0"
+                          ></div>
+                        </div>
+                      </div>
+                     <bar-chart></bar-chart>
+                     <!--Bar Chart for MM & MC -->
                     </div>
                   </div>
-                  <canvas
-                    id="line-chart"
-                    width="426"
-                    height="350"
-                    class="chartjs-render-monitor"
-                    style="display: block; width: 426px; height: 350px;"
-                  ></canvas>
                 </div>
-                <div class="widget-chart-content text-center mt-5">
-                  <div class="widget-description mt-0 text-warning">
-                    <i class="fa fa-arrow-left"></i>
-                    <span class="pl-1">175.5%</span>
-                    <span class="text-muted opacity-8 pl-1"
-                      >increased server resources</span
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 col-lg-6">
+        <div class="mb-3 card">
+          <div class="card-header-tab card-header-tab-animation card-header">
+            <div class="card-header-title">
+              <i class="header-icon lnr-apartment icon-gradient bg-love-kiss">
+              </i>
+              Total contributions of each faculty
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="tabs-eg-77">
+                <div
+                  class="card mb-3 widget-chart widget-chart2 text-left w-100"
+                >
+                  <div class="widget-chat-wrapper-outer">
+                    <div
+                      class="widget-chart-wrapper widget-chart-wrapper-lg opacity-10 m-0"
                     >
+                      <div
+                        class="chartjs-size-monitor"
+                        style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"
+                      >
+                        <div
+                          class="chartjs-size-monitor-expand"
+                          style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
+                        >
+                          <div
+                            style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"
+                          ></div>
+                        </div>
+                        <div
+                          class="chartjs-size-monitor-shrink"
+                          style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
+                        >
+                          <div
+                            style="position:absolute;width:200%;height:200%;left:0; top:0"
+                          ></div>
+                        </div>
+                      </div>
+                     <line-chart></line-chart>
+                     <!--Bar Chart for MM & MC -->
+                    </div>
                   </div>
                 </div>
               </div>
@@ -288,10 +322,19 @@ import { commonHelper } from "@/helper/commonHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
 import router from "@/router";
 import { DefaultConstants } from "@/constant/DefaultConstant";
+import PieChart from "@/components/chart/PieChart"
+import BarChart from "@/components/chart/BarChart"
+import LineChart from '../components/chart/LineChart.vue';
+
 
 export default {
   name: "UserList",
   mixins: [commonHelper],
+  components :{
+    PieChart,
+    BarChart,
+    LineChart
+  },
   data() {
     return {
       list_users: [],
@@ -312,7 +355,6 @@ export default {
   },
   created() {
     this.filterContribution.magazineId = 1; // selected the magazine have ID = 1
-    // this.filter.magazineId = 1; // selected the magazine have ID = 1
     this.getTotalValue();
     this.getMagazineListDashboard();
     this.getContributionHasNoComment();

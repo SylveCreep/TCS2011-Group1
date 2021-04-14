@@ -259,7 +259,7 @@ export default {
             id: magazine_id,
           }
           axios
-            .patch(UrlConstants.Magazine + "closeAt", magazine_close)
+            .patch(UrlConstants.Magazine + "/closeAt", magazine_close)
             .then((res) => {
               this.successAlert(); //this function is called from commonHelper.js file
               this.getMagazineList();
