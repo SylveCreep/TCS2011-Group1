@@ -320,7 +320,6 @@
 import axios from "axios";
 import { commonHelper } from "@/helper/commonHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
-import router from "@/router";
 import { DefaultConstants } from "@/constant/DefaultConstant";
 import PieChart from "@/components/chart/PieChart"
 import BarChart from "@/components/chart/BarChart"

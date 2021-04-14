@@ -11,7 +11,6 @@
 import axios from "axios";
 import { GChart } from "vue-google-charts";
 import { UrlConstants } from "@/constant/UrlConstant";
-import { commonHelper } from "@/helper/commonHelper";
 
 export default {
   components: {
