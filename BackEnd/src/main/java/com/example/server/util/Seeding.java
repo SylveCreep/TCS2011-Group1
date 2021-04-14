@@ -90,6 +90,27 @@ public class Seeding implements CommandLineRunner {
                  userDao.save(nUser);
     }
 
+    private void createUserSpec(Faker faker, String email, String pwd, Role role){
+        Random random = new Random();
+        User nUser = new User();
+                 nUser.setEmail(email + "@gmail.com");
+                 nUser.setCode( "U" + String.format("%04d", queryCheck.GetHighestId("user")));
+                 nUser.setPassword(bcryptEncoder.encode(pwd));
+                 nUser.setRole(role);
+                 nUser.setFullName(faker.name().fullName());
+                 nUser.setAddress(faker.address().buildingNumber());
+                 nUser.setDateOfBirth(faker.date().birthday(18, 50));
+                 nUser.setIs_deleted(Constant.NOTDELETED);
+                 nUser.setCreated_at(new Date());
+                 nUser.setGender(Constant.MALE);
+                 nUser.setAvatar("avatar-l400.jpg");
+                 nUser.setFaculty(facultyDao.getOne(Long.valueOf(1 + (int)(Math.random() * (queryCheck.GetHighestId("faculty") - 1)))));
+                 String phoneString = faker.phoneNumber().cellPhone();
+                 Long phoneNumber = Long.parseLong(phoneString.replaceAll("[\\D+]", "").trim());
+                 nUser.setPhoneNumber(phoneNumber);
+                 userDao.save(nUser);
+    }
+
     
     private void seedingRole(){
         if (queryCheck.CheckItemInTable("role") < 5){
@@ -118,6 +139,8 @@ public class Seeding implements CommandLineRunner {
              for (int i = 0; i < 5; i++){
                  createUser(faker, "admin123", role);
              }
+             createUserSpec(faker, "admin", "123456a", role);
+
         }
         else{
             return;
@@ -129,6 +152,7 @@ public class Seeding implements CommandLineRunner {
             Faker faker = new Faker();
             Role role = roleDao.findRoleByName("Marketing Manager");
             createUser(faker, "MM1234", role);
+            createUserSpec(faker, "mm", "123456a", role);
         }
         else{
             return;
@@ -142,6 +166,7 @@ public class Seeding implements CommandLineRunner {
              for (int i = 0; i < 10; i++){
                 createUser(faker, "MC1234", role);
              }
+             createUserSpec(faker, "mc", "123456a", role);
         }
         else{
             return;
@@ -155,6 +180,7 @@ public class Seeding implements CommandLineRunner {
             for (int i = 0; i < 100; i++){
                 createUser(faker, "Student123", role);
             }
+            createUserSpec(faker, "student", "123456a", role);
         }
         else{
             return;
