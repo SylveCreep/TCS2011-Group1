@@ -4,7 +4,7 @@
     v-if="loginUser.roleId == 2 || loginUser.roleId == 3"
   >
     <!--Only MarkettingManager & MarketingCodinator can access this chart -->
-    <GChart type="LineChart" :data="chartData" :options="chartOptions" />
+    <GChart type="PieChart" :data="chartData" :options="chartOptions" />
     <p class="text-center" style="color: red" v-if="list_errors.showErrorMcMm">
       {{ errorMessage }}
     </p>
@@ -33,6 +33,7 @@ export default {
         title: "Total contribution in magazine",
         width: "700",
         height: "400",
+        pieHole: 0.4,
       },
     };
   },

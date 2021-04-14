@@ -167,7 +167,7 @@
             <div class="card-header-title">
               <i class="header-icon lnr-apartment icon-gradient bg-love-kiss">
               </i>
-              Total contributions of each faculty
+              Total contributions of each magaizne
             </div>
           </div>
           <div class="card-body">
@@ -354,7 +354,8 @@ export default {
     };
   },
   created() {
-    this.filterContribution.magazineId = 1; // selected the magazine have ID = 1
+    this.filter.status = 0
+    // this.filterContribution.magazineId = 1; // selected the magazine have ID = 1
     this.getTotalValue();
     this.getMagazineListDashboard();
     this.getContributionHasNoComment();
