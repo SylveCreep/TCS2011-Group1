@@ -1,88 +1,67 @@
+<template>
+  <div
+    class="Chart__content"
+    v-if="loginUser.roleId == 2 || loginUser.roleId == 3"
+  >
+    <!--Only MarkettingManager & MarketingCodinator can access this chart -->
+    <GChart type="LineChart" :data="chartData" :options="chartOptions" />
+    <p class="text-center" style="color: red" v-if="list_errors.showErrorMcMm">
+      {{ errorMessage }}
+    </p>
+  </div>
+</template>
 <script>
-import { Line } from "vue-chartjs";
+import axios from "axios";
+import { GChart } from "vue-google-charts";
+import { UrlConstants } from "@/constant/UrlConstant";
+import { commonHelper } from "@/helper/commonHelper";
+
 export default {
-  extends: Line,
-  props: {
-    chartData: {
-      type: Array,
-      required: false,
-    },
-    chartLabels: {
-      type: Array,
-      required: true,
-    },
+  mixins: [commonHelper],
+  components: {
+    GChart,
   },
+  props: {},
   data() {
     return {
-      options: {
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-              },
-              gridLines: {
-                display: true,
-              },
-            },
-          ],
-          xAxes: [
-            {
-              gridLines: {
-                display: false,
-              },
-            },
-          ],
-        },
-        legend: {
-          display: false,
-        },
-        responsive: true,
-        maintainAspectRatio: false,
+      list_errors: {
+        showErrorMcMm: false,
+      },
+      errorMessage: "This chart is nor exist",
+      chartData: [["Faculty", "students"]],
+      chartOptions: {
+        title: "Total contribution in magazine",
+        width: "700",
+        height: "400",
       },
     };
   },
-  mounted() {
-    // this.renderChart(
-    //   {
-    //     labels: this.chartLabels,
-    //     datasets: [
-    //       {
-    //         label: "contributions",
-    //         borderColor: "#249EBF",
-    //         pointBackgroundColor: "white",
-    //         borderWidth: 1,
-    //         pointBorderColor: "#249EBF",
-    //         backgroundColor: "transparent",
-    //         data: this.chartData,
-    //       },
-    //     ],
-    //   },
-    //   this.options
-    // );
-    this.renderChart(
-      {
-        labels: this.chartLabels,
-        datasets: [
-          {
-            label: "contributions",
-            borderColor: "#249EBF",
-            pointBackgroundColor: "white",
-            borderWidth: 1,
-            pointBorderColor: "#249EBF",
-            backgroundColor: "transparent",
-            data: this.chartData,
-          },
-          {
-            responsive: true,
-          },
-        ],
-      },
-      this.options
-    );
-    // {
-    //   responsive: true,
-    // }
+  created() {
+    this.importChart();
+  },
+  methods: {
+    importChart() {
+      axios
+        .get(UrlConstants.Magazine + "/getContributionCountByMagazine")
+        .then((r) => {
+          let result = r.data.data;
+          result.forEach((element) => {
+            this.chartData.push([
+              element.magazineName,
+              element.totalContributions,
+            ]);
+          });
+        })
+        .catch((e) => {
+          this.errorMessage = e.response.data.error;
+          this.list_errors.showErrorMcMm = true;
+        });
+    },
   },
 };
 </script>
+<style scoped>
+.Chart-content {
+  height: 400px;
+}
+</style>

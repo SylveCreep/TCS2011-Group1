@@ -8,7 +8,7 @@
         </div>
         <div class="Chart__content">
           <GChart
-            type="ColumnChart"
+            type="PieChart"
             :data="chartData"
             :options="chartOptions"
           />
@@ -34,23 +34,10 @@ export default {
   props: {},
   data() {
     return {
-      filter: {
-        roleId: null
-      },
-      student: {
-        name: [],
-        contribution: [],
-      },
+      studentByFaculty: [],
       chartData: [
-        ["Year", "Sales", "Expenses", "Profit"],
-        ["2014", 1000],
-        ["2015", 1170],
-        ["2016", 660],
-        ["2017", 1030],
+        ["Faculty", "students"],
       ],
-      // chartData: [
-      //   this.student,
-      // ],
       chartOptions: {
         chart: {
           title: "Company Performance",
@@ -60,19 +47,18 @@ export default {
     };
   },
   created() {
-    this.getUser();
     this.importChart()
-    // console.log(this.student.name);
   },
   methods: {
     importChart() {
-      axios.post(UrlConstants.User + "/filter", this.filter).then((r) => {
-        this.student = r.data.data;
-        console.log(this.student);
+      axios.get(UrlConstants.Faculty + "/getStudentCountByFaculty")
+      .then((r) => {
+        let result = r.data.data
+        console.log(result)
+        result.forEach(element => {
+            this.chartData.push([element.facultyName, element.totalStudents])
+        });
       });
-    },
-    getUser() {
-      this.filter.roleId = DefaultConstants.Role.Student;
     },
   },
 };
