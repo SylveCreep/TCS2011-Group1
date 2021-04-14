@@ -45,7 +45,8 @@
         <ul class="vertical-nav-menu">
           <li class="app-sidebar__heading">Hello {{ loginUser.fullName }}</li>
           <li>
-            <router-link to="/dashboard">
+            <router-link to="/dashboard" v-if="loginUser.roleId !== 1">
+            <!--Only admin cannot access this route-->
               <i class="metismenu-icon fas fa-th"></i>
               <p>Dashboard</p>
             </router-link>

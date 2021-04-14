@@ -29,7 +29,7 @@
               placeholder="Current Password"
               v-model="user.password"
             />
-            <div class="icon"><em class="fas fa-user"></em></div>
+            <div class="icon"><em class="fas fa-lock"></em></div>
           </div>
         </div>
         <p class="error_notify" style="color: red" v-if="list_errors !== null">
@@ -46,7 +46,7 @@
               v-model="user.new_password"
               v-on:keyup="checkConfirmPassword"
             />
-            <div class="icon"><em class="fas fa-user"></em></div>
+            <div class="icon"><em class="fas fa-lock"></em></div>
           </div>
         </div>
         <p class="error_notify" style="color: red" v-if="list_errors !== null">
@@ -63,7 +63,7 @@
               v-model="user.confirm_password"
               v-on:keyup="checkConfirmPassword"
             />
-            <div class="icon"><em class="fas fa-user"></em></div>
+            <div class="icon"><em class="fas fa-lock"></em></div>
           </div>
         </div>
         <p class="error_notify" style="color: red" v-if="list_errors !== null">
@@ -200,7 +200,7 @@ export default {
   transition: 0.3s ease all;
 }
 .pass_show .ptxt:hover {
-  color: #333333;
+  color: #7399f7;
 }
 .main_div {
   padding: 50px 50px 0;

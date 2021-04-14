@@ -10,81 +10,6 @@
             Analytics Dashboard
           </div>
         </div>
-        <div class="page-title-actions">
-          <button
-            type="button"
-            data-toggle="tooltip"
-            title=""
-            data-placement="bottom"
-            class="btn-shadow mr-3 btn btn-dark"
-            data-original-title="Example Tooltip"
-          >
-            <i class="fa fa-star"></i>
-          </button>
-          <div class="d-inline-block dropdown">
-            <button
-              type="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-              class="btn-shadow dropdown-toggle btn btn-info"
-            >
-              <span class="btn-icon-wrapper pr-2 opacity-7">
-                <i class="fa fa-business-time fa-w-20"></i>
-              </span>
-              Buttons
-            </button>
-            <div
-              tabindex="-1"
-              role="menu"
-              aria-hidden="true"
-              class="dropdown-menu dropdown-menu-right"
-            >
-              <ul class="nav flex-column">
-                <li class="nav-item">
-                  <a href="javascript:void(0);" class="nav-link">
-                    <i class="nav-link-icon lnr-inbox"></i>
-                    <span>
-                      Inbox
-                    </span>
-                    <div class="ml-auto badge badge-pill badge-secondary">
-                      86
-                    </div>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="javascript:void(0);" class="nav-link">
-                    <i class="nav-link-icon lnr-book"></i>
-                    <span>
-                      Book
-                    </span>
-                    <div class="ml-auto badge badge-pill badge-danger">5</div>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="javascript:void(0);" class="nav-link">
-                    <i class="nav-link-icon lnr-picture"></i>
-                    <span>
-                      Picture
-                    </span>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a
-                    disabled=""
-                    href="javascript:void(0);"
-                    class="nav-link disabled"
-                  >
-                    <i class="nav-link-icon lnr-file-empty"></i>
-                    <span>
-                      File Disabled
-                    </span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
     <div class="row">
@@ -93,7 +18,7 @@
           <div class="widget-content-wrapper text-white">
             <div class="widget-content-left">
               <div class="widget-heading">
-                <h5>The number of Contributions:</h5>
+                <h5><b>The number of Contributions:</b></h5>
               </div>
             </div>
             <div class="widget-content-right">
@@ -108,7 +33,7 @@
         <div class="card mb-3 widget-content bg-arielle-smile">
           <div class="widget-content-wrapper text-white">
             <div class="widget-content-left">
-              <div class="widget-heading"><h5>The number of Students:</h5></div>
+              <div class="widget-heading"><h5><b>The number of Students:</b></h5></div>
             </div>
             <div class="widget-content-right">
               <div class="widget-numbers_component text-white">
@@ -123,7 +48,7 @@
           <div class="widget-content-wrapper text-white">
             <div class="widget-content-left">
               <div class="widget-heading">
-                <h5>The number of magazines:</h5>
+                <h5><b>The number of magazines:</b></h5>
               </div>
             </div>
             <div class="widget-content-right">
@@ -135,14 +60,14 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row" v-if="loginUser.roleId == 1 || loginUser.roleId == 2 || loginUser.roleId == 3">
       <div class="col-md-12 col-lg-6">
         <div class="mb-3 card">
           <div class="card-header-tab card-header-tab-animation card-header">
             <div class="card-header-title">
               <i class="header-icon lnr-apartment icon-gradient bg-love-kiss">
               </i>
-              Sales Report
+              Total students of each faculty
             </div>
           </div>
           <div class="card-body">
@@ -176,21 +101,11 @@
                           ></div>
                         </div>
                       </div>
-                      <canvas
-                        id="canvas"
-                        width="418"
-                        height="209"
-                        class="chartjs-render-monitor"
-                        style="display: block; width: 418px; height: 209px;"
-                      ></canvas>
+                     <pie-chart></pie-chart>
+                     <!--Pie Chart for MM & MC -->
                     </div>
                   </div>
                 </div>
-                <h6
-                  class="text-muted text-uppercase font-size-md opacity-5 font-weight-normal"
-                >
-                  Top Authors
-                </h6>
               </div>
             </div>
           </div>
@@ -198,53 +113,97 @@
       </div>
       <div class="col-md-12 col-lg-6">
         <div class="mb-3 card">
-          <div class="card-header-tab card-header">
+          <div class="card-header-tab card-header-tab-animation card-header">
             <div class="card-header-title">
-              <i class="header-icon lnr-rocket icon-gradient bg-tempting-azure">
+              <i class="header-icon lnr-apartment icon-gradient bg-love-kiss">
               </i>
-              Bandwidth Reports
+              Total contributions of each faculty
             </div>
           </div>
-          <div class="tab-content">
-            <div class="tab-pane fade active show" id="tab-eg-55">
-              <div class="widget-chart p-3">
-                <div style="height: 350px">
-                  <div
-                    class="chartjs-size-monitor"
-                    style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"
-                  >
+          <div class="card-body">
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="tabs-eg-77">
+                <div
+                  class="card mb-3 widget-chart widget-chart2 text-left w-100"
+                >
+                  <div class="widget-chat-wrapper-outer">
                     <div
-                      class="chartjs-size-monitor-expand"
-                      style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
+                      class="widget-chart-wrapper widget-chart-wrapper-lg opacity-10 m-0"
                     >
                       <div
-                        style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"
-                      ></div>
-                    </div>
-                    <div
-                      class="chartjs-size-monitor-shrink"
-                      style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
-                    >
-                      <div
-                        style="position:absolute;width:200%;height:200%;left:0; top:0"
-                      ></div>
+                        class="chartjs-size-monitor"
+                        style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"
+                      >
+                        <div
+                          class="chartjs-size-monitor-expand"
+                          style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
+                        >
+                          <div
+                            style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"
+                          ></div>
+                        </div>
+                        <div
+                          class="chartjs-size-monitor-shrink"
+                          style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
+                        >
+                          <div
+                            style="position:absolute;width:200%;height:200%;left:0; top:0"
+                          ></div>
+                        </div>
+                      </div>
+                     <bar-chart></bar-chart>
+                     <!--Bar Chart for MM & MC -->
                     </div>
                   </div>
-                  <canvas
-                    id="line-chart"
-                    width="426"
-                    height="350"
-                    class="chartjs-render-monitor"
-                    style="display: block; width: 426px; height: 350px;"
-                  ></canvas>
                 </div>
-                <div class="widget-chart-content text-center mt-5">
-                  <div class="widget-description mt-0 text-warning">
-                    <i class="fa fa-arrow-left"></i>
-                    <span class="pl-1">175.5%</span>
-                    <span class="text-muted opacity-8 pl-1"
-                      >increased server resources</span
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 col-lg-6">
+        <div class="mb-3 card">
+          <div class="card-header-tab card-header-tab-animation card-header">
+            <div class="card-header-title">
+              <i class="header-icon lnr-apartment icon-gradient bg-love-kiss">
+              </i>
+              Total contributions of each magaizne
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="tabs-eg-77">
+                <div
+                  class="card mb-3 widget-chart widget-chart2 text-left w-100"
+                >
+                  <div class="widget-chat-wrapper-outer">
+                    <div
+                      class="widget-chart-wrapper widget-chart-wrapper-lg opacity-10 m-0"
                     >
+                      <div
+                        class="chartjs-size-monitor"
+                        style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"
+                      >
+                        <div
+                          class="chartjs-size-monitor-expand"
+                          style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
+                        >
+                          <div
+                            style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"
+                          ></div>
+                        </div>
+                        <div
+                          class="chartjs-size-monitor-shrink"
+                          style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
+                        >
+                          <div
+                            style="position:absolute;width:200%;height:200%;left:0; top:0"
+                          ></div>
+                        </div>
+                      </div>
+                     <line-chart></line-chart>
+                     <!--Bar Chart for MM & MC -->
+                    </div>
                   </div>
                 </div>
               </div>
@@ -312,16 +271,15 @@
               <label class="select_label">Magazine List</label>
               <select
                 class="select_form_control"
-                id="category_id"
+                id="magazine_id"
                 name="category"
-                v-model="filter.id"
-                v-on:change="getFilter"
+                v-model="filterContribution.id"
+                v-on:change="getFilterContribution"
               >
-                <option selected>All</option>
                 <option
                   v-for="magazine in list_magazines"
                   :key="magazine.id"
-                  v-bind:value="magazine.magazineId"
+                  v-bind:value="magazine.id"
                 >
                   {{ magazine.theme }}
                 </option>
@@ -364,10 +322,19 @@ import { commonHelper } from "@/helper/commonHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
 import router from "@/router";
 import { DefaultConstants } from "@/constant/DefaultConstant";
+import PieChart from "@/components/chart/PieChart"
+import BarChart from "@/components/chart/BarChart"
+import LineChart from '../components/chart/LineChart.vue';
+
 
 export default {
   name: "UserList",
   mixins: [commonHelper],
+  components :{
+    PieChart,
+    BarChart,
+    LineChart
+  },
   data() {
     return {
       list_users: [],
@@ -375,19 +342,24 @@ export default {
       list_topStudents: {},
       list_contributions: {},
       list_magazines: [],
+      filterContribution: {
+        column: DefaultConstants.Column, //default column = 'id'
+        sort: DefaultConstants.Sort, //default sort = 'asc'
+        limit: DefaultConstants.Limit, //default limit = 15
+        page: DefaultConstants.Page, //default page = 15
+      },
       filter: {
-        status: 0,
+        status: DefaultConstants.MagazineStatuses.Opening,
       },
     };
   },
   created() {
-    //These functions are called from commonHelper.js file
-    // this.getUserList();
-    // this.getRoleList();
-    // this.getFacultyList();
+    this.filter.status = 0
+    // this.filterContribution.magazineId = 1; // selected the magazine have ID = 1
     this.getTotalValue();
     this.getMagazineListDashboard();
-    // this.getTopStudent();
+    this.getContributionHasNoComment();
+    this.getTopStudentByMagazine(0); // selected the top 5 student has most contribution of the univercity
   },
   methods: {
     getMagazineListDashboard() {
@@ -410,33 +382,34 @@ export default {
           this.errors = error.response.data;
         });
     },
-    getTopStudent() {
-      axios
-        .get(UrlConstants.BaseUrl + "/" + "getTopStudent")
-        .then((response) => {
-          this.list_topStudents = response.data.data;
-        })
-        .catch((error) => {
-          this.errors = error.response.data;
-        });
-    },
     getTopStudentByMagazine(magazine_id) {
-      let url = "/getContributionsByMagazineId?magazineId=";
-      axios
-        .get(UrlConstants.Contribution + url + magazine_id)
-        .then((r) => {
-          this.list_topStudents = r.data.data;
-        })
-        .catch((error) => {
-          this.errors = error.response.data;
-        });
+      if (magazine_id == 0) {
+        axios
+          .get(UrlConstants.BaseUrl + "/" + "getTopStudent")
+          .then((response) => {
+            this.list_topStudents = response.data.data;
+          })
+          .catch((error) => {
+            this.errors = error.response.data;
+          });
+      } else {
+        let url = "/getTopStudent/?magazineId=";
+        axios
+          .get(UrlConstants.BaseUrl + url + magazine_id)
+          .then((response) => {
+            this.list_topStudents = response.data.data;
+          })
+          .catch((error) => {
+            this.errors = error.response.data;
+          });
+      }
     },
-    getContributionHasNoComment(magazine_id) {
-      let url = "/getContributionsHasNoComment?magazineId=";
+    getContributionHasNoComment() {
+      let url = "/getContributionsHasNoComment";
       axios
-        .get(UrlConstants.Contribution + url + magazine_id)
-        .then((r) => {
-          this.list_topStudents = r.data.data;
+        .post(UrlConstants.Contribution + url, this.filterContribution)
+        .then((response) => {
+          this.list_contributions = response.data.data.list;
         })
         .catch((error) => {
           this.errors = error.response.data;
@@ -445,9 +418,10 @@ export default {
     getFilter() {
       let magazine_id = this.filter.id;
       this.getTopStudentByMagazine(magazine_id);
-      if (magazine_id == 0) {
-        this.getTopStudent();
-      }
+    },
+    getFilterContribution() {
+      this.filterContribution.magazineId = this.filterContribution.id;
+      this.getContributionHasNoComment();
     },
   },
 };
@@ -455,7 +429,7 @@ export default {
 
 <style>
 .widget-numbers_component {
-  margin-left: 5px;
+  margin-left: 10px;
 }
 .click {
   cursor: pointer;
@@ -466,8 +440,9 @@ export default {
 h3 {
   font-weight: bold;
 }
-#category_id {
-  padding: 2px;
+#magazine_id {
+  padding: 5px;
+  margin-left: 10px;
 }
 .click {
   cursor: pointer;

@@ -4,6 +4,7 @@ import axios from "axios";
 import router from "@/router";
 import VueCookies from 'vue-cookies';
 import moment from 'moment';
+import VueGoogleCharts from 'vue-google-charts'
 
 // import VueSweetalert2 from 'vue-sweetalert2';
 
@@ -19,3 +20,5 @@ new Vue({
   axios,router,
   render: h => h(App),
 }).$mount('#app')
+ 
+Vue.use(VueGoogleCharts)

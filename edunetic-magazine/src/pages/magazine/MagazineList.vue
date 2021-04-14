@@ -156,6 +156,7 @@
                       <p
                         class="click"
                         style="display: inline"
+                        v-on:click="closedDay(magazine.id)"
                         v-if="loginUser.roleId === 2 && status === 2"
                       >
                         <b>Close | </b>
@@ -202,6 +203,7 @@ import { ResultConstants } from "@/constant/ResultConstant";
 import router from "@/router";
 import ThePagination from "@/components/ThePagination";
 import { commonHelper } from "@/helper/commonHelper";
+import moment from 'moment';
 export default {
   name: "MagazineList",
   components: {
@@ -243,26 +245,31 @@ export default {
         router.push("/magazines/" + magazine_id + "/update");
       }
     },
-    // async deleteMagazine(magazine_id) {
-    //   await this.checkMagazineExisted(magazine_id);
-    //   if (!this.canModify) {
-    //     this.errorAlert("delete", "magazine");
-    //     this.getMagazineList();
-    //   } else {
-    //     await this.confirmAlert("delete", "magazine");
-    //     if (this.confirmResult) {
-    //       axios
-    //         .delete(UrlConstants.Magazine + "/" + magazine_id)
-    //         .then((res) => {
-    //           this.successAlert(); //this function is called from commonHelper.js file
-    //           this.getMagazineList();
-    //         })
-    //         .catch((error) => {
-    //           this.errors = error.data;
-    //         });
-    //     }
-    //   }
-    // },
+    async closedDay(magazine_id) {
+      await this.checkMagazineExisted(magazine_id);
+      if (!this.canModify) {
+        this.errorAlert("close", "magazine");
+        this.getMagazineList();
+      } else {
+        await this.confirmAlert("close", "magazine");
+        if (this.confirmResult) {
+          let currentDay = moment(new Date()).format('YYYY-MM-DD');
+          let magazine_close = {
+            close_at: currentDay,
+            id: magazine_id,
+          }
+          axios
+            .patch(UrlConstants.Magazine + "/closeAt", magazine_close)
+            .then((res) => {
+              this.successAlert(); //this function is called from commonHelper.js file
+              this.getMagazineList();
+            })
+            .catch((error) => {
+              this.errors = error.data;
+            });
+        }
+      }
+    },
     showContribution(magazine_id) {
       axios.get(UrlConstants.Magazine + "/" + magazine_id).then((response) => {
         if (response.data.code === ResultConstants.Failure) {
