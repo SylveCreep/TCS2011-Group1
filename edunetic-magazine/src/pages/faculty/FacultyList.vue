@@ -67,17 +67,6 @@
                   />
                 </div>
                 <div class="form-group">
-                  <label>Co-cordinator's name</label>
-                  <input
-                    class="form-control"
-                    type="text"
-                    placeholder="Search"
-                    aria-label="Search"
-                    v-model="filter.managerName"
-                    v-on:keyup="getFilter"
-                  />
-                </div>
-                <div class="form-group">
                   <label>Created date</label>
                   <input
                     class="form-control"
@@ -101,9 +90,6 @@
                     <th class="sort" v-on:click="getSort('faculty_name')">
                       Name <i class="fas fa-sort"></i>
                     </th>
-                    <th class="sort" v-on:click="getSort('manager_name')">
-                      Co-cordinator's name <i class="fas fa-sort"></i>
-                    </th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -114,7 +100,6 @@
                   >
                     <td>{{ faculty.code }}</td>
                     <td>{{ faculty.facultyName }}</td>
-                    <td>{{ faculty.managerName }}</td>
                     <td>
                       <p
                         class="click"
