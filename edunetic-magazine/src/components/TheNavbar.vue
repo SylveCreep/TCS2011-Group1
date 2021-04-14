@@ -140,6 +140,7 @@ export default {
         .get(UrlConstants.User + "/" + this.$cookies.get("id"))
         .then((res) => {
           this.loginUser = res.data.data;
+          console.log(this.loginUser)
           this.avatarUrl = UrlConstants.AvatarSource + this.loginUser.avatar;
         });
     },

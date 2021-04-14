@@ -9,7 +9,7 @@
       <i class="fas fa-comments fa-w-16 fa-2x"></i>
     </button>
     <div class="row">
-      <div class="theme-settings__inner" id="general-chat" v-if="showChat">
+      <div class="theme-settings__inner" id="general-chat" v-show="showChat">
         <div class="row">
           <div class="col-12">
             <div class="chat-search-section">
@@ -17,6 +17,8 @@
                 type="text"
                 placeholder="search"
                 class="form-control search-input"
+                v-model="filter.fullName"
+                v-on:keyup="searchStudent"
               />
               <i
                 class="fas fa-search chat-search"
@@ -26,7 +28,13 @@
           </div>
           <div class="col-12">
             <div class="list-chat">
-              <div class="chat-item row" v-for="(user,index) of list_users" :key="user.id" :id="'chat-item-' +(index+1)" v-on:click="getTargetContact(user)">
+              <div
+                class="chat-item row"
+                v-for="(user, index) of list_users"
+                :key="user.id"
+                :id="'chat-item-' + (index + 1)"
+                v-on:click="getTargetContact(user)"
+              >
                 <div class="col-2 chat-avatar">
                   <img
                     v-bind:src="linkSource + user.avatar"
@@ -35,11 +43,14 @@
                     alt=""
                     width="42"
                   />
-                  <i class="fas fa-circle small-online-status" v-if="user.isOnline"></i>
+                  <i
+                    class="fas fa-circle small-online-status"
+                    v-if="user.isOnline"
+                  ></i>
                   <i class="fas fa-circle small-offline-status" v-else></i>
                 </div>
                 <div class="col-10 chat-detail">
-                  <p class="chat-name">{{user.fullName}}</p>
+                  <p class="chat-name">{{ user.fullName }}</p>
                   <!--<p class="last-chat">Hello Simon</p>-->
                 </div>
               </div>
@@ -58,8 +69,8 @@
             />
           </div>
           <div class="col-10 px-3 chat-detail">
-            <h3 class="chat-name">{{targetUser.fullName}}</h3>
-            <p class="online-status" v-if="this.connected">
+            <h3 class="chat-name">{{ targetUser.fullName }}</h3>
+            <p class="online-status" v-if="targetUser.isOnline">
               <span class="fas fa-circle"></span> Online
             </p>
             <p class="offline-status" v-else>
@@ -153,7 +164,7 @@ export default {
         this.showChat = false;
       } else {
         this.showChat = true;
-        document.querySelector('#chat-item-1').classList.remove('is-hide');
+        document.querySelector('#chat-item-1').click();
       }
     },
     getTargetContact(user) {
@@ -188,7 +199,10 @@ export default {
       }
        this.getUserList();
     },
-    searchStudent() {},
+    searchStudent() {
+      this.filter.page = DefaultConstants.firstPage;
+      this.getContactList();
+    },
     connect() {
       this.stompClient = Stomp.over(
         new SockJS(UrlConstants.BaseUrl + "/stomp")
@@ -282,14 +296,14 @@ p {
   margin-bottom: 0;
 }
 .small-online-status {
-   z-index: 2;
+  z-index: 2;
   position: relative;
   font-size: 15px;
   margin-left: 30px;
   color: green;
 }
 .small-offline-status {
-   z-index: 2;
+  z-index: 2;
   position: relative;
   font-size: 15px;
   margin-left: 30px;
@@ -321,9 +335,9 @@ p {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 #small-circle {
-   z-index: 1;
-    position: relative;
-    margin-bottom:-20px
+  z-index: 1;
+  position: relative;
+  margin-bottom: -20px;
 }
 .message-right {
   display: block;
@@ -337,7 +351,11 @@ p {
   margin-right: 1px;
 }
 .online-status {
-  margin-top: -30px
+  color: green;
+  margin-top: 0px;
+}
+.offline-status {
+  margin-top: 0px;
 }
 .message-input {
   height: 70px;

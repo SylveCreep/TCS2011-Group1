@@ -43,43 +43,11 @@ export default {
     };
   },
   mounted() {
-    // this.renderChart(
-    //   {
-    //     labels: this.chartLabels,
-    //     datasets: [
-    //       {
-    //         label: "contributions",
-    //         borderColor: "#249EBF",
-    //         pointBackgroundColor: "white",
-    //         borderWidth: 1,
-    //         pointBorderColor: "#249EBF",
-    //         backgroundColor: "transparent",
-    //         data: this.chartData,
-    //       },
-    //     ],
-    //   },
-    //   this.options
-    // );
-    this.renderChart(
-      {
-        labels: this.chartLabels,
-        datasets: [
-          {
-            label: "contributions",
-            borderColor: "#249EBF",
-            pointBackgroundColor: "white",
-            borderWidth: 1,
-            pointBorderColor: "#249EBF",
-            backgroundColor: "transparent",
-            data: this.chartData,
-          },
-        ],
-      },
-      this.options
-    );
+    this.renderChart(this.chartData,this.options);
     // {
     //   responsive: true,
     // }
   },
 };
+
 </script>

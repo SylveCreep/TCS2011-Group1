@@ -184,7 +184,7 @@
             </div>
             <div class="row comment-reply">
               <input
-                id="comment-input-box"
+                id="input-comment-box"
                 type="text"
                 editId=""
                 name="commentComment"
@@ -304,14 +304,14 @@ export default {
       return commentTime;
     },
     addComment() {
-      let commentValue = document.querySelector("#comment-input-box").value;
+      let commentValue = document.querySelector("#input-comment-box").value;
       if (commentValue !== "") {
         let data = {
           contributionId: this.$route.params.id,
           content: commentValue,
         };
         axios.post(UrlConstants.Comment + "/send", data);
-        document.querySelector("#comment-input-box").value = "";
+        document.querySelector("#input-comment-box").value = "";
         this.getCommentList();
       } else {
         let classLists = document.querySelector(".comment-alert").classList;

@@ -1,6 +1,7 @@
-let BaseUrl= "http://10.23.253.122:8080";
+let BaseUrl= "http://10.23.253.0:8080";
 export  const UrlConstants = Object.freeze({
     BaseUrl: BaseUrl,
+    GoogleLogin: BaseUrl + "/google/login",
     Login: BaseUrl + "/login",
     Logout: BaseUrl + "/users/logout",
     User: BaseUrl + "/users",

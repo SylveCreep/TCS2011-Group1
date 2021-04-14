@@ -22,7 +22,7 @@
 </template>
 <script>
 import axios from "axios";
-import LineChart from "@/components/chart/LineChart";
+import LineChart from "../components/chart/LineChart.vue";
 import { commonHelper } from "@/helper/commonHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
 import router from "@/router";
@@ -45,8 +45,8 @@ export default {
       //   showError: false,
       //   errorMessage: "Please enter a package name",
       user: {
-        contribution:[],
-        weeks:[],
+        contribution: [],
+        weeks: [],
       },
       loaded: false,
       showError: [],
@@ -59,6 +59,7 @@ export default {
     this.getMagazineList();
     this.getUser();
     this.importChart();
+    this.loaded = false;
   },
   methods: {
     // requestData() {
@@ -95,7 +96,7 @@ export default {
       axios
         .get("https://6072f548e4e0160017ddf160.mockapi.io/users/line/1")
         .then((response) => {
-          console.log(response.data)
+          console.log(response.data);
           this.user = response.data;
           this.loaded = true;
           console.log(this.user.weeks);
