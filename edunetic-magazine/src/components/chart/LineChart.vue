@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="Chart__content"
-    v-if="loginUser.roleId == 2 || loginUser.roleId == 3"
-  >
+  <div class="Chart__content">
     <!--Only MarkettingManager & MarketingCodinator can access this chart -->
     <GChart type="PieChart" :data="chartData" :options="chartOptions" />
     <p class="text-center" style="color: red" v-if="list_errors.showErrorMcMm">
@@ -14,10 +11,8 @@
 import axios from "axios";
 import { GChart } from "vue-google-charts";
 import { UrlConstants } from "@/constant/UrlConstant";
-import { commonHelper } from "@/helper/commonHelper";
 
 export default {
-  mixins: [commonHelper],
   components: {
     GChart,
   },

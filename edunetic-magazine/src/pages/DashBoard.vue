@@ -60,7 +60,7 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row" v-if="loginUser.roleId == 1 || loginUser.roleId == 2 || loginUser.roleId == 3">
       <div class="col-md-12 col-lg-6">
         <div class="mb-3 card">
           <div class="card-header-tab card-header-tab-animation card-header">

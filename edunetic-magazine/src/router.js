@@ -90,7 +90,7 @@ export const router = new Router({
             component: DashBoard,
             meta: {
                 authen: true,
-                admin: true,
+                admin: false,
                 student: true,
                 mc: true,
                 mm: true,
