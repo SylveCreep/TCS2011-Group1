@@ -32,13 +32,6 @@ export default {
       },
     };
   },
-<<<<<<< HEAD
-  mounted() {
-    this.renderChart(this.chartData,this.options);
-    // {
-    //   responsive: true,
-    // }
-=======
   created() {
     this.importChart();
   },
@@ -60,7 +53,6 @@ export default {
           this.list_errors.showErrorMcMm = true;
         });
     },
->>>>>>> b2275b1a598184fb6cc84c0affc70fd61295efd7
   },
 };
 
