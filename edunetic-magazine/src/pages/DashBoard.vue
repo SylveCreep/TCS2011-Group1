@@ -29,11 +29,13 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6 col-xl-4">
+      <div class="col-md-6 col-xl-4" v-if="loginUser.roleId !== 4">
         <div class="card mb-3 widget-content bg-arielle-smile">
           <div class="widget-content-wrapper text-white">
             <div class="widget-content-left">
-              <div class="widget-heading"><h5><b>The number of Students:</b></h5></div>
+              <div class="widget-heading">
+                <h5><b>The number of Students:</b></h5>
+              </div>
             </div>
             <div class="widget-content-right">
               <div class="widget-numbers_component text-white">
@@ -60,8 +62,17 @@
         </div>
       </div>
     </div>
-    <div class="row" v-if="loginUser.roleId == 1 || loginUser.roleId == 2 || loginUser.roleId == 3">
-      <div class="col-md-12 col-lg-6">
+    <div
+      class="row"
+      v-if="
+        loginUser.roleId == 2 || loginUser.roleId == 3 || loginUser.roleId == 4
+      "
+    >
+      <!--Only admin can not access this dashboard -->
+      <div
+        class="col-md-12 col-lg-6"
+        v-if="loginUser.roleId == 2 || loginUser.roleId == 3"
+      >
         <div class="mb-3 card">
           <div class="card-header-tab card-header-tab-animation card-header">
             <div class="card-header-title">
@@ -72,46 +83,16 @@
           </div>
           <div class="card-body">
             <div class="tab-content">
-              <div class="tab-pane fade show active" id="tabs-eg-77">
-                <div
-                  class="card mb-3 widget-chart widget-chart2 text-left w-100"
-                >
-                  <div class="widget-chat-wrapper-outer">
-                    <div
-                      class="widget-chart-wrapper widget-chart-wrapper-lg opacity-10 m-0"
-                    >
-                      <div
-                        class="chartjs-size-monitor"
-                        style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"
-                      >
-                        <div
-                          class="chartjs-size-monitor-expand"
-                          style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
-                        >
-                          <div
-                            style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"
-                          ></div>
-                        </div>
-                        <div
-                          class="chartjs-size-monitor-shrink"
-                          style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
-                        >
-                          <div
-                            style="position:absolute;width:200%;height:200%;left:0; top:0"
-                          ></div>
-                        </div>
-                      </div>
-                     <pie-chart></pie-chart>
-                     <!--Pie Chart for MM & MC -->
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <pie-chart></pie-chart>
+              <!--Pie Chart for MM & MC -->
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-12 col-lg-6">
+      <div
+        class="col-md-12 col-lg-6"
+        v-if="loginUser.roleId == 2 || loginUser.roleId == 3 || loginUser.roleId == 4"
+      >
         <div class="mb-3 card">
           <div class="card-header-tab card-header-tab-animation card-header">
             <div class="card-header-title">
@@ -122,46 +103,13 @@
           </div>
           <div class="card-body">
             <div class="tab-content">
-              <div class="tab-pane fade show active" id="tabs-eg-77">
-                <div
-                  class="card mb-3 widget-chart widget-chart2 text-left w-100"
-                >
-                  <div class="widget-chat-wrapper-outer">
-                    <div
-                      class="widget-chart-wrapper widget-chart-wrapper-lg opacity-10 m-0"
-                    >
-                      <div
-                        class="chartjs-size-monitor"
-                        style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"
-                      >
-                        <div
-                          class="chartjs-size-monitor-expand"
-                          style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
-                        >
-                          <div
-                            style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"
-                          ></div>
-                        </div>
-                        <div
-                          class="chartjs-size-monitor-shrink"
-                          style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
-                        >
-                          <div
-                            style="position:absolute;width:200%;height:200%;left:0; top:0"
-                          ></div>
-                        </div>
-                      </div>
-                     <bar-chart></bar-chart>
-                     <!--Bar Chart for MM & MC -->
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <bar-chart></bar-chart>
+              <!--Bar Chart for MM & MC -->
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-12 col-lg-6">
+      <div class="col-md-12 col-lg-6" v-if="loginUser.roleId == 4">
         <div class="mb-3 card">
           <div class="card-header-tab card-header-tab-animation card-header">
             <div class="card-header-title">
@@ -172,41 +120,8 @@
           </div>
           <div class="card-body">
             <div class="tab-content">
-              <div class="tab-pane fade show active" id="tabs-eg-77">
-                <div
-                  class="card mb-3 widget-chart widget-chart2 text-left w-100"
-                >
-                  <div class="widget-chat-wrapper-outer">
-                    <div
-                      class="widget-chart-wrapper widget-chart-wrapper-lg opacity-10 m-0"
-                    >
-                      <div
-                        class="chartjs-size-monitor"
-                        style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"
-                      >
-                        <div
-                          class="chartjs-size-monitor-expand"
-                          style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
-                        >
-                          <div
-                            style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"
-                          ></div>
-                        </div>
-                        <div
-                          class="chartjs-size-monitor-shrink"
-                          style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"
-                        >
-                          <div
-                            style="position:absolute;width:200%;height:200%;left:0; top:0"
-                          ></div>
-                        </div>
-                      </div>
-                     <line-chart></line-chart>
-                     <!--Bar Chart for MM & MC -->
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <donut-chart></donut-chart>
+              <!--Bar Chart for MM & MC -->
             </div>
           </div>
         </div>
@@ -320,20 +235,18 @@
 import axios from "axios";
 import { commonHelper } from "@/helper/commonHelper";
 import { UrlConstants } from "@/constant/UrlConstant";
-import router from "@/router";
 import { DefaultConstants } from "@/constant/DefaultConstant";
-import PieChart from "@/components/chart/PieChart"
-import BarChart from "@/components/chart/BarChart"
-import LineChart from '../components/chart/LineChart.vue';
-
+import PieChart from "@/components/chart/PieChart";
+import BarChart from "@/components/chart/BarChart";
+import DonutChart from "../components/chart/DonutChart.vue";
 
 export default {
   name: "UserList",
   mixins: [commonHelper],
-  components :{
+  components: {
     PieChart,
     BarChart,
-    LineChart
+    DonutChart,
   },
   data() {
     return {
@@ -354,8 +267,7 @@ export default {
     };
   },
   created() {
-    this.filter.status = 0
-    // this.filterContribution.magazineId = 1; // selected the magazine have ID = 1
+    this.filterContribution.magazineId = 1; // selected the magazine have ID = 1
     this.getTotalValue();
     this.getMagazineListDashboard();
     this.getContributionHasNoComment();

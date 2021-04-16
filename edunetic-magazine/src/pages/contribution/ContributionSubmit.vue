@@ -30,7 +30,7 @@
                 />
               </div>
               <div class="col-sm-12">
-                <p style="color: red" v-if="list_errors !== null">
+                <p style="color: red; margin: 5px 0 0 15px" v-if="list_errors !== null">
                   {{ list_errors.file }}
                 </p>
                 <p class="form-text-file">
