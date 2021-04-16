@@ -79,7 +79,7 @@ public interface UserDao extends JpaRepository<User, Long> {
         @Query(value = "SELECT u.* FROM user u WHERE u.is_deleted = 0 AND u.reset_password_key = :key ", nativeQuery = true)
         User findExistedUserByPasswordKey(String key);
 
-        @Query(value = "SELECT COUNT(u.id) FROM user u WHERE u.is_deleted = 0 AND u.role_id = 3 ", nativeQuery = true)
+        @Query(value = "SELECT COUNT(u.id) FROM user u WHERE u.is_deleted = 0 AND u.role_id = 4 ", nativeQuery = true)
         Long countExistedStudent();
 
         @Query(value = "SELECT u.code as code, u.id as userId, u.full_name as fullName, u.background_avatar as avatar, f.faculty_name as facultyName, f.id as facultyId, COUNT(c.id) as total "
