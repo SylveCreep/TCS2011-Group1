@@ -32,6 +32,7 @@ Client source:
  - Open the client source in edunetic-magazine folder in your preffered IDE.
  - For first configuration, run this command in your terminal: npm install.
  - To run the source, run this command in your terminal: npm run serve.
+ - As this source is a demo source, you should run source client in localhost:8081
 
 # To login in system
 - You can use these accounts:
