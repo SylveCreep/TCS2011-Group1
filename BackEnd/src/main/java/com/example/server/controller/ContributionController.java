@@ -28,6 +28,7 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import com.example.server.dao.ContributionDao;
+import com.example.server.dao.UserDao;
 import com.example.server.entity.Contribution;
 import com.example.server.model.request.ContributionRequest;
 import com.example.server.model.response.ContributionPagingResponse;
@@ -108,6 +109,12 @@ public class ContributionController {
             if (request.getId() == null) {
                 return responseUtils.getResponseEntity("NULL", FAILURE, "Must has contribution id",
                         HttpStatus.BAD_REQUEST);
+            }
+            HashMap<String, Object> validateResult = responseUtils.validateContributionRequest(request, file, 1);
+            Object validateRes = validateResult.get("result");
+            if (Integer.parseInt(validateRes.toString()) == -1) {
+                return responseUtils.getActionResponseEntity("NULL", FAILURE, "Update contribution failed",
+                        validateResult, HttpStatus.BAD_REQUEST);
             }
             if (request.getWithFile() == null) {
                 request.setWithFile(0);

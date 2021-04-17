@@ -50,6 +50,7 @@ public class CommentController {
     @Autowired
     private KafkaTemplate<String, CommentMessageResponse> kafkaCommentTemplate;
 
+    @PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003') or hasRole('R0004')")
     @PostMapping
     public ResponseEntity<?> createComment(@Valid @RequestBody CreateComment comment) {
         try {
@@ -66,6 +67,7 @@ public class CommentController {
         }
     }
 
+    @PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003') or hasRole('R0004')")
     @DeleteMapping(value = "/{id}", consumes = { "test/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> deleteComment(@PathVariable(name = "id") Long id) {
         try {
@@ -85,6 +87,7 @@ public class CommentController {
         }
     }
 
+    @PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003') or hasRole('R0004')")
     @PatchMapping(consumes = { "test/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> updateComment(@RequestBody CreateComment commentDto) {
         try {
@@ -105,6 +108,7 @@ public class CommentController {
         }
     }
 
+    @PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003') or hasRole('R0004')")
     @PostMapping(value = "/filter")
     public ResponseEntity<?> showCommentBySearch(@RequestBody CommentSearchRequest commentSearchRequest) {
         try {
@@ -123,6 +127,7 @@ public class CommentController {
         }
     }
 
+    @PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003') or hasRole('R0004')")
     @GetMapping(value = "/{id}", consumes = { "text/plain", "application/*" }, produces = "application/json")
     public ResponseEntity<?> getComment(@PathVariable(name = "id") Long id) {
         try {
@@ -142,6 +147,7 @@ public class CommentController {
         }
     }
 
+    @PreAuthorize("hasRole('R0001') or hasRole('R0002') or hasRole('R0003') or hasRole('R0004')")
     @PostMapping(value = "/send", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> sendComment(@RequestBody CommentMessageResponse commentMessage) {
         try {

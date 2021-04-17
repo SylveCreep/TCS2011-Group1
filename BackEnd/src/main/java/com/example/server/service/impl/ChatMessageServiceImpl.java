@@ -89,7 +89,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         chatMessage.setIs_deleted(DELETED);
         chatMessageDao.save(chatMessage);
 
-        User toUser = userDao.findExistedUserById(chatMessageRequest.getToUser());
+        User toUser = userDao.findExistedUserById(chatMessage.getToUserId());
         ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
         chatMessageResponse.setId(chatMessage.getId());
         chatMessageResponse.setFromUserId(chatMessage.getFromUser().getId());

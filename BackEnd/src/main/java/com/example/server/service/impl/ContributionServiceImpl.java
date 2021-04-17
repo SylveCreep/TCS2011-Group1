@@ -102,7 +102,11 @@ public class ContributionServiceImpl implements ContributionService {
     @Override
     public Boolean deleted(Contribution contribution) {
         try {
+            User user = userDao.findExistedUserByEmail(getEmail());
             contribution.setIs_deleted(DELETED);
+            if(!user.getId().equals(contribution.getUser().getId())){
+                return false;
+            }
             try {
                 contributionDao.save(contribution);
                 return true;
@@ -163,8 +167,9 @@ public class ContributionServiceImpl implements ContributionService {
     @Override
     public Boolean updateContribution(ContributionRequest contribution, MultipartFile file, int withFile) {
         try {
+            User user = userDao.findByEmail(getEmail());
             Contribution uContribution = contributionDao.findExistedContributionById(contribution.getId());
-            if (uContribution == null) {
+            if (uContribution == null || !user.getId().equals(uContribution.getUser().getId())) {
                 return null;
             }
             uContribution.setUpdated_at(new Date());
