@@ -26,7 +26,7 @@ export default {
       chartData: [["Faculty", "students"]],
       chartOptions: {
         "title": "Student in faculty",
-        "width": "700",
+        "width": "500",
         "height": "400",
       },
     };

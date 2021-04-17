@@ -51,8 +51,8 @@
               <p>Dashboard</p>
             </router-link>
           </li>
-          <li v-if="loginUser.roleId !== 4">
-            <!--Only studnet cannot access this route-->
+          <li v-if="loginUser.roleId !== 4 && loginUser.roleId !== 5">
+            <!--Only studnet and guest cannot access this route-->
             <router-link to="/users">
               <i class="metismenu-icon fas fa-th"></i>
               <p v-on:click="deleteUserKey()">User List</p>
@@ -73,7 +73,7 @@
             </router-link>
           </li>
           <li>
-            <router-link to="/magazines" v-if="loginUser.roleId !== 1">
+            <router-link to="/magazines" v-if="loginUser.roleId !== 1 && loginUser.roleId !== 5">
               <!--Only admin cannot access this route-->
               <i class="metismenu-icon fas fa-th"></i>
               <p>Magazine List</p>

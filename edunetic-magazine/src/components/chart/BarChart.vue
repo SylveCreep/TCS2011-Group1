@@ -26,7 +26,7 @@ export default {
       chartData: [["Faculty", "Contributions"]],
       chartOptions: {
         title: "Total contribution of each faculty",
-        width: "700",
+        width: "500",
         height: "400",
       },
     };

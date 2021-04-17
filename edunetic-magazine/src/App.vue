@@ -68,6 +68,7 @@ export default {
       axios.defaults.headers.common["Authorization"] =
         "Bearer " + this.$cookies.get("jwt");
       axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+      this.$router.push("/dashboard");
     },
     userLogout(e) {
       this.token = e;

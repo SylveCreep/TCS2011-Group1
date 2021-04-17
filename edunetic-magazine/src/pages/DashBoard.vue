@@ -91,7 +91,7 @@
       </div>
       <div
         class="col-md-12 col-lg-6"
-        v-if="loginUser.roleId == 2 || loginUser.roleId == 3 || loginUser.roleId == 4"
+        v-if="loginUser.roleId !== 1"
       >
         <div class="mb-3 card">
           <div class="card-header-tab card-header-tab-animation card-header">
@@ -109,7 +109,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-12 col-lg-6" v-if="loginUser.roleId == 4">
+      <div class="col-md-12 col-lg-6" v-if="loginUser.roleId !== 1">
         <div class="mb-3 card">
           <div class="card-header-tab card-header-tab-animation card-header">
             <div class="card-header-title">
@@ -239,6 +239,7 @@ import { DefaultConstants } from "@/constant/DefaultConstant";
 import PieChart from "@/components/chart/PieChart";
 import BarChart from "@/components/chart/BarChart";
 import DonutChart from "../components/chart/DonutChart.vue";
+import Vue from "vue";
 
 export default {
   name: "UserList",
@@ -250,6 +251,7 @@ export default {
   },
   data() {
     return {
+      reRender: false,
       list_users: [],
       totalValue: {},
       list_topStudents: {},
@@ -267,6 +269,7 @@ export default {
     };
   },
   created() {
+
     this.filterContribution.magazineId = 1; // selected the magazine have ID = 1
     this.getTotalValue();
     this.getMagazineListDashboard();
