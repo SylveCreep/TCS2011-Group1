@@ -1,0 +1,158 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins',sans-serif;
+    
+  }
+  html,body{
+    display: grid;
+    height: 100vh;
+
+  }
+  .btn {
+    margin-left: 20px
+  }
+  .btn-success {
+    color: #fff;
+    background-color: #3ac47d;
+    border-color: #3ac47d;
+  }
+  .btn-primary {
+    color: #fff;
+    background-color: #3f6ad8;
+    border-color: #3f6ad8;
+}
+.btn-danger {
+  color: #fff;
+  background-color: #d92550;
+  border-color: #d92550;
+}
+.btn-secondary {
+  color: #fff;
+  background-color: #545b62;
+  border-color: #4e555b;
+}
+  .main_div{
+    width: 365px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
+    margin-left: 25%;
+    margin-right:25%;
+    width: 50%;
+  }
+  
+  .main_div .title{
+    text-align: center;
+    font-size: 30px;
+    font-weight: 600;
+  }
+  .main_div .social_icons{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .social_icons a{
+    display: block;
+    height: 45px;
+    width: 100%;
+    line-height: 45px;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 20px;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s linear;
+  }
+  .social_icons a span{
+    margin-left: 5px;
+    font-size: 18px;
+  }
+  .social_icons a:first-child{
+    margin-right: 5px;
+    background: #4267B2;
+  }
+  .social_icons a:first-child:hover{
+    background: #375695;
+  }
+  .social_icons a:last-child{
+    margin-left: 5px;
+    background: #dd4b39;
+  }
+  .social_icons a:last-child:hover{
+    background: #f76754;
+  }
+  form .input_box{
+    height: 50px;
+    width: 100%;
+    position: relative;
+    margin-top: 15px;
+  }
+  .input_box input{
+    height: 100%;
+    width: 100%;
+    outline: none;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    padding-left: 45px;
+    font-size: 17px;
+    transition: all 0.3s ease;
+  }
+  .input_box input:focus{
+    border-color: #343a40;
+  }
+  .input_box .icon{
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    color: grey;
+  }
+  form .option_div{
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .option_div .check_box{
+    display: flex;
+    align-items: center;
+  }
+  .option_div span{
+    margin-left: 5px;
+    font-size: 16px;
+    color: #333;
+  }
+  .option_div .forget_div a{
+    font-size: 16px;
+    color: #343a40;
+  }
+  .button input{
+    padding-left: 0;
+    background: #343a40;
+    color: #fff;
+    border: none;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s linear;
+    
+  }
+  .button input:hover{
+    background: #4c555e;
+  }
+  form .sign_up{
+    text-align: center;
+    margin-top: 25px;
+  }
+  .sign_up a{
+    color: #255df8;
+  }
+  form a{
+    text-decoration: none;
+  }
+  form a:hover{
+    text-decoration: underline;
+  }
+  
