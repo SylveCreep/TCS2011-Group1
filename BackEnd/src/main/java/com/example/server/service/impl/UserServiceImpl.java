@@ -494,6 +494,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 totalMagazines = magazineDao.countMagazine();
                 totalContributions = contributionDao.countContributionByUserId(user.getId());
                 break;
+            case "[ROLE_R0005]":
+                totalStudents = null;
+                totalMagazines = magazineDao.countMagazine();
+                totalContributions = contributionDao.countContributionByUserId(null);
+                break;
             default:
                 totalContributions = null;
                 totalMagazines = null;
