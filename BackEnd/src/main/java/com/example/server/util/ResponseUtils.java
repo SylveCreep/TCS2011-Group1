@@ -216,12 +216,12 @@ public class ResponseUtils {
                 }
             }
 
-            // if(!valUpdateEmail.equals("Valid")){
-            // inputForm.put("email", valUpdateEmail);
-            // if(!form.containsKey("result")){
-            // form.put("result", -1);
-            // }
-            // }
+            if (!valUpdateEmail.equals("Valid")) {
+                inputForm.put("email", valUpdateEmail);
+                if (!form.containsKey("result")) {
+                    form.put("result", -1);
+                }
+            }
             // if(!valPass.equals("Valid")){
             // inputForm.put("password", valPass);
             // if(!form.containsKey("result")){
@@ -291,7 +291,7 @@ public class ResponseUtils {
     }
 
     public String validateEmailInput(String email) {
-        if (email == null) {
+        if (email == null || !email.contains("@")) {
             return "Invalid";
         }
         User user = userDao.findByEmail(email);
@@ -303,7 +303,7 @@ public class ResponseUtils {
     }
 
     public String validateEmailUpdateInput(String email, Long id) {
-        if (email == null || id == null) {
+        if (email == null || id == null || !email.contains("@")) {
             return "Invalid";
         }
         Optional<User> user = userDao.findById(id);
@@ -728,7 +728,9 @@ public class ResponseUtils {
         String valFinishedAt = validateDateMagazineInput(createMagazine.getFinished_at());
         String valPublishedAt = validateDateMagazineInput(createMagazine.getPublished_at());
         String valId = validateIdMagazineInput(createMagazine.getId());
-        String valDateEvent = validateDateIncMagazineInput(createMagazine.getCreated_at(), createMagazine.getFinished_at(), createMagazine.getPublished_at(), createMagazine.getClose_at(), type, createMagazine.getId());
+        String valDateEvent = validateDateIncMagazineInput(createMagazine.getCreated_at(),
+                createMagazine.getFinished_at(), createMagazine.getPublished_at(), createMagazine.getClose_at(), type,
+                createMagazine.getId());
 
         switch (type) {
         case 0:
@@ -750,7 +752,7 @@ public class ResponseUtils {
                     form.put("result", -1);
                 }
             }
-            if (!valDateEvent.equals("Valid")){
+            if (!valDateEvent.equals("Valid")) {
                 inputForm.put("Date Event", valDateEvent);
                 if (!form.containsKey("result")) {
                     form.put("result", -1);
@@ -789,7 +791,7 @@ public class ResponseUtils {
                     form.put("result", -1);
                 }
             }
-            if (!valDateEvent.equals("Valid")){
+            if (!valDateEvent.equals("Valid")) {
                 inputForm.put("Date Event", valDateEvent);
                 if (!form.containsKey("result")) {
                     form.put("result", -1);
@@ -800,7 +802,7 @@ public class ResponseUtils {
             }
             break;
         case 2:
-             if (!valId.equals("Valid")) {
+            if (!valId.equals("Valid")) {
                 inputForm.put("id", valId);
                 if (!form.containsKey("result")) {
                     form.put("result", -1);
@@ -821,34 +823,34 @@ public class ResponseUtils {
         if (magazineDto.getTheme() == null) {
             return "Invalid";
         }
-        /*if (NameValidation.containSpecialCharacter(magazineDto.getTheme())) {
-            return "Contain Special Character";
-        }*/
+        /*
+         * if (NameValidation.containSpecialCharacter(magazineDto.getTheme())) { return
+         * "Contain Special Character"; }
+         */
         Magazine magazine = magazineDao.findByTheme(magazineDto.getTheme());
         Boolean isOne;
         if (magazine != null && magazine.getId() == magazineDto.getId())
             isOne = true;
-        else   
+        else
             isOne = false;
-        switch (type){
-            case 0:
-                if (magazine != null) {
+        switch (type) {
+        case 0:
+            if (magazine != null) {
+                return "Theme of magazine existed";
+            } else {
+                return "Valid";
+            }
+        case 1:
+            if (magazine != null) {
+                if (isOne == true)
+                    return "Valid";
+                else
                     return "Theme of magazine existed";
-                } else {
-                    return "Valid";
-                }
-            case 1:
-                if (magazine != null){
-                    if (isOne == true)
-                        return "Valid";
-                    else 
-                        return "Theme of magazine existed";
-                }
-                else{
-                    return "Valid";
-                }
-            default:
-                return "Invalid";
+            } else {
+                return "Valid";
+            }
+        default:
+            return "Invalid";
         }
     }
 
@@ -891,53 +893,52 @@ public class ResponseUtils {
         }
     }
 
-    public String validateDateIncMagazineInput(Date createdAt, Date finishedAt, Date publishedAt, Date closeAt, int status, Long id) {
+    public String validateDateIncMagazineInput(Date createdAt, Date finishedAt, Date publishedAt, Date closeAt,
+            int status, Long id) {
         Date create_at;
-        switch (status){
-            case 0:
-                if (createdAt == null){
-                    create_at = new Date();
-                }else{
-                    create_at = createdAt;
-                }
-                if (create_at.before(finishedAt)){
-                    if(finishedAt.before(publishedAt)){
-                        if (closeAt != null) {
-                            if (publishedAt.before(closeAt))
-                                return "Valid";
-                            else
-                                return "published_at is after close_at";
-                        } else
+        switch (status) {
+        case 0:
+            if (createdAt == null) {
+                create_at = new Date();
+            } else {
+                create_at = createdAt;
+            }
+            if (create_at.before(finishedAt)) {
+                if (finishedAt.before(publishedAt)) {
+                    if (closeAt != null) {
+                        if (publishedAt.before(closeAt))
                             return "Valid";
-                    }
-                    else
-                        return "finished_at is after published_at";
+                        else
+                            return "published_at is after close_at";
+                    } else
+                        return "Valid";
                 } else
-                    return "created_at is after finished_at";
-            case 1:
-                if (createdAt == null){
-                    create_at = magazineDao.getOne(id).getCreated_at();
-                }else{
-                    create_at = createdAt;
-                }
-                if (create_at.before(finishedAt)){
-                    if(finishedAt.before(publishedAt)){
-                        if (closeAt != null) {
-                            if (publishedAt.before(closeAt))
-                                return "Valid";
-                            else
-                                return "published_at is after close_at";
-                        } else
+                    return "finished_at is after published_at";
+            } else
+                return "created_at is after finished_at";
+        case 1:
+            if (createdAt == null) {
+                create_at = magazineDao.getOne(id).getCreated_at();
+            } else {
+                create_at = createdAt;
+            }
+            if (create_at.before(finishedAt)) {
+                if (finishedAt.before(publishedAt)) {
+                    if (closeAt != null) {
+                        if (publishedAt.before(closeAt))
                             return "Valid";
-                    }
-                    else
-                        return "finished_at is after published_at";
+                        else
+                            return "published_at is after close_at";
+                    } else
+                        return "Valid";
                 } else
-                    return "created_at is after finished_at";
-            default:
-                return "Invalid";
+                    return "finished_at is after published_at";
+            } else
+                return "created_at is after finished_at";
+        default:
+            return "Invalid";
         }
-        
+
     }
 
     public static String getSiteURL(HttpServletRequest request) {

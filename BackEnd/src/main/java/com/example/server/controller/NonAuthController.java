@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -92,8 +93,8 @@ public class NonAuthController {
         }
     }
 
-    @PostMapping(value = "/register", consumes = { "text/plain", "application/*" }, produces = "application/json")
-    public ResponseEntity<?> saveUser(@RequestBody CreateAccount user, @RequestParam("file") MultipartFile file,
+    @PostMapping(value = "/register", produces = "application/json")
+    public ResponseEntity<?> saveUser(CreateAccount user, @RequestPart("file") MultipartFile file,
             HttpServletRequest httpServletRequest) {
         try {
             HashMap<String, Object> validateResult = responseUtils.validateCreateAccountRequest(user, file, 0);
