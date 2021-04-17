@@ -28,7 +28,7 @@
 
         <p>
           <b>File:</b>
-          <span class="file-source" v-on:click="downloadContribution">{{
+          <span class="file-source" v-on:click="downloadContribution(contribution.extension)">{{
             contribution.linkSource
           }}</span>
         </p>
@@ -139,6 +139,8 @@ export default {
         .get(UrlConstants.Contribution + "/" + this.$route.params.id)
         .then((r) => {
           this.contribution = r.data.data;
+          console.log("🚀 ~ file: ContributionDetail.vue ~ line 142 ~ .then ~ r.data.data", r.data.data)
+          
         })
         .catch((error) => {
           this.errors = error.response;
@@ -148,7 +150,7 @@ export default {
       const tfile = this.$refs.file.files[0];
       this.contribution.file = tfile;
     },
-    downloadContribution() {
+    downloadContribution(extension) {
       axios
         .get(
           UrlConstants.Contribution +
@@ -157,7 +159,7 @@ export default {
           { responseType: "blob" }
         )
         .then((r) => {
-          FileSaver.saveAs(r.data, "contribution.zip");
+          FileSaver.saveAs(r.data, "contribution." + extension);
         })
         .catch((error) => {
           this.errors = error.response;
