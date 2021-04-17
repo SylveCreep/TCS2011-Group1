@@ -1,6 +1,8 @@
 package com.example.server.config;
 
 import io.jsonwebtoken.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,6 +18,8 @@ import java.util.Date;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.example.server.service.BanService;
+
 @Component
 public class TokenProvider implements Serializable {
 
@@ -27,6 +31,9 @@ public class TokenProvider implements Serializable {
 
     @Value("${jwt.authorities.key}")
     public String AUTHORITIES_KEY;
+
+    @Autowired
+    private BanService banService;
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -69,7 +76,7 @@ public class TokenProvider implements Serializable {
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token) && banService.find(token) == null);
     }
 
     UsernamePasswordAuthenticationToken getAuthenticationToken(final String token, final Authentication existingAuth, final UserDetails userDetails) {
