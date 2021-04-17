@@ -45,7 +45,7 @@ email: mm@gmail.com pass: 123456a (role marketing coordinator)
 
 email: student@gmail.com pass: 123456a (role student)
 
-- For guest role: If you are first time login, you can use google sign in.
+- For guest role: If you are first time login, you can use google sign in or register.
 
 
 
