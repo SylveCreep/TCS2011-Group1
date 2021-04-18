@@ -1,4 +1,4 @@
-let BaseUrl= "https://1b4e29b70259.ngrok.io";
+let BaseUrl= "http://localhost:8080";
 export  const UrlConstants = Object.freeze({
     BaseUrl: BaseUrl,
     GoogleLogin: BaseUrl + "/google/login",
